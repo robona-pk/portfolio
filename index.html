@@ -50,7 +50,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   bottom: 0;
   transform: translateY(-13rem);  /* increase this number to go higher */
 }
-@keyframes avatarIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes avatarIn {
+  from { opacity: 0; transform: translateY(calc(-13rem + 30px)); }
+  to { opacity: 1; transform: translateY(-13rem); }
+}
 .hero-avatar{width:clamp(200px,22vw,295px);display:block;animation:avatarFloat 5s ease-in-out 1.5s infinite alternate}
 @keyframes avatarFloat{from{transform:translateY(0)}to{transform:translateY(-14px)}}
 .hero-avatar-glow{position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:65%;height:36px;border-radius:50%;background:radial-gradient(ellipse,rgba(240,160,32,.22) 0%,transparent 70%);animation:avatarFloat 5s ease-in-out 1.5s infinite alternate;filter:blur(8px)}

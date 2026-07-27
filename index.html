@@ -195,7 +195,61 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .cs-band.ff .cs-band-lbl{color:var(--s)}
 .cs-band.ci .cs-band-lbl{color:var(--d)}
 .cs-band-text{font-size:.9rem;color:var(--t2);line-height:1.7}
+/* CASE STUDY CARDS; sneak-peek grid */
+.case-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+.case-card{background:var(--card);border:1px solid var(--border);padding:2rem 2rem 1.75rem;text-align:left;
+  cursor:pointer;display:flex;flex-direction:column;gap:1rem;position:relative;overflow:hidden;
+  font-family:var(--fb);color:inherit;
+  transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.case-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--s),var(--d),transparent);
+  transform:scaleX(0);transform-origin:left;transition:transform .35s ease}
+.case-card:hover,.case-card:focus-visible{transform:translateY(-4px);border-color:var(--bhi);
+  box-shadow:0 20px 50px rgba(0,0,0,.35),0 0 0 1px rgba(240,160,32,.08)}
+.case-card:hover::before,.case-card:focus-visible::before{transform:scaleX(1)}
+.case-card:focus-visible{outline:2px solid var(--s);outline-offset:2px}
+.cc-top{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.cc-num{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
+.cc-co{font-size:.85rem;font-weight:600;color:var(--t1)}
+.cc-dot{color:var(--bhi)}
+.cc-tp{font-size:.78rem;color:var(--t2)}
+.cc-status{font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-left:auto;display:flex;align-items:center;gap:.35rem}
+.cc-status.live{color:var(--p)}
+.cc-status.shipped{color:var(--d)}
+.cc-metric{font-family:var(--fd);font-size:clamp(1.9rem,3.6vw,2.5rem);font-weight:800;letter-spacing:-.03em;line-height:1;
+  background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cc-title{font-family:var(--fd);font-size:1.05rem;font-weight:700;color:var(--t1);line-height:1.3}
+.cc-teaser{font-size:.85rem;color:var(--t2);line-height:1.65;flex:1;margin:0}
+.cc-cta{font-size:.78rem;font-weight:600;color:var(--s);display:inline-flex;align-items:center;gap:.4rem;margin-top:.25rem;transition:gap .2s}
+.case-card:hover .cc-cta,.case-card:focus-visible .cc-cta{gap:.65rem}
+@media(max-width:900px){.case-grid{grid-template-columns:1fr}}
 
+/* CASE STUDY MODAL */
+body.modal-open{overflow:hidden}
+.case-modal-overlay{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;
+  background:rgba(5,5,4,.78);backdrop-filter:blur(6px);padding:2.5rem 1.5rem;opacity:0;transition:opacity .25s ease}
+.case-modal-overlay.open{display:flex}
+.case-modal-overlay.show{opacity:1}
+.case-modal{background:var(--bg2);border:1px solid var(--border);max-width:900px;width:100%;max-height:88vh;
+  display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.55);
+  transform:translateY(24px) scale(.98);opacity:0;transition:transform .3s cubic-bezier(.22,.61,.36,1),opacity .3s ease}
+.case-modal-overlay.show .case-modal{transform:translateY(0) scale(1);opacity:1}
+.case-modal-topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;
+  border-bottom:1px solid var(--border);background:rgba(8,8,6,.6);flex-shrink:0}
+.case-modal-tag{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--s)}
+.case-modal-close{background:none;border:1px solid var(--bhi);color:var(--t1);width:32px;height:32px;border-radius:4px;
+  font-size:1.1rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s}
+.case-modal-close:hover{border-color:var(--s);color:var(--s)}
+.case-modal-body{overflow-y:auto}
+.case-modal-body .case{background:transparent}
+@media(max-width:640px){
+  .case-modal-overlay{padding:0}
+  .case-modal{max-height:100vh;height:100vh;max-width:100%;border:none}
+}
+
+
+/* TILT CARD (replace your existing ".case{transform-style:preserve-3d...}" rule) */
+.case-card{transform-style:preserve-3d}
 /* ─────────────────────────────────────────
    SKILLS
 ───────────────────────────────────────── */
@@ -560,359 +614,432 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 </div>
 
 <!-- CASE STUDIES -->
+<!-- CASE STUDIES -->
 <hr class="divider">
 <div class="wrap" id="cases">
   <div class="sec-mark"><span class="sec-t">Case Studies</span><div class="sec-rule"></div></div>
-  <div class="case-stack">
-
-    <!-- CASE 01 -->
-    <article class="case reveal">
-      <div class="cs-hd">
-        <div class="cs-hd-top">
-          <span class="cs-num">01</span>
-          <span class="cs-co">Lenskart@Home</span>
-          <span class="cs-dot">&#183;</span>
-          <span class="cs-tp">Conversion &#183; O2O</span>
-          <span class="cs-st live">&#9679; Live</span>
+  <div class="case-grid">
+      <div class="case-card reveal" data-case="1" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case study: Personalised Home Trials" onclick="openCase(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCase(1);}">
+        <div class="cc-top">
+          <span class="cc-num">01</span>
+          <span class="cc-co">Lenskart@Home</span>
+          <span class="cc-dot">&#183;</span>
+          <span class="cc-tp">Conversion &#183; O2O</span>
+          <span class="cc-status live">&#9679; Live</span>
         </div>
-        <div class="cs-metric">&#8377;1.8Cr</div>
-        <div class="cs-title">Personalised Home Trials</div>
-        <div class="cs-flow">
-          <span class="csf done">Context</span><span class="csf-arr">&#8594;</span>
-          <span class="csf done">Discovery</span><span class="csf-arr">&#8594;</span>
-          <span class="csf done">MVP</span><span class="csf-arr">&#8594;</span>
-          <span class="csf active">Live</span>
+        <div class="cc-metric">&#8377;1.8Cr</div>
+        <div class="cc-title">Personalised Home Trials</div>
+        <p class="cc-teaser">To understand why users were dropping off the Home Trial landing page, we conducted customer calls with people who had shown intent but hadn&#39;t completed a booking.</p>
+        <span class="cc-cta">Read full case study <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <div class="case-card reveal" data-case="2" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case study: Truly Omnichannel Experience for Customers" onclick="openCase(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCase(2);}">
+        <div class="cc-top">
+          <span class="cc-num">02</span>
+          <span class="cc-co">Lenskart &#183; Omni</span>
+          <span class="cc-dot">&#183;</span>
+          <span class="cc-tp">Attribution &#183; O2O</span>
+          <span class="cc-status live">&#9679; Live</span>
         </div>
+        <div class="cc-metric">1 Customer, 1 Experience</div>
+        <div class="cc-title">Truly Omnichannel Experience for Customers</div>
+        <p class="cc-teaser">When a Lenskart customer buys in-store, they have a natural point of contact; they know exactly where to go for repairs, exchanges, or questions. Online customers have no such anchor.</p>
+        <span class="cc-cta">Read full case study <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </div>
-
-      <div class="cs-sec">
-        <span class="cs-lbl">Discovery</span>
-        <p class="cs-p">To understand why users were dropping off the Home Trial landing page, we conducted customer calls with people who had shown intent but hadn&#39;t completed a booking. One signal kept surfacing across every conversation.</p>
-      </div>
-
-      <div class="cs-quote">
-        <p>&#8220;The store is already close to my house. If I go there, I&#39;ll get much more variety.&#8221;</p>
-        <cite>Recurring verbatim from multiple discovery calls</cite>
-      </div>
-
-      <div class="cs-sec">
-        <p class="cs-p">Customers weren&#39;t rejecting home trials; they were rejecting the <strong style="color:var(--t1)">unpredictability of a fixed kit</strong>. With no say over what frames showed up, booking felt like a gamble. Visiting a store felt more certain.</p>
-      </div>
-      <div class="cs-stats two">
-        <div class="cs-stat teal">
-          <div class="cs-stat-n">30%</div>
-          <div class="cs-stat-l">Online returns traceable to fit / style issues; the exact problem a home trial solves</div>
+      <div class="case-card reveal" data-case="3" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case study: Smart Health Reports: Decoding Health Stats" onclick="openCase(3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCase(3);}">
+        <div class="cc-top">
+          <span class="cc-num">03</span>
+          <span class="cc-co">Bajaj Finserv Health</span>
+          <span class="cc-dot">&#183;</span>
+          <span class="cc-tp">Health Tech &#183; Data</span>
+          <span class="cc-status shipped">&#9679; Live</span>
         </div>
-        <div class="cs-stat" style="background:transparent;display:flex;align-items:center;padding:1.5rem 2rem">
-          <p style="font-size:.875rem;color:var(--t2);line-height:1.65">Returns happening because customers couldn&#39;t try before buying; a solvable problem if we could get the right frames to them first.</p>
+        <div class="cc-metric">&#8377;7L MRR</div>
+        <div class="cc-title">Smart Health Reports: Decoding Health Stats</div>
+        <p class="cc-teaser">Health Files let customers upload their lab reports to the platform. Almost nobody did.</p>
+        <span class="cc-cta">Read full case study <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <div class="case-card reveal" data-case="4" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case study: Doctor Quality Score &amp; Listing Reorder" onclick="openCase(4)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCase(4);}">
+        <div class="cc-top">
+          <span class="cc-num">04</span>
+          <span class="cc-co">Bajaj Finserv Health</span>
+          <span class="cc-dot">&#183;</span>
+          <span class="cc-tp">Quality &#183; CTR</span>
+          <span class="cc-status shipped">&#9679; Shipped</span>
         </div>
+        <div class="cc-metric">+18% CTR</div>
+        <div class="cc-title">Doctor Quality Score &amp; Listing Reorder</div>
+        <p class="cc-teaser">Doctor listings ranked by popularity metrics; not patient-relevant quality signals. High-performing doctors were buried; under-performers had equal visibility.</p>
+        <span class="cc-cta">Read full case study <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </div>
-
-      <div class="cs-callout">
-        <span class="cs-callout-icon">&#9888;</span>
-        <div><div class="cs-callout-lbl">Constraint from leadership</div><p>No significant backend or inventory system investment until demand was validated. The objective: prove the hypothesis cheaply before committing engineering resources to a full integration.</p></div>
-      </div>
-
-      <div class="cs-sec">
-        <span class="cs-lbl">The MVP: An Illusion of Choice</span>
-        <p class="cs-p">Here&#39;s the thing: customers wanted to pick their frames. They didn&#39;t actually need a <em>different</em> set of frames. So we gave them exactly that; using an existing Lenskart product listing page, we let customers browse and &#8220;select&#8221; frames for their home trial. The same ~150 frames the agent was carrying anyway. Nothing changed in the backend. The agent showed up with the exact same kit as before.</p>
-        <div class="cs-highlight">
-          <p>Customers felt in control. We got a clean read on whether the act of choosing; not actual variety; was the real conversion lever. It was the cheapest possible test of our hypothesis, and it worked.</p>
+      <div class="case-card reveal" data-case="5" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case study: AI-Powered Insurance Pre-Authorization" onclick="openCase(5)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCase(5);}">
+        <div class="cc-top">
+          <span class="cc-num">05</span>
+          <span class="cc-co">Bajaj Finserv Health</span>
+          <span class="cc-dot">&#183;</span>
+          <span class="cc-tp">Automation &#183; Insurance</span>
+          <span class="cc-status shipped">&#9679; Shipped</span>
         </div>
+        <div class="cc-metric">&#8377;17L / yr</div>
+        <div class="cc-title">AI-Powered Insurance Pre-Authorization</div>
+        <p class="cc-teaser">Insurance pre-authorization was a manual, document-heavy process. Every approval required human review of dense medical records.</p>
+        <span class="cc-cta">Read full case study <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </div>
-
-      <div class="cs-stats two" style="grid-template-columns:1fr">
-        <div class="cs-stat amber">
-          <div class="cs-stat-n">+7%</div>
-          <div class="cs-stat-l">Increase in appointments booked in the pilot area; demand validated</div>
-        </div>
-      </div>
-
-      <div class="cs-sec">
-        <span class="cs-lbl">After the MVP: The Real Launch</span>
-        <p class="cs-p">With demand validated, we built the actual thing. Customers could now browse real store inventory from nearby Lenskart locations and select the specific frames they wanted brought home; not a curated kit, but their own list. The flow went live across <strong style="color:var(--t1)">5 cities</strong> in select PIN codes.</p>
-        <p class="cs-p">We&#39;re seeing early positive movement in overall leads. At the same time, we&#39;re actively working on funnel improvements, bettering the frame pickup process for agents, and figuring out more reliable on-time arrival.</p>
-      </div>
-
-      <div class="cs-voc">
-        <p>&#8220;This is a great feature, we were too busy to go to the store so decided to do a home trial; you should make it a paid service, it is so premium.&#8221;</p>
-        <cite>Customer who ended up purchasing 3 frames</cite>
-      </div>
-
-      <div class="cs-video-trio">
-        <div class="cs-video-aside">
-          <div class="cs-stat amber"><div class="cs-stat-n" style="font-size:1.25rem">5 Cities</div><div class="cs-stat-l">Live launch</div></div>
-          <div class="cs-stat teal"><div class="cs-stat-n" style="font-size:1.4rem">&#128200;</div><div class="cs-stat-l">Lead signal positive</div></div>
-        </div>
-        <div class="cs-video-center">
-          <iframe src="https://drive.google.com/file/d/11kuZDAMUmZzZeX5alIwGjYji_R38UW0x/preview" class="cs-iframe" allow="autoplay" allowfullscreen></iframe>
-          <p class="cs-cap" style="margin-top:.5rem">Product walkthrough; post-MVP live flow</p>
-        </div>
-        <div class="cs-video-aside">
-          <div class="cs-stat purple"><div class="cs-stat-n" style="font-size:1.4rem">&#128257;</div><div class="cs-stat-l">Ops gaps closing sprint-by-sprint</div></div>
-          <div class="cs-stat dark"><div class="cs-stat-n" style="font-size:.7rem;color:#A090E0;letter-spacing:.06em;text-transform:uppercase">Live &#183; Iterating</div><div class="cs-stat-l">Funnel experiments running</div></div>
-        </div>
-      </div>
-
-      <div class="cs-band ff">
-        <span class="cs-band-icon">&#9889;</span>
-        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">Nobody told agents to do this; but once they could see what customers had picked, they started calling them before appointments to discuss frames. We built a selection feature. Agents turned it into a styling concierge.</p></div>
-      </div>
-    </article>
-
-    <!-- CASE 02 -->
-    <article class="case reveal">
-      <div class="cs-hd">
-        <div class="cs-hd-top">
-          <span class="cs-num">02</span>
-          <span class="cs-co">Lenskart &#183; Omni</span>
-          <span class="cs-dot">&#183;</span>
-          <span class="cs-tp">Attribution &#183; O2O</span>
-          <span class="cs-st live">&#9679; Live</span>
-        </div>
-        <div class="cs-metric">1 Customer, 1 Experience</div>
-        <div class="cs-title">Truly Omnichannel Experience for Customers</div>
-        <div class="cs-flow">
-          <span class="csf done">Problem</span><span class="csf-arr">&#8594;</span>
-          <span class="csf done">3 Approaches</span><span class="csf-arr">&#8594;</span>
-          <span class="csf done">Polygon Attribution</span><span class="csf-arr">&#8594;</span>
-          <span class="csf active">Dashboard Live</span>
-        </div>
-      </div>
-
-      <div class="cs-sec">
-        <span class="cs-lbl">The Problem</span>
-        <p class="cs-p">When a Lenskart customer buys in-store, they have a natural point of contact; they know exactly where to go for repairs, exchanges, or questions. Online customers have no such anchor. No store owns them, no one follows up, and returns run significantly higher than the offline channel.</p>
-        <p class="cs-p">The goal: map every online order to exactly one nearby store, give that store full visibility into its territory GMV, and create real accountability for the online customer&#39;s experience post-purchase.</p>
-      </div>
-
-      <div class="cs-sec">
-        <span class="cs-lbl">Three Approaches Evaluated</span>
-        <p class="cs-p">All three sound reasonable. All three have the same fatal problem; they try to infer which store a customer has a <em>relationship</em> with. Our data showed that&#39;s the wrong question entirely.</p>
-      </div>
-      <div class="cs-compare">
-        <div class="cs-compare-item">
-          <div class="cs-compare-hd">Distance-based</div>
-          <div class="cs-compare-desc">Assign each order to the nearest store within 10km. Simple and deterministic.</div>
-          <span class="cs-compare-verdict fail">✗ Failed &nbsp;;&nbsp; 25% of customers have never visited their nearest store</span>
-        </div>
-        <div class="cs-compare-item">
-          <div class="cs-compare-hd">Last Visited Store</div>
-          <div class="cs-compare-desc">Assign to the store where the customer last made a purchase. Relationship-based.</div>
-          <span class="cs-compare-verdict fail">✗ Failed &nbsp;;&nbsp; Last visit = coincidence of geography, not loyalty</span>
-        </div>
-        <div class="cs-compare-item">
-          <div class="cs-compare-hd">Combination</div>
-          <div class="cs-compare-desc">QMS where available, distance everywhere else. Best of both worlds?</div>
-          <span class="cs-compare-verdict fail">✗ Failed &nbsp;;&nbsp; Two attribution classes, impossible to set fair targets</span>
-        </div>
-      </div>
-
-      <div class="cs-quote">
-        <p>The goal was never to find the store a customer <em>prefers</em>. It&#39;s to find the store best <em>positioned</em> to physically serve them.</p>
-      </div>
-
-      <div class="cs-sec">
-        <span class="cs-lbl">The Solution: Polygon Attribution</span>
-        <p class="cs-p">Polygon attribution; inspired by Walmart&#39;s hex grid approach, built from hexagons of 0.01km&#178;; answers exactly that: if this customer needs to walk into a store tomorrow, which one is realistically on their doorstep? Deterministic, auditable, and every delivery address belongs to exactly one store with no overlap or dead zones.</p>
-      </div>
-
-      <div class="cs-sec">
-        <span class="cs-lbl">The Dashboard: One Book of Business</span>
-        <p class="cs-p">We built a unified &#8220;Your Territory&#8221; view inside the store POS. Every store now sees its polygon on a map, with online orders attributed to it shown alongside walk-in sales; total territory revenue, ATV, returns, exchanges, and NPS in one unified view. No channel split. One number, one territory, one book of business.</p>
-      </div>
-
-      <div class="cs-media">
-        <img src="https://drive.google.com/thumbnail?id=1DhwfHGAMmvJe9SJnmSCPxcMvJYxx5tp-&sz=w1200" class="cs-img" alt="Store territory dashboard">
-        <p class="cs-cap">Live store POS; territory map + unified revenue view</p>
-      </div>
-
-      <div class="cs-stats four">
-        <div class="cs-stat amber"><div class="cs-stat-n" style="font-size:1.5rem">Pan-India</div><div class="cs-stat-l">Attribution live</div></div>
-        <div class="cs-stat teal"><div class="cs-stat-n" style="font-size:1.5rem">First Time</div><div class="cs-stat-l">Online GMV at store level</div></div>
-        <div class="cs-stat purple"><div class="cs-stat-n" style="font-size:1.5rem">Returns+NPS</div><div class="cs-stat-l">Online metrics visible</div></div>
-        <div class="cs-stat dark"><div class="cs-stat-n">Live &#183; Iterating</div><div class="cs-stat-l">Targets coming next</div></div>
-      </div>
-
-      <div class="cs-band ci">
-        <span class="cs-band-icon">&#128161;</span>
-        <div><div class="cs-band-lbl">Customer Insight</div><p class="cs-band-text">We assumed customers would naturally gravitate to their nearest store. 25% didn&#39;t; they were buying from stores 5km+ away, on the way to work or mid-errand. Proximity doesn&#39;t predict preference.</p></div>
-      </div>
-    </article>
-
-    <!-- CASE 03 -->
-    <article class="case reveal">
-      <div class="cs-hd">
-        <div class="cs-hd-top">
-          <span class="cs-num">03</span>
-          <span class="cs-co">Bajaj Finserv Health</span>
-          <span class="cs-dot">&#183;</span>
-          <span class="cs-tp">Health Tech &#183; Data</span>
-          <span class="cs-st shipped">&#9679; Live</span>
-        </div>
-        <div class="cs-metric">&#8377;7L MRR</div>
-        <div class="cs-title">Smart Health Reports: Decoding Health Stats</div>
-        <div class="cs-flow">
-          <span class="csf done">Dead Feature</span><span class="csf-arr">&#8594;</span>
-          <span class="csf done">Real Problem</span><span class="csf-arr">&#8594;</span>
-          <span class="csf done">OCR + LOINC</span><span class="csf-arr">&#8594;</span>
-          <span class="csf active">Shipped</span>
-        </div>
-      </div>
-
-      <div class="cs-sec">
-        <span class="cs-lbl">The Dead Feature</span>
-        <p class="cs-p">Health Files let customers upload their lab reports to the platform. Almost nobody did. Rather than optimising the upload flow, we went back to customers to understand why. Side note: the few who did use it were uploading everything from prescriptions to Aadhaar cards; Health Files had quietly become a general-purpose document locker nobody asked for.</p>
-      </div>
-
-      <div class="cs-band ff">
-        <span class="cs-band-icon">&#9889;</span>
-        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">The few who did use Health Files were uploading everything from prescriptions to Aadhaar cards; Health Files had quietly become a general-purpose document locker nobody asked for.</p></div>
-      </div>
-
-      <div class="cs-quote">
-        <p>&#8220;Why give my reports to a platform that does nothing with them?&#8221;</p>
-        <cite style="color:#F0ECD8">What customers actually told us</cite>
-      </div>
-
-      <div class="cs-sec">
-        <span class="cs-lbl">The Technical Challenge</span>
-        <p class="cs-p">Lab reports from different labs use different names, units, and formats for the same parameter. We had to standardise before we could explain anything.</p>
-      </div>
-      <div class="cs-process">
-        <div class="cs-process-step">
-          <span class="cs-process-icon">&#128196;</span>
-          <span class="cs-process-lbl">Raw PDF</span>
-          <div class="cs-process-desc">Lab reports in different formats, layouts, units</div>
-        </div>
-        <div class="cs-process-step">
-          <span class="cs-process-icon">&#128269;</span>
-          <span class="cs-process-lbl">OCR</span>
-          <div class="cs-process-desc">Extract every parameter, value, and unit from the document</div>
-        </div>
-        <div class="cs-process-step">
-          <span class="cs-process-icon">&#128279;</span>
-          <span class="cs-process-lbl">LOINC Mapping</span>
-          <div class="cs-process-desc">Map each parameter to its universal medical ID; normalise across labs</div>
-        </div>
-        <div class="cs-process-step">
-          <span class="cs-process-icon">&#129504;</span>
-          <span class="cs-process-lbl">Pareto Scope</span>
-          <div class="cs-process-desc">Top 20% of AHC packages cover 80% of parameters; build those first.</div>
-        </div>
-        <div class="cs-process-step">
-          <span class="cs-process-icon">&#127775;</span>
-          <span class="cs-process-lbl">Smart Report</span>
-          <div class="cs-process-desc">Plain English explanations + historical trend for every parameter</div>
-        </div>
-      </div>
-
-      <div class="cs-sec">
-        <span class="cs-lbl">The Product</span>
-        <p class="cs-p">Every parameter explained in plain English; what it means, where you stand, what&#39;s critical, how to improve it; plus a historical trend compiled across all past reports.</p>
-      </div>
-
-      <div class="cs-media">
-        <iframe src="https://drive.google.com/file/d/1RO7er3RwxaF9rjv67iNBx0QX3RAwnxqF/preview" class="cs-iframe" allow="autoplay" allowfullscreen></iframe>
-      </div>
-
-      <div class="cs-results">
-        <span class="cs-lbl">Outcome</span>
-        <ul class="cs-rl">
-          <li>A patient staring at a high HbA1c reading is the exact right time to recommend a diabetes consultation</li>
-          <li>&#8377;7L incremental MRR from health service recommendations surfaced inside the report</li>
-        </ul>
-      </div>
-
-      <div class="cs-band ci">
-        <span class="cs-band-icon">&#128161;</span>
-        <div><div class="cs-band-lbl">Customer Insight</div><p class="cs-band-text">75% of customers googled their out-of-range parameters the moment they got their report. We built that into the report; and turned the anxiety into a recommendation.</p></div>
-      </div>
-    </article>
-    <!-- CASE 04 -->
-    <article class="case reveal">
-      <div class="cs-hd">
-        <div class="cs-hd-top">
-          <span class="cs-num">04</span>
-          <span class="cs-co">Bajaj Finserv Health</span>
-          <span class="cs-dot">&#183;</span>
-          <span class="cs-tp">Quality &#183; CTR</span>
-          <span class="cs-st Live">&#9679; Shipped</span>
-        </div>
-        <div class="cs-metric">+18% CTR</div>
-        <div class="cs-title">Doctor Quality Score &amp; Listing Reorder</div>
-        <div class="cs-flow">
-          <span class="csf done">Problem</span><span class="csf-arr">&#8594;</span>
-          <span class="csf done">Quality Score</span><span class="csf-arr">&#8594;</span>
-          <span class="csf active">18% CTR Lift</span>
-        </div>
-      </div>
-      <div class="cs-sec">
-        <span class="cs-lbl">The Problem</span>
-        <p class="cs-p">Doctor listings ranked by popularity metrics; not patient-relevant quality signals. High-performing doctors were buried; under-performers had equal visibility. Result: lower conversions, weaker patient trust.</p>
-      </div>
-      <div class="cs-sec">
-        <span class="cs-lbl">The Solution</span>
-        <p class="cs-p">Formulated a composite quality score weighting cancellation rates, patient ratings, profile completeness, and fee fairness. Listings reordered algorithmically; best doctors surface first.</p>
-      </div>
-      <div class="cs-stats two">
-        <div class="cs-stat amber"><div class="cs-stat-n">+18%</div><div class="cs-stat-l">Click-Through Rate improvement</div></div>
-        <div class="cs-stat teal"><div class="cs-stat-n">11.6%</div><div class="cs-stat-l">Lift in annual revenue</div></div>
-      </div>
-      <div class="cs-band ff">
-        <span class="cs-band-icon">&#9889;</span>
-        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">The 18% CTR lift came from reordering existing doctors; not adding new ones. The talent was already there. It was just buried.</p></div>
-      </div>
-    </article>
-
-    <!-- CASE 05 -->
-    <article class="case reveal">
-      <div class="cs-hd">
-        <div class="cs-hd-top">
-          <span class="cs-num">05</span>
-          <span class="cs-co">Bajaj Finserv Health</span>
-          <span class="cs-dot">&#183;</span>
-          <span class="cs-tp">Automation &#183; Insurance</span>
-          <span class="cs-st Live">&#9679; Shipped</span>
-        </div>
-        <div class="cs-metric">&#8377;17L / yr</div>
-        <div class="cs-title">AI-Powered Insurance Pre-Authorization</div>
-        <div class="cs-flow">
-          <span class="csf done">Manual Bottleneck</span><span class="csf-arr">&#8594;</span>
-          <span class="csf done">OCR + NER</span><span class="csf-arr">&#8594;</span>
-          <span class="csf active">26% Throughput &#183; &#8377;17L Saved</span>
-        </div>
-      </div>
-      <div class="cs-sec">
-        <span class="cs-lbl">The Problem</span>
-        <p class="cs-p">Insurance pre-authorization was a manual, document-heavy process. Every approval required human review of dense medical records; creating a throughput ceiling that limited the platform&#39;s ability to scale claim processing without proportionally scaling headcount.</p>
-      </div>
-      <div class="cs-sec">
-        <span class="cs-lbl">The Solution</span>
-        <p class="cs-p">Automated the pre-auth pipeline using OCR for document digitisation and NER (Natural Language Entity Recognition) for intelligent parsing of medical terminology and claim fields; eliminating the manual review bottleneck end-to-end.</p>
-      </div>
-      <div class="cs-stats two">
-        <div class="cs-stat amber"><div class="cs-stat-n">+26%</div><div class="cs-stat-l">Processing throughput increase</div></div>
-        <div class="cs-stat teal"><div class="cs-stat-n">&#8377;17L</div><div class="cs-stat-l">Annual operational cost savings</div></div>
-      </div>
-      <div class="cs-results">
-        <span class="cs-lbl">Also</span>
-        <ul class="cs-rl">
-          <li>Reduced human error rates in approvals</li>
-          <li>Scalable foundation for future claims automation</li>
-          <li>Freed ops team bandwidth for complex edge cases</li>
-        </ul>
-      </div>
-      <div class="cs-band ff">
-        <span class="cs-band-icon">&#9889;</span>
-        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">Some documents being reviewed manually were handwritten, faxed, or scanned at an angle. The OCR pipeline had to learn to read imperfect documents before it could replace the humans reading them.</p></div>
-      </div>
-    </article>
-
   </div>
 </div>
 
-<!-- SKILLS -->
+<!-- Hidden source content for case study modal (untouched original case content) -->
+<div id="case-sources" style="display:none" aria-hidden="true">
+<article class="case" id="case-detail-1">
+      <div class="cs-hd">
+        <div class="cs-hd-top">
+          <span class="cs-num">01</span>
+          <span class="cs-co">Lenskart@Home</span>
+          <span class="cs-dot">&#183;</span>
+          <span class="cs-tp">Conversion &#183; O2O</span>
+          <span class="cs-st live">&#9679; Live</span>
+        </div>
+        <div class="cs-metric">&#8377;1.8Cr</div>
+        <div class="cs-title">Personalised Home Trials</div>
+        <div class="cs-flow">
+          <span class="csf done">Context</span><span class="csf-arr">&#8594;</span>
+          <span class="csf done">Discovery</span><span class="csf-arr">&#8594;</span>
+          <span class="csf done">MVP</span><span class="csf-arr">&#8594;</span>
+          <span class="csf active">Live</span>
+        </div>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">Discovery</span>
+        <p class="cs-p">To understand why users were dropping off the Home Trial landing page, we conducted customer calls with people who had shown intent but hadn&#39;t completed a booking. One signal kept surfacing across every conversation.</p>
+      </div>
+
+      <div class="cs-quote">
+        <p>&#8220;The store is already close to my house. If I go there, I&#39;ll get much more variety.&#8221;</p>
+        <cite>Recurring verbatim from multiple discovery calls</cite>
+      </div>
+
+      <div class="cs-sec">
+        <p class="cs-p">Customers weren&#39;t rejecting home trials; they were rejecting the <strong style="color:var(--t1)">unpredictability of a fixed kit</strong>. With no say over what frames showed up, booking felt like a gamble. Visiting a store felt more certain.</p>
+      </div>
+      <div class="cs-stats two">
+        <div class="cs-stat teal">
+          <div class="cs-stat-n">30%</div>
+          <div class="cs-stat-l">Online returns traceable to fit / style issues; the exact problem a home trial solves</div>
+        </div>
+        <div class="cs-stat" style="background:transparent;display:flex;align-items:center;padding:1.5rem 2rem">
+          <p style="font-size:.875rem;color:var(--t2);line-height:1.65">Returns happening because customers couldn&#39;t try before buying; a solvable problem if we could get the right frames to them first.</p>
+        </div>
+      </div>
+
+      <div class="cs-callout">
+        <span class="cs-callout-icon">&#9888;</span>
+        <div><div class="cs-callout-lbl">Constraint from leadership</div><p>No significant backend or inventory system investment until demand was validated. The objective: prove the hypothesis cheaply before committing engineering resources to a full integration.</p></div>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">The MVP: An Illusion of Choice</span>
+        <p class="cs-p">Here&#39;s the thing: customers wanted to pick their frames. They didn&#39;t actually need a <em>different</em> set of frames. So we gave them exactly that; using an existing Lenskart product listing page, we let customers browse and &#8220;select&#8221; frames for their home trial. The same ~150 frames the agent was carrying anyway. Nothing changed in the backend. The agent showed up with the exact same kit as before.</p>
+        <div class="cs-highlight">
+          <p>Customers felt in control. We got a clean read on whether the act of choosing; not actual variety; was the real conversion lever. It was the cheapest possible test of our hypothesis, and it worked.</p>
+        </div>
+      </div>
+
+      <div class="cs-stats two" style="grid-template-columns:1fr">
+        <div class="cs-stat amber">
+          <div class="cs-stat-n">+7%</div>
+          <div class="cs-stat-l">Increase in appointments booked in the pilot area; demand validated</div>
+        </div>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">After the MVP: The Real Launch</span>
+        <p class="cs-p">With demand validated, we built the actual thing. Customers could now browse real store inventory from nearby Lenskart locations and select the specific frames they wanted brought home; not a curated kit, but their own list. The flow went live across <strong style="color:var(--t1)">5 cities</strong> in select PIN codes.</p>
+        <p class="cs-p">We&#39;re seeing early positive movement in overall leads. At the same time, we&#39;re actively working on funnel improvements, bettering the frame pickup process for agents, and figuring out more reliable on-time arrival.</p>
+      </div>
+
+      <div class="cs-voc">
+        <p>&#8220;This is a great feature, we were too busy to go to the store so decided to do a home trial; you should make it a paid service, it is so premium.&#8221;</p>
+        <cite>Customer who ended up purchasing 3 frames</cite>
+      </div>
+
+      <div class="cs-video-trio">
+        <div class="cs-video-aside">
+          <div class="cs-stat amber"><div class="cs-stat-n" style="font-size:1.25rem">5 Cities</div><div class="cs-stat-l">Live launch</div></div>
+          <div class="cs-stat teal"><div class="cs-stat-n" style="font-size:1.4rem">&#128200;</div><div class="cs-stat-l">Lead signal positive</div></div>
+        </div>
+        <div class="cs-video-center">
+          <iframe src="https://drive.google.com/file/d/11kuZDAMUmZzZeX5alIwGjYji_R38UW0x/preview" class="cs-iframe" allow="autoplay" allowfullscreen></iframe>
+          <p class="cs-cap" style="margin-top:.5rem">Product walkthrough; post-MVP live flow</p>
+        </div>
+        <div class="cs-video-aside">
+          <div class="cs-stat purple"><div class="cs-stat-n" style="font-size:1.4rem">&#128257;</div><div class="cs-stat-l">Ops gaps closing sprint-by-sprint</div></div>
+          <div class="cs-stat dark"><div class="cs-stat-n" style="font-size:.7rem;color:#A090E0;letter-spacing:.06em;text-transform:uppercase">Live &#183; Iterating</div><div class="cs-stat-l">Funnel experiments running</div></div>
+        </div>
+      </div>
+
+      <div class="cs-band ff">
+        <span class="cs-band-icon">&#9889;</span>
+        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">Nobody told agents to do this; but once they could see what customers had picked, they started calling them before appointments to discuss frames. We built a selection feature. Agents turned it into a styling concierge.</p></div>
+      </div>
+    </article>
+
+<article class="case" id="case-detail-2">
+      <div class="cs-hd">
+        <div class="cs-hd-top">
+          <span class="cs-num">02</span>
+          <span class="cs-co">Lenskart &#183; Omni</span>
+          <span class="cs-dot">&#183;</span>
+          <span class="cs-tp">Attribution &#183; O2O</span>
+          <span class="cs-st live">&#9679; Live</span>
+        </div>
+        <div class="cs-metric">1 Customer, 1 Experience</div>
+        <div class="cs-title">Truly Omnichannel Experience for Customers</div>
+        <div class="cs-flow">
+          <span class="csf done">Problem</span><span class="csf-arr">&#8594;</span>
+          <span class="csf done">3 Approaches</span><span class="csf-arr">&#8594;</span>
+          <span class="csf done">Polygon Attribution</span><span class="csf-arr">&#8594;</span>
+          <span class="csf active">Dashboard Live</span>
+        </div>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">The Problem</span>
+        <p class="cs-p">When a Lenskart customer buys in-store, they have a natural point of contact; they know exactly where to go for repairs, exchanges, or questions. Online customers have no such anchor. No store owns them, no one follows up, and returns run significantly higher than the offline channel.</p>
+        <p class="cs-p">The goal: map every online order to exactly one nearby store, give that store full visibility into its territory GMV, and create real accountability for the online customer&#39;s experience post-purchase.</p>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">Three Approaches Evaluated</span>
+        <p class="cs-p">All three sound reasonable. All three have the same fatal problem; they try to infer which store a customer has a <em>relationship</em> with. Our data showed that&#39;s the wrong question entirely.</p>
+      </div>
+      <div class="cs-compare">
+        <div class="cs-compare-item">
+          <div class="cs-compare-hd">Distance-based</div>
+          <div class="cs-compare-desc">Assign each order to the nearest store within 10km. Simple and deterministic.</div>
+          <span class="cs-compare-verdict fail">✗ Failed &nbsp;;&nbsp; 25% of customers have never visited their nearest store</span>
+        </div>
+        <div class="cs-compare-item">
+          <div class="cs-compare-hd">Last Visited Store</div>
+          <div class="cs-compare-desc">Assign to the store where the customer last made a purchase. Relationship-based.</div>
+          <span class="cs-compare-verdict fail">✗ Failed &nbsp;;&nbsp; Last visit = coincidence of geography, not loyalty</span>
+        </div>
+        <div class="cs-compare-item">
+          <div class="cs-compare-hd">Combination</div>
+          <div class="cs-compare-desc">QMS where available, distance everywhere else. Best of both worlds?</div>
+          <span class="cs-compare-verdict fail">✗ Failed &nbsp;;&nbsp; Two attribution classes, impossible to set fair targets</span>
+        </div>
+      </div>
+
+      <div class="cs-quote">
+        <p>The goal was never to find the store a customer <em>prefers</em>. It&#39;s to find the store best <em>positioned</em> to physically serve them.</p>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">The Solution: Polygon Attribution</span>
+        <p class="cs-p">Polygon attribution; inspired by Walmart&#39;s hex grid approach, built from hexagons of 0.01km&#178;; answers exactly that: if this customer needs to walk into a store tomorrow, which one is realistically on their doorstep? Deterministic, auditable, and every delivery address belongs to exactly one store with no overlap or dead zones.</p>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">The Dashboard: One Book of Business</span>
+        <p class="cs-p">We built a unified &#8220;Your Territory&#8221; view inside the store POS. Every store now sees its polygon on a map, with online orders attributed to it shown alongside walk-in sales; total territory revenue, ATV, returns, exchanges, and NPS in one unified view. No channel split. One number, one territory, one book of business.</p>
+      </div>
+
+      <div class="cs-media">
+        <img src="https://drive.google.com/thumbnail?id=1DhwfHGAMmvJe9SJnmSCPxcMvJYxx5tp-&sz=w1200" class="cs-img" alt="Store territory dashboard">
+        <p class="cs-cap">Live store POS; territory map + unified revenue view</p>
+      </div>
+
+      <div class="cs-stats four">
+        <div class="cs-stat amber"><div class="cs-stat-n" style="font-size:1.5rem">Pan-India</div><div class="cs-stat-l">Attribution live</div></div>
+        <div class="cs-stat teal"><div class="cs-stat-n" style="font-size:1.5rem">First Time</div><div class="cs-stat-l">Online GMV at store level</div></div>
+        <div class="cs-stat purple"><div class="cs-stat-n" style="font-size:1.5rem">Returns+NPS</div><div class="cs-stat-l">Online metrics visible</div></div>
+        <div class="cs-stat dark"><div class="cs-stat-n">Live &#183; Iterating</div><div class="cs-stat-l">Targets coming next</div></div>
+      </div>
+
+      <div class="cs-band ci">
+        <span class="cs-band-icon">&#128161;</span>
+        <div><div class="cs-band-lbl">Customer Insight</div><p class="cs-band-text">We assumed customers would naturally gravitate to their nearest store. 25% didn&#39;t; they were buying from stores 5km+ away, on the way to work or mid-errand. Proximity doesn&#39;t predict preference.</p></div>
+      </div>
+    </article>
+
+<article class="case" id="case-detail-3">
+      <div class="cs-hd">
+        <div class="cs-hd-top">
+          <span class="cs-num">03</span>
+          <span class="cs-co">Bajaj Finserv Health</span>
+          <span class="cs-dot">&#183;</span>
+          <span class="cs-tp">Health Tech &#183; Data</span>
+          <span class="cs-st shipped">&#9679; Live</span>
+        </div>
+        <div class="cs-metric">&#8377;7L MRR</div>
+        <div class="cs-title">Smart Health Reports: Decoding Health Stats</div>
+        <div class="cs-flow">
+          <span class="csf done">Dead Feature</span><span class="csf-arr">&#8594;</span>
+          <span class="csf done">Real Problem</span><span class="csf-arr">&#8594;</span>
+          <span class="csf done">OCR + LOINC</span><span class="csf-arr">&#8594;</span>
+          <span class="csf active">Shipped</span>
+        </div>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">The Dead Feature</span>
+        <p class="cs-p">Health Files let customers upload their lab reports to the platform. Almost nobody did. Rather than optimising the upload flow, we went back to customers to understand why. Side note: the few who did use it were uploading everything from prescriptions to Aadhaar cards; Health Files had quietly become a general-purpose document locker nobody asked for.</p>
+      </div>
+
+      <div class="cs-band ff">
+        <span class="cs-band-icon">&#9889;</span>
+        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">The few who did use Health Files were uploading everything from prescriptions to Aadhaar cards; Health Files had quietly become a general-purpose document locker nobody asked for.</p></div>
+      </div>
+
+      <div class="cs-quote">
+        <p>&#8220;Why give my reports to a platform that does nothing with them?&#8221;</p>
+        <cite style="color:#F0ECD8">What customers actually told us</cite>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">The Technical Challenge</span>
+        <p class="cs-p">Lab reports from different labs use different names, units, and formats for the same parameter. We had to standardise before we could explain anything.</p>
+      </div>
+      <div class="cs-process">
+        <div class="cs-process-step">
+          <span class="cs-process-icon">&#128196;</span>
+          <span class="cs-process-lbl">Raw PDF</span>
+          <div class="cs-process-desc">Lab reports in different formats, layouts, units</div>
+        </div>
+        <div class="cs-process-step">
+          <span class="cs-process-icon">&#128269;</span>
+          <span class="cs-process-lbl">OCR</span>
+          <div class="cs-process-desc">Extract every parameter, value, and unit from the document</div>
+        </div>
+        <div class="cs-process-step">
+          <span class="cs-process-icon">&#128279;</span>
+          <span class="cs-process-lbl">LOINC Mapping</span>
+          <div class="cs-process-desc">Map each parameter to its universal medical ID; normalise across labs</div>
+        </div>
+        <div class="cs-process-step">
+          <span class="cs-process-icon">&#129504;</span>
+          <span class="cs-process-lbl">Pareto Scope</span>
+          <div class="cs-process-desc">Top 20% of AHC packages cover 80% of parameters; build those first.</div>
+        </div>
+        <div class="cs-process-step">
+          <span class="cs-process-icon">&#127775;</span>
+          <span class="cs-process-lbl">Smart Report</span>
+          <div class="cs-process-desc">Plain English explanations + historical trend for every parameter</div>
+        </div>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">The Product</span>
+        <p class="cs-p">Every parameter explained in plain English; what it means, where you stand, what&#39;s critical, how to improve it; plus a historical trend compiled across all past reports.</p>
+      </div>
+
+      <div class="cs-media">
+        <iframe src="https://drive.google.com/file/d/1RO7er3RwxaF9rjv67iNBx0QX3RAwnxqF/preview" class="cs-iframe" allow="autoplay" allowfullscreen></iframe>
+      </div>
+
+      <div class="cs-results">
+        <span class="cs-lbl">Outcome</span>
+        <ul class="cs-rl">
+          <li>A patient staring at a high HbA1c reading is the exact right time to recommend a diabetes consultation</li>
+          <li>&#8377;7L incremental MRR from health service recommendations surfaced inside the report</li>
+        </ul>
+      </div>
+
+      <div class="cs-band ci">
+        <span class="cs-band-icon">&#128161;</span>
+        <div><div class="cs-band-lbl">Customer Insight</div><p class="cs-band-text">75% of customers googled their out-of-range parameters the moment they got their report. We built that into the report; and turned the anxiety into a recommendation.</p></div>
+      </div>
+    </article>
+
+<article class="case" id="case-detail-4">
+      <div class="cs-hd">
+        <div class="cs-hd-top">
+          <span class="cs-num">04</span>
+          <span class="cs-co">Bajaj Finserv Health</span>
+          <span class="cs-dot">&#183;</span>
+          <span class="cs-tp">Quality &#183; CTR</span>
+          <span class="cs-st Live">&#9679; Shipped</span>
+        </div>
+        <div class="cs-metric">+18% CTR</div>
+        <div class="cs-title">Doctor Quality Score &amp; Listing Reorder</div>
+        <div class="cs-flow">
+          <span class="csf done">Problem</span><span class="csf-arr">&#8594;</span>
+          <span class="csf done">Quality Score</span><span class="csf-arr">&#8594;</span>
+          <span class="csf active">18% CTR Lift</span>
+        </div>
+      </div>
+      <div class="cs-sec">
+        <span class="cs-lbl">The Problem</span>
+        <p class="cs-p">Doctor listings ranked by popularity metrics; not patient-relevant quality signals. High-performing doctors were buried; under-performers had equal visibility. Result: lower conversions, weaker patient trust.</p>
+      </div>
+      <div class="cs-sec">
+        <span class="cs-lbl">The Solution</span>
+        <p class="cs-p">Formulated a composite quality score weighting cancellation rates, patient ratings, profile completeness, and fee fairness. Listings reordered algorithmically; best doctors surface first.</p>
+      </div>
+      <div class="cs-stats two">
+        <div class="cs-stat amber"><div class="cs-stat-n">+18%</div><div class="cs-stat-l">Click-Through Rate improvement</div></div>
+        <div class="cs-stat teal"><div class="cs-stat-n">11.6%</div><div class="cs-stat-l">Lift in annual revenue</div></div>
+      </div>
+      <div class="cs-band ff">
+        <span class="cs-band-icon">&#9889;</span>
+        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">The 18% CTR lift came from reordering existing doctors; not adding new ones. The talent was already there. It was just buried.</p></div>
+      </div>
+    </article>
+
+<article class="case" id="case-detail-5">
+      <div class="cs-hd">
+        <div class="cs-hd-top">
+          <span class="cs-num">05</span>
+          <span class="cs-co">Bajaj Finserv Health</span>
+          <span class="cs-dot">&#183;</span>
+          <span class="cs-tp">Automation &#183; Insurance</span>
+          <span class="cs-st Live">&#9679; Shipped</span>
+        </div>
+        <div class="cs-metric">&#8377;17L / yr</div>
+        <div class="cs-title">AI-Powered Insurance Pre-Authorization</div>
+        <div class="cs-flow">
+          <span class="csf done">Manual Bottleneck</span><span class="csf-arr">&#8594;</span>
+          <span class="csf done">OCR + NER</span><span class="csf-arr">&#8594;</span>
+          <span class="csf active">26% Throughput &#183; &#8377;17L Saved</span>
+        </div>
+      </div>
+      <div class="cs-sec">
+        <span class="cs-lbl">The Problem</span>
+        <p class="cs-p">Insurance pre-authorization was a manual, document-heavy process. Every approval required human review of dense medical records; creating a throughput ceiling that limited the platform&#39;s ability to scale claim processing without proportionally scaling headcount.</p>
+      </div>
+      <div class="cs-sec">
+        <span class="cs-lbl">The Solution</span>
+        <p class="cs-p">Automated the pre-auth pipeline using OCR for document digitisation and NER (Natural Language Entity Recognition) for intelligent parsing of medical terminology and claim fields; eliminating the manual review bottleneck end-to-end.</p>
+      </div>
+      <div class="cs-stats two">
+        <div class="cs-stat amber"><div class="cs-stat-n">+26%</div><div class="cs-stat-l">Processing throughput increase</div></div>
+        <div class="cs-stat teal"><div class="cs-stat-n">&#8377;17L</div><div class="cs-stat-l">Annual operational cost savings</div></div>
+      </div>
+      <div class="cs-results">
+        <span class="cs-lbl">Also</span>
+        <ul class="cs-rl">
+          <li>Reduced human error rates in approvals</li>
+          <li>Scalable foundation for future claims automation</li>
+          <li>Freed ops team bandwidth for complex edge cases</li>
+        </ul>
+      </div>
+      <div class="cs-band ff">
+        <span class="cs-band-icon">&#9889;</span>
+        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">Some documents being reviewed manually were handwritten, faxed, or scanned at an angle. The OCR pipeline had to learn to read imperfect documents before it could replace the humans reading them.</p></div>
+      </div>
+    </article>
+</div>
+
+<!-- CASE STUDY MODAL -->
+<div class="case-modal-overlay" id="caseModalOverlay" role="dialog" aria-modal="true" aria-label="Case study detail">
+  <div class="case-modal">
+    <div class="case-modal-topbar">
+      <span class="case-modal-tag">Case Study</span>
+      <button class="case-modal-close" onclick="closeCase()" aria-label="Close case study">&times;</button>
+    </div>
+    <div class="case-modal-body" id="caseModalBody"></div>
+  </div>
+</div><!-- SKILLS -->
 <hr class="divider">
 <div class="wrap" id="skills">
   <div class="sec-mark"><span class="sec-t">Skills</span><div class="sec-rule"></div></div>

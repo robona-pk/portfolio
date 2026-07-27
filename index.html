@@ -614,7 +614,6 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 </div>
 
 <!-- CASE STUDIES -->
-<!-- CASE STUDIES -->
 <hr class="divider">
 <div class="wrap" id="cases">
   <div class="sec-mark"><span class="sec-t">Case Studies</span><div class="sec-rule"></div></div>
@@ -1039,7 +1038,8 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
     </div>
     <div class="case-modal-body" id="caseModalBody"></div>
   </div>
-</div><!-- SKILLS -->
+</div>
+  <!-- SKILLS -->
 <hr class="divider">
 <div class="wrap" id="skills">
   <div class="sec-mark"><span class="sec-t">Skills</span><div class="sec-rule"></div></div>
@@ -1047,6 +1047,53 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
     <p class="skills-flow">I build products grounded in <em class="sk s">product strategy</em>; roadmaps, PRDs, go-to-market planning, cross-functional leadership, API integration, B2B2C and O2O journeys. I find opportunities through <em class="sk g">growth and experimentation</em>; A/B testing, funnel optimisation, user journey mapping, CRO, cohort analysis, retention, feature adoption. I make decisions with <em class="sk a">analytics and data</em>; SQL, GA4, CleverTap, Tableau, Microsoft Clarity, Julius AI, Excel.</p>
   </div>
 </div>
+  
+const caseOverlay = document.getElementById('caseModalOverlay');
+const caseModalBody = document.getElementById('caseModalBody');
+let lastFocusedCard = null;
+
+function openCase(n) {
+  const source = document.getElementById('case-detail-' + n);
+  if (!source || !caseOverlay || !caseModalBody) return;
+  lastFocusedCard = document.activeElement;
+  caseModalBody.innerHTML = source.outerHTML;
+  const clone = caseModalBody.querySelector('.case');
+  if (clone) clone.classList.add('in');
+  caseOverlay.classList.add('open');
+  document.body.classList.add('modal-open');
+  requestAnimationFrame(() => caseOverlay.classList.add('show'));
+  caseModalBody.scrollTop = 0;
+  const closeBtn = caseOverlay.querySelector('.case-modal-close');
+  if (closeBtn) closeBtn.focus();
+}
+
+function closeCase() {
+  if (!caseOverlay) return;
+  caseOverlay.classList.remove('show');
+  document.body.classList.remove('modal-open');
+  setTimeout(() => {
+    caseOverlay.classList.remove('open');
+    caseModalBody.innerHTML = '';
+  }, 250);
+  if (lastFocusedCard) lastFocusedCard.focus();
+}
+
+if (caseOverlay) {
+  caseOverlay.addEventListener('click', e => {
+    if (e.target === caseOverlay) closeCase();
+  });
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && caseOverlay && caseOverlay.classList.contains('open')) closeCase();
+});
+
+/* ═══════════════════════════════════════════════════════
+   CASE CARD STAGGER DELAYS
+═══════════════════════════════════════════════════════ */
+document.querySelectorAll('.case-grid .case-card').forEach((c, i) => {
+  c.style.setProperty('--si', i);
+  c.style.transitionDelay = (i * 0.08) + 's';
+});
 
 <!-- CONTACT -->
 <hr class="divider">

@@ -341,6 +341,21 @@ footer a:hover{color:var(--s)}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.scan-line,.status-dot{animation:none}}
 
 /* COMPARISON CARDS; 3-col grid showing approaches + verdict */
+  /* REJECTED APPROACHES; simple stacked rows, no column-stretch possible */
+.cs-rejected{border-bottom:1px solid var(--border)}
+.cs-rejected-row{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
+  padding:1.1rem 2.5rem;border-bottom:1px solid var(--border)}
+.cs-rejected-row:last-child{border-bottom:none}
+.cs-rejected-text{flex:1;min-width:0}
+.cs-rejected-hd{font-size:.9rem;font-weight:700;color:var(--t1);margin-bottom:.25rem}
+.cs-rejected-desc{font-size:.82rem;color:var(--t2);line-height:1.55;margin:0}
+.cs-rejected-verdict{flex-shrink:0;font-size:.72rem;font-weight:700;padding:.4rem .85rem;
+  border-radius:2px;background:rgba(239,68,68,.12);color:#F87171;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:.35rem}
+@media(max-width:640px){
+  .cs-rejected-row{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1rem 1.25rem}
+  .cs-rejected-verdict{white-space:normal}
+}
 .cs-compare{display:grid;grid-template-columns:repeat(3,1fr);align-items:start;border-bottom:1px solid var(--border)}
 .cs-compare-item{padding:1.5rem;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:.5rem}
 .cs-compare-item:last-child{border-right:none}
@@ -815,24 +830,29 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
         <span class="cs-lbl">Three Approaches Evaluated</span>
         <p class="cs-p">All three sound reasonable. All three have the same fatal problem; they try to infer which store a customer has a <em>relationship</em> with. Our data showed that&#39;s the wrong question entirely.</p>
       </div>
-      <div class="cs-compare">
-        <div class="cs-compare-item">
-          <div class="cs-compare-hd">Distance-based</div>
-          <div class="cs-compare-desc">Assign each order to the nearest store within 10km. Simple and deterministic.</div>
-          <span class="cs-compare-verdict fail">✗ Failed &nbsp;;&nbsp; 25% of customers have never visited their nearest store</span>
-        </div>
-        <div class="cs-compare-item">
-          <div class="cs-compare-hd">Last Visited Store</div>
-          <div class="cs-compare-desc">Assign to the store where the customer last made a purchase. Relationship-based.</div>
-          <span class="cs-compare-verdict fail">✗ Failed &nbsp;;&nbsp; Last visit = coincidence of geography, not loyalty</span>
-        </div>
-        <div class="cs-compare-item">
-          <div class="cs-compare-hd">Combination</div>
-          <div class="cs-compare-desc">QMS where available, distance everywhere else. Best of both worlds?</div>
-          <span class="cs-compare-verdict fail">✗ Failed &nbsp;;&nbsp; Two attribution classes, impossible to set fair targets</span>
-        </div>
-      </div>
-
+    <div class="cs-rejected">
+        <div class="cs-rejected-row">
+          <div class="cs-rejected-text">
+            <div class="cs-rejected-hd">Distance-based</div>
+            <p class="cs-rejected-desc">Assign each order to the nearest store within 10km. Simple and deterministic.</p>
+          </div>
+          <span class="cs-rejected-verdict">✗ Failed &nbsp;;&nbsp; 25% of customers have never visited their nearest store</span>
+        </div>
+        <div class="cs-rejected-row">
+          <div class="cs-rejected-text">
+            <div class="cs-rejected-hd">Last Visited Store</div>
+            <p class="cs-rejected-desc">Assign to the store where the customer last made a purchase. Relationship-based.</p>
+          </div>
+          <span class="cs-rejected-verdict">✗ Failed &nbsp;;&nbsp; Last visit = coincidence of geography, not loyalty</span>
+        </div>
+        <div class="cs-rejected-row">
+          <div class="cs-rejected-text">
+            <div class="cs-rejected-hd">Combination</div>
+            <p class="cs-rejected-desc">QMS where available, distance everywhere else. Best of both worlds?</p>
+          </div>
+          <span class="cs-rejected-verdict">✗ Failed &nbsp;;&nbsp; Two attribution classes, impossible to set fair targets</span>
+        </div>
+      </div>
       <div class="cs-quote">
         <p>The goal was never to find the store a customer <em>prefers</em>. It&#39;s to find the store best <em>positioned</em> to physically serve them.</p>
       </div>

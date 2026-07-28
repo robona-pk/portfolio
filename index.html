@@ -1079,7 +1079,47 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script>
+  <script/* ═══════════════════════════════════════════════════════
+   CASE STUDY MODAL — open / close
+═══════════════════════════════════════════════════════ */
+const caseOverlay = document.getElementById('caseModalOverlay');
+const caseModalBody = document.getElementById('caseModalBody');
+let lastFocusedCard = null;
+
+function openCase(n) {
+  const source = document.getElementById('case-detail-' + n);
+  if (!source || !caseOverlay || !caseModalBody) return;
+  lastFocusedCard = document.activeElement;
+  caseModalBody.innerHTML = source.outerHTML;
+  const clone = caseModalBody.querySelector('.case');
+  if (clone) clone.classList.add('in');
+  caseOverlay.classList.add('open');
+  document.body.classList.add('modal-open');
+  requestAnimationFrame(() => caseOverlay.classList.add('show'));
+  caseModalBody.scrollTop = 0;
+  const closeBtn = caseOverlay.querySelector('.case-modal-close');
+  if (closeBtn) closeBtn.focus();
+}
+
+function closeCase() {
+  if (!caseOverlay) return;
+  caseOverlay.classList.remove('show');
+  document.body.classList.remove('modal-open');
+  setTimeout(() => {
+    caseOverlay.classList.remove('open');
+    caseModalBody.innerHTML = '';
+  }, 250);
+  if (lastFocusedCard) lastFocusedCard.focus();
+}
+
+if (caseOverlay) {
+  caseOverlay.addEventListener('click', e => {
+    if (e.target === caseOverlay) closeCase();
+  });
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && caseOverlay && caseOverlay.classList.contains('open')) closeCase();
+});>
 /* ═══════════════════════════════════════════════════════
    CASE CARD STAGGER DELAYS
 ═══════════════════════════════════════════════════════ */

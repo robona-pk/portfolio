@@ -227,15 +227,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 /* CASE STUDY MODAL */
 body.modal-open{overflow:hidden}
 .case-modal-overlay{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:2.5rem 1.5rem;opacity:0;transition:opacity .25s ease}
+  background:rgba(0,0,0,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:2.5rem 1.5rem;opacity:0;transition:opacity .25s ease}
 .case-modal-overlay.open{display:flex}
 .case-modal-overlay.show{opacity:1}
-.case-modal{background:#16150F;border:1px solid var(--bhi);max-width:900px;width:100%;max-height:88vh;
-  display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(240,160,32,.12),0 30px 90px rgba(0,0,0,.7);
+.case-modal{background:#1F1E19;border:1px solid #3D3A30;max-width:900px;width:100%;max-height:88vh;
+  display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(240,160,32,.18),0 40px 100px rgba(0,0,0,.85);
   transform:translateY(24px) scale(.98);opacity:0;transition:transform .3s cubic-bezier(.22,.61,.36,1),opacity .3s ease}
 .case-modal-overlay.show .case-modal{transform:translateY(0) scale(1);opacity:1}
-.case-modal-topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;
-  border-bottom:1px solid var(--bhi);background:#1B1A15;flex-shrink:0}
+.case-modal-topbar{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.5rem;
+  border-bottom:1px solid #3D3A30;background:#262419;flex-shrink:0}
+.case-modal-close{background:rgba(255,255,255,.06);border:1px solid #3D3A30;color:var(--t1);width:40px;height:40px;border-radius:50%;
+  font-size:1.3rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.case-modal-close:hover{background:var(--s);border-color:var(--s);color:#080806}
 
 /* TILT CARD (replace your existing ".case{transform-style:preserve-3d...}" rule) */
 .case-card{transform-style:preserve-3d}

@@ -153,7 +153,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .cs-callout p{font-size:.875rem;color:var(--t2);line-height:1.7}
 
 /* STAT CARDS; colorful visual anchors */
-.cs-stats{display:grid;border-bottom:1px solid var(--border)}
+.cs-stats{display:grid;align-items:start;border-bottom:1px solid var(--border)}
 .cs-stats.two{grid-template-columns:1fr 1fr}
 .cs-stats.three{grid-template-columns:1fr 1fr 1fr}
 .cs-stats.four{grid-template-columns:repeat(4,1fr)}
@@ -341,7 +341,7 @@ footer a:hover{color:var(--s)}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.scan-line,.status-dot{animation:none}}
 
 /* COMPARISON CARDS; 3-col grid showing approaches + verdict */
-.cs-compare{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border)}
+.cs-compare{display:grid;grid-template-columns:repeat(3,1fr);align-items:start;border-bottom:1px solid var(--border)}
 .cs-compare-item{padding:1.5rem;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:.5rem}
 .cs-compare-item:last-child{border-right:none}
 .cs-compare-hd{font-size:.95rem;font-weight:700;color:var(--t1)}
@@ -351,7 +351,7 @@ footer a:hover{color:var(--s)}
 .cs-compare-verdict.win{background:rgba(240,160,32,.12);color:var(--s)}
 
 /* PROCESS FLOW; horizontal steps diagram */
-.cs-process{display:flex;align-items:stretch;border-bottom:1px solid var(--border);overflow-x:auto}
+.cs-process{display:flex;align-items:flex-start;border-bottom:1px solid var(--border);overflow-x:auto}
 .cs-process-step{flex:1;min-width:120px;padding:1.5rem 1.25rem;border-right:1px solid var(--border);text-align:center;position:relative}
 .cs-process-step:last-child{border-right:none}
 .cs-process-step::after{content:"→";position:absolute;right:-.65rem;top:50%;transform:translateY(-50%);color:var(--s);font-size:.85rem;font-weight:700;z-index:1}
@@ -735,7 +735,7 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
           <div class="cs-stat-hero-l">Online returns traceable to fit / style issues; the exact problem a home trial solves</div>
         </div>
         <p class="cs-stat-hero-note">Returns happening because customers couldn&#39;t try before buying; a solvable problem if we could get the right frames to them first.</p>
-      </div>      </div>
+      </div>
 
       <div class="cs-callout">
         <span class="cs-callout-icon">&#9888;</span>

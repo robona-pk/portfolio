@@ -225,7 +225,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 @media(max-width:900px){.case-grid{grid-template-columns:1fr}}
 
 /* CASE STUDY MODAL */
-body.modal-open{overflow:hidden}
+.case-modal-body{flex:1 1 auto;min-height:0;overflow-y:auto}
 .case-modal-overlay{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;
   background:rgba(0,0,0,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:2.5rem 1.5rem;opacity:0;transition:opacity .25s ease}
 .case-modal-overlay.open{display:flex}

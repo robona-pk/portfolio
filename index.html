@@ -197,6 +197,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .cs-media{padding:1.75rem 2.5rem;border-bottom:1px solid var(--border)}
 .cs-img{width:100%;display:block;border:1px solid var(--border)}
 .cs-video-trio{display:grid;grid-template-columns:1fr 320px 1fr;gap:1.25rem;align-items:center;padding:1.75rem 2.5rem;border-bottom:1px solid var(--border)}
+.cs-video-launch{display:grid;grid-template-columns:320px 1fr;gap:2rem;align-items:center;
+  padding:1.75rem 2.5rem;border-bottom:1px solid var(--border)}
+@media(max-width:768px){.cs-video-launch{grid-template-columns:1fr}}
 .cs-video-aside{display:flex;flex-direction:column;gap:.75rem}
 .cs-video-aside .cs-stat{border-right:none}
 .cs-iframe{width:100%;max-width:320px;aspect-ratio:9/16;border:none;display:block;border-radius:12px;margin:0 auto}
@@ -771,23 +774,17 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
           <div class="cs-stat-l">Increase in appointments booked in the pilot area; demand validated</div>
         </div>
       </div>
- <div class="cs-video-trio">
-        <div class="cs-video-aside">
-        </div>
-        <div class="cs-video-center">
-          <iframe src="https://drive.google.com/file/d/11kuZDAMUmZzZeX5alIwGjYji_R38UW0x/preview" class="cs-iframe" allow="autoplay" allowfullscreen></iframe>
-          <p class="cs-cap" style="margin-top:.5rem">Product walkthrough; post-MVP live flow</p>
-        </div>
-        <div class="cs-video-aside">
-          
-        </div>
-      </div>
-
-      <div class="cs-sec">
-        <span class="cs-lbl">After the MVP: The Real Launch</span>
-        <p class="cs-p">With demand validated, we built the actual thing. Customers could now browse real store inventory from nearby Lenskart locations and select the specific frames they wanted brought home; not a curated kit, but their own list. The flow went live across <strong style="color:var(--t1)">5 cities</strong> in select PIN codes.</p>
-        <p class="cs-p">We&#39;re seeing early positive movement in overall leads. At the same time, we&#39;re actively working on funnel improvements, bettering the frame pickup process for agents, and figuring out more reliable on-time arrival.</p>
-      </div>
+ <div class="cs-video-launch">
+  <div>
+    <iframe src="https://drive.google.com/file/d/11kuZDAMUmZzZeX5alIwGjYji_R38UW0x/preview" class="cs-iframe" allow="autoplay" allowfullscreen></iframe>
+    <p class="cs-cap" style="margin-top:.5rem">Product walkthrough; post-MVP live flow</p>
+  </div>
+  <div>
+    <span class="cs-lbl">After the MVP: The Real Launch</span>
+    <p class="cs-p">With demand validated, we built the actual thing. Customers could now browse real store inventory from nearby Lenskart locations and select the specific frames they wanted brought home; not a curated kit, but their own list. The flow went live across <strong style="color:var(--t1)">5 cities</strong> in select PIN codes.</p>
+    <p class="cs-p">We&#39;re seeing early positive movement in overall leads. At the same time, we&#39;re actively working on funnel improvements, bettering the frame pickup process for agents, and figuring out more reliable on-time arrival.</p>
+  </div>
+</div>
 
       <div class="cs-voc">
         <p>&#8220;This is a great feature, we were too busy to go to the store so decided to do a home trial; you should make it a paid service, it is so premium.&#8221;</p>

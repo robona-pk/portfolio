@@ -174,19 +174,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .cs-stats.one .cs-stat{padding:2rem 2.5rem}
 
 /* STAT + NOTE; one metric with supporting context — not two equal boxes */
-.cs-stat-hero{display:flex;align-items:stretch;border-bottom:1px solid var(--border)}
-.cs-stat-hero-figure{flex:0 0 auto;min-width:220px;max-width:320px;padding:1.75rem 2rem;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border)}
+.cs-stat-hero{border-bottom:1px solid var(--border)}
+.cs-stat-hero-figure{padding:1.75rem 2.5rem;display:flex;flex-direction:column;justify-content:center}
 .cs-stat-hero-figure.teal{background:rgba(0,200,176,.07)}
 .cs-stat-hero-figure.amber{background:rgba(240,160,32,.08)}
 .cs-stat-hero-n{font-family:var(--fd);font-size:clamp(1.75rem,4vw,2.5rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:.35rem}
 .cs-stat-hero-figure.teal .cs-stat-hero-n{color:var(--d)}
 .cs-stat-hero-figure.amber .cs-stat-hero-n{color:var(--s)}
-.cs-stat-hero-l{font-size:.8rem;color:var(--t2);line-height:1.4}
-.cs-stat-hero-note{flex:1;padding:1.75rem 2.25rem;font-size:.9375rem;color:var(--t2);line-height:1.75;display:flex;align-items:center}
-@media(max-width:640px){
-  .cs-stat-hero{flex-direction:column}
-  .cs-stat-hero-figure{max-width:none;border-right:none;border-bottom:1px solid var(--border)}
-}
+.cs-stat-hero-l{font-size:.8rem;color:var(--t2);line-height:1.4;max-width:600px}
 
 /* RESULTS LIST */
 .cs-results{padding:1.75rem 2.5rem;border-bottom:1px solid var(--border)}
@@ -735,12 +730,11 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
       <div class="cs-sec">
         <p class="cs-p">Customers weren&#39;t rejecting home trials; they were rejecting the <strong style="color:var(--t1)">unpredictability of a fixed kit</strong>. With no say over what frames showed up, booking felt like a gamble. Visiting a store felt more certain.</p>
       </div>
-      <div class="cs-stat-hero">
+     <div class="cs-stat-hero">
         <div class="cs-stat-hero-figure teal">
           <div class="cs-stat-hero-n">30%</div>
-          <div class="cs-stat-hero-l">Online returns traceable to fit/style issues; the exact problem a home trial solves</div>
+          <div class="cs-stat-hero-l">Online returns traceable to fit / style issues; the exact problem a home trial solves</div>
         </div>
-        <p class="cs-stat-hero-note">Returns happening because customers couldn&#39;t try before buying; a solvable problem if we could get the right frames to them first.</p>
       </div>
 
       <div class="cs-callout">

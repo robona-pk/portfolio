@@ -10,6 +10,40 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
+  /* RANKED PRIORITY LIST; sequence genuinely matters here */
+.cs-ranked{padding:1.75rem 2.5rem;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:1.1rem}
+.cs-rank-item{display:flex;align-items:flex-start;gap:1rem}
+.cs-rank-badge{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--sd);color:var(--s);
+  font-family:var(--fd);font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center}
+.cs-rank-body{flex:1;padding-top:.1rem}
+.cs-rank-hd{font-size:.9rem;font-weight:700;color:var(--t1);margin-bottom:.2rem}
+.cs-rank-desc{font-size:.85rem;color:var(--t2);line-height:1.55;margin:0}
+
+/* WEIGHTED SCORE BARS; encodes the real percentages, not decoration */
+.cs-weights{padding:1.75rem 2.5rem;border-bottom:1px solid var(--border)}
+.cs-weights>.cs-lbl{margin-bottom:1.1rem;display:block}
+.cs-weight-row{display:flex;align-items:center;gap:1rem;margin-bottom:.9rem}
+.cs-weight-row:last-child{margin-bottom:0}
+.cs-weight-label{flex:0 0 170px;font-size:.85rem;color:var(--t1);font-weight:600}
+.cs-weight-track{flex:1;height:9px;background:var(--border);border-radius:5px;overflow:hidden}
+.cs-weight-fill{height:100%;border-radius:5px}
+.cs-weight-fill.amber{background:linear-gradient(90deg,var(--s),var(--s2))}
+.cs-weight-fill.teal{background:var(--d)}
+.cs-weight-fill.purple{background:var(--v)}
+.cs-weight-pct{flex:0 0 42px;text-align:right;font-family:var(--fd);font-weight:800;font-size:.95rem;color:var(--t1)}
+
+/* SCORE FORMULA STRIP; the trust gate as a visual equation */
+.cs-formula{display:flex;align-items:center;justify-content:center;gap:.85rem;flex-wrap:wrap;
+  padding:1.5rem 2.5rem;border-bottom:1px solid var(--border);background:rgba(0,200,176,.05)}
+.cs-formula-part{font-family:var(--fd);font-weight:700;font-size:.85rem;color:var(--t1);
+  padding:.55rem 1.1rem;border:1px solid var(--border);border-radius:6px;background:var(--card);white-space:nowrap}
+.cs-formula-op{font-size:1.1rem;color:var(--t3);font-weight:700}
+
+@media(max-width:640px){
+  .cs-weight-label{flex:0 0 120px;font-size:.78rem}
+  .cs-formula{padding:1.25rem 1.25rem}
+  .cs-formula-part{font-size:.78rem;padding:.45rem .8rem}
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#080806;--bg2:#0D0D0A;--card:#111110;--border:#1E1E1A;--bhi:#2C2C26;
@@ -329,7 +363,7 @@ footer a:hover{color:var(--s)}
   .vital{border-right:none!important;border-bottom:1px solid var(--border)!important}
   .vital:last-child{border-bottom:none!important}
   .wrap{padding:3.5rem 1.25rem}
-  .cs-hd,.cs-sec,.cs-quote,.cs-voc,.cs-callout,.cs-results,.cs-media,.cs-band,.cs-stats{padding-left:1.25rem;padding-right:1.25rem}
+  .cs-hd,.cs-sec,.cs-quote,.cs-voc,.cs-callout,.cs-results,.cs-media,.cs-band,.cs-stats,.cs-ranked,.cs-weights{padding-left:1.25rem;padding-right:1.25rem}
   .cs-sec{padding:1.25rem}
   .cs-stats.three,.cs-stats.four{grid-template-columns:1fr 1fr}
   .about-sidebar{flex-direction:column}
@@ -939,21 +973,105 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
         <div class="cs-hd-top">
           <span class="cs-num">04</span>
           <span class="cs-co">Bajaj Finserv Health</span>
-          <span class="cs-dot">&#183;</span>        
-          <span class="cs-st live">&#9679; live </span>
+          <span class="cs-dot">&#183;</span>
+          <span class="cs-st live">&#9679; Live</span>
         </div>
         <div class="cs-metric">+18% CTR</div>
         <div class="cs-title">Doctor Quality Score &amp; Listing Reorder</div>
-       
       </div>
+
       <div class="cs-sec">
         <span class="cs-lbl">The Problem</span>
-        <p class="cs-p">Doctor listings ranked by popularity metrics; not patient-relevant quality signals. High-performing doctors were buried; under-performers had equal visibility. Result: lower conversions, weaker patient trust.</p>
+        <p class="cs-p">Doctor listings had no real ranking logic; sort order was effectively random. Doctors with poor attendance records ranked identically to doctors who consistently showed up on time, and doctors with incomplete profiles &#8212; missing degree, years of experience, description, or even a photo &#8212; could still surface in the first few scrolls, ahead of doctors with complete, trustworthy profiles.</p>
       </div>
+
       <div class="cs-sec">
-        <span class="cs-lbl">The Solution</span>
-        <p class="cs-p">Formulated a composite quality score weighting cancellation rates, patient ratings, profile completeness, and fee fairness. Listings reordered algorithmically; best doctors surface first.</p>
+        <span class="cs-lbl">What Patients Actually Weigh</span>
+        <p class="cs-p">Before rebuilding the ranking, we looked at what patients were actually weighing when choosing a doctor, and in what order.</p>
       </div>
+      <div class="cs-ranked">
+        <div class="cs-rank-item">
+          <span class="cs-rank-badge">1</span>
+          <div class="cs-rank-body">
+            <div class="cs-rank-hd">Years of experience</div>
+            <p class="cs-rank-desc">The strongest signal; patients defaulted to more experienced doctors first.</p>
+          </div>
+        </div>
+        <div class="cs-rank-item">
+          <span class="cs-rank-badge">2</span>
+          <div class="cs-rank-body">
+            <div class="cs-rank-hd">Ratings</div>
+            <p class="cs-rank-desc">The second filter, used to validate or override the experience signal.</p>
+          </div>
+        </div>
+        <div class="cs-rank-item">
+          <span class="cs-rank-badge">3</span>
+          <div class="cs-rank-body">
+            <div class="cs-rank-hd">Fees</div>
+            <p class="cs-rank-desc">Not a hunt for the cheapest option, but a comparison against what felt reasonable for a doctor&#39;s experience and specialty.</p>
+          </div>
+        </div>
+        <div class="cs-rank-item">
+          <span class="cs-rank-badge">4</span>
+          <div class="cs-rank-body">
+            <div class="cs-rank-hd">Gender, in specific specialties</div>
+            <p class="cs-rank-desc">Patients booking a gynecologist skewed toward preferring a female doctor; patients booking an andrologist skewed toward preferring a male doctor.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">The Fix: A Two-Layer Scoring Model</span>
+        <p class="cs-p">Rather than averaging every signal into one flat score, we split the model into two layers; preference signals and trust signals aren&#39;t the same kind of thing. A highly experienced doctor with a poor attendance record shouldn&#39;t be able to average their way to a high ranking &#8212; reliability has to gate visibility, not just adjust it.</p>
+      </div>
+
+      <div class="cs-weights">
+        <span class="cs-lbl">Layer 1 &#183; Core Preference Score</span>
+        <div class="cs-weight-row">
+          <span class="cs-weight-label">Years of Experience</span>
+          <div class="cs-weight-track"><div class="cs-weight-fill amber" style="width:45%"></div></div>
+          <span class="cs-weight-pct">45%</span>
+        </div>
+        <div class="cs-weight-row">
+          <span class="cs-weight-label">Patient Rating</span>
+          <div class="cs-weight-track"><div class="cs-weight-fill teal" style="width:35%"></div></div>
+          <span class="cs-weight-pct">35%</span>
+        </div>
+        <div class="cs-weight-row">
+          <span class="cs-weight-label">Fair Fees Index</span>
+          <div class="cs-weight-track"><div class="cs-weight-fill purple" style="width:20%"></div></div>
+          <span class="cs-weight-pct">20%</span>
+        </div>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">Layer 2 &#183; Trust Gate</span>
+        <p class="cs-p">Attendance % and Profile Quality combine into a single multiplier. A doctor with poor attendance or an incomplete, unprofessional profile has their entire score pulled down proportionally &#8212; no amount of experience or strong reviews can fully compensate for unreliability.</p>
+      </div>
+      <div class="cs-formula">
+        <span class="cs-formula-part">Core Preference Score</span>
+        <span class="cs-formula-op">&#215;</span>
+        <span class="cs-formula-part">Trust Gate (0.6&#8211;1.0)</span>
+        <span class="cs-formula-op">=</span>
+        <span class="cs-formula-part" style="border-color:var(--d);color:var(--d)">Final Score</span>
+      </div>
+
+      <div class="cs-sec">
+        <div class="cs-highlight">
+          <p><strong style="color:var(--t1)">Fair Fees Index, defined:</strong> each doctor&#39;s fee is benchmarked against the peer average for doctors in the same city tier, years-of-experience bracket, and degree. A doctor charging near or below that peer benchmark scores near full marks; one charging well above it receives a proportionally lower score.</p>
+        </div>
+      </div>
+
+      <div class="cs-sec">
+        <span class="cs-lbl">Profile Quality, Beyond Just Completeness</span>
+        <p class="cs-p">A complete profile isn&#39;t necessarily a trustworthy one; a doctor could fill every field with a blurry, badly cropped, unsmiling photo. So beyond checking whether fields were filled in, we bulk-cleaned photo backgrounds across the entire doctor directory for visual consistency, and scored photo professionalism directly on expression, blur, and framing (full face captured vs. zoomed-out or cropped).</p>
+      </div>
+
+      <div class="cs-callout">
+        <span class="cs-callout-icon">&#9878;</span>
+        <div><div class="cs-callout-lbl">Gender: A Deliberate Exclusion</div><p>Gender was a real, measurable signal in patient behaviour for specific specialties &#8212; but we chose not to fold it into the algorithmic score. Ranking doctors by a sensitive attribute would have been unfair to doctors themselves. Instead, we surfaced it as a contextual, patient-controlled filter in specialties where the pattern was strong, so the platform could serve the preference transparently without an algorithm making that call silently.</p></div>
+      </div>
+
       <div class="cs-stats two">
         <div class="cs-stat amber"><div class="cs-stat-n">+18%</div><div class="cs-stat-l">Click-Through Rate improvement</div></div>
         <div class="cs-stat teal"><div class="cs-stat-n">11.6%</div><div class="cs-stat-l">Lift in annual revenue</div></div>

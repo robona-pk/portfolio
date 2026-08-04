@@ -267,10 +267,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   font-family:var(--fb);color:inherit;
   transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
 .case-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--s),var(--d),transparent);
+ background:linear-gradient(90deg,#1E50C8,var(--d),transparent);
   transform:scaleX(0);transform-origin:left;transition:transform .35s ease}
 .case-card:hover,.case-card:focus-visible{transform:translateY(-4px);border-color:var(--bhi);
-  box-shadow:0 20px 50px rgba(0,0,0,.35),0 0 0 1px rgba(240,160,32,.08)}
+ box-shadow:0 20px 50px rgba(0,0,0,.35),0 0 0 1px rgba(30,80,200,.15)}
 .case-card:hover::before,.case-card:focus-visible::before{transform:scaleX(1)}
 .case-card:focus-visible{outline:2px solid var(--s);outline-offset:2px}
 .cc-top{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
@@ -282,10 +282,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .cc-status.live{color:var(--p)}
 .cc-status.shipped{color:var(--d)}
 .cc-metric{font-family:var(--fd);font-size:clamp(1.9rem,3.6vw,2.5rem);font-weight:800;letter-spacing:-.03em;line-height:1;
-  background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+ background:linear-gradient(135deg,#1E50C8,#5B8EF0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .cc-title{font-family:var(--fd);font-size:1.05rem;font-weight:700;color:var(--t1);line-height:1.3}
 .cc-teaser{font-size:.85rem;color:var(--t2);line-height:1.65;flex:1;margin:0}
-.cc-cta{font-size:.78rem;font-weight:600;color:var(--s);display:inline-flex;align-items:center;gap:.4rem;margin-top:.25rem;transition:gap .2s}
+.cc-cta{font-size:.78rem;font-weight:600;color:#5B8EF0;display:inline-flex;align-items:center;gap:.4rem;margin-top:.25rem;transition:gap .2s}
 .case-card:hover .cc-cta,.case-card:focus-visible .cc-cta{gap:.65rem}
 @media(max-width:900px){.case-grid{grid-template-columns:1fr}}
 
@@ -296,14 +296,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .case-modal-overlay.open{display:flex}
 .case-modal-overlay.show{opacity:1}
 .case-modal{background:#1F1E19;border:1px solid #3D3A30;max-width:900px;width:100%;max-height:88vh;
-  display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(30,80,200,.28),0 40px 100px rgba(0,0,0,.85);
+  display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(30,80,200,.5),0 40px 100px rgba(0,0,0,.85);
   transform:translateY(24px) scale(.98);opacity:0;transition:transform .3s cubic-bezier(.22,.61,.36,1),opacity .3s ease}
 .case-modal-overlay.show .case-modal{transform:translateY(0) scale(1);opacity:1}
 .case-modal-topbar{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.5rem;
   border-bottom:1px solid #3D3A30;background:#1A1E2E;flex-shrink:0}
 .case-modal-close{background:rgba(255,255,255,.06);border:1px solid #3D3A30;color:var(--t1);width:40px;height:40px;border-radius:50%;
   font-size:1.3rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.case-modal-close:hover{background:var(--s);border-color:var(--s);color:#080806}
+.case-modal-close:hover{background:#1E50C8;border-color:#1E50C8;color:#F0ECD8}
 
 /* TILT CARD (replace your existing ".case{transform-style:preserve-3d...}" rule) */
 .case-card{transform-style:preserve-3d}

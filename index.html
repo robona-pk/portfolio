@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -301,6 +300,34 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 ───────────────────────────────────────── */
 .skills-wrap{max-width:860px}
 .skills-flow{font-size:clamp(1.05rem,2vw,1.25rem);color:var(--t2);line-height:2}
+/* SKILLS GRID */
+.sk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.sk-card{background:var(--card);border:1px solid var(--border);padding:1.25rem 1.25rem;
+  display:flex;flex-direction:column;gap:.85rem;position:relative;overflow:hidden}
+.sk-card::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%}
+.sk-card.amber::before{background:linear-gradient(180deg,var(--s),var(--s2))}
+.sk-card.teal::before{background:var(--d)}
+.sk-card.purple::before{background:var(--v)}
+.sk-card.green::before{background:var(--p)}
+.sk-cat{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:-.2rem}
+.sk-card.amber .sk-cat{color:var(--s)}
+.sk-card.teal .sk-cat{color:var(--d)}
+.sk-card.purple .sk-cat{color:var(--v)}
+.sk-card.green .sk-cat{color:var(--p)}
+.sk-items{display:flex;flex-direction:column;gap:.4rem}
+.sk-item{display:flex;align-items:center;gap:.65rem}
+.sk-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.sk-card.amber .sk-dot{background:var(--s)}
+.sk-card.teal .sk-dot{background:var(--d)}
+.sk-card.purple .sk-dot{background:var(--v)}
+.sk-card.green .sk-dot{background:var(--p)}
+.sk-name{font-size:.82rem;font-weight:600;color:var(--t1)}
+.sk-tags{display:flex;flex-wrap:wrap;gap:.35rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.sk-tag{font-size:.72rem;font-weight:500;color:var(--t3);background:var(--bg2);
+  border:1px solid var(--border);padding:.25rem .65rem;border-radius:3px;letter-spacing:.02em}
+@media(max-width:900px){.sk-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.sk-grid{grid-template-columns:1fr}}
+
 .sk{font-style:normal;font-weight:700;font-family:var(--fd)}
 .sk.s{color:var(--s)}
 .sk.g{color:var(--d)}
@@ -1089,8 +1116,73 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 <hr class="divider">
 <div class="wrap" id="skills">
   <div class="sec-mark"><span class="sec-t">Skills</span><div class="sec-rule"></div></div>
-  <div class="skills-wrap reveal">
-    <p class="skills-flow">I build products grounded in <em class="sk s">product strategy</em>; roadmaps, PRDs, go-to-market planning, cross-functional leadership, API integration, B2B2C and O2O journeys. I find opportunities through <em class="sk g">growth and experimentation</em>; A/B testing, funnel optimisation, user journey mapping, CRO, cohort analysis, retention, feature adoption. I make decisions with <em class="sk a">analytics and data</em>; SQL, GA4, CleverTap, Tableau, Microsoft Clarity, Julius AI, Excel.</p>
+  <div class="sk-grid reveal">
+
+    <div class="sk-card amber">
+      <span class="sk-cat">Product &amp; Strategy</span>
+      <div class="sk-items">
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">PRDs &amp; Roadmapping</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Go-to-Market Planning</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">User Research</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Feature Adoption &amp; Activation</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Retention Strategy &amp; Cohort Analysis</span></div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">Notion</span>
+        <span class="sk-tag">Jira</span>
+        <span class="sk-tag">Confluence</span>
+        <span class="sk-tag">Figma</span>
+        <span class="sk-tag">Miro</span>
+      </div>
+    </div>
+
+    <div class="sk-card teal">
+      <span class="sk-cat">Analytics &amp; Data</span>
+      <div class="sk-items">
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">SQL &amp; BigQuery</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">GA4 &amp; Firebase</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">A/B Testing</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Cohort &amp; Behavioral Segmentation</span></div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">CleverTap</span>
+        <span class="sk-tag">Tableau</span>
+        <span class="sk-tag">Clarity</span>
+        <span class="sk-tag">Julius AI</span>
+        <span class="sk-tag">Excel</span>
+      </div>
+    </div>
+
+    <div class="sk-card purple">
+      <span class="sk-cat">Technical</span>
+      <div class="sk-items">
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Python — scripts &amp; automation</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Figma — design &amp; prototyping</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Version control &amp; deployment</span></div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">Python</span>
+        <span class="sk-tag">GitHub</span>
+        <span class="sk-tag">Vercel</span>
+        <span class="sk-tag">HTML/CSS</span>
+      </div>
+    </div>
+
+    <div class="sk-card green">
+      <span class="sk-cat">Growth &amp; Marketing</span>
+      <div class="sk-items">
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Funnel Optimisation &amp; CRO</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Campaign Measurement</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">User Journey Mapping</span></div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">CleverTap</span>
+        <span class="sk-tag">GA4</span>
+        <span class="sk-tag">WhatsApp Business</span>
+        <span class="sk-tag">Push Notifications</span>
+      </div>
+    </div>
+
   </div>
 </div>
   

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,7 +73,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .nav-hamburger{display:none;background:none;border:1px solid var(--bhi);color:var(--t1);cursor:pointer;padding:.4rem .5rem;border-radius:4px;align-items:center;justify-content:center}
 
 /* HERO */
-#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:9rem 3rem 5.5rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:4rem 3rem 5.5rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
 .hero-ghost{position:absolute;right:-3rem;bottom:-5rem;font-family:var(--fd);font-size:clamp(12rem,38vw,34rem);font-weight:800;line-height:1;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px rgba(240,160,32,.05);pointer-events:none;user-select:none}
 .scan-line{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(240,160,32,.3),transparent);animation:scan 7s ease-in-out infinite;pointer-events:none}
 @keyframes scan{0%,100%{top:8%;opacity:0}8%{opacity:1}92%{opacity:.5}99%{top:90%;opacity:0}}
@@ -106,17 +105,29 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 /* VITALS */
 #vitals{background:var(--bg2);border-bottom:1px solid var(--border)}
 .vitals-row{display:grid;grid-template-columns:repeat(4,1fr)}
-.vital{padding:2.25rem 2.5rem;border-right:1px solid var(--border)}
-.vital:last-child{border-right:none}
+#vitals{position:relative;overflow:hidden}
+#vitals::before{content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 50% 160% at 10% 50%, rgba(30,80,200,.28) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 160% at 50% 50%, rgba(160,128,224,.14) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 160% at 90% 50%, rgba(0,200,176,.14) 0%,transparent 60%);
+  pointer-events:none}
+.vital{padding:1.75rem 2rem;border-right:none;position:relative;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  border-top:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%)}
+.vitals-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:1.5rem}
+
 .vital-ey{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:.5rem;display:block}
-.vital-n{font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:.35rem;background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block}
+.vital-n{font-family:var(--fd);font-size:clamp(1.75rem,3.5vw,2.5rem);font-weight:800;letter-spacing:-.04em;line-height:1;color:#F0ECD8}
 .vital-l{font-size:.8rem;color:var(--t2);line-height:1.4;margin-bottom:.75rem}
-.wave{display:block;width:100%;opacity:.35}
 
 /* WRAP */
-.wrap{max-width:1200px;margin:0 auto;padding:5rem 3rem}
+.wrap{max-width:1200px;margin:0 auto;padding:3rem 3rem}
 .divider{border:none;border-top:1px solid var(--border)}
-.sec-mark{display:flex;align-items:center;gap:1rem;margin-bottom:3.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.sec-mark{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
 .sec-n{font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
 .sec-t{font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--s)}
 .sec-rule{flex:1;height:1px;background:var(--border)}
@@ -129,7 +140,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .astat::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--s),var(--d),transparent)}
 .astat-n{font-family:var(--fd);font-size:1.85rem;font-weight:800;letter-spacing:-.03em;color:var(--s);line-height:1;margin-bottom:.2rem}
 .astat-l{font-size:.78rem;color:var(--t2)}
-.about-pull{font-family:var(--fd);font-size:clamp(1.5rem,2.8vw,2.1rem);font-weight:700;color:var(--t1);line-height:1.25;margin-bottom:2rem;padding-left:1.25rem;border-left:3px solid var(--s)}
+.about-pull{font-family:var(--fd);font-size:clamp(1.5rem,2.8vw,2.1rem);font-weight:700;color:var(--t1);line-height:1.25;margin-bottom:1.4rem;padding-left:1.25rem;border-left:3px solid var(--s)}
 .about-copy{font-size:.95rem;color:var(--t2);line-height:1.85}
 .about-copy p+p{margin-top:.85rem}
 .about-copy strong{color:var(--t1);font-weight:600}
@@ -143,7 +154,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .case{background:var(--card)}
 
 /* CASE HEADER */
-.cs-hd{padding:2rem 2.5rem 1.75rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.cs-hd{padding:1.4rem 2.5rem 1rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
 .cs-hd::after{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--s),var(--d),transparent)}
 .cs-hd-top{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap}
 .cs-num{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
@@ -166,7 +177,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .csf-arr{color:var(--t3);font-size:.7rem}
 
 /* SECTIONS; text blocks */
-.cs-sec{padding:1.75rem 2.5rem;border-bottom:1px solid var(--border)}
+.cs-sec{padding:1.4rem 2.5rem;border-bottom:1px solid var(--border)}
 .cs-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--s);margin-bottom:.75rem;display:block;opacity:.85}
 .cs-p{font-size:.9375rem;color:var(--t2);line-height:1.8;margin-bottom:.65rem;max-width:760px}
 .cs-p:last-child{margin-bottom:0}
@@ -182,8 +193,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .cs-voc cite{font-size:.72rem;color:var(--t1);font-style:normal}
 
 /* CONSTRAINT CALLOUT */
-.cs-callout{padding:1.25rem 2.5rem;border-bottom:1px solid var(--border);background:rgba(240,160,32,.05);display:flex;gap:1.25rem;align-items:flex-start}
-.cs-callout-icon{font-size:1rem;flex-shrink:0;margin-top:.15rem}
+.cs-callout{padding:1.1rem 2.5rem;border-bottom:1px solid var(--border);background:rgba(240,160,32,.05);display:flex;gap:1.25rem;align-items:flex-start}
+.cs-callout-icon{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:rgba(240,160,32,.15);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;line-height:1}
 .cs-callout-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--s);margin-bottom:.35rem}
 .cs-callout p{font-size:.875rem;color:var(--t2);line-height:1.7}
 
@@ -218,7 +230,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .cs-stat-hero-l{font-size:.8rem;color:var(--t2);line-height:1.4;max-width:600px}
 
 /* RESULTS LIST */
-.cs-results{padding:1.75rem 2.5rem;border-bottom:1px solid var(--border)}
+.cs-results{padding:1.4rem 2.5rem;border-bottom:1px solid var(--border)}
 .cs-rl{list-style:none;display:flex;flex-direction:column;gap:.5rem}
 .cs-rl li{font-size:.9375rem;color:var(--t2);padding-left:1.25rem;position:relative;line-height:1.6;max-width:760px}
 .cs-rl li::before{content:"→";position:absolute;left:0;color:var(--s);font-weight:700}
@@ -237,10 +249,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .cs-cap{font-size:.72rem;color:var(--t3);text-align:center;margin-top:.5rem;letter-spacing:.04em}
 
 /* FUN FACT BAND */
-.cs-band{display:flex;align-items:flex-start;gap:1rem;padding:1.5rem 2.5rem;border-bottom:1px solid var(--border)}
+.cs-band{display:flex;align-items:flex-start;gap:1rem;padding:1.2rem 2.5rem;border-bottom:1px solid var(--border)}
 .cs-band.ff{background:rgba(240,160,32,.06);border-left:3px solid var(--s)}
 .cs-band.ci{background:rgba(0,200,176,.06);border-left:3px solid var(--d)}
-.cs-band-icon{font-size:1rem;flex-shrink:0;margin-top:.1rem}
+.cs-band-icon{flex-shrink:0;width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;line-height:1}
+.cs-band.ff .cs-band-icon{background:rgba(240,160,32,.15)}
+.cs-band.ci .cs-band-icon{background:rgba(0,200,176,.15)}
 .cs-band-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem}
 .cs-band.ff .cs-band-lbl{color:var(--s)}
 .cs-band.ci .cs-band-lbl{color:var(--d)}
@@ -252,10 +267,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   font-family:var(--fb);color:inherit;
   transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
 .case-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--s),var(--d),transparent);
+ background:linear-gradient(90deg,#1E50C8,var(--d),transparent);
   transform:scaleX(0);transform-origin:left;transition:transform .35s ease}
 .case-card:hover,.case-card:focus-visible{transform:translateY(-4px);border-color:var(--bhi);
-  box-shadow:0 20px 50px rgba(0,0,0,.35),0 0 0 1px rgba(240,160,32,.08)}
+ box-shadow:0 20px 50px rgba(0,0,0,.35),0 0 0 1px rgba(30,80,200,.15)}
 .case-card:hover::before,.case-card:focus-visible::before{transform:scaleX(1)}
 .case-card:focus-visible{outline:2px solid var(--s);outline-offset:2px}
 .cc-top{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
@@ -267,7 +282,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .cc-status.live{color:var(--p)}
 .cc-status.shipped{color:var(--d)}
 .cc-metric{font-family:var(--fd);font-size:clamp(1.9rem,3.6vw,2.5rem);font-weight:800;letter-spacing:-.03em;line-height:1;
-  background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .cc-title{font-family:var(--fd);font-size:1.05rem;font-weight:700;color:var(--t1);line-height:1.3}
 .cc-teaser{font-size:.85rem;color:var(--t2);line-height:1.65;flex:1;margin:0}
 .cc-cta{font-size:.78rem;font-weight:600;color:var(--s);display:inline-flex;align-items:center;gap:.4rem;margin-top:.25rem;transition:gap .2s}
@@ -288,7 +303,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   border-bottom:1px solid #3D3A30;background:#262419;flex-shrink:0}
 .case-modal-close{background:rgba(255,255,255,.06);border:1px solid #3D3A30;color:var(--t1);width:40px;height:40px;border-radius:50%;
   font-size:1.3rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.case-modal-close:hover{background:var(--s);border-color:var(--s);color:#080806}
+.case-modal-close:hover{background:#1E50C8;border-color:#1E50C8;color:#F0ECD8}
 
 /* TILT CARD (replace your existing ".case{transform-style:preserve-3d...}" rule) */
 .case-card{transform-style:preserve-3d}
@@ -297,6 +312,38 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 ───────────────────────────────────────── */
 .skills-wrap{max-width:860px}
 .skills-flow{font-size:clamp(1.05rem,2vw,1.25rem);color:var(--t2);line-height:2}
+/* SKILLS GRID */
+.sk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.sk-card{background:var(--card);border:1px solid var(--border);padding:1.25rem 1.25rem;
+  display:flex;flex-direction:column;gap:.85rem;position:relative;overflow:hidden}
+.sk-card::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%}
+.sk-card.amber::before{background:linear-gradient(180deg,var(--s),var(--s2))}
+.sk-card.teal::before{background:var(--d)}
+.sk-card.purple::before{background:var(--v)}
+.sk-card.green::before{background:var(--p)}
+.sk-cat{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:-.2rem}
+.sk-card.amber .sk-cat{color:var(--s)}
+.sk-card.teal .sk-cat{color:var(--d)}
+.sk-card.purple .sk-cat{color:var(--v)}
+.sk-card.green .sk-cat{color:var(--p)}
+.sk-items{display:flex;flex-direction:column;gap:.4rem}
+.sk-item{display:flex;align-items:center;gap:.65rem}
+.sk-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.sk-card.amber .sk-dot{background:var(--s)}
+.sk-card.teal .sk-dot{background:var(--d)}
+.sk-card.purple .sk-dot{background:var(--v)}
+.sk-card.green .sk-dot{background:var(--p)}
+.sk-name{font-size:.82rem;font-weight:600;color:var(--t1)}
+.sk-tags{display:flex;flex-wrap:wrap;gap:.35rem;padding-top:.5rem;border-top:1px solid var(--border)}
+.sk-tag{font-size:.72rem;font-weight:500;color:var(--t2);background:var(--bg2);
+  border:1px solid var(--bhi);padding:.25rem .65rem;border-radius:3px;letter-spacing:.02em}
+.sk-card.amber .sk-tag{color:var(--s);border-color:rgba(240,160,32,.25);background:rgba(240,160,32,.06)}
+.sk-card.teal .sk-tag{color:var(--d);border-color:rgba(0,200,176,.25);background:rgba(0,200,176,.06)}
+.sk-card.purple .sk-tag{color:var(--v);border-color:rgba(160,128,224,.25);background:rgba(160,128,224,.06)}
+.sk-card.green .sk-tag{color:var(--p);border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.06)}
+@media(max-width:900px){.sk-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.sk-grid{grid-template-columns:1fr}}
+
 .sk{font-style:normal;font-weight:700;font-family:var(--fd)}
 .sk.s{color:var(--s)}
 .sk.g{color:var(--d)}
@@ -306,14 +353,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
    CONTACT
 ───────────────────────────────────────── */
 #cw{background:var(--bg2);border-top:1px solid var(--border)}
-.contact-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:5rem;align-items:start}
+.contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
 .contact-hl{font-family:var(--fd);font-size:clamp(3rem,7vw,6rem);font-weight:800;letter-spacing:-.04em;line-height:.9;color:var(--t1);margin-bottom:1.5rem}
 .contact-hl em{font-style:normal;background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .csub{font-size:1rem;color:var(--t2);line-height:1.8;max-width:380px;margin-bottom:2rem}
 .clinks{display:flex;flex-direction:column;gap:.65rem}
 .clink{display:flex;align-items:center;gap:.75rem;color:var(--t2);text-decoration:none;font-size:.95rem;font-weight:500;transition:color .2s}
 .clink:hover{color:var(--s)}
-.clink-i{width:34px;height:34px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;font-style:normal;transition:border-color .2s}
+.clink-i{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--border);border-radius:4px;font-size:1rem;flex-shrink:0}
 .clink:hover .clink-i{border-color:var(--s)}
 .cform{display:flex;flex-direction:column;gap:.8rem}
 .cgroup{display:flex;flex-direction:column;gap:.35rem}
@@ -440,10 +487,9 @@ footer a:hover{color:var(--s)}
    SCROLL ANIMATIONS
 ============================================================ */
 
-/* 1. Reading progress bar */
 #scroll-progress{position:fixed;top:0;left:0;height:2px;width:0%;z-index:1000;pointer-events:none;
-  background:linear-gradient(90deg,var(--s) 0%,var(--s2) 60%,var(--d) 100%);
-  box-shadow:0 0 8px rgba(240,160,32,.5);
+  background:linear-gradient(90deg,#1E50C8 0%,#5B8EF0 60%,#00C8B0 100%);
+  box-shadow:0 0 8px rgba(30,80,200,.5);
   transition:width .08s linear}
 
 /* 2. Nav scrolled state */
@@ -647,10 +693,10 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 <!-- VITALS -->
 <div id="vitals">
   <div class="vitals-row">
-    <div class="vital reveal"><span class="vital-ey">Revenue &#183; Lenskart</span><span class="vital-n" data-target="6" data-prefix="&#8377;" data-suffix="Cr+">&#8377;0Cr+</span><div class="vital-l">Incremental annualised</div><svg class="wave" viewBox="0 0 180 20" xmlns="http://www.w3.org/2000/svg"><polyline points="0,10 12,10 16,3 20,17 24,10 40,10 44,2 48,18 52,10 68,10 72,5 76,15 80,10 100,10 104,3 108,17 112,10 130,10 134,4 138,16 142,10 160,10" fill="none" stroke="rgba(240,160,32,.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    <div class="vital reveal"><span class="vital-ey">Revenue &#183; Bajaj Finserv Health</span><span class="vital-n" data-target="1.5" data-prefix="&#8377;" data-suffix="Cr+">&#8377;0Cr+</span><div class="vital-l">Combined revenue impact</div><svg class="wave" viewBox="0 0 180 20" xmlns="http://www.w3.org/2000/svg"><polyline points="0,10 15,10 18,4 22,16 26,10 44,10 48,2 52,18 56,10 72,10 76,6 80,14 84,10 104,10 108,3 112,17 116,10 134,10 138,5 142,15 146,10 166,10 170,4 174,16 178,10 180,10" fill="none" stroke="rgba(240,160,32,.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    <div class="vital reveal"><span class="vital-ey">Lenskart@Home</span><span class="vital-n" data-target="72" data-prefix="&#8377;" data-suffix="Cr+ ARR">&#8377;0Cr+ ARR</span><div class="vital-l">India's largest at-home eyewear platform</div><svg class="wave" viewBox="0 0 180 20" xmlns="http://www.w3.org/2000/svg"><polyline points="0,10 10,10 14,4 18,16 22,10 38,10 42,2 46,18 50,10 66,10 70,5 74,15 78,10 96,10 100,4 104,16 108,10 126,10 130,3 134,17 138,10 156,10 160,5 164,15 168,10 180,10" fill="none" stroke="rgba(240,160,32,.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    <div class="vital reveal"><span class="vital-ey">Experience</span><span class="vital-n" data-target="5" data-suffix=" years">0 yrs</span><div class="vital-l">Across 3 industries</div><svg class="wave" viewBox="0 0 180 20" xmlns="http://www.w3.org/2000/svg"><polyline points="0,10 20,10 24,4 28,16 32,10 52,10 56,2 60,18 64,10 82,10 86,5 90,15 94,10 114,10 118,3 122,17 126,10 146,10 150,4 154,16 158,10 178,10" fill="none" stroke="rgba(240,160,32,.35)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="vital reveal"><span class="vital-ey">Revenue &#183; Lenskart</span><span class="vital-n" data-target="6" data-prefix="&#8377;" data-suffix="Cr+">&#8377;0Cr+</span><div class="vital-l">Incremental annualised</div></div>
+    <div class="vital reveal"><span class="vital-ey">Revenue &#183; Bajaj Finserv Health</span><span class="vital-n" data-target="1.5" data-prefix="&#8377;" data-suffix="Cr+">&#8377;0Cr+</span><div class="vital-l">Combined revenue impact</div></div>
+    <div class="vital reveal"><span class="vital-ey">Lenskart@Home</span><span class="vital-n" data-target="72" data-prefix="&#8377;" data-suffix="Cr+ ARR">&#8377;0Cr+ ARR</span><div class="vital-l">India's largest at-home eyewear platform</div></div>
+    <div class="vital reveal"><span class="vital-ey">Experience</span><span class="vital-n" data-target="5" data-suffix=" years">0 yrs</span><div class="vital-l">Across 3 industries</div></div>
   </div>
 </div>
 
@@ -723,19 +769,7 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
         <p class="cc-teaser">Doctor listings ranked by popularity metrics; not patient-relevant quality signals. High-performing doctors were buried; under-performers had equal visibility.</p>
         <span class="cc-cta">Read full case study <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </div>
-      <div class="case-card reveal" data-case="5" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case study: AI-Powered Insurance Pre-Authorization" onclick="openCase(5)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCase(5);}">
-        <div class="cc-top">
-          <span class="cc-num">05</span>
-          <span class="cc-co">Bajaj Finserv Health</span>
-          <span class="cc-dot">&#183;</span>          
-          <span class="cc-status live">&#9679; live </span>
         </div>
-        <div class="cc-metric">&#8377;17L / yr</div>
-        <div class="cc-title">AI-Powered Insurance Pre-Authorization</div>
-        <p class="cc-teaser">Insurance pre-authorization was a manual, document-heavy process. Every approval required human review of dense medical records.</p>
-        <span class="cc-cta">Read full case study <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      </div>
-  </div>
 </div>
 
 <!-- Hidden source content for case study modal (untouched original case content) -->
@@ -1076,48 +1110,6 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
         <div class="cs-stat amber"><div class="cs-stat-n">+18%</div><div class="cs-stat-l">Click-Through Rate improvement</div></div>
         <div class="cs-stat teal"><div class="cs-stat-n">11.6%</div><div class="cs-stat-l">Lift in annual revenue</div></div>
       </div>
-      <div class="cs-band ff">
-        <span class="cs-band-icon">&#9889;</span>
-        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">The 18% CTR lift came from reordering existing doctors; not adding new ones. The talent was already there. It was just buried.</p></div>
-      </div>
-    </article>
-
-<article class="case" id="case-detail-5">
-      <div class="cs-hd">
-        <div class="cs-hd-top">
-          <span class="cs-num">05</span>
-          <span class="cs-co">Bajaj Finserv Health</span>
-          <span class="cs-dot">&#183;</span>        
-          <span class="cs-st live">&#9679; Live</span>
-        </div>
-        <div class="cs-metric">&#8377;17L / yr</div>
-        <div class="cs-title">AI-Powered Insurance Pre-Authorization</div>
-       
-      </div>
-      <div class="cs-sec">
-        <span class="cs-lbl">The Problem</span>
-        <p class="cs-p">Insurance pre-authorization was a manual, document-heavy process. Every approval required human review of dense medical records; creating a throughput ceiling that limited the platform&#39;s ability to scale claim processing without proportionally scaling headcount.</p>
-      </div>
-      <div class="cs-sec">
-        <span class="cs-lbl">The Solution</span>
-        <p class="cs-p">Automated the pre-auth pipeline using OCR for document digitisation and NER (Natural Language Entity Recognition) for intelligent parsing of medical terminology and claim fields; eliminating the manual review bottleneck end-to-end.</p>
-      </div>
-      <div class="cs-stats two">
-        <div class="cs-stat amber"><div class="cs-stat-n">+26%</div><div class="cs-stat-l">Processing throughput increase</div></div>
-        <div class="cs-stat teal"><div class="cs-stat-n">&#8377;17L</div><div class="cs-stat-l">Annual operational cost savings</div></div>
-      </div>
-      <div class="cs-results">
-        <span class="cs-lbl">Also</span>
-        <ul class="cs-rl">
-          <li>Reduced human error rates in approvals</li>
-          <li>Scalable foundation for future claims automation</li>
-          <li>Freed ops team bandwidth for complex edge cases</li>
-        </ul>
-      </div>
-      <div class="cs-band ff">
-        <span class="cs-band-icon">&#9889;</span>
-        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">Some documents being reviewed manually were handwritten, faxed, or scanned at an angle. The OCR pipeline had to learn to read imperfect documents before it could replace the humans reading them.</p></div>
-      </div>
     </article>
 </div>
 
@@ -1135,8 +1127,69 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 <hr class="divider">
 <div class="wrap" id="skills">
   <div class="sec-mark"><span class="sec-t">Skills</span><div class="sec-rule"></div></div>
-  <div class="skills-wrap reveal">
-    <p class="skills-flow">I build products grounded in <em class="sk s">product strategy</em>; roadmaps, PRDs, go-to-market planning, cross-functional leadership, API integration, B2B2C and O2O journeys. I find opportunities through <em class="sk g">growth and experimentation</em>; A/B testing, funnel optimisation, user journey mapping, CRO, cohort analysis, retention, feature adoption. I make decisions with <em class="sk a">analytics and data</em>; SQL, GA4, CleverTap, Tableau, Microsoft Clarity, Julius AI, Excel.</p>
+  <div class="sk-grid reveal">
+
+    <div class="sk-card amber">
+      <span class="sk-cat">Product &amp; Strategy</span>
+      <div class="sk-items">
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">PRDs &amp; Roadmapping</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Go-to-Market Planning</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">User Research</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Feature Adoption &amp; Activation</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Retention Strategy &amp; Cohort Analysis</span></div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">Notion</span>
+        <span class="sk-tag">Jira</span>
+        <span class="sk-tag">Confluence</span>
+        <span class="sk-tag">Figma</span>
+        <span class="sk-tag">Miro</span>
+      </div>
+    </div>
+
+    <div class="sk-card teal">
+      <span class="sk-cat">Analytics &amp; Data</span>
+      <div class="sk-items">
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">SQL &amp; BigQuery</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">GA4 &amp; Firebase</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">A/B Testing</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Cohort &amp; Behavioral Segmentation</span></div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">CleverTap</span>
+        <span class="sk-tag">Tableau</span>
+        <span class="sk-tag">Clarity</span>
+        <span class="sk-tag">PowerBi</span>
+        <span class="sk-tag">Excel</span>
+      </div>
+    </div>
+
+    <div class="sk-card purple">
+      <span class="sk-cat">Technical</span>
+      <div class="sk-items">
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Python — scripts &amp; automation</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Figma — design &amp; prototyping</span></div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">Python</span>
+        <span class="sk-tag">Vercel</span>
+        <span class="sk-tag">App script (VBA)</span>
+      </div>
+    </div>
+
+    <div class="sk-card green">
+      <span class="sk-cat">Growth &amp; Marketing</span>
+      <div class="sk-items">
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Funnel Optimisation &amp; CRO</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Campaign Measurement</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">User Journey Mapping</span></div>
+      </div>
+      <div class="sk-tags">
+        <span class="sk-tag">CleverTap</span>
+        <span class="sk-tag">GA4</span>
+      </div>
+    </div>
+
   </div>
 </div>
   
@@ -1146,28 +1199,24 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 <div id="cw">
   <div class="wrap" id="contact">
     <div class="sec-mark"><span class="sec-t">Contact</span><div class="sec-rule"></div></div>
-    <div class="contact-layout">
+   <div class="contact-layout">
       <div class="reveal">
         <h2 class="contact-hl">Let&#39;s<br><span style="color:#f0a020 !important">Talk.</span></h2>
         <p class="csub">Open to senior PM roles where I can drive meaningful revenue growth and own high-impact products end-to-end.</p>
-        <div class="clinks">
-          <a href="mailto:alternate.prerna@gmail.com" class="clink"><em class="clink-i">&#9993;</em>alternate.prerna@gmail.com</a>
-          <a href="tel:+918851068275" class="clink"><em class="clink-i">&#128222;</em>+91 88510 68275</a>
-          <a href="https://linkedin.com/in/prerna-kapoor" target="_blank" rel="noopener" class="clink"><em class="clink-i" style="font-size:.7rem;font-weight:700;font-style:normal">in</em>LinkedIn Profile</a>
-          <a href="https://drive.google.com/file/d/1vuTV-G_UsDAkRK8Qp8_WzeNu4VGCAOyv/view?usp=drive_link" target="_blank" rel="noopener" class="clink"><em class="clink-i">&#8595;</em>Download Resume</a>
-        </div>
-        <div style="margin-top: 50px;">
-          <a href="https://wa.me/918851068275" target="_blank" rel="noopener" class="btn btn-p" style="display: inline-block;">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div style="margin-top:2rem">
+          <a href="https://wa.me/918851068275" target="_blank" rel="noopener" class="btn btn-p" style="display:inline-block">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
       </div>
-      <div class="reveal" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-        <p style="font-size: 12px; color: #999; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Scan to connect</p>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://wa.me/918851068275" alt="WhatsApp QR Code" style="width: 200px; height: 200px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+      <div class="reveal">
+        <div class="clinks">
+         <a href="mailto:alternate.prerna@gmail.com" class="clink"><span class="clink-i">&#9993;</span>alternate.prerna@gmail.com</a>
+<a href="tel:+918851068275" class="clink"><span class="clink-i">&#128222;</span>+91 88510 68275</a>
+<a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" class="clink"><span class="clink-i" style="font-size:.7rem;font-weight:700;font-style:normal">in</span>LinkedIn Profile</a>
+<a href="https://drive.google.com/file/d/1vuTV-G_UsDAkRK8Qp8_WzeNu4VGCAOyv/view?usp=drive_link" target="_blank" rel="noopener" class="clink"><span class="clink-i" style="font-size:.8rem">&#128065;</span>View Resume</a>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-<a href="https://wa.me/918851068275" target="_blank" rel="noopener" id="flt">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a href="https://wa.me/918851068275" target="_blank" rel="noopener" id="flt">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>

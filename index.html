@@ -908,7 +908,7 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 
       <div class="cs-sec">
         <span class="cs-lbl">Three Approaches Evaluated</span>
-        <p class="cs-p">All three sound reasonable. All three have the same fatal problem; they try to infer which store a customer has a <em>relationship</em> with. Our data showed that's the wrong question entirely.</p>
+        <p class="cs-p">All three sound reasonable. All three try to infer which store a customer has a <em>relationship</em> with. The data said that's the wrong question entirely.</p>
       </div>
       <div class="cs-rejected">
         <div class="cs-rejected-row">
@@ -916,22 +916,27 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
             <div class="cs-rejected-hd">Distance-based</div>
             <p class="cs-rejected-desc">Assign each order to the nearest store within 10km. Simple and deterministic.</p>
           </div>
-          <span class="cs-rejected-verdict">&#10007; Failed &nbsp;;&nbsp; 25% of customers have never visited their nearest store</span>
+          <span class="cs-rejected-verdict">&#10007; Failed &nbsp;;&nbsp; Badly skewed in dense catchments; one store received ~600 orders in 4 months, several got zero</span>
         </div>
         <div class="cs-rejected-row">
           <div class="cs-rejected-text">
-            <div class="cs-rejected-hd">Last Visited Store</div>
-            <p class="cs-rejected-desc">Assign to the store where the customer last made a purchase. Relationship-based.</p>
+            <div class="cs-rejected-hd">Last QMS (Eye Test) Store</div>
+            <p class="cs-rejected-desc">Assign to the store where the customer's most recent eye test happened. Relationship-based.</p>
           </div>
-          <span class="cs-rejected-verdict">&#10007; Failed &nbsp;;&nbsp; Last visit = coincidence of geography, not loyalty</span>
+          <span class="cs-rejected-verdict">&#10007; Failed &nbsp;;&nbsp; Only 31% of QMS stores matched the customer's actual nearest store</span>
         </div>
         <div class="cs-rejected-row">
           <div class="cs-rejected-text">
             <div class="cs-rejected-hd">Combination</div>
             <p class="cs-rejected-desc">QMS where available, distance everywhere else. Best of both worlds?</p>
           </div>
-          <span class="cs-rejected-verdict">&#10007; Failed &nbsp;;&nbsp; Two attribution classes, impossible to set fair targets</span>
+          <span class="cs-rejected-verdict">&#10007; Failed &nbsp;;&nbsp; Two attribution classes, impossible to explain or set fair targets against</span>
         </div>
+      </div>
+
+      <div class="cs-callout">
+        <span class="cs-callout-icon">&#128172;</span>
+        <div><div class="cs-callout-lbl">Why "last visited" broke down</div><p>We called customers who'd bought from a store far from home. Of 6 reached: 3 had visited a store near their <em>workplace</em>, not home; 2 wanted more frame variety than their nearest store carried; 1 simply didn't know a closer store existed. Last visit wasn't loyalty; it was coincidence.</p></div>
       </div>
 
       <div class="cs-quote">
@@ -940,7 +945,7 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 
       <div class="cs-sec">
         <span class="cs-lbl">The Solution: Polygon Attribution</span>
-        <p class="cs-p">Polygon attribution; inspired by Walmart's hex grid approach, built from hexagons of 0.01km&#178;; answers exactly that: if this customer needs to walk into a store tomorrow, which one is realistically on their doorstep? Deterministic, auditable, and every delivery address belongs to exactly one store with no overlap or dead zones.</p>
+        <p class="cs-p">Polygon attribution; inspired by Walmart's hex-grid catchment model, built from tiles of 0.01km&#178;; answers exactly that: if this customer needs to walk into a store tomorrow, which one is realistically on their doorstep? No QMS preference, no relationship-inference. Deterministic and auditable; every delivery address belongs to exactly one store, no overlap, no dead zones. The polygon only changes when a new store opens.</p>
       </div>
 
       <div class="cs-sec">
@@ -962,7 +967,7 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 
       <div class="cs-band ci">
         <span class="cs-band-icon">&#128161;</span>
-        <div><div class="cs-band-lbl">Customer Insight</div><p class="cs-band-text">We assumed customers would naturally gravitate to their nearest store. 25% didn't; they were buying from stores 5km+ away, on the way to work or mid-errand. Proximity doesn't predict preference.</p></div>
+        <div><div class="cs-band-lbl">Customer Insight</div><p class="cs-band-text">We assumed customers would naturally gravitate to their nearest store. 25% didn't; they were buying from stores 5km+ away, on the way to work or mid-errand. Proximity doesn't predict preference; it just predicts who's responsible for you now.</p></div>
       </div>
 
       <div class="cs-stat-hero">
@@ -971,8 +976,7 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
           <div class="cs-stat-hero-l">Online customer NPS, since territory ownership and 48-hour check-ins went live.</div>
         </div>
       </div>
-    </article>
-<article class="case" id="case-detail-3">
+    </article><article class="case" id="case-detail-3">
       <div class="cs-hd">
         <div class="cs-hd-top">
           <span class="cs-num">03</span>

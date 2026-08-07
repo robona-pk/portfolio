@@ -177,9 +177,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .csf-arr{color:var(--t3);font-size:.7rem}
 
 /* SECTIONS; text blocks */
-.cs-sec{padding:1.4rem 2.5rem;border-bottom:1px solid var(--border)}
-.cs-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--s);margin-bottom:.75rem;display:block;opacity:.85}
-.cs-p{font-size:.9375rem;color:var(--t2);line-height:1.8;margin-bottom:.65rem;max-width:760px}
+.cs-sec{padding:1.75rem 2.5rem;border-bottom:1px solid var(--border)}
+  .cs-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--s);margin-bottom:1rem;display:block;opacity:.85}
+.cs-p{font-size:.9375rem;color:var(--t2);line-height:1.8;margin-bottom:.9rem;max-width:760px}
 .cs-p:last-child{margin-bottom:0}
 
 /* PULL QUOTE; the dramatic full-width moment */
@@ -469,6 +469,8 @@ footer a:hover{color:var(--s)}
 
 /* HIGHLIGHT BOX; key insight pull within a section */
 .cs-highlight{margin:1rem 0;padding:1rem 1.25rem;background:rgba(240,160,32,.06);border-left:3px solid var(--s)}
+  .cs-key{font-family:var(--fd);font-size:1.15rem;font-weight:700;color:var(--t1);line-height:1.4;margin:.25rem 0 1.25rem;max-width:700px}
+.cs-em{color:var(--t1);font-weight:700}
 .cs-highlight p{font-size:.9rem;color:var(--t1);font-weight:500;line-height:1.65}
 
 @media(max-width:640px){
@@ -787,7 +789,7 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 
       <div class="cs-sec">
         <span class="cs-lbl">The Problem</span>
-        <p class="cs-p">80% of customers dropped off the Home Trial landing page at step one, before even selecting an address or slot. We called people who'd landed on the page but abandoned it that early to find out why</p>
+        <p class="cs-p">80% of customers dropped off the Home Trial landing page at step one, before even selecting an address or slot. We called people who'd landed on the page but abandoned it that early to find out why.</p>
       </div>
 
       <div class="cs-quote">
@@ -797,7 +799,8 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 
       <div class="cs-sec">
         <span class="cs-lbl">The Real Insight</span>
-        <p class="cs-p">Customers weren&#39;t rejecting home trials; they were rejecting the <strong style="color:var(--t1)">unpredictability of a fixed kit</strong>. With no say over which frames showed up, booking felt like a gamble. A store visit felt certain. This wasn&#39;t a distance problem or a trust-in-service problem; it was a control problem.</p>
+        <p class="cs-key">Customers weren't rejecting home trials. They were rejecting a kit they had no say over.</p>
+        <p class="cs-p">With no say over which frames showed up, booking felt like a gamble. A store visit felt certain. This wasn't a distance problem or a trust-in-service problem; it was a <span class="cs-em">control</span> problem.</p>
       </div>
 
       <div class="cs-stat-hero">
@@ -814,9 +817,9 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 
       <div class="cs-sec">
         <span class="cs-lbl">The MVP: Testing Control, Not Variety</span>
-        <p class="cs-p">The hypothesis: it wasn&#39;t <em>more</em> frames customers needed, it was the <em>act of choosing</em>. So we tested that in isolation. Using an existing Lenskart product listing page, we let customers browse and "select" frames for their trial; from the same ~150 frames the agent was already carrying. Nothing changed in the backend. The agent showed up with the exact same kit as before, just now hand-picked by the customer on paper.</p>
+        <p class="cs-p">The hypothesis: it wasn't <span class="cs-em">more</span> frames customers needed, it was the <span class="cs-em">act of choosing</span>. So we tested that in isolation. Using an existing Lenskart product listing page, we let customers browse and "select" frames for their trial; from the same ~150 frames the agent was already carrying. Nothing changed in the backend. The agent showed up with the exact same kit as before, just now hand-picked by the customer on paper.</p>
         <div class="cs-highlight">
-          <p>If bookings moved without a single new frame in the kit, we&#39;d know: choice itself was the lever, not variety. It was the cheapest possible way to test that.</p>
+          <p>If bookings moved without a single new frame in the kit, we'd know: choice itself was the lever, not variety. It was the cheapest possible way to test that.</p>
         </div>
       </div>
 
@@ -834,7 +837,7 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
         </div>
         <div>
           <span class="cs-lbl">The Real Launch: Real Inventory, Real Choice</span>
-          <p class="cs-p">With demand validated, we built the actual thing. Customers now browse real inventory from their nearby Lenskart store and select the specific frames they want brought home; not a curated kit standing in for choice, but their own list, live across <strong style="color:var(--t1)">5 cities</strong>.</p>
+          <p class="cs-p">With demand validated, we built the actual thing. Customers now browse real inventory from their nearby Lenskart store and select the specific frames they want brought home; not a curated kit standing in for choice, but their own list, live across <span class="cs-em">5 cities</span>.</p>
           <p class="cs-p">This also means better supply utilisation; the same store inventory now serves both walk-ins and home trials. But the incremental revenue itself comes from the lift in home trial bookings this unlocked.</p>
         </div>
       </div>
@@ -849,14 +852,14 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
         <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">Nobody told agents to do this; but once they could see what customers had picked, they started calling them before appointments to discuss frames. We built a selection feature. Agents turned it into a styling concierge.</p></div>
       </div>
 
-     <div class="cs-stat-hero">
+      <div class="cs-stat-hero">
         <div class="cs-stat-hero-figure amber">
           <div class="cs-stat-hero-n">&#8377;1.8Cr</div>
           <div class="cs-stat-hero-l">Incremental annualised revenue across 5 cities, from the lift in bookings once customers could pick their own frames.</div>
         </div>
       </div>
 
-     <div class="cs-sec">
+      <div class="cs-sec">
         <span class="cs-lbl">The Bigger Problem</span>
         <p class="cs-p">Launching home trials was the easy half. Scaling them meant going beyond a dedicated agent workforce; every Lenskart store needed to become a home trial hub.</p>
       </div>
@@ -870,11 +873,11 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
       </div>
 
       <div class="cs-sec">
-        <p class="cs-p" style="font-weight:600;color:var(--t1)">Making that work meant answering a harder question first: which store owns which customer?</p>
-        <p class="cs-p" style="margin-top:.75rem"><a href="javascript:void(0)" onclick="openCase(2)" style="color:var(--s);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem">See how we solved that in Case #02 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+        <p class="cs-key">Making that work meant answering a harder question first: which store owns which customer?</p>
+        <p class="cs-p"><a href="javascript:void(0)" onclick="openCase(2)" style="color:var(--s);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem">See how we solved that in Case #02 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
       </div>
     </article>
-<article class="case" id="case-detail-2">
+  <article class="case" id="case-detail-2">
       <div class="cs-hd">
         <div class="cs-hd-top">
           <span class="cs-num">02</span>

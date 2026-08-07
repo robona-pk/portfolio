@@ -178,7 +178,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 
 /* SECTIONS; text blocks */
 .cs-sec{padding:1.75rem 2.5rem;border-bottom:1px solid var(--border)}
-  .cs-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--s);margin-bottom:1rem;display:block;opacity:.85}
+ .cs-lbl{font-family:var(--fd);font-size:1.1rem;font-weight:700;letter-spacing:-.01em;color:var(--t1);margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;opacity:1}
+.cs-lbl::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--s);flex-shrink:0}
 .cs-p{font-size:.9375rem;color:var(--t2);line-height:1.8;margin-bottom:.9rem;max-width:760px}
 .cs-p:last-child{margin-bottom:0}
 
@@ -469,7 +470,7 @@ footer a:hover{color:var(--s)}
 
 /* HIGHLIGHT BOX; key insight pull within a section */
 .cs-highlight{margin:1rem 0;padding:1rem 1.25rem;background:rgba(240,160,32,.06);border-left:3px solid var(--s)}
-  .cs-key{font-family:var(--fd);font-size:1.15rem;font-weight:700;color:var(--t1);line-height:1.4;margin:.25rem 0 1.25rem;max-width:700px}
+  .cs-key{font-family:var(--fd);font-size:1.15rem;font-weight:700;font-style:italic;color:var(--s);line-height:1.4;margin:.25rem 0 1.25rem;max-width:700px}
 .cs-em{color:var(--t1);font-weight:700}
 .cs-highlight p{font-size:.9rem;color:var(--t1);font-weight:500;line-height:1.65}
 

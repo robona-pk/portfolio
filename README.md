@@ -20,7 +20,7 @@ Built and scaled products across wellness, diagnostics, consultations, insurance
 
 Selected outcomes:
 - Built a diabetes wellness business from 0→1, generating **₹28L revenue in five months**
-- Smart Health Reports increased active Health Files users by **8×**, driving adoption
+- Smart Health Reports increased active Health Files users by **8×** and generated **₹7L+ incremental MRR**
 - Doctor listing reorder improved CTR by **18%** and annual revenue by **11.6%**
 - Automated insurance pre-authorisation, improving throughput by **26%** and saving **₹17L annually**
 

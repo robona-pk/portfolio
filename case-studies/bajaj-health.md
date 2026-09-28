@@ -13,7 +13,7 @@ Health Files allowed customers to upload lab reports, but adoption was low becau
 
 We built Smart Health Reports to normalise lab data across formats and present parameters in plain language with historical trends. When an out-of-range result indicated a relevant service, the product offered an **optional next step**—for example, a diabetes consultation—rather than leaving customers to navigate the issue alone.
 
-**Outcome:** **₹7L+ incremental MRR** from relevant health-service recommendations surfaced in the report.
+**Outcome:** Active Health Files users increased **8×**, showing that a useful report experience drove sustained adoption.
 
 The product principle was to replace fragmented, anxious searching with understandable context and a customer-controlled route to care.
 

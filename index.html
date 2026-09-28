@@ -424,18 +424,17 @@ footer a:hover{color:var(--s)}
 /* COMPARISON CARDS; 3-col grid showing approaches + verdict */
   /* REJECTED APPROACHES; simple stacked rows, no column-stretch possible */
 .cs-rejected{border-bottom:1px solid var(--border)}
-.cs-rejected-row{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
+.cs-rejected-row{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(0,1.2fr);align-items:start;gap:1.5rem;
   padding:1.1rem 2.5rem;border-bottom:1px solid var(--border)}
 .cs-rejected-row:last-child{border-bottom:none}
-.cs-rejected-text{flex:1;min-width:0}
+.cs-rejected-text{min-width:0}
 .cs-rejected-hd{font-size:.9rem;font-weight:700;color:var(--t1);margin-bottom:.25rem}
 .cs-rejected-desc{font-size:.82rem;color:var(--t2);line-height:1.55;margin:0}
-.cs-rejected-verdict{flex-shrink:0;font-size:.72rem;font-weight:700;padding:.4rem .85rem;
-  border-radius:2px;background:rgba(239,68,68,.12);color:#F87171;white-space:nowrap;
-  display:inline-flex;align-items:center;gap:.35rem}
+.cs-rejected-verdict{font-size:.72rem;font-weight:700;padding:.4rem .85rem;
+  border-radius:2px;background:rgba(239,68,68,.12);color:#F87171;white-space:normal;line-height:1.45;
+  display:block}
 @media(max-width:640px){
-  .cs-rejected-row{flex-direction:column;align-items:flex-start;gap:.6rem;padding:1rem 1.25rem}
-  .cs-rejected-verdict{white-space:normal}
+  .cs-rejected-row{grid-template-columns:1fr;gap:.6rem;padding:1rem 1.25rem}
 }
 .cs-compare{display:grid;grid-template-columns:repeat(3,1fr);align-items:start;border-bottom:1px solid var(--border)}
 .cs-compare-item{padding:1.5rem;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:.5rem}

@@ -712,12 +712,12 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s)!important}
 .case-card,.build-card,.build-visual,.vital{border-radius:0!important}
 .sec-mark::before{content:"";display:block;width:9px;height:9px;flex:0 0 9px;background:var(--s);transform:rotate(45deg)}
 .hobby-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}
-.hobby-card{position:relative;min-height:230px;padding:1.65rem;border:1px solid var(--border);background:#21192c;box-shadow:5px 5px 0 rgba(224,234,104,.35);overflow:hidden}
+.hobby-card{position:relative;min-height:0;padding:1.65rem;border:1px solid var(--border);background:#21192c;box-shadow:5px 5px 0 rgba(224,234,104,.35);overflow:hidden;display:flex;flex-direction:column}
 .hobby-card:nth-child(even){box-shadow:5px 5px 0 rgba(189,137,233,.42)}
 .hobby-no{display:block;margin-bottom:2rem;font-size:.68rem;letter-spacing:.13em;font-weight:800;color:var(--acid)}
 .hobby-card h3{margin:0 0 .75rem;font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.25rem);letter-spacing:-.04em;line-height:1;color:var(--t1)}
 .hobby-card:nth-child(even) h3{color:var(--acid)}
-.hobby-card p{max-width:48ch;margin:0;color:var(--t2);font-size:.9rem;line-height:1.7}.hobby-link{position:absolute;left:1.65rem;bottom:1.5rem;color:var(--acid);font-size:.8rem;font-weight:800;text-decoration:none}.hobby-link:hover{color:var(--s)}
+.hobby-card p{max-width:48ch;margin:0;color:var(--t2);font-size:.9rem;line-height:1.7}.hobby-link{display:inline-block;align-self:flex-start;margin-top:1.25rem;color:var(--acid);font-size:.8rem;font-weight:800;text-decoration:none}.hobby-link:hover{color:var(--s)}
 .contact-hl span{color:var(--s)!important}
 @media(max-width:900px){
   #hero{grid-template-columns:1fr!important;gap:2.5rem;padding-top:7rem!important;min-height:auto}

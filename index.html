@@ -197,6 +197,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .cs-callout{padding:1.1rem 2.5rem;border-bottom:1px solid var(--border);background:rgba(240,160,32,.05);display:flex;gap:1.25rem;align-items:flex-start}
 .cs-callout-icon{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:rgba(240,160,32,.15);
   display:flex;align-items:center;justify-content:center;font-size:1.1rem;line-height:1}
+.cs-callout-icon.constraint{background:var(--d);color:#170f1b;font-size:1rem}
 .cs-callout-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--s);margin-bottom:.35rem}
 .cs-callout p{font-size:.875rem;color:var(--t2);line-height:1.7}
 
@@ -753,7 +754,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .case-modal .cs-hd::after{background:linear-gradient(90deg,var(--modal-gold),var(--modal-gold-border),transparent)!important}
 .case-modal .cs-metric:not(.cs-metric-text),.case-modal .cs-stat-n,.case-modal .cs-stat-hero-n{color:var(--modal-gold)!important;background:none!important;-webkit-text-fill-color:var(--modal-gold)!important}
 .case-modal .cs-stat,.case-modal .cs-stat-hero-figure,.case-modal .cs-band.ff,.case-modal .cs-band.ci{background:var(--modal-gold-soft)!important}.case-modal .cs-stat.dark .cs-stat-n{font-size:.7rem!important;letter-spacing:.06em!important;text-transform:uppercase!important}
-.case-modal .cs-lbl::before,.case-modal .cs-band{border-left-color:var(--modal-gold)!important}.case-modal .cs-lbl::before,.case-modal .cs-band-icon{background:var(--modal-gold)!important}.case-modal .cs-rl li::before,.case-modal .cs-process-step::after,.case-modal .cs-process-lbl,.case-modal .cs-band-lbl,.case-modal .cs-callout-lbl,.case-modal .cs-weight-pct{color:var(--modal-gold)!important}
+.case-modal .cs-lbl::before,.case-modal .cs-band{border-left-color:var(--modal-gold)!important}.case-modal .cs-lbl::before,.case-modal .cs-band-icon,.case-modal .cs-callout-icon{background:var(--modal-gold)!important}.case-modal .cs-callout-icon{color:#170f1b}.case-modal .cs-rl li::before,.case-modal .cs-process-step::after,.case-modal .cs-process-lbl,.case-modal .cs-band-lbl,.case-modal .cs-callout-lbl,.case-modal .cs-weight-pct{color:var(--modal-gold)!important}
 .case-modal .cs-flow .csf.active{background:var(--modal-gold)!important;color:#170f1b!important}.case-modal .cs-flow .csf.done{background:var(--modal-gold-soft)!important;color:var(--modal-gold)!important}.case-modal .cs-flow .csf-arr{color:var(--modal-gold)!important}
 .case-modal .cs-st,.case-modal .cs-st.live,.case-modal .cs-st.shipped,.case-modal .cs-st.iter{color:var(--modal-gold)!important}.case-modal .cs-weight-fill{background:var(--modal-gold)!important}.case-modal .cs-formula{background:var(--modal-gold-soft)!important}.case-modal .cs-formula-part:last-child{border-color:var(--modal-gold)!important;color:var(--modal-gold)!important}
 .case-modal .cs-evidence{color:var(--modal-gold);font-weight:800;letter-spacing:.01em;white-space:nowrap}.case-modal .cs-key{color:var(--t1)!important}.case-modal .cs-key + .cs-p a{color:var(--modal-gold)!important}
@@ -974,7 +975,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
       </div>
 
       <div class="cs-callout">
-        <span class="cs-callout-icon">&#9888;</span>
+        <span class="cs-callout-icon constraint" aria-hidden="true">&#9888;</span>
         <div><div class="cs-callout-lbl">Constraint</div><p>No significant backend or inventory investment until demand was validated. Prove the hypothesis cheaply before committing engineering to a full integration.</p></div>
       </div>
 

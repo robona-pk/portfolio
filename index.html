@@ -660,7 +660,7 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 /* Refinement layer: retain the original portfolio content, make its scan path calmer. */
 :root{
   --bg:#140f1b;--bg2:#1a1424;--card:#21192c;--border:#3d2d4d;--bhi:#654778;
-  --s:#ed72ad;--s2:#bd89e9;--d:#bd89e9;--v:#bd89e9;
+  --s:#ed72ad;--s2:#bd89e9;--d:#bd89e9;--v:#bd89e9;--acid:#e0ea68;
   --t1:#f7f0f8;--t2:#d7cadc;--t3:#ae9cb6;
 }
 html{background:var(--bg)}
@@ -677,7 +677,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s)!important}
 .eyebrow,.section-label,.case-kicker,.build-kicker{color:var(--s2)!important}
 .hero-name em{background:linear-gradient(135deg,var(--s),var(--s2))!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important}
 .hero-sub{color:var(--t2)!important}
-.btn-p,.build-actions .build-primary{background:var(--s)!important;color:#1a1020!important;box-shadow:none!important}
+.btn-p,.build-actions .build-primary,.nav-cta,#flt{background:var(--acid)!important;color:#1a1020!important;box-shadow:none!important}
 .btn-s{border-color:var(--s2)!important;color:var(--t1)!important}
 #vitals{border-color:var(--border)!important;background:transparent!important;padding:2.75rem 3rem}
 #vitals::before{display:none!important}
@@ -692,6 +692,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s)!important}
 .case-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:start}
 .case-card{min-height:0!important;padding:1.5rem!important;gap:.8rem!important;transform:none!important;box-shadow:4px 4px 0 rgba(189,137,233,.18)!important}
 .case-card .cc-teaser{flex:none!important}.case-card:hover{border-color:var(--s)!important;transform:translate(-2px,-2px)!important;box-shadow:7px 7px 0 rgba(237,114,173,.7)!important}
+.case-card::before{height:3px!important;background:var(--acid)!important;transform:scaleX(1)!important;opacity:.84}.case-card:nth-child(even)::before{background:var(--s2)!important}.case-card:nth-child(even) .cc-metric{background:var(--acid)!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important}
 .case-num,.case-stat .num{color:var(--s)!important}
 .case-tag{color:var(--s2)!important;border-color:var(--bhi)!important}
 .build-grid{grid-template-columns:minmax(0,1.08fr) minmax(260px,.92fr)!important;align-items:start}
@@ -710,6 +711,13 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s)!important}
 #cursor-glow{background:radial-gradient(circle,rgba(255,210,99,.18) 0%,rgba(255,210,99,.07) 42%,transparent 70%)!important}
 .case-card,.build-card,.build-visual,.vital{border-radius:0!important}
 .sec-mark::before{content:"";display:block;width:9px;height:9px;flex:0 0 9px;background:var(--s);transform:rotate(45deg)}
+.hobby-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}
+.hobby-card{position:relative;min-height:230px;padding:1.65rem;border:1px solid var(--border);background:#21192c;box-shadow:5px 5px 0 rgba(224,234,104,.35);overflow:hidden}
+.hobby-card:nth-child(even){box-shadow:5px 5px 0 rgba(189,137,233,.42)}
+.hobby-no{display:block;margin-bottom:2rem;font-size:.68rem;letter-spacing:.13em;font-weight:800;color:var(--acid)}
+.hobby-card h3{margin:0 0 .75rem;font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.25rem);letter-spacing:-.04em;line-height:1;color:var(--t1)}
+.hobby-card:nth-child(even) h3{color:var(--acid)}
+.hobby-card p{max-width:48ch;margin:0;color:var(--t2);font-size:.9rem;line-height:1.7}.hobby-link{position:absolute;left:1.65rem;bottom:1.5rem;color:var(--acid);font-size:.8rem;font-weight:800;text-decoration:none}.hobby-link:hover{color:var(--s)}
 .contact-hl span{color:var(--s)!important}
 @media(max-width:900px){
   #hero{grid-template-columns:1fr!important;gap:2.5rem;padding-top:7rem!important;min-height:auto}
@@ -718,6 +726,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s)!important}
   #vitals{padding:2rem 1.25rem}
   .vitals-row{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   .case-grid,.build-grid,.sk-grid{grid-template-columns:1fr!important}
+  .hobby-grid{grid-template-columns:1fr}
   .case-card{min-height:0!important}
   .build-visual{min-height:340px}
 }
@@ -736,6 +745,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s)!important}
   <ul class="nav-links" id="nl">
     <li><a href="#about">About</a></li>
     <li><a href="#cases">Work</a></li>
+    <li><a href="#hobbies">Hobby Projects</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
   </ul>
@@ -860,7 +870,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s)!important}
   <div class="build-grid">
     <article class="build-card reveal">
       <span class="build-kicker">Independent AI workflow · 2026</span>
-      <h3>ApplyGuard</h3>
+      <h3>FindAMatch</h3>
       <p>A local-first, evidence-grounded job-search copilot for product managers. It converts a resume into a reviewable evidence ledger, imports candidate-labeled job alerts, applies hard eligibility filters, and prepares a human-reviewed application packet.</p>
       <div class="build-tags"><span>Agentic workflow</span><span>Gmail OAuth</span><span>Explainable ranking</span><span>Human-in-the-loop</span><span>Privacy by design</span></div>
       <div class="build-actions">
@@ -1292,6 +1302,26 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s)!important}
     <div class="case-modal-body" id="caseModalBody"></div>
   </div>
 </div>
+<!-- HOBBY PROJECTS -->
+<hr class="divider">
+<div class="wrap" id="hobbies">
+  <div class="sec-mark"><span class="sec-t">Hobby Projects</span><div class="sec-rule"></div></div>
+  <div class="hobby-grid">
+    <article class="hobby-card reveal">
+      <span class="hobby-no">01 · AI WORKFLOWS</span>
+      <h3>Building practical AI experiments</h3>
+      <p>I build small, local-first tools to learn how agents can reduce repetitive research and synthesis work while keeping people in control of important decisions.</p>
+      <a class="hobby-link" href="https://github.com/robona-pk" target="_blank" rel="noopener">Explore GitHub ↗</a>
+    </article>
+    <article class="hobby-card reveal">
+      <span class="hobby-no">02 · PRODUCT PROTOTYPES</span>
+      <h3>Turning product questions into working prototypes</h3>
+      <p>My repositories are a living record of the product ideas, interaction experiments, and automation prototypes I build outside my day-to-day PM work.</p>
+      <a class="hobby-link" href="https://github.com/robona-pk" target="_blank" rel="noopener">See the work ↗</a>
+    </article>
+  </div>
+</div>
+
   <!-- SKILLS -->
 <hr class="divider">
 <div class="wrap" id="skills">
@@ -1381,6 +1411,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s)!important}
          <a href="mailto:alternate.prerna@gmail.com" class="clink"><span class="clink-i">&#9993;</span>alternate.prerna@gmail.com</a>
 <a href="tel:+918851068275" class="clink"><span class="clink-i">&#128222;</span>+91 88510 68275</a>
 <a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" class="clink"><span class="clink-i" style="font-size:.7rem;font-weight:700;font-style:normal">in</span>LinkedIn Profile</a>
+<a href="https://github.com/robona-pk" target="_blank" rel="noopener" class="clink"><span class="clink-i" style="font-size:.75rem;font-weight:700;font-style:normal">GH</span>GitHub Projects</a>
 <a href="https://drive.google.com/file/d/1To5xUIDQBddvdafDoVcgCVNxidGA1Cfo/view?usp=sharing" target="_blank" rel="noopener" class="clink"><span class="clink-i" style="font-size:.8rem">&#128065;</span>View Resume</a>
         </div>
       </div>
@@ -1626,7 +1657,7 @@ const spyObs = new IntersectionObserver(entries => {
     navLinks.forEach(a => a.classList.toggle('nav-active', a.getAttribute('href') === '#' + id));
   });
 }, { rootMargin: '-35% 0px -55% 0px', threshold: 0 });
-['about','cases','skills','contact'].forEach(id => {
+['about','cases','hobbies','skills','contact'].forEach(id => {
   const el = document.getElementById(id); if (el) spyObs.observe(el);
 });
 

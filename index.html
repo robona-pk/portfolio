@@ -747,6 +747,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .case-modal .cs-stat,.case-modal .cs-stat-hero-figure{background:rgba(85,183,174,.06)!important}.case-modal .cs-stat.dark .cs-stat-n{font-size:.7rem!important;letter-spacing:.06em!important;text-transform:uppercase!important}
 .case-modal .cs-lbl::before{background:#55b7ae!important}.case-modal .cs-rl li::before{color:#55b7ae!important}
 .case-modal .cs-flow .csf.active{background:#55b7ae!important;color:#170f1b!important}.case-modal .cs-flow .csf.done{background:rgba(85,183,174,.14)!important;color:#83d8d1!important}
+.case-modal .cs-evidence{color:#73cfc7;font-weight:800;letter-spacing:.01em;white-space:nowrap}
 @media(max-width:900px){#about .about-layout{grid-template-columns:1fr!important}.about-portrait{width:min(320px,80vw);margin:1.25rem auto 0;order:-1}}
 .contact-hl span{color:var(--s)!important}
 @media(max-width:900px){
@@ -1445,12 +1446,38 @@ const caseOverlay = document.getElementById('caseModalOverlay');
 const caseModalBody = document.getElementById('caseModalBody');
 let lastFocusedCard = null;
 
+function highlightCaseEvidence(root) {
+  const selector = '.cs-p, .cs-stat-l, .cs-stat-hero-l, .cs-rl li';
+  const pattern = /(₹\s?\d+(?:\.\d+)?(?:Cr\+|L|M|K)?|\+?\d+(?:\.\d+)?%|\d+(?:\.\d+)?[×x]|\d+\s*(?:→|to)\s*\d+|\d+(?:\.\d+)?(?:Cr\+|L|M|K))/g;
+  root.querySelectorAll(selector).forEach(el => {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      if (!pattern.test(node.nodeValue)) return;
+      pattern.lastIndex = 0;
+      const fragment = document.createDocumentFragment();
+      let cursor = 0;
+      node.nodeValue.replace(pattern, (match, offset) => {
+        fragment.append(document.createTextNode(node.nodeValue.slice(cursor, offset)));
+        const proof = document.createElement('span');
+        proof.className = 'cs-evidence'; proof.textContent = match;
+        fragment.append(proof); cursor = offset + match.length;
+        return match;
+      });
+      fragment.append(document.createTextNode(node.nodeValue.slice(cursor)));
+      node.parentNode.replaceChild(fragment, node);
+    });
+  });
+}
+
 function openCase(n) {
   const source = document.getElementById('case-detail-' + n);
   if (!source || !caseOverlay || !caseModalBody) return;
   lastFocusedCard = document.activeElement;
   caseModalBody.innerHTML = source.outerHTML;
   const clone = caseModalBody.querySelector('.case');
+  if (clone) highlightCaseEvidence(clone);
   if (clone) clone.classList.add('in');
   caseOverlay.classList.add('open');
   document.body.classList.add('modal-open');

@@ -1454,18 +1454,22 @@ function highlightCaseEvidence(root) {
     const nodes = [];
     while (walker.nextNode()) nodes.push(walker.currentNode);
     nodes.forEach(node => {
-      if (!pattern.test(node.nodeValue)) return;
+      const value = node.nodeValue;
       pattern.lastIndex = 0;
+      if (!pattern.test(value)) return;
+      pattern.lastIndex = 0;
+      const parts = value.split(pattern);
       const fragment = document.createDocumentFragment();
-      let cursor = 0;
-      node.nodeValue.replace(pattern, (match, offset) => {
-        fragment.append(document.createTextNode(node.nodeValue.slice(cursor, offset)));
-        const proof = document.createElement('span');
-        proof.className = 'cs-evidence'; proof.textContent = match;
-        fragment.append(proof); cursor = offset + match.length;
-        return match;
+      parts.forEach((part, index) => {
+        if (!part) return;
+        if (index % 2) {
+          const proof = document.createElement('span');
+          proof.className = 'cs-evidence'; proof.textContent = part;
+          fragment.append(proof);
+        } else {
+          fragment.append(document.createTextNode(part));
+        }
       });
-      fragment.append(document.createTextNode(node.nodeValue.slice(cursor)));
       node.parentNode.replaceChild(fragment, node);
     });
   });

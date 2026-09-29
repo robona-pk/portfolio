@@ -33,7 +33,7 @@
 
 /* SCORE FORMULA STRIP; the trust gate as a visual equation */
 .cs-formula{display:flex;align-items:center;justify-content:center;gap:.85rem;flex-wrap:wrap;
-  padding:1.5rem 2.5rem;border-bottom:1px solid var(--border);background:rgba(0,200,176,.05)}
+  padding:1.5rem 2.5rem;border-bottom:1px solid var(--border);background:rgba(240,160,32,.05)}
 .cs-formula-part{font-family:var(--fd);font-weight:700;font-size:.85rem;color:var(--t1);
   padding:.55rem 1.1rem;border:1px solid var(--border);border-radius:6px;background:var(--card);white-space:nowrap}
 .cs-formula-op{font-size:1.1rem;color:var(--t3);font-weight:700}
@@ -47,8 +47,8 @@
 :root{
   --bg:#080806;--bg2:#0D0D0A;--card:#111110;--border:#1E1E1A;--bhi:#2C2C26;
   --s:#F0A020;--s2:#FFD060;--sd:rgba(240,160,32,.1);
-  --d:#00C8B0;--dd:rgba(0,200,176,.1);
-  --p:#22C55E;--v:#A080E0;--vd:rgba(160,128,224,.1);
+  --d:#F0A020;--dd:rgba(240,160,32,.1);
+  --p:#F0A020;--v:#A080E0;--vd:rgba(160,128,224,.1);
   --t1:#F0ECD8;--t2:#C4C0AC;--t3:#8A8674;
   --fd:"Bricolage Grotesque",sans-serif;
   --fb:"Inter",sans-serif;
@@ -58,7 +58,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--fb);font-size:16px;l
   background-image:radial-gradient(circle,rgba(240,160,32,.04) 1px,transparent 1px);background-size:32px 32px}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
   background:radial-gradient(ellipse 50% 40% at 88% 95%,rgba(240,160,32,.07) 0%,transparent 55%),
-             radial-gradient(ellipse 40% 35% at 5% 5%,rgba(0,200,176,.05) 0%,transparent 50%)}
+             radial-gradient(ellipse 40% 35% at 5% 5%,rgba(240,160,32,.05) 0%,transparent 50%)}
 body>*{position:relative;z-index:1}
 
 /* NAV */
@@ -110,7 +110,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
   background:
     radial-gradient(ellipse 50% 160% at 10% 50%, rgba(30,80,200,.28) 0%,transparent 60%),
     radial-gradient(ellipse 40% 160% at 50% 50%, rgba(160,128,224,.14) 0%,transparent 60%),
-    radial-gradient(ellipse 50% 160% at 90% 50%, rgba(0,200,176,.14) 0%,transparent 60%);
+    radial-gradient(ellipse 50% 160% at 90% 50%, rgba(240,160,32,.14) 0%,transparent 60%);
   pointer-events:none}
 .vital{padding:1.75rem 2rem;border-right:none;position:relative;
   background:rgba(255,255,255,.04);
@@ -208,7 +208,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .cs-stat{padding:1.75rem 2rem;border-right:1px solid var(--border);position:relative}
 .cs-stat:last-child{border-right:none}
 .cs-stat.amber{background:rgba(240,160,32,.08)}
-.cs-stat.teal{background:rgba(0,200,176,.07)}
+.cs-stat.teal{background:rgba(240,160,32,.07)}
 .cs-stat.purple{background:rgba(160,128,224,.07)}
 .cs-stat.dark{background:rgba(109,40,217,.06);border-color:rgba(109,40,217,.2)}
 .cs-stat-n{font-family:var(--fd);font-size:clamp(1.75rem,4vw,2.75rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:.35rem}
@@ -223,7 +223,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 /* STAT + NOTE; one metric with supporting context — not two equal boxes */
 .cs-stat-hero{border-bottom:1px solid var(--border)}
 .cs-stat-hero-figure{padding:1.75rem 2.5rem;display:flex;flex-direction:column;justify-content:center}
-.cs-stat-hero-figure.teal{background:rgba(0,200,176,.07)}
+.cs-stat-hero-figure.teal{background:rgba(240,160,32,.07)}
 .cs-stat-hero-figure.amber{background:rgba(240,160,32,.08)}
 .cs-stat-hero-n{font-family:var(--fd);font-size:clamp(1.75rem,4vw,2.5rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:.35rem}
 .cs-stat-hero-figure.teal .cs-stat-hero-n{color:var(--d)}
@@ -249,14 +249,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 @media(max-width:900px){.cs-video-trio{grid-template-columns:1fr}.cs-video-aside{flex-direction:row;flex-wrap:wrap}.cs-video-aside .cs-stat{flex:1;min-width:140px}}
 .cs-cap{font-size:.72rem;color:var(--t3);text-align:center;margin-top:.5rem;letter-spacing:.04em}
 
+/* Video proof stays visible even when Drive's embedded player cannot stream. */
+.cs-video-proof{width:min(100%,320px);margin:0 auto;border:1px solid var(--border);background:var(--bg2)}
+.cs-video-proof a{display:block;position:relative;color:inherit;text-decoration:none}
+.cs-video-thumb{display:block;width:100%;aspect-ratio:9/16;object-fit:cover}
+.cs-video-proof .cs-video-open{position:absolute;inset:auto 0 0;padding:.7rem .85rem;background:linear-gradient(transparent,rgba(8,8,6,.9));color:var(--t1);font-size:.76rem;font-weight:700;letter-spacing:.04em}
+.cs-video-proof figcaption{padding:.7rem .85rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--t2);line-height:1.45}
+.cs-video-proof figcaption strong{display:block;margin-bottom:.15rem;color:var(--t1);font-size:.78rem}
+
 /* FUN FACT BAND */
 .cs-band{display:flex;align-items:flex-start;gap:1rem;padding:1.2rem 2.5rem;border-bottom:1px solid var(--border)}
 .cs-band.ff{background:rgba(240,160,32,.06);border-left:3px solid var(--s)}
-.cs-band.ci{background:rgba(0,200,176,.06);border-left:3px solid var(--d)}
+.cs-band.ci{background:rgba(240,160,32,.06);border-left:3px solid var(--d)}
 .cs-band-icon{flex-shrink:0;width:36px;height:36px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;font-size:1.1rem;line-height:1}
 .cs-band.ff .cs-band-icon{background:rgba(240,160,32,.15)}
-.cs-band.ci .cs-band-icon{background:rgba(0,200,176,.15)}
+.cs-band.ci .cs-band-icon{background:rgba(240,160,32,.15)}
 .cs-band-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem}
 .cs-band.ff .cs-band-lbl{color:var(--s)}
 .cs-band.ci .cs-band-lbl{color:var(--d)}
@@ -292,7 +300,7 @@ background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:te
 
 /* PRODUCT BUILDS */
 .build-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
-.build-card{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(0,200,176,.1),rgba(17,17,16,.98) 42%);border:1px solid var(--bhi);padding:2rem;min-height:310px;display:flex;flex-direction:column}
+.build-card{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(240,160,32,.1),rgba(17,17,16,.98) 42%);border:1px solid var(--bhi);padding:2rem;min-height:310px;display:flex;flex-direction:column}
 .build-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 95% 0%,rgba(240,160,32,.18),transparent 35%);pointer-events:none}
 .build-card>*{position:relative;z-index:1}.build-kicker{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--d);font-weight:700}.build-card h3{font-family:var(--fd);font-size:clamp(1.8rem,3vw,2.6rem);letter-spacing:-.04em;line-height:1;margin:.9rem 0}.build-card p{max-width:520px;color:var(--t2);font-size:.92rem;line-height:1.7}.build-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 1.5rem}.build-tags span{font-size:.7rem;padding:.3rem .6rem;border:1px solid var(--bhi);border-radius:99px;color:var(--t2);background:rgba(8,8,6,.35)}.build-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:auto}.build-actions a{font-size:.82rem;font-weight:700;text-decoration:none}.build-actions .build-primary{color:#080806;background:var(--s);padding:.65rem 1rem;border-radius:4px}.build-actions .build-secondary{color:var(--t1);border:1px solid var(--bhi);padding:.62rem 1rem;border-radius:4px}.build-note{font-size:.76rem;color:var(--t3);margin-top:1rem}
 @media(max-width:900px){.build-grid{grid-template-columns:1fr}}
@@ -346,7 +354,7 @@ background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:te
 .sk-tag{font-size:.72rem;font-weight:500;color:var(--t2);background:var(--bg2);
   border:1px solid var(--bhi);padding:.25rem .65rem;border-radius:3px;letter-spacing:.02em}
 .sk-card.amber .sk-tag{color:var(--s);border-color:rgba(240,160,32,.25);background:rgba(240,160,32,.06)}
-.sk-card.teal .sk-tag{color:var(--d);border-color:rgba(0,200,176,.25);background:rgba(0,200,176,.06)}
+.sk-card.teal .sk-tag{color:var(--d);border-color:rgba(240,160,32,.25);background:rgba(240,160,32,.06)}
 .sk-card.purple .sk-tag{color:var(--v);border-color:rgba(160,128,224,.25);background:rgba(160,128,224,.06)}
 .sk-card.green .sk-tag{color:var(--p);border-color:rgba(34,197,94,.25);background:rgba(34,197,94,.06)}
 @media(max-width:900px){.sk-grid{grid-template-columns:repeat(2,1fr)}}
@@ -497,7 +505,7 @@ footer a:hover{color:var(--s)}
 ============================================================ */
 
 #scroll-progress{position:fixed;top:0;left:0;height:2px;width:0%;z-index:1000;pointer-events:none;
-  background:linear-gradient(90deg,#1E50C8 0%,#5B8EF0 60%,#00C8B0 100%);
+  background:linear-gradient(90deg,#1E50C8 0%,#5B8EF0 60%,#F0A020 100%);
   box-shadow:0 0 8px rgba(30,80,200,.5);
   transition:width .08s linear}
 
@@ -632,7 +640,7 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
   background:radial-gradient(circle,rgba(240,160,32,.04) 0%,transparent 70%);
   animation:orbDrift 12s ease-in-out infinite}
 .orb-2{width:240px;height:240px;top:45%;right:20%;
-  background:radial-gradient(circle,rgba(0,200,176,.04) 0%,transparent 70%);
+  background:radial-gradient(circle,rgba(240,160,32,.04) 0%,transparent 70%);
   animation:orbDrift 16s ease-in-out 2s infinite reverse}
 @keyframes orbDrift{0%,100%{transform:translate(0,0)}33%{transform:translate(20px,-24px)}66%{transform:translate(-16px,18px)}}
 
@@ -660,7 +668,7 @@ nav.scrolled{border-bottom-color:rgba(240,160,32,.18)!important;
 /* Refinement layer: retain the original portfolio content, make its scan path calmer. */
 :root{
   --bg:#140f1b;--bg2:#1a1424;--card:#21192c;--border:#3d2d4d;--bhi:#654778;
-  --s:#ba719a;--s2:#a092c5;--d:#a092c5;--v:#a092c5;--acid:#ded1a8;
+  --s:#ba719a;--s2:#a092c5;--d:#e1b85b;--dd:rgba(225,184,91,.1);--p:#e1b85b;--v:#a092c5;--acid:#ded1a8;
   --t1:#f7f0f8;--t2:#d7cadc;--t3:#ae9cb6;
 }
 html{background:var(--bg)}
@@ -739,15 +747,17 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .about-portrait-tag{position:absolute;right:-1rem;bottom:1.5rem;z-index:2;padding:.55rem .7rem;border:2px solid #170f1b;background:#c783a7;color:#170f1b;font-size:.65rem;letter-spacing:.12em;font-weight:800;box-shadow:4px 4px 0 #0b090f;transform:rotate(-4deg)}
 .about-portrait-mark{position:absolute;left:-.5rem;top:1.25rem;z-index:3;width:2.25rem;height:2.25rem;display:grid;place-items:center;background:var(--s2);color:#170f1b;border:2px solid #170f1b;font-family:var(--fd);font-size:1.5rem;font-weight:800;box-shadow:4px 4px 0 #0b090f}
 .about-portrait::after{content:"";position:absolute;right:-1.1rem;top:2.5rem;width:1.6rem;height:1.6rem;border:2px solid var(--s);background:#17111d;transform:rotate(45deg)}
-/* Mineral teal is reserved for evidence inside case-study detail views. */
-.case-modal{background:#17111d!important;border:1px solid #554962!important;box-shadow:7px 7px 0 #09070c,0 40px 100px rgba(0,0,0,.85)!important}
-.case-modal-topbar{background:#21192c!important;border-bottom-color:#554962!important}.case-modal-close{border-color:#554962!important}.case-modal-close:hover{background:#55b7ae!important;border-color:#55b7ae!important;color:#170f1b!important}
-.case-modal .cs-hd::after{background:linear-gradient(90deg,#55b7ae,rgba(85,183,174,.2),transparent)!important}
-.case-modal .cs-metric:not(.cs-metric-text),.case-modal .cs-stat-n,.case-modal .cs-stat-hero-n{color:#55b7ae!important;background:none!important;-webkit-text-fill-color:#55b7ae!important}
-.case-modal .cs-stat,.case-modal .cs-stat-hero-figure{background:rgba(85,183,174,.06)!important}.case-modal .cs-stat.dark .cs-stat-n{font-size:.7rem!important;letter-spacing:.06em!important;text-transform:uppercase!important}
-.case-modal .cs-lbl::before{background:#55b7ae!important}.case-modal .cs-rl li::before{color:#55b7ae!important}
-.case-modal .cs-flow .csf.active{background:#55b7ae!important;color:#170f1b!important}.case-modal .cs-flow .csf.done{background:rgba(85,183,174,.14)!important;color:#83d8d1!important}
-.case-modal .cs-evidence{color:#73cfc7;font-weight:800;letter-spacing:.01em;white-space:nowrap}
+/* Gold is the single accent inside case-study detail views. */
+.case-modal{--modal-gold:#e1b85b;--modal-gold-soft:rgba(225,184,91,.09);--modal-gold-border:rgba(225,184,91,.28);background:#17111d!important;border:1px solid #554962!important;box-shadow:7px 7px 0 #09070c,0 40px 100px rgba(0,0,0,.85)!important}
+.case-modal-topbar{background:#21192c!important;border-bottom-color:#554962!important}.case-modal-close{border-color:#554962!important}.case-modal-close:hover{background:var(--modal-gold)!important;border-color:var(--modal-gold)!important;color:#170f1b!important}
+.case-modal .cs-hd::after{background:linear-gradient(90deg,var(--modal-gold),var(--modal-gold-border),transparent)!important}
+.case-modal .cs-metric:not(.cs-metric-text),.case-modal .cs-stat-n,.case-modal .cs-stat-hero-n{color:var(--modal-gold)!important;background:none!important;-webkit-text-fill-color:var(--modal-gold)!important}
+.case-modal .cs-stat,.case-modal .cs-stat-hero-figure,.case-modal .cs-band.ff,.case-modal .cs-band.ci{background:var(--modal-gold-soft)!important}.case-modal .cs-stat.dark .cs-stat-n{font-size:.7rem!important;letter-spacing:.06em!important;text-transform:uppercase!important}
+.case-modal .cs-lbl::before,.case-modal .cs-band{border-left-color:var(--modal-gold)!important}.case-modal .cs-lbl::before,.case-modal .cs-band-icon{background:var(--modal-gold)!important}.case-modal .cs-rl li::before,.case-modal .cs-process-step::after,.case-modal .cs-process-lbl,.case-modal .cs-band-lbl,.case-modal .cs-callout-lbl,.case-modal .cs-weight-pct{color:var(--modal-gold)!important}
+.case-modal .cs-flow .csf.active{background:var(--modal-gold)!important;color:#170f1b!important}.case-modal .cs-flow .csf.done{background:var(--modal-gold-soft)!important;color:var(--modal-gold)!important}.case-modal .cs-flow .csf-arr{color:var(--modal-gold)!important}
+.case-modal .cs-st,.case-modal .cs-st.live,.case-modal .cs-st.shipped,.case-modal .cs-st.iter{color:var(--modal-gold)!important}.case-modal .cs-weight-fill{background:var(--modal-gold)!important}.case-modal .cs-formula{background:var(--modal-gold-soft)!important}.case-modal .cs-formula-part:last-child{border-color:var(--modal-gold)!important;color:var(--modal-gold)!important}
+.case-modal .cs-evidence{color:var(--modal-gold);font-weight:800;letter-spacing:.01em;white-space:nowrap}.case-modal .cs-key{color:var(--t1)!important}.case-modal .cs-key + .cs-p a{color:var(--modal-gold)!important}
+.case-modal .cs-metric-long{font-size:clamp(2.15rem,4vw,3.3rem);line-height:1.02;max-width:14ch}
 @media(max-width:900px){#about .about-layout{grid-template-columns:1fr!important}.about-portrait{width:min(320px,80vw);margin:1.25rem auto 0;order:-1}}
 .contact-hl span{color:var(--s)!important}
 @media(max-width:900px){
@@ -875,7 +885,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
         <p class="cc-teaser">When a Lenskart customer buys in-store, they have a natural point of contact; they know exactly where to go for repairs, exchanges, or questions. Online customers have no such anchor.</p>
         <span class="cc-cta">Read full case study <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </div>
-      <div class="case-card reveal" data-case="3" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case study: Smart Health Reports: The Dead Feature" onclick="openCase(3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCase(3);}">
+      <div class="case-card reveal" data-case="3" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case study: Smart Health Reports: Rebuilding a Dormant Feature" onclick="openCase(3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCase(3);}">
         <div class="cc-top">
           <span class="cc-num">03</span>
           <span class="cc-co">Bajaj Finserv Health</span>
@@ -883,8 +893,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
           <span class="cc-status live">&#9679; Live</span>
         </div>
         <div class="cc-metric">8&#215; Health Files Adoption</div>
-        <div class="cc-title">Smart Health Reports: The Dead Feature</div>
-        <p class="cc-teaser">A dormant Health Files feature became an 8&#215; adoption loop and drove &#8377;7L incremental MRR.</p>
+        <div class="cc-title">Smart Health Reports: Rebuilding a Dormant Feature</div>
+        <p class="cc-teaser">A dormant Health Files upload became a useful report experience that people returned to.</p>
         <span class="cc-cta">Read full case study <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </div>
       <div class="case-card reveal" data-case="4" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case study: Doctor Quality Score &amp; Listing Reorder" onclick="openCase(4)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCase(4);}">
@@ -940,7 +950,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 
       <div class="cs-sec">
         <span class="cs-lbl">The Problem</span>
-        <p class="cs-p">In a typical week, 80% of Home Trial landing-page visitors dropped off at step one — before selecting an address or slot. We called customers who had shown intent but abandoned at that point to understand the barrier.</p>
+        <p class="cs-p">Four in five Home Trial landing-page visitors left at step one, before selecting an address or slot. We called people who had shown intent but abandoned there to understand the barrier.</p>
       </div>
 
       <div class="cs-quote">
@@ -989,10 +999,13 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
       </div>
 
       <div class="cs-video-launch">
-        <div>
-          <iframe src="https://drive.google.com/file/d/11kuZDAMUmZzZeX5alIwGjYji_R38UW0x/preview" class="cs-iframe" allow="autoplay" allowfullscreen></iframe>
-          <p class="cs-cap" style="margin-top:.5rem">Product walkthrough; post-MVP live flow</p>
-        </div>
+        <figure class="cs-video-proof">
+          <a href="https://drive.google.com/file/d/11kuZDAMUmZzZeX5alIwGjYji_R38UW0x/view" target="_blank" rel="noopener" aria-label="Open the Home Trials product walkthrough video in Google Drive">
+            <img class="cs-video-thumb" src="https://drive.google.com/thumbnail?id=11kuZDAMUmZzZeX5alIwGjYji_R38UW0x&amp;sz=w1200" alt="Home Trials product walkthrough showing the Lenskart mobile experience" referrerpolicy="no-referrer">
+            <span class="cs-video-open">Open full walkthrough</span>
+          </a>
+          <figcaption><strong>Product walkthrough</strong>Post-MVP Home Trials flow.</figcaption>
+        </figure>
         <div>
           <span class="cs-lbl">The Real Launch: Real Inventory, Real Choice</span>
           <p class="cs-p">With demand validated, we built the actual thing. Customers now browse real inventory from their nearby Lenskart store and select the specific frames they want brought home; not a curated kit standing in for choice, but their own list, live across <span class="cs-em">5 cities</span>.</p>
@@ -1008,13 +1021,6 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
       <div class="cs-band ff">
         <span class="cs-band-icon">&#9889;</span>
         <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">Nobody told agents to do this; but once they could see what customers had picked, they started calling them before appointments to discuss frames. We built a selection feature. Agents turned it into a styling concierge.</p></div>
-      </div>
-
-      <div class="cs-stat-hero">
-        <div class="cs-stat-hero-figure amber">
-          <div class="cs-stat-hero-n">&#8377;1.8Cr</div>
-          <div class="cs-stat-hero-l">Incremental annualised revenue across 5 cities, from the lift in bookings once customers could pick their own frames.</div>
-        </div>
       </div>
 
       <div class="cs-sec">
@@ -1146,8 +1152,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
           <span class="cs-tp">Health Tech &#183; Data</span>
           <span class="cs-st live">&#9679; Live</span>
         </div>
-        <div class="cs-metric">8&#215;</div>
-        <div class="cs-title">Smart Health Reports: The Dead Feature</div>
+        <div class="cs-metric cs-metric-long">8&#215; Health Files adoption</div>
+        <div class="cs-title">Smart Health Reports: Rebuilding a Dormant Feature</div>
       </div>
 
       <div class="cs-sec">
@@ -1203,13 +1209,19 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
       </div>
 
       <div class="cs-media">
-        <iframe src="https://drive.google.com/file/d/1RO7er3RwxaF9rjv67iNBx0QX3RAwnxqF/preview" class="cs-iframe" allow="autoplay" allowfullscreen></iframe>
+        <figure class="cs-video-proof">
+          <a href="https://drive.google.com/file/d/1RO7er3RwxaF9rjv67iNBx0QX3RAwnxqF/view" target="_blank" rel="noopener" aria-label="Open the Smart Health Reports product walkthrough video in Google Drive">
+            <img class="cs-video-thumb" src="https://lh3.googleusercontent.com/d/1RO7er3RwxaF9rjv67iNBx0QX3RAwnxqF=w1200?authuser=0" alt="Smart Health Reports product walkthrough showing the Bajaj Finserv Health mobile experience" referrerpolicy="no-referrer">
+            <span class="cs-video-open">Open full walkthrough</span>
+          </a>
+          <figcaption><strong>Smart Health Reports walkthrough</strong>Health Files report experience.</figcaption>
+        </figure>
       </div>
 
       <div class="cs-results">
         <span class="cs-lbl">Outcome</span>
         <ul class="cs-rl">
-          <li>Active Health Files users increased <strong style="color:var(--t1)">8×</strong>, showing that a useful report experience drove sustained adoption.</li>
+          <li>Smart Reports turned a dormant upload flow into a report experience people returned to.</li>
           <li>&#8377;7L incremental MRR from health-service recommendations surfaced inside the report.</li>
         </ul>
       </div>
@@ -1324,9 +1336,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
         <div><div class="cs-callout-lbl">Gender: A Deliberate Exclusion</div><p>Gender was a real, measurable signal in patient behaviour for specific specialties &#8212; but we chose not to fold it into the algorithmic score. Ranking doctors by a sensitive attribute would have been unfair to doctors themselves. Instead, we surfaced it as a contextual, patient-controlled filter in specialties where the pattern was strong, so the platform could serve the preference transparently without an algorithm making that call silently.</p></div>
       </div>
 
-      <div class="cs-stats two">
-        <div class="cs-stat amber"><div class="cs-stat-n">+18%</div><div class="cs-stat-l">Click-through-rate improvement after the listing reorder</div></div>
-        <div class="cs-stat teal"><div class="cs-stat-n">11.6%</div><div class="cs-stat-l">Annual revenue lift after the listing reorder</div></div>
+      <div class="cs-stats one">
+        <div class="cs-stat"><div class="cs-stat-n">11.6%</div><div class="cs-stat-l">Annual revenue lift after the listing reorder</div></div>
       </div>
     </article>
 </div>

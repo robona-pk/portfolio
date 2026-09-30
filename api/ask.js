@@ -26,17 +26,34 @@ const knowledgeBase = [
   }
 ];
 
-const courteousRedirect = 'I’m here to keep this conversation constructive. I can share evidence from Prerna’s work—her projects, product approach, outcomes, or skills—if that would be useful.';
 const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate)\b/i;
+const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|she|her|you|this bot|the bot|assistant)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent)\b|\b(?:prerna|she|her|you|this bot|the bot|assistant)\s+(?:is|are|was|were)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent)\b/i;
+const insultAnswer = 'I don’t have portfolio evidence to support that characterisation. I can help with questions about Prerna’s work, projects, outcomes, or skills.';
 const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood at (her )?job\b/i;
 const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
 const careerMoveQuestion = /\b(switching (org|organisation|organization)|changing (org|organisation|organization|jobs?)|leaving|job change|new role|new opportunities)\b/i;
 const careerMoveAnswer = 'Prerna is exploring senior product roles where she can own high-impact products end to end and drive meaningful revenue growth. She is looking for the right scope to apply her growth, adoption, and cross-functional product experience.';
 const experienceQuestion = /\b(how much|how many|years? of|total)\b.*\bexperience\b|\bexperience\b.*\b(how much|how many|years?|total)\b/i;
 const experienceAnswer = 'Prerna has 5+ years of experience as a Growth and Adoption Product Manager, spanning e-commerce, health-tech, and insurance.';
+const identityQuestion = /\b(who is prerna|who is she|tell me about prerna|about prerna)\b/i;
+const identityAnswer = 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years of experience across e-commerce, health-tech, and insurance. Her work focuses on activation, conversion, retention, and revenue growth.';
+const roleQuestion = /\b(what (does|is).{0,18}\b(role|job|title)|what is prerna.{0,18}\b(role|job|title))\b/i;
+const roleAnswer = 'Prerna is a Growth and Adoption Product Manager.';
+const locationQuestion = /\b(where is.{0,18}\bbased|where.{0,18}\bfrom|based where|location)\b/i;
+const locationAnswer = 'Prerna is based in Bengaluru, India.';
+const employerQuestion = /\b(where (does|did).{0,18}\bwork|companies|employers?)\b/i;
+const employerAnswer = 'Prerna’s portfolio includes growth and product work at Lenskart and Bajaj Finserv Health.';
+const contactQuestion = /\b(how (can|do).{0,18}\b(contact|reach)|email|phone number|linkedin)\b/i;
+const contactAnswer = 'You can use the contact links in the portfolio to reach Prerna by email, phone, LinkedIn, or WhatsApp.';
+const personalQuestion = /\b(age|birthday|married|single|dating|boyfriend|girlfriend|husband|wife|family|children|home address|address|salary|religion|politics|vote|voting|live)\b/i;
+const personalAnswer = 'I only share portfolio information that Prerna has chosen to make public. I can help with her work, experience, projects, outcomes, or skills.';
+const promptInjection = /\b(ignore (all |any |the )?(previous|prior|above)|system prompt|developer message|jailbreak|reveal (your |the )?instructions|act as|pretend (to be|you are))\b/i;
+const externalKnowledgeQuestion = /\b(president|prime minister|capital of|weather|news|stock price|share price|crypto|bitcoin|election|sports score|recipe|joke|translate|current time)\b/i;
+const outOfScopeAnswer = 'This assistant is designed for questions about Prerna’s work and portfolio, rather than general knowledge. I can help with her experience, projects, product approach, outcomes, or skills.';
+const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
+const assistantAnswer = 'I’m Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work and point to the relevant source where available.';
 const portfolioSubject = /\b(prerna|she|her)\b/i;
-const portfolioTopic = /\b(lenskart|bajaj|health|home trial|product|growth|adoption|career|experience|skills?|tools?|projects?|work|case studies|revenue|activation|conversion|retention|sql|python|figma|vercel)\b/i;
-const portfolioScopeAnswer = 'I’m here to answer questions about Prerna’s portfolio. I can help with her experience, projects, product approach, outcomes, or skills.';
+const portfolioTopic = /\b(lenskart|bajaj|health|home trial|product|growth|adoption|career|experience|skills?|tools?|projects?|work|case studies|revenue|activation|conversion|retention|sql|python|figma|vercel|company|industry|resume|background|portfolio|impact|metrics?)\b/i;
 
 function cosineSimilarity(left, right) {
   const dotProduct = left.reduce((sum, value, index) => sum + value * right[index], 0);
@@ -70,11 +87,20 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   const question = typeof req.body?.question === 'string' ? req.body.question.trim() : '';
   if (!question || question.length > 280) return res.status(400).json({ error: 'Ask a question up to 280 characters.' });
-  if (unconstructiveLanguage.test(question)) return res.status(200).json({ answer: courteousRedirect, citations: [] });
+  if (promptInjection.test(question)) return res.status(200).json({ answer: outOfScopeAnswer, citations: [] });
+  if (directedInsult.test(question) || (unconstructiveLanguage.test(question) && /\b(bot|assistant|you)\b/i.test(question))) return res.status(200).json({ answer: insultAnswer, citations: [] });
+  if (personalQuestion.test(question)) return res.status(200).json({ answer: personalAnswer, citations: [] });
+  if (externalKnowledgeQuestion.test(question)) return res.status(200).json({ answer: outOfScopeAnswer, citations: [] });
   if (capabilityQuestion.test(question)) return res.status(200).json({ answer: capabilityAnswer, citations: ['Lenskart@Home case study', 'Bajaj Finserv Health case study'] });
   if (careerMoveQuestion.test(question)) return res.status(200).json({ answer: careerMoveAnswer, citations: ['Portfolio overview'] });
   if (experienceQuestion.test(question)) return res.status(200).json({ answer: experienceAnswer, citations: ['Portfolio overview'] });
-  if (!portfolioSubject.test(question) && !portfolioTopic.test(question)) return res.status(200).json({ answer: portfolioScopeAnswer, citations: [] });
+  if (identityQuestion.test(question)) return res.status(200).json({ answer: identityAnswer, citations: ['Portfolio overview'] });
+  if (roleQuestion.test(question)) return res.status(200).json({ answer: roleAnswer, citations: ['Portfolio overview'] });
+  if (locationQuestion.test(question)) return res.status(200).json({ answer: locationAnswer, citations: ['Portfolio overview'] });
+  if (employerQuestion.test(question)) return res.status(200).json({ answer: employerAnswer, citations: ['Portfolio overview'] });
+  if (contactQuestion.test(question)) return res.status(200).json({ answer: contactAnswer, citations: [] });
+  if (assistantQuestion.test(question)) return res.status(200).json({ answer: assistantAnswer, citations: [] });
+  if (!portfolioSubject.test(question) && !portfolioTopic.test(question)) return res.status(200).json({ answer: outOfScopeAnswer, citations: [] });
   if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: 'RAG endpoint is not configured.' });
 
   let passages;

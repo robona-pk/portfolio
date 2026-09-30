@@ -785,16 +785,22 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .cv-flow-step:nth-child(3) .cv-flow-node{background:#a092c5}
 .cv-flow-step strong{display:block;margin-bottom:.35rem;color:var(--t1);font-size:.82rem;line-height:1.25}
 .cv-flow-step p{margin:0;color:var(--t2);font-size:.72rem;line-height:1.5}
-.cv-tech-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border)}
-.cv-tech-item{padding:1.25rem 1.35rem;border-right:1px solid var(--border)}
-.cv-tech-item:last-child{border-right:none}
-.cv-tech-item h4{margin:0 0 .4rem;color:var(--modal-gold);font-family:var(--fd);font-size:.92rem;letter-spacing:-.01em}
-.cv-tech-item p{margin:0;color:var(--t2);font-size:.78rem;line-height:1.55}
+.cv-system-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:stretch;padding:1.5rem 2.5rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(225,184,91,.045),rgba(160,146,197,.035))}
+.cv-system-node{position:relative;min-width:0;padding:1rem;border:1px solid var(--modal-gold-border);background:#21192c;box-shadow:3px 3px 0 #0b090f}
+.cv-system-node.cv-system-state{border-color:rgba(199,131,167,.65);background:#281b2a}
+.cv-system-node h4{margin:0 0 .35rem;color:var(--modal-gold);font-family:var(--fd);font-size:.9rem;line-height:1.2}
+.cv-system-node.cv-system-state h4{color:#e2a7c4}.cv-system-node p{margin:0;color:var(--t2);font-size:.74rem;line-height:1.5}
+.cv-system-arrow{align-self:center;padding:0 .55rem;color:var(--modal-gold);font-size:1.05rem;font-weight:800}
+.cv-system-note{grid-column:3 / span 3;margin-top:1rem;padding:.65rem .8rem;border-left:2px solid #c783a7;background:rgba(199,131,167,.08);color:#e3d8e7;font-size:.74rem;line-height:1.5}
+.cv-system-note strong{color:#e2a7c4}
+.cv-growth-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border)}
+.cv-growth-item{padding:1.35rem;border-right:1px solid var(--border);background:rgba(225,184,91,.025)}
+.cv-growth-item:last-child{border-right:none}.cv-growth-item h4{margin:0 0 .5rem;color:var(--modal-gold);font-family:var(--fd);font-size:.95rem}.cv-growth-item p{margin:0;color:var(--t2);font-size:.78rem;line-height:1.58}
 .cv-demo{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:1.5rem 2.5rem;background:rgba(225,184,91,.06);border-left:3px solid var(--modal-gold)}
 .cv-demo-copy{max-width:52ch}.cv-demo-copy strong{display:block;margin-bottom:.35rem;color:var(--t1);font-family:var(--fd);font-size:1.05rem}.cv-demo-copy p{margin:0;color:var(--t2);font-size:.84rem;line-height:1.55}
 .cv-demo-link{flex:0 0 auto;padding:.75rem 1rem;border:1px solid var(--modal-gold);background:var(--modal-gold);color:#170f1b!important;font-size:.78rem;font-weight:800;text-decoration:none;box-shadow:3px 3px 0 #0b090f}
 .cv-demo-link:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #0b090f}
-@media(max-width:700px){.cv-tech-grid{grid-template-columns:1fr}.cv-tech-item{border-right:none;border-bottom:1px solid var(--border)}.cv-tech-item:last-child{border-bottom:none}.cv-demo{align-items:flex-start;flex-direction:column;padding:1.25rem}.cv-flow{grid-template-columns:repeat(5,minmax(138px,1fr))}}
+@media(max-width:700px){.cv-system-flow{grid-template-columns:1fr;padding:1.25rem}.cv-system-arrow{padding:.35rem 0;justify-self:center;transform:rotate(90deg)}.cv-system-note{grid-column:auto;margin-top:.65rem}.cv-growth-grid{grid-template-columns:1fr}.cv-growth-item{border-right:none;border-bottom:1px solid var(--border)}.cv-growth-item:last-child{border-bottom:none}.cv-demo{align-items:flex-start;flex-direction:column;padding:1.25rem}.cv-flow{grid-template-columns:repeat(5,minmax(138px,1fr))}}
 @media(max-width:900px){#about .about-layout{grid-template-columns:1fr!important}.about-portrait{width:min(320px,80vw);margin:1.25rem auto 0;order:-1}}
 .contact-hl span{color:var(--s)!important}
 @media(max-width:900px){
@@ -975,8 +981,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
     </figure>
     <article class="build-card reveal">
       <span class="build-kicker">Voice AI product experiment · 2026</span>
-      <h3>ClearView Voice Booking Agent</h3>
-      <p>A phone-style booking assistant for at-home eye tests and frame trials. It checks serviceability, offers real mock slots, books appointments, and turns unsupported locations into waitlist demand signals.</p>
+      <h3>Charlie the Voice Booking Agent</h3>
+      <p>A phone-based booking assistant for at-home eye tests and frame trials. It gives customers who are less comfortable with apps a simple way to book a visit, check serviceability, and choose a slot.</p>
       <div class="build-tags"><span>FastAPI</span><span>SQLite</span><span>Browser voice APIs</span><span>State machine</span><span>Funnel analytics</span></div>
       <div class="build-actions">
         <a class="build-primary" href="#case-5" onclick="openCase(5);return false;">Explore case study ↗</a>
@@ -1010,23 +1016,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 
   <div class="cs-sec">
     <span class="cs-lbl">Problem statement</span>
-    <p class="cs-p">Home-visit booking funnels tend to lose people at address entry and slot selection. A call is more natural for customers who prefer speaking, need help with a decision, or do not trust an app-based booking flow.</p>
-    <p class="cs-p">The challenge was to make voice interaction feel simple without letting a language model make booking decisions or write unvalidated data.</p>
-  </div>
-
-  <div class="cs-contrast">
-    <div class="cs-contrast-col before">
-      <span class="cs-contrast-tag">What could go wrong</span>
-      <div class="cs-contrast-item">An open-ended bot skips details or asks for too much at once</div>
-      <div class="cs-contrast-item">Spoken pincodes and phone numbers are easy to mishear</div>
-      <div class="cs-contrast-item">An unsupported location becomes a dead end</div>
-    </div>
-    <div class="cs-contrast-col after">
-      <span class="cs-contrast-tag">The product decision</span>
-      <div class="cs-contrast-item">One question per turn, with the booking order fixed in code</div>
-      <div class="cs-contrast-item">Local validation before any serviceability or booking action</div>
-      <div class="cs-contrast-item">Consent-based waitlist turns unmet demand into an expansion signal</div>
-    </div>
+    <p class="cs-p">At-home eye care is especially useful for customers who would rather call than navigate an app. Senior citizens and other less tech-confident customers may want a home eye test or frame trial, but need a low-friction way to complete the booking independently.</p>
+    <p class="cs-p">Charlie creates that access path: a customer can make a simple phone-style call, speak naturally, and have the agent book a visit on their behalf. The product challenge was to make this feel reassuringly simple while keeping the booking process precise and reliable.</p>
   </div>
 
   <div class="cs-sec">
@@ -1042,13 +1033,28 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
   </div>
 
   <div class="cs-sec">
-    <span class="cs-lbl">Technical overview</span>
+    <span class="cs-lbl">How Charlie works</span>
     <p class="cs-p">The build keeps generative AI deliberately narrow. Qwen extracts only the answer needed in the current state. FastAPI owns the conversation state, validation, permitted API calls, and fixed next prompt.</p>
   </div>
-  <div class="cv-tech-grid">
-    <div class="cv-tech-item"><h4>Voice layer</h4><p>Chrome speech recognition captures an answer. Browser speech synthesis delivers Charlie's fixed response.</p></div>
-    <div class="cv-tech-item"><h4>Agent control</h4><p>FastAPI runs the finite-state machine. Qwen 2.5 via Ollama can normalise one current-field answer only.</p></div>
-    <div class="cv-tech-item"><h4>Business layer</h4><p>FastAPI and SQLite manage serviceability, slots, bookings, waitlist records, and funnel events.</p></div>
+  <div class="cv-system-flow" aria-label="Charlie system flowchart">
+    <div class="cv-system-node"><h4>Customer call</h4><p>A customer speaks or types one answer at a time.</p></div>
+    <div class="cv-system-arrow" aria-hidden="true">→</div>
+    <div class="cv-system-node"><h4>Voice interface</h4><p>Browser speech recognition and synthesis make the exchange feel like a call.</p></div>
+    <div class="cv-system-arrow" aria-hidden="true">→</div>
+    <div class="cv-system-node cv-system-state"><h4>Charlie state machine</h4><p>FastAPI validates the answer and chooses the next permitted step.</p></div>
+    <div class="cv-system-arrow" aria-hidden="true">→</div>
+    <div class="cv-system-node"><h4>Booking services</h4><p>Serviceability, slots, bookings, waitlist, and events are stored in SQLite.</p></div>
+    <p class="cv-system-note"><strong>Qwen 2.5 via Ollama:</strong> used only to normalise the answer expected in the current step. It cannot advance the flow or create a booking.</p>
+  </div>
+
+  <div class="cs-sec">
+    <span class="cs-lbl">How I would grow adoption</span>
+    <p class="cs-p">The product is not a replacement for the app. It is an assisted-access channel that can broaden who is able to complete a home booking and help the business learn where support is needed.</p>
+  </div>
+  <div class="cv-growth-grid">
+    <div class="cv-growth-item"><h4>Reach the right customer</h4><p>Place a clear “Call to book” path on home-trial pages, store collateral, helpline IVR, and caregiver-facing communications, where an app may not be the preferred route.</p></div>
+    <div class="cv-growth-item"><h4>Make first use reassuring</h4><p>Lead with a familiar call flow, disclose the AI agent clearly, offer a human handoff when needed, and send an SMS or WhatsApp confirmation after the booking.</p></div>
+    <div class="cv-growth-item"><h4>Build the learning loop</h4><p>Track call starts, completed bookings, drop-offs, transfers, and waitlist demand by pincode. Use those signals to improve the flow and prioritise service expansion.</p></div>
   </div>
 
   <div class="cv-demo">

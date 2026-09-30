@@ -39,11 +39,78 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 
 ## Portfolio RAG assistant
 
-The portfolio includes an "Ask Prerna" assistant in `index.html`. It is designed as a small, inspectable RAG implementation:
+The floating **Ask Prerna** assistant is a deliberately inspectable RAG demo. It answers questions about Prerna’s portfolio, explains its scope when a question is unrelated, and shows the portfolio sources used for supported answers.
 
-- The browser submits a question to `POST /api/ask`.
-- The serverless handler embeds the question and portfolio passages, ranks them by cosine similarity, sends only the most relevant passages to the model, and returns the answer with source labels.
-- The interface shows those source labels beneath every answer.
-- When the page is opened as a static file, it falls back to the same local retrieval index so the interaction remains demoable without credentials.
+### Architecture
 
-To activate the live server-side answer generation on Vercel, set `OPENAI_API_KEY` in the project's environment variables. `OPENAI_MODEL` and `OPENAI_EMBEDDING_MODEL` are optional. They default to `gpt-4.1-mini` and `text-embedding-3-small`.
+```text
+Visitor question
+      │
+      ▼
+Answer-policy guard ──► graceful redirect / profile answer / privacy boundary
+      │ (portfolio question)
+      ▼
+POST /api/ask  ──► OpenAI embeddings ──► cosine-similarity ranking
+      │                                        │
+      │                                        ▼
+      └──────────────────────────── top portfolio passages only
+                                               │
+                                               ▼
+                                      OpenAI Responses API
+                                               │
+                                               ▼
+                              concise answer + cited source labels in the chat
+```
+
+### Components
+
+| Component | Location | Responsibility |
+| --- | --- | --- |
+| Chat UI and static fallback | `index.html` | Floating chat window, source labels, local answer-policy checks, and a demo-safe fallback index. |
+| Server RAG endpoint | `api/ask.js` | Applies the same answer policy, retrieves relevant passages, calls the model, and returns citations. |
+| Portfolio knowledge | `knowledgeBase` in `api/ask.js` | Curated case-study, product-approach, skills, and profile passages used for server retrieval. |
+| Static demo knowledge | `portfolioKnowledge` in `index.html` | A concise browser fallback used only when the API is unavailable or the portfolio is opened as a static file. |
+
+### Retrieval flow
+
+1. The browser sends the visitor’s question to `POST /api/ask`.
+2. The server embeds the question and curated portfolio passages using `text-embedding-3-small`.
+3. It calculates cosine similarity and selects the top three passages.
+4. Only those passages are provided to `gpt-4.1-mini` through the Responses API.
+5. The UI renders the answer along with the matching portfolio sources.
+
+This keeps the model grounded in the portfolio rather than allowing it to invent employers, metrics, projects, or personal details.
+
+### Answer policy and edge cases
+
+Before retrieval, the client and server apply a small policy layer for common visitor intent:
+
+- **Supported portfolio facts:** experience, role, location, employers, work, skills, product approach, outcomes, and career intent.
+- **Behavioural questions:** strengths, leadership style, problem-solving, motivation, and hiring fit answer from documented work; weaknesses, failure, conflict, and feedback prompts avoid speculation when no evidence exists.
+- **Personal questions:** salary, family, relationships, private address, and other personal details receive a privacy-respecting boundary.
+- **Insults:** the assistant responds calmly and asks the visitor to keep the question evidence-based.
+- **Out-of-scope questions:** general knowledge, politics, news, weather, jokes, and similar requests are redirected to the portfolio’s purpose.
+- **Prompt injection attempts:** requests to ignore instructions or expose internal instructions stay within the assistant’s portfolio-only scope.
+
+### Local fallback
+
+If `OPENAI_API_KEY` is not configured, or the API cannot be reached, the browser uses the concise static answer bank in `index.html`. This lets the chatbot remain demonstrable in a static preview, while the Vercel API path is the full embedding-based RAG implementation.
+
+### Vercel preproduction
+
+The current chatbot preproduction deployment is the Vercel preview connected to `codex/portfolio-rag-preprod`. It is intentionally separate from the existing user-owned `preprod` branch, so chatbot work can be reviewed without overwriting unrelated preproduction changes. No production promotion is performed by this repository workflow.
+
+Required Vercel environment variable:
+
+```bash
+OPENAI_API_KEY=your_openai_api_key
+```
+
+Optional model overrides:
+
+```bash
+OPENAI_MODEL=gpt-4.1-mini
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+```
+
+Never commit API keys. Configure them only in Vercel’s project environment settings, scoped to Preview (and Production only when the assistant is ready to be promoted).

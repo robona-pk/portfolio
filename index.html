@@ -985,7 +985,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
       <span class="build-kicker">Voice AI product experiment · 2026</span>
       <h3>Charlie the Voice Booking Agent</h3>
       <p>A phone-based booking assistant for at-home eye tests and frame trials. It gives customers who are less comfortable with apps a simple way to book a visit, check serviceability, and choose a slot.</p>
-      <div class="build-tags"><span>FastAPI</span><span>SQLite</span><span>Browser voice APIs</span><span>State machine</span><span>Funnel analytics</span></div>
+      <div class="build-tags"><span>FastAPI</span><span>SQLite</span><span>Browser voice APIs</span><span>State machine</span></div>
       <div class="build-actions">
         <a class="build-primary" href="#case-5" onclick="openCase(5);return false;">Explore case study ↗</a>
         <a class="build-secondary" href="https://docs.google.com/videos/d/1ODUBoZVEVvevSUnQqDwE0KWQi2xAfvQpcNDs6XvWNaM/edit?usp=sharing" target="_blank" rel="noopener">Watch demo ↗</a>
@@ -1036,7 +1036,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 
   <div class="cs-sec">
     <span class="cs-lbl">How Charlie works</span>
-    <p class="cs-p">The build keeps generative AI deliberately narrow. Qwen extracts only the answer needed in the current state. FastAPI owns the conversation state, validation, permitted API calls, and fixed next prompt.</p>
+    <p class="cs-p">The build keeps generative AI deliberately narrow. An optional answer-normalisation layer can interpret only the current response. FastAPI owns the conversation state, validation, permitted API calls, and fixed next prompt.</p>
   </div>
   <div class="cv-system-flow" aria-label="Charlie system flowchart">
     <div class="cv-system-node"><h4>Customer call</h4><p>A customer speaks or types one answer at a time.</p></div>
@@ -1046,7 +1046,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
     <div class="cv-system-node cv-system-state"><h4>Charlie state machine</h4><p>FastAPI validates the answer and chooses the next permitted step.</p></div>
     <div class="cv-system-arrow" aria-hidden="true">→</div>
     <div class="cv-system-node"><h4>Booking services</h4><p>Serviceability, slots, bookings, waitlist, and events are stored in SQLite.</p></div>
-    <p class="cv-system-note"><strong>Qwen 2.5 via Ollama:</strong> used only to normalise the answer expected in the current step. It cannot advance the flow or create a booking.</p>
+    <p class="cv-system-note"><strong>Optional answer normalisation:</strong> a hosted model can interpret only the answer expected in the current step. It cannot advance the flow or create a booking. The deployed demo safely validates raw input when no model endpoint is configured.</p>
   </div>
 
   <div class="cs-sec">

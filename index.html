@@ -696,10 +696,13 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 #hero .hero-inner{position:relative;z-index:3!important;max-width:790px!important}
 #hero .hero-name{position:relative;z-index:4;font-size:clamp(4.9rem,10.6vw,10.2rem);margin-bottom:1rem;text-shadow:5px 5px 0 rgba(20,15,27,.72)}
 #hero .hero-role,#hero .hero-facts,#hero .hero-sub,#hero .hero-actions{position:relative;z-index:4;max-width:510px}
-#hero .hero-role{color:var(--s2)}
+#hero .hero-role{display:inline-flex;width:fit-content;align-items:baseline;padding:.58rem .78rem .62rem;border:1px solid rgba(160,146,197,.46);border-left:3px solid var(--s2);background:rgba(47,34,58,.68);color:var(--s2);font-size:clamp(1.28rem,2.1vw,1.62rem);line-height:1.05;letter-spacing:-.035em;margin-bottom:.8rem}
 #hero .hero-role strong{color:var(--t1)}
-#hero .hero-facts{border-top-color:rgba(160,146,197,.52)}
+#hero .hero-facts{max-width:560px;padding:0;margin-bottom:1.45rem;border:1px solid rgba(160,146,197,.46);background:rgba(27,20,36,.62)}
+#hero .hero-fact{padding:.72rem .82rem .78rem}
 #hero .hero-fact + .hero-fact{border-left-color:rgba(160,146,197,.4)}
+#hero .hero-fact-label{margin-bottom:.3rem;color:#bbaecc;font-size:.58rem;letter-spacing:.13em}
+#hero .hero-fact strong{font-size:1rem;letter-spacing:-.015em;color:var(--t1)}
 #hero .hero-sub{padding:.7rem .85rem;background:rgba(20,15,27,.72);border-left:3px solid var(--s2)}
 .eyebrow,.section-label,.case-kicker,.build-kicker{color:var(--s2)!important}
 .hero-name em{background:linear-gradient(135deg,var(--s),var(--s2))!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important}

@@ -34,6 +34,9 @@ const careerMoveQuestion = /\b(switching (org|organisation|organization)|changin
 const careerMoveAnswer = 'Prerna is exploring senior product roles where she can own high-impact products end to end and drive meaningful revenue growth. She is looking for the right scope to apply her growth, adoption, and cross-functional product experience.';
 const experienceQuestion = /\b(how much|how many|years? of|total)\b.*\bexperience\b|\bexperience\b.*\b(how much|how many|years?|total)\b/i;
 const experienceAnswer = 'Prerna has 5+ years of experience as a Growth and Adoption Product Manager, spanning e-commerce, health-tech, and insurance.';
+const portfolioSubject = /\b(prerna|she|her)\b/i;
+const portfolioTopic = /\b(lenskart|bajaj|health|home trial|product|growth|adoption|career|experience|skills?|tools?|projects?|work|case studies|revenue|activation|conversion|retention|sql|python|figma|vercel)\b/i;
+const portfolioScopeAnswer = 'I’m here to answer questions about Prerna’s portfolio. I can help with her experience, projects, product approach, outcomes, or skills.';
 
 function cosineSimilarity(left, right) {
   const dotProduct = left.reduce((sum, value, index) => sum + value * right[index], 0);
@@ -71,6 +74,7 @@ export default async function handler(req, res) {
   if (capabilityQuestion.test(question)) return res.status(200).json({ answer: capabilityAnswer, citations: ['Lenskart@Home case study', 'Bajaj Finserv Health case study'] });
   if (careerMoveQuestion.test(question)) return res.status(200).json({ answer: careerMoveAnswer, citations: ['Portfolio overview'] });
   if (experienceQuestion.test(question)) return res.status(200).json({ answer: experienceAnswer, citations: ['Portfolio overview'] });
+  if (!portfolioSubject.test(question) && !portfolioTopic.test(question)) return res.status(200).json({ answer: portfolioScopeAnswer, citations: [] });
   if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: 'RAG endpoint is not configured.' });
 
   let passages;

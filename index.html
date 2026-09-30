@@ -772,6 +772,29 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .case-modal .cs-st,.case-modal .cs-st.live,.case-modal .cs-st.shipped,.case-modal .cs-st.iter{color:var(--modal-gold)!important}.case-modal .cs-weight-fill{background:var(--modal-gold)!important}.case-modal .cs-formula{background:var(--modal-gold-soft)!important}.case-modal .cs-formula-part:last-child{border-color:var(--modal-gold)!important;color:var(--modal-gold)!important}
 .case-modal .cs-evidence{color:var(--modal-gold);font-weight:800;letter-spacing:.01em;white-space:nowrap}.case-modal .cs-key{color:var(--t1)!important}.case-modal .cs-key + .cs-p a{color:var(--modal-gold)!important}
 .case-modal .cs-metric-long{font-size:clamp(2.15rem,4vw,3.3rem);line-height:1.02;max-width:14ch}
+
+/* ClearView case-study details: a functional flow diagram, not a faux product screen. */
+.case-modal .cv-hero-visual{margin:0;border-bottom:1px solid var(--border);background:#120d18}
+.case-modal .cv-hero-visual img{display:block;width:100%;aspect-ratio:16/7;object-fit:cover;object-position:center}
+.cv-flow{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border);overflow-x:auto}
+.cv-flow-step{position:relative;min-width:138px;padding:1.25rem 1rem 1.35rem;border-right:1px solid var(--border);background:rgba(225,184,91,.035)}
+.cv-flow-step:last-child{border-right:none}
+.cv-flow-step:not(:last-child)::after{content:"→";position:absolute;right:-.42rem;top:50%;z-index:2;color:var(--modal-gold);font-size:1rem;font-weight:800}
+.cv-flow-node{display:grid;place-items:center;width:30px;height:30px;margin-bottom:.8rem;background:var(--modal-gold);color:#170f1b;font-family:var(--fd);font-size:.73rem;font-weight:800;box-shadow:3px 3px 0 #0b090f}
+.cv-flow-step:nth-child(2) .cv-flow-node,.cv-flow-step:nth-child(4) .cv-flow-node{background:#c783a7}
+.cv-flow-step:nth-child(3) .cv-flow-node{background:#a092c5}
+.cv-flow-step strong{display:block;margin-bottom:.35rem;color:var(--t1);font-size:.82rem;line-height:1.25}
+.cv-flow-step p{margin:0;color:var(--t2);font-size:.72rem;line-height:1.5}
+.cv-tech-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border)}
+.cv-tech-item{padding:1.25rem 1.35rem;border-right:1px solid var(--border)}
+.cv-tech-item:last-child{border-right:none}
+.cv-tech-item h4{margin:0 0 .4rem;color:var(--modal-gold);font-family:var(--fd);font-size:.92rem;letter-spacing:-.01em}
+.cv-tech-item p{margin:0;color:var(--t2);font-size:.78rem;line-height:1.55}
+.cv-demo{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:1.5rem 2.5rem;background:rgba(225,184,91,.06);border-left:3px solid var(--modal-gold)}
+.cv-demo-copy{max-width:52ch}.cv-demo-copy strong{display:block;margin-bottom:.35rem;color:var(--t1);font-family:var(--fd);font-size:1.05rem}.cv-demo-copy p{margin:0;color:var(--t2);font-size:.84rem;line-height:1.55}
+.cv-demo-link{flex:0 0 auto;padding:.75rem 1rem;border:1px solid var(--modal-gold);background:var(--modal-gold);color:#170f1b!important;font-size:.78rem;font-weight:800;text-decoration:none;box-shadow:3px 3px 0 #0b090f}
+.cv-demo-link:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #0b090f}
+@media(max-width:700px){.cv-tech-grid{grid-template-columns:1fr}.cv-tech-item{border-right:none;border-bottom:1px solid var(--border)}.cv-tech-item:last-child{border-bottom:none}.cv-demo{align-items:flex-start;flex-direction:column;padding:1.25rem}.cv-flow{grid-template-columns:repeat(5,minmax(138px,1fr))}}
 @media(max-width:900px){#about .about-layout{grid-template-columns:1fr!important}.about-portrait{width:min(320px,80vw);margin:1.25rem auto 0;order:-1}}
 .contact-hl span{color:var(--s)!important}
 @media(max-width:900px){
@@ -950,11 +973,89 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
       <img src="assets/prerna-pm-collage-violet.jpg" alt="Editorial collage representing customer research, product journeys, and strategy" loading="lazy">
       <figcaption>Research → decisions → outcomes</figcaption>
     </figure>
+    <article class="build-card reveal">
+      <span class="build-kicker">Voice AI product experiment · 2026</span>
+      <h3>ClearView Voice Booking Agent</h3>
+      <p>A phone-style booking assistant for at-home eye tests and frame trials. It checks serviceability, offers real mock slots, books appointments, and turns unsupported locations into waitlist demand signals.</p>
+      <div class="build-tags"><span>FastAPI</span><span>SQLite</span><span>Browser voice APIs</span><span>State machine</span><span>Funnel analytics</span></div>
+      <div class="build-actions">
+        <a class="build-primary" href="#case-5" onclick="openCase(5);return false;">Explore case study ↗</a>
+        <a class="build-secondary" href="https://drive.google.com/file/d/1v4zPdY0VOVt4T3fvCA_SYCRnVCR4elWL/view?usp=sharing" target="_blank" rel="noopener">Watch demo ↗</a>
+        <a class="build-secondary" href="https://github.com/robona-pk/Voice-Booking-Agent---ClearView" target="_blank" rel="noopener">View source ↗</a>
+      </div>
+      <p class="build-note">Designed around one-question-at-a-time booking, with deterministic validation around the conversational flow.</p>
+    </article>
+    <figure class="build-visual reveal">
+      <img src="assets/clearview-voice-booking-agent-3d.png" alt="3D illustration of a voice booking agent for at-home eye care" loading="lazy">
+      <figcaption>Voice → booking → appointment</figcaption>
+    </figure>
   </div>
 </div>
 
 <!-- Hidden source content for case study modal (untouched original case content) -->
 <div id="case-sources" style="display:none" aria-hidden="true">
+<article class="case" id="case-detail-5">
+  <figure class="cv-hero-visual">
+    <img src="assets/clearview-voice-booking-agent-3d.png" alt="3D illustration of the ClearView voice booking agent workflow">
+  </figure>
+  <div class="cs-hd">
+    <div class="cs-hd-top">
+      <span class="cs-num">Product experiment</span>
+      <span class="cs-co">ClearView At-Home</span>
+      <span class="cs-st iter">Prototype</span>
+    </div>
+    <div class="cs-metric cs-metric-text cs-metric-long">Charlie</div>
+    <div class="cs-title">A voice agent that turns intent into a confirmed home appointment</div>
+  </div>
+
+  <div class="cs-sec">
+    <span class="cs-lbl">Problem statement</span>
+    <p class="cs-p">Home-visit booking funnels tend to lose people at address entry and slot selection. A call is more natural for customers who prefer speaking, need help with a decision, or do not trust an app-based booking flow.</p>
+    <p class="cs-p">The challenge was to make voice interaction feel simple without letting a language model make booking decisions or write unvalidated data.</p>
+  </div>
+
+  <div class="cs-contrast">
+    <div class="cs-contrast-col before">
+      <span class="cs-contrast-tag">What could go wrong</span>
+      <div class="cs-contrast-item">An open-ended bot skips details or asks for too much at once</div>
+      <div class="cs-contrast-item">Spoken pincodes and phone numbers are easy to mishear</div>
+      <div class="cs-contrast-item">An unsupported location becomes a dead end</div>
+    </div>
+    <div class="cs-contrast-col after">
+      <span class="cs-contrast-tag">The product decision</span>
+      <div class="cs-contrast-item">One question per turn, with the booking order fixed in code</div>
+      <div class="cs-contrast-item">Local validation before any serviceability or booking action</div>
+      <div class="cs-contrast-item">Consent-based waitlist turns unmet demand into an expansion signal</div>
+    </div>
+  </div>
+
+  <div class="cs-sec">
+    <span class="cs-lbl">The booking flow</span>
+    <p class="cs-p">Charlie uses voice only as the interface. The deterministic state machine decides what happens next, so every step is explicit, validated, and traceable.</p>
+  </div>
+  <div class="cv-flow" aria-label="ClearView booking flowchart">
+    <div class="cv-flow-step"><span class="cv-flow-node">01</span><strong>Capture intent</strong><p>Caller chooses an eye test or frame trial.</p></div>
+    <div class="cv-flow-step"><span class="cv-flow-node">02</span><strong>Check serviceability</strong><p>Validate a 6-digit pincode, then query eligible areas.</p></div>
+    <div class="cv-flow-step"><span class="cv-flow-node">03</span><strong>Offer a real slot</strong><p>Normalise the date and return only available slots.</p></div>
+    <div class="cv-flow-step"><span class="cv-flow-node">04</span><strong>Confirm safely</strong><p>Read the summary, collect explicit consent, then book.</p></div>
+    <div class="cv-flow-step"><span class="cv-flow-node">05</span><strong>Learn from demand</strong><p>Unsupported areas can opt into a waitlist for future coverage.</p></div>
+  </div>
+
+  <div class="cs-sec">
+    <span class="cs-lbl">Technical overview</span>
+    <p class="cs-p">The build keeps generative AI deliberately narrow. Qwen extracts only the answer needed in the current state. FastAPI owns the conversation state, validation, permitted API calls, and fixed next prompt.</p>
+  </div>
+  <div class="cv-tech-grid">
+    <div class="cv-tech-item"><h4>Voice layer</h4><p>Chrome speech recognition captures an answer. Browser speech synthesis delivers Charlie's fixed response.</p></div>
+    <div class="cv-tech-item"><h4>Agent control</h4><p>FastAPI runs the finite-state machine. Qwen 2.5 via Ollama can normalise one current-field answer only.</p></div>
+    <div class="cv-tech-item"><h4>Business layer</h4><p>FastAPI and SQLite manage serviceability, slots, bookings, waitlist records, and funnel events.</p></div>
+  </div>
+
+  <div class="cv-demo">
+    <div class="cv-demo-copy"><strong>Watch Charlie complete a booking</strong><p>The demo shows the phone-style flow from service selection to a confirmed appointment.</p></div>
+    <a class="cv-demo-link" href="https://drive.google.com/file/d/1v4zPdY0VOVt4T3fvCA_SYCRnVCR4elWL/view?usp=sharing" target="_blank" rel="noopener">Watch demo ↗</a>
+  </div>
+</article>
 <article class="case" id="case-detail-1">
       <div class="cs-hd">
         <div class="cs-hd-top">

@@ -793,14 +793,16 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .cv-system-arrow{align-self:center;padding:0 .55rem;color:var(--modal-gold);font-size:1.05rem;font-weight:800}
 .cv-system-note{grid-column:3 / span 3;margin-top:1rem;padding:.65rem .8rem;border-left:2px solid #c783a7;background:rgba(199,131,167,.08);color:#e3d8e7;font-size:.74rem;line-height:1.5}
 .cv-system-note strong{color:#e2a7c4}
-.cv-growth-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border)}
-.cv-growth-item{padding:1.35rem;border-right:1px solid var(--border);background:rgba(225,184,91,.025)}
-.cv-growth-item:last-child{border-right:none}.cv-growth-item h4{margin:0 0 .5rem;color:var(--modal-gold);font-family:var(--fd);font-size:.95rem}.cv-growth-item p{margin:0;color:var(--t2);font-size:.78rem;line-height:1.58}
+.cv-use-grid{display:grid;grid-template-columns:repeat(2,1fr);border-bottom:1px solid var(--border)}
+.cv-use-item{display:grid;grid-template-columns:28px 1fr;gap:.85rem;padding:1.3rem 1.35rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(225,184,91,.025)}
+.cv-use-item:nth-child(even){border-right:none}.cv-use-item:nth-last-child(-n+2){border-bottom:none}
+.cv-use-check{display:grid;place-items:center;width:24px;height:24px;background:var(--modal-gold);color:#170f1b;font-size:.78rem;font-weight:900;box-shadow:2px 2px 0 #0b090f}
+.cv-use-item h4{margin:0 0 .35rem;color:var(--modal-gold);font-family:var(--fd);font-size:.95rem;line-height:1.25}.cv-use-item p{margin:0;color:var(--t2);font-size:.78rem;line-height:1.58}
 .cv-demo{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:1.5rem 2.5rem;background:rgba(225,184,91,.06);border-left:3px solid var(--modal-gold)}
 .cv-demo-copy{max-width:52ch}.cv-demo-copy strong{display:block;margin-bottom:.35rem;color:var(--t1);font-family:var(--fd);font-size:1.05rem}.cv-demo-copy p{margin:0;color:var(--t2);font-size:.84rem;line-height:1.55}
 .cv-demo-link{flex:0 0 auto;padding:.75rem 1rem;border:1px solid var(--modal-gold);background:var(--modal-gold);color:#170f1b!important;font-size:.78rem;font-weight:800;text-decoration:none;box-shadow:3px 3px 0 #0b090f}
 .cv-demo-link:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #0b090f}
-@media(max-width:700px){.cv-system-flow{grid-template-columns:1fr;padding:1.25rem}.cv-system-arrow{padding:.35rem 0;justify-self:center;transform:rotate(90deg)}.cv-system-note{grid-column:auto;margin-top:.65rem}.cv-growth-grid{grid-template-columns:1fr}.cv-growth-item{border-right:none;border-bottom:1px solid var(--border)}.cv-growth-item:last-child{border-bottom:none}.cv-demo{align-items:flex-start;flex-direction:column;padding:1.25rem}.cv-flow{grid-template-columns:repeat(5,minmax(138px,1fr))}}
+@media(max-width:700px){.cv-system-flow{grid-template-columns:1fr;padding:1.25rem}.cv-system-arrow{padding:.35rem 0;justify-self:center;transform:rotate(90deg)}.cv-system-note{grid-column:auto;margin-top:.65rem}.cv-use-grid{grid-template-columns:1fr}.cv-use-item,.cv-use-item:nth-child(even){border-right:none;border-bottom:1px solid var(--border)}.cv-use-item:last-child{border-bottom:none}.cv-demo{align-items:flex-start;flex-direction:column;padding:1.25rem}.cv-flow{grid-template-columns:repeat(5,minmax(138px,1fr))}}
 @media(max-width:900px){#about .about-layout{grid-template-columns:1fr!important}.about-portrait{width:min(320px,80vw);margin:1.25rem auto 0;order:-1}}
 .contact-hl span{color:var(--s)!important}
 @media(max-width:900px){
@@ -1048,13 +1050,14 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
   </div>
 
   <div class="cs-sec">
-    <span class="cs-lbl">How I would grow adoption</span>
-    <p class="cs-p">The product is not a replacement for the app. It is an assisted-access channel that can broaden who is able to complete a home booking and help the business learn where support is needed.</p>
+    <span class="cs-lbl">Where Charlie fits next</span>
+    <p class="cs-p">Charlie is a reusable assisted-action pattern for apps where a customer needs to complete a real-world task but would benefit from a phone-first, guided route.</p>
   </div>
-  <div class="cv-growth-grid">
-    <div class="cv-growth-item"><h4>Reach the right customer</h4><p>Place a clear “Call to book” path on home-trial pages, store collateral, helpline IVR, and caregiver-facing communications, where an app may not be the preferred route.</p></div>
-    <div class="cv-growth-item"><h4>Make first use reassuring</h4><p>Lead with a familiar call flow, disclose the AI agent clearly, offer a human handoff when needed, and send an SMS or WhatsApp confirmation after the booking.</p></div>
-    <div class="cv-growth-item"><h4>Build the learning loop</h4><p>Track call starts, completed bookings, drop-offs, transfers, and waitlist demand by pincode. Use those signals to improve the flow and prioritise service expansion.</p></div>
+  <div class="cv-use-grid" aria-label="Applications for Charlie">
+    <div class="cv-use-item"><span class="cv-use-check">✓</span><div><h4>Home-service apps</h4><p>Book appliance repair, beauty services, cleaning, or a home consultation by collecting the address, preferred date, and available slot.</p></div></div>
+    <div class="cv-use-item"><span class="cv-use-check">✓</span><div><h4>Healthcare apps</h4><p>Schedule diagnostics, home sample collection, follow-up consultations, or medicine delivery for patients and caregivers who prefer calling.</p></div></div>
+    <div class="cv-use-item"><span class="cv-use-check">✓</span><div><h4>Retail and mobility apps</h4><p>Arrange a home demo, test drive, store appointment, product installation, or service pickup without requiring the customer to navigate a complex flow.</p></div></div>
+    <div class="cv-use-item"><span class="cv-use-check">✓</span><div><h4>Insurance and financial apps</h4><p>Schedule a claims callback, document collection, relationship-manager appointment, or assisted onboarding step with clear consent and confirmation.</p></div></div>
   </div>
 
   <div class="cv-demo">

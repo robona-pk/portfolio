@@ -53,7 +53,7 @@ const outOfScopeAnswer = 'This assistant is designed for questions about Prerna�
 const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
 const assistantAnswer = 'I’m Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work and point to the relevant source where available.';
 const strengthsQuestion = /\b(strengths?|strong suit|best at|superpower)\b/i;
-const strengthsAnswer = 'Prerna’s strengths are evidence-led product thinking, turning behavioural insight into measurable experiments, and carrying work across product, operations, and lifecycle touchpoints. Her portfolio shows this through growth, activation, conversion, and retention outcomes across Lenskart and Bajaj Finserv Health.';
+const strengthsAnswer = 'Prerna brings energy, persistence, and a genuine appetite for difficult problems, alongside evidence-led product thinking. She turns behavioural insight into measurable experiments and carries work across product, operations, and lifecycle touchpoints—reflected in growth, activation, conversion, and retention outcomes across Lenskart and Bajaj Finserv Health.';
 const weaknessesQuestion = /\b(weakness|weaknesses|area(s)? (to|of) improve|shortcoming|development area)\b/i;
 const behaviouralBoundaryAnswer = 'I don’t have portfolio evidence to make a personal assessment of that, and I wouldn’t speculate. I can share Prerna’s documented approach to product work, collaboration, and measurable outcomes.';
 const leadershipQuestion = /\b(leadership style|lead|leader|manage people|manage teams?|collaborat|work(ing)? style|cross[- ]functional)\b/i;
@@ -65,6 +65,8 @@ const motivationAnswer = 'Prerna’s portfolio centres on moments of high custom
 const hiringQuestion = /\b(why (should|would).{0,24}\b(hire|choose)|why hire|fit for|good fit)\b/i;
 const hiringAnswer = 'For a growth and adoption product role, Prerna brings 5+ years across e-commerce, health-tech, and insurance, plus evidence of measurable revenue, activation, conversion, retention, and operational outcomes.';
 const undocumentedBehaviourQuestion = /\b(conflict|disagreement|failure|failed|mistake|feedback|pressure|stress|difficult (situation|conversation)|challenge)\b/i;
+const personalProfileQuestion = /\b(how is (prerna|she) as a person|what (is|are) (prerna|she).{0,24}\b(person|personality|like)|personality|values|life philosophy)\b/i;
+const personalProfileAnswer = 'Prerna is energetic, persistent, and drawn to solving meaningful challenges. She cares about steady, deliberate progress and brings that mindset to both work and life. Her philosophy is simple: devotion to her future self must exceed attachment to her past.';
 const portfolioSubject = /\b(prerna|she|her)\b/i;
 const portfolioTopic = /\b(lenskart|bajaj|health|home trial|product|growth|adoption|career|experience|skills?|tools?|projects?|work|case studies|revenue|activation|conversion|retention|sql|python|figma|vercel|company|industry|resume|background|portfolio|impact|metrics?)\b/i;
 
@@ -114,6 +116,7 @@ export default async function handler(req, res) {
   if (contactQuestion.test(question)) return res.status(200).json({ answer: contactAnswer, citations: [] });
   if (assistantQuestion.test(question)) return res.status(200).json({ answer: assistantAnswer, citations: [] });
   if (strengthsQuestion.test(question)) return res.status(200).json({ answer: strengthsAnswer, citations: ['Product approach', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'] });
+  if (personalProfileQuestion.test(question)) return res.status(200).json({ answer: personalProfileAnswer, citations: [] });
   if (weaknessesQuestion.test(question) || undocumentedBehaviourQuestion.test(question)) return res.status(200).json({ answer: behaviouralBoundaryAnswer, citations: [] });
   if (leadershipQuestion.test(question)) return res.status(200).json({ answer: leadershipAnswer, citations: ['Portfolio overview'] });
   if (problemSolvingQuestion.test(question)) return res.status(200).json({ answer: problemSolvingAnswer, citations: ['Product approach'] });

@@ -36,3 +36,14 @@ This repository includes detailed case studies, product experiments, and technic
 
 **Prerna Kapoor**  
 Growth & Adoption Product Manager | Activation • Conversion • Retention • AI/Product
+
+## Portfolio RAG assistant
+
+The portfolio includes an "Ask Prerna" assistant in `index.html`. It is designed as a small, inspectable RAG implementation:
+
+- The browser submits a question to `POST /api/ask`.
+- The serverless handler embeds the question and portfolio passages, ranks them by cosine similarity, sends only the most relevant passages to the model, and returns the answer with source labels.
+- The interface shows those source labels beneath every answer.
+- When the page is opened as a static file, it falls back to the same local retrieval index so the interaction remains demoable without credentials.
+
+To activate the live server-side answer generation on Vercel, set `OPENAI_API_KEY` in the project's environment variables. `OPENAI_MODEL` and `OPENAI_EMBEDDING_MODEL` are optional. They default to `gpt-4.1-mini` and `text-embedding-3-small`.

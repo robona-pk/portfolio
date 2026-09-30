@@ -89,8 +89,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 @keyframes pdot{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}60%{box-shadow:0 0 0 7px transparent}}
 .hero-name{font-family:var(--fd);font-size:clamp(5rem,14vw,12rem);font-weight:800;line-height:.86;letter-spacing:-.045em;color:var(--t1);margin-bottom:1.75rem}
 .hero-name em{font-style:normal;background:linear-gradient(135deg,var(--s) 10%,var(--s2) 70%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-meta{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;font-size:.925rem;color:var(--t2);margin-bottom:1.25rem}
-.hero-meta .dot{color:var(--bhi)}
+.hero-role{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;margin:0 0 1.05rem;font-family:var(--fd);font-size:clamp(1.2rem,2vw,1.55rem);font-weight:500;letter-spacing:-.03em;color:var(--t2)}
+.hero-role strong{font-weight:750;color:var(--t1)}
+.hero-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:510px;margin:0 0 1.45rem;padding:.85rem 0 0;list-style:none;border-top:1px solid var(--bhi)}
+.hero-fact{min-width:0;padding:.05rem .9rem .05rem 0}
+.hero-fact + .hero-fact{padding-left:.9rem;border-left:1px solid var(--bhi)}
+.hero-fact-label{display:block;margin-bottom:.22rem;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)}
+.hero-fact strong{display:block;font-family:var(--fd);font-size:.92rem;font-weight:700;line-height:1.25;color:var(--t1)}
 .hero-sub{font-size:1.05rem;color:var(--t2);max-width:500px;line-height:1.78;margin-bottom:2.5rem}
 .hero-actions{display:flex;gap:.85rem;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--fb);font-size:.9rem;font-weight:600;padding:.85rem 2rem;border:none;cursor:pointer;text-decoration:none;transition:transform .2s,opacity .2s;border-radius:4px}
@@ -677,7 +682,7 @@ body{background:radial-gradient(circle at 82% 8%,rgba(189,137,233,.12),transpare
 body::before{opacity:.22;background-image:radial-gradient(rgba(149,129,196,.35) .65px,transparent .7px)!important}
 nav{background:rgba(20,15,27,.9)!important;border-color:var(--border)!important;backdrop-filter:blur(12px)}
 nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
-#hero{min-height:720px;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,360px);column-gap:clamp(2.5rem,6vw,5rem);align-items:center;padding:7rem max(3rem,calc((100vw - 1180px)/2)) 4.5rem!important}
+#hero{min-height:100dvh;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,360px);column-gap:clamp(2.5rem,6vw,5rem);align-items:center;padding:5.5rem max(3rem,calc((100vw - 1180px)/2)) 3rem!important}
 #hero .hero-inner{grid-column:1;grid-row:1;margin:0!important;max-width:680px}
 #hero .hero-avatar-wrap{grid-column:2;grid-row:1;position:relative!important;inset:auto!important;justify-self:center;margin:0!important;transform:none!important;animation:none!important}
 #hero .hero-avatar{width:300px!important;animation:none!important}
@@ -689,8 +694,12 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 #hero .hero-avatar-wrap::after{inset:13% 9% 14% 13%;border:2px solid rgba(160,146,197,.48);transform:translate(-16px,18px);opacity:.8}
 @keyframes workbenchFloat{from{transform:translateY(0) rotate(-1.5deg)}to{transform:translateY(-11px) rotate(.8deg)}}
 #hero .hero-inner{position:relative;z-index:3!important;max-width:790px!important}
-#hero .hero-name{position:relative;z-index:4;font-size:clamp(5.7rem,12.3vw,11.8rem);margin-bottom:1.4rem;text-shadow:5px 5px 0 rgba(20,15,27,.72)}
-#hero .hero-meta,#hero .hero-sub,#hero .hero-actions{position:relative;z-index:4;max-width:480px}
+#hero .hero-name{position:relative;z-index:4;font-size:clamp(4.9rem,10.6vw,10.2rem);margin-bottom:1rem;text-shadow:5px 5px 0 rgba(20,15,27,.72)}
+#hero .hero-role,#hero .hero-facts,#hero .hero-sub,#hero .hero-actions{position:relative;z-index:4;max-width:510px}
+#hero .hero-role{color:var(--s2)}
+#hero .hero-role strong{color:var(--t1)}
+#hero .hero-facts{border-top-color:rgba(160,146,197,.52)}
+#hero .hero-fact + .hero-fact{border-left-color:rgba(160,146,197,.4)}
 #hero .hero-sub{padding:.7rem .85rem;background:rgba(20,15,27,.72);border-left:3px solid var(--s2)}
 .eyebrow,.section-label,.case-kicker,.build-kicker{color:var(--s2)!important}
 .hero-name em{background:linear-gradient(135deg,var(--s),var(--s2))!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important}
@@ -776,6 +785,10 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 @media(max-width:560px){
   #hero{padding-top:6.4rem!important;padding-bottom:4rem!important}
   #hero .hero-avatar-wrap{width:min(390px,96vw)!important}
+  #hero .hero-role{font-size:1.15rem;margin-bottom:.95rem}
+  #hero .hero-facts{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:1.2rem}
+  #hero .hero-fact:nth-child(3){grid-column:1 / -1;margin-top:.8rem;padding:.8rem 0 0;border-top:1px solid rgba(160,146,197,.4)}
+  #hero .hero-fact:nth-child(3){border-left:0}
   #hero .hero-sub{padding:.6rem .7rem}
   #vitals .vital{padding:1.1rem!important;min-height:145px}
   .vitals-row{grid-template-columns:1fr!important}
@@ -812,13 +825,13 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
   <div class="hero-inner">
     <div class="hero-status"><span class="status-dot"></span>AVAILABLE FOR NEW OPPORTUNITIES</div>
     <h1 class="hero-name">Prerna<br><em>Kapoor.</em></h1>
-    <div class="hero-meta">
-      <span>Growth &amp; Adoption PM</span><span class="dot">&#183;</span>
-      <span>5 Years</span><span class="dot">&#183;</span>
-      <span>Bengaluru, India</span><span class="dot">&#183;</span>
-      <span>3 Industries</span>
-    </div>
-    <p class="hero-sub">I turn high-intent drop-off into activation, conversion, and retention — building growth systems across e-commerce, health-tech, and insurance.</p>
+    <p class="hero-role">Growth &amp; Adoption <strong>Product Manager</strong></p>
+    <ul class="hero-facts" aria-label="Professional summary">
+      <li class="hero-fact"><span class="hero-fact-label">Experience</span><strong>5 years</strong></li>
+      <li class="hero-fact"><span class="hero-fact-label">Based in</span><strong>Bengaluru, India</strong></li>
+      <li class="hero-fact"><span class="hero-fact-label">Domain range</span><strong>3 industries</strong></li>
+    </ul>
+    <p class="hero-sub">I turn high-intent drop-off into activation, conversion, and retention. I build growth systems across e-commerce, health-tech, and insurance.</p>
     <div class="hero-actions">
       <a href="#cases" class="btn btn-p">View Case Studies <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       <a href="https://drive.google.com/file/d/1To5xUIDQBddvdafDoVcgCVNxidGA1Cfo/view?usp=sharing" target="_blank" rel="noopener" class="btn btn-s">Resume <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v8M2 7l4 4 4-4M1 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>

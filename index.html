@@ -795,10 +795,10 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .cv-system-note{grid-column:1 / -1;margin:1rem auto 0;padding:.55rem .75rem;border-left:2px solid #c783a7;background:rgba(199,131,167,.08);color:#e3d8e7;font-size:.72rem;line-height:1.45}
 .cv-system-note strong{color:#e2a7c4}
 .cv-use-grid{display:grid;grid-template-columns:repeat(2,1fr);border-bottom:1px solid var(--border)}
-.cv-use-item{display:grid;grid-template-columns:28px 1fr;gap:.85rem;padding:1.3rem 1.35rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(225,184,91,.025)}
+.cv-use-item{padding:1.3rem 1.35rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(225,184,91,.025)}
 .cv-use-item:nth-child(even){border-right:none}.cv-use-item:nth-last-child(-n+2){border-bottom:none}
-.cv-use-check{display:grid;place-items:center;width:24px;height:24px;background:var(--modal-gold);color:#170f1b;font-size:.78rem;font-weight:900;box-shadow:2px 2px 0 #0b090f}
 .cv-use-item h4{margin:0 0 .35rem;color:var(--modal-gold);font-family:var(--fd);font-size:.95rem;line-height:1.25}.cv-use-item p{margin:0;color:var(--t2);font-size:.78rem;line-height:1.58}
+.cv-service-icons{display:flex;justify-content:center;align-items:center;gap:.35rem;margin:0 auto .55rem}.cv-service-icon{display:grid;place-items:center;min-width:34px;height:24px;padding:0 .25rem;border:1px solid var(--modal-gold);color:var(--modal-gold);font-size:.56rem;font-weight:900;letter-spacing:.05em}.cv-service-arrow{color:var(--t3);font-size:.72rem}
 .cv-demo{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:1.5rem 2.5rem;background:rgba(225,184,91,.06);border-left:3px solid var(--modal-gold)}
 .cv-demo-copy{max-width:52ch}.cv-demo-copy strong{display:block;margin-bottom:.35rem;color:var(--t1);font-family:var(--fd);font-size:1.05rem}.cv-demo-copy p{margin:0;color:var(--t2);font-size:.84rem;line-height:1.55}
 .cv-demo-link{flex:0 0 auto;padding:.75rem 1rem;border:1px solid var(--modal-gold);background:var(--modal-gold);color:#170f1b!important;font-size:.78rem;font-weight:800;text-decoration:none;box-shadow:3px 3px 0 #0b090f}
@@ -1046,7 +1046,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
     <div class="cv-system-arrow" aria-hidden="true">→</div>
     <div class="cv-system-node cv-system-state"><span class="cv-system-icon" aria-hidden="true">&#9881;</span><h4>State machine</h4><p>Validates and routes</p></div>
     <div class="cv-system-arrow" aria-hidden="true">→</div>
-    <div class="cv-system-node"><span class="cv-system-icon" aria-hidden="true">&#10003;</span><h4>Booking services</h4><p>Check, slot, confirm</p></div>
+    <div class="cv-system-node"><div class="cv-service-icons" aria-label="Booking API and database"><span class="cv-service-icon">API</span><span class="cv-service-arrow" aria-hidden="true">→</span><span class="cv-service-icon">DB</span></div><h4>Booking services</h4><p>Check, slot, confirm</p></div>
     <p class="cv-system-note"><strong>Optional LLM:</strong> extracts one answer only. It never chooses a step or writes booking data.</p>
   </div>
 
@@ -1055,10 +1055,10 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
     <p class="cs-p">Charlie is a reusable assisted-action pattern for apps where a customer needs to complete a real-world task but would benefit from a phone-first, guided route.</p>
   </div>
   <div class="cv-use-grid" aria-label="Applications for Charlie">
-    <div class="cv-use-item"><span class="cv-use-check">✓</span><div><h4>Home-service apps</h4><p>Book appliance repair, beauty services, cleaning, or a home consultation by collecting the address, preferred date, and available slot.</p></div></div>
-    <div class="cv-use-item"><span class="cv-use-check">✓</span><div><h4>Healthcare apps</h4><p>Schedule diagnostics, home sample collection, follow-up consultations, or medicine delivery for patients and caregivers who prefer calling.</p></div></div>
-    <div class="cv-use-item"><span class="cv-use-check">✓</span><div><h4>Retail and mobility apps</h4><p>Arrange a home demo, test drive, store appointment, product installation, or service pickup without requiring the customer to navigate a complex flow.</p></div></div>
-    <div class="cv-use-item"><span class="cv-use-check">✓</span><div><h4>Insurance and financial apps</h4><p>Schedule a claims callback, document collection, relationship-manager appointment, or assisted onboarding step with clear consent and confirmation.</p></div></div>
+    <div class="cv-use-item"><h4>Home-service apps</h4><p>Book appliance repair, beauty services, cleaning, or a home consultation by collecting the address, preferred date, and available slot.</p></div>
+    <div class="cv-use-item"><h4>Healthcare apps</h4><p>Schedule diagnostics, home sample collection, follow-up consultations, or medicine delivery for patients and caregivers who prefer calling.</p></div>
+    <div class="cv-use-item"><h4>Retail and mobility apps</h4><p>Arrange a home demo, test drive, store appointment, product installation, or service pickup without requiring the customer to navigate a complex flow.</p></div>
+    <div class="cv-use-item"><h4>Insurance and financial apps</h4><p>Schedule a claims callback, document collection, relationship-manager appointment, or assisted onboarding step with clear consent and confirmation.</p></div>
   </div>
 
   <div class="cv-demo">

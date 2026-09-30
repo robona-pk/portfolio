@@ -395,33 +395,26 @@ background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:te
 #fmsg{font-size:.78rem;display:none;margin-top:.35rem}
 
 /* PORTFOLIO RAG ASSISTANT */
-#ask-prerna{background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.rag-layout{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:4rem;align-items:start}
-.rag-title{font-family:var(--fd);font-size:clamp(2.45rem,5vw,4.9rem);font-weight:800;letter-spacing:-.045em;line-height:.92;color:var(--t1);margin:1rem 0 1.2rem}
-.rag-title span{color:var(--s)}
-.rag-copy{max-width:39ch;color:var(--t2);font-size:.98rem;line-height:1.8}
-.rag-flow{display:grid;gap:.75rem;margin-top:2.25rem}
-.rag-flow-item{display:grid;grid-template-columns:1.8rem 1fr;gap:.8rem;align-items:start;padding:.85rem 0;border-bottom:1px solid var(--border)}
-.rag-flow-item:first-child{border-top:1px solid var(--border)}
-.rag-step{font-family:var(--fd);font-size:.68rem;font-weight:800;color:var(--s);padding-top:.2rem}
-.rag-flow-item strong{display:block;color:var(--t1);font-size:.84rem;margin-bottom:.1rem}.rag-flow-item p{margin:0;color:var(--t3);font-size:.78rem;line-height:1.55}
-.rag-chat{border:1px solid var(--bhi);background:var(--card);box-shadow:8px 8px 0 rgba(240,160,32,.08)}
-.rag-chat-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.15rem;border-bottom:1px solid var(--border)}
+.rag-launcher{position:fixed;right:2rem;bottom:2rem;z-index:320;display:flex;flex-direction:column;align-items:flex-end;gap:.65rem}
+.rag-nudge{background:#F5F7FF;color:#131A35;font-size:.76rem;font-weight:700;padding:.5rem .75rem;border:1px solid rgba(72,118,255,.42);box-shadow:4px 4px 0 rgba(43,108,255,.22);animation:ragNudgeIn .5s cubic-bezier(.16,1,.3,1) .85s both}
+.rag-launch{display:inline-flex;align-items:center;gap:.7rem;background:#2B6CFF;border:1px solid #7FA7FF;color:#fff;font:800 .84rem var(--fb);letter-spacing:.01em;padding:.9rem 1rem;cursor:pointer;box-shadow:5px 5px 0 #121B43,0 12px 28px rgba(43,108,255,.32);transition:transform .18s,box-shadow .18s}
+.rag-launch::before{content:"AI";display:grid;place-items:center;width:1.75rem;height:1.75rem;border:1px solid rgba(255,255,255,.72);font:800 .58rem var(--fd);letter-spacing:.04em}.rag-launch:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 #121B43,0 16px 30px rgba(43,108,255,.38)}.rag-launch:active{transform:translateY(1px);box-shadow:3px 3px 0 #121B43}.rag-launch:focus-visible,.rag-close:focus-visible{outline:2px solid #AFC7FF;outline-offset:3px}
+@keyframes ragNudgeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.rag-modal{position:fixed;inset:0;z-index:450;display:none;align-items:flex-end;justify-content:flex-end;padding:2rem;background:rgba(3,5,14,.66);backdrop-filter:blur(5px)}.rag-modal.open{display:flex}.rag-modal.open .rag-chat{animation:ragModalIn .25s cubic-bezier(.16,1,.3,1) both}body.rag-open{overflow:hidden}@keyframes ragModalIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.rag-chat{width:min(100%,610px);border:1px solid #365DBD;background:var(--card);box-shadow:10px 10px 0 #121B43}
+.rag-chat-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.15rem;border-bottom:1px solid var(--border);background:linear-gradient(110deg,rgba(43,108,255,.22),rgba(43,108,255,.04))}
 .rag-chat-label{display:flex;align-items:center;gap:.6rem;font-size:.82rem;font-weight:700;color:var(--t1)}
-.rag-live-dot{width:7px;height:7px;border-radius:50%;background:var(--s);box-shadow:0 0 0 4px var(--sd)}
+.rag-live-dot{width:7px;height:7px;border-radius:50%;background:#5B8CFF;box-shadow:0 0 0 4px rgba(91,140,255,.18)}
 .rag-mode{color:var(--t3);font-family:var(--fd);font-size:.63rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.rag-close{appearance:none;border:0;background:transparent;color:var(--t2);font-size:1.5rem;line-height:1;padding:.1rem .35rem;cursor:pointer}.rag-close:hover{color:#fff}
 .rag-messages{min-height:255px;max-height:370px;overflow-y:auto;padding:1rem 1.15rem;display:flex;flex-direction:column;gap:.9rem}
 .rag-message{max-width:92%;font-size:.86rem;line-height:1.65;padding:.78rem .9rem;border:1px solid var(--border)}
-.rag-message.bot{align-self:flex-start;background:var(--bg2);color:var(--t2);border-left:2px solid var(--s)}
-.rag-message.user{align-self:flex-end;background:var(--sd);color:var(--t1);border-color:rgba(240,160,32,.28)}
+.rag-message.bot{align-self:flex-start;background:var(--bg2);color:var(--t2);border-left:2px solid #5B8CFF}.rag-message.user{align-self:flex-end;background:rgba(43,108,255,.14);color:var(--t1);border-color:rgba(91,140,255,.42)}
 .rag-message.loading{color:var(--t3);font-style:italic}.rag-message.error{border-left-color:#F87171}
-.rag-citations{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.65rem}.rag-citation{border:1px solid rgba(240,160,32,.28);color:var(--s2);font-size:.67rem;font-weight:700;padding:.2rem .45rem;background:rgba(240,160,32,.04)}
+.rag-citations{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.65rem}.rag-citation{border:1px solid rgba(91,140,255,.38);color:#AFC7FF;font-size:.67rem;font-weight:700;padding:.2rem .45rem;background:rgba(43,108,255,.08)}
 .rag-prompts{display:flex;flex-wrap:wrap;gap:.45rem;padding:.75rem 1.15rem;border-top:1px solid var(--border)}
-.rag-prompt{appearance:none;background:transparent;border:1px solid var(--bhi);color:var(--t2);font-family:var(--fb);font-size:.72rem;padding:.42rem .6rem;cursor:pointer;transition:border-color .2s,color .2s}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:var(--s);color:var(--t1);outline:none}
-.rag-form{display:flex;gap:.55rem;padding:1rem 1.15rem;border-top:1px solid var(--border)}
-.rag-input{min-width:0;flex:1;background:var(--bg);border:1px solid var(--bhi);border-radius:2px;color:var(--t1);font:inherit;font-size:.85rem;padding:.72rem .8rem;outline:none}.rag-input:focus{border-color:var(--s)}.rag-input::placeholder{color:var(--t3)}
-.rag-send{flex:0 0 auto;border:0;border-radius:2px;background:var(--s);color:#080806;font:700 .78rem var(--fb);padding:.72rem .95rem;cursor:pointer;transition:transform .15s,opacity .15s}.rag-send:hover{opacity:.9}.rag-send:active{transform:translateY(1px)}.rag-send:disabled{opacity:.55;cursor:wait}
-.rag-disclaimer{margin-top:.8rem;color:var(--t3);font-size:.7rem;line-height:1.5}
+.rag-prompt{appearance:none;background:transparent;border:1px solid var(--bhi);color:var(--t2);font-family:var(--fb);font-size:.72rem;padding:.42rem .6rem;cursor:pointer;transition:border-color .2s,color .2s}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:#5B8CFF;color:var(--t1);outline:none}
+.rag-form{display:flex;gap:.55rem;padding:1rem 1.15rem;border-top:1px solid var(--border)}.rag-input{min-width:0;flex:1;background:var(--bg);border:1px solid var(--bhi);border-radius:2px;color:var(--t1);font:inherit;font-size:.85rem;padding:.72rem .8rem;outline:none}.rag-input:focus{border-color:#5B8CFF}.rag-input::placeholder{color:var(--t3)}.rag-send{flex:0 0 auto;border:0;border-radius:2px;background:#2B6CFF;color:#fff;font:700 .78rem var(--fb);padding:.72rem .95rem;cursor:pointer;transition:transform .15s,opacity .15s}.rag-send:hover{opacity:.9}.rag-send:active{transform:translateY(1px)}.rag-send:disabled{opacity:.55;cursor:wait}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 footer{padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
@@ -433,6 +426,7 @@ footer a:hover{color:var(--s)}
 .reveal.in{opacity:1;transform:translateY(0)}
 
 #flt{position:fixed;bottom:2rem;right:2rem;z-index:300;background:var(--s);color:#080806;font-size:.875rem;font-weight:700;padding:.8rem 1.75rem;text-decoration:none;display:flex;align-items:center;gap:.5rem;box-shadow:0 4px 24px rgba(240,160,32,.28);opacity:0;transform:translateY(12px);transition:opacity .3s,transform .3s;border-radius:4px}
+#flt{right:10.5rem}
 
 /* RESPONSIVE */
 @media(max-width:900px){
@@ -440,7 +434,6 @@ footer a:hover{color:var(--s)}
   .about-sidebar{flex-direction:row;flex-wrap:wrap}
   .astat{flex:1;min-width:130px}
   .contact-layout{grid-template-columns:1fr;gap:3rem}
-  .rag-layout{grid-template-columns:1fr;gap:2.75rem}
   .career-arc,.hero-vert{display:none}
   .cs-stats.four{grid-template-columns:1fr 1fr}
   .vitals-row{grid-template-columns:1fr 1fr}
@@ -459,7 +452,7 @@ footer a:hover{color:var(--s)}
   #hero{padding:7rem 1.25rem 4rem}
   .hero-sub,.hero-meta{max-width:100%}
   .hero-actions{flex-direction:column}
-  .rag-form{flex-direction:column}.rag-send{width:100%}
+  .rag-launcher{right:1.25rem;bottom:1.25rem}.rag-modal{padding:1rem;align-items:flex-end}.rag-nudge{font-size:.72rem}.rag-chat{width:100%;box-shadow:5px 5px 0 #121B43}.rag-form{flex-direction:column}.rag-send{width:100%}#flt{right:1.25rem;bottom:5.75rem}
   .btn{width:100%;justify-content:center}
   .vitals-row{grid-template-columns:1fr}
   .vital{border-right:none!important;border-bottom:1px solid var(--border)!important}
@@ -1588,23 +1581,15 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 
 
 <!-- PORTFOLIO RAG ASSISTANT -->
-<section id="ask-prerna">
-  <div class="wrap">
-    <div class="rag-layout">
-      <div class="reveal">
-        <div class="sec-mark"><span class="sec-t">Portfolio assistant</span><div class="sec-rule"></div></div>
-        <h2 class="rag-title">Ask about the work.<br><span>See the retrieval.</span></h2>
-        <p class="rag-copy">This assistant answers from Prerna's portfolio, not a generic profile prompt. Each response is grounded in the most relevant case-study passages.</p>
-        <div class="rag-flow" aria-label="Retrieval augmented generation flow">
-          <div class="rag-flow-item"><span class="rag-step">01</span><div><strong>Question</strong><p>A visitor asks about a role, project, metric, or working style.</p></div></div>
-          <div class="rag-flow-item"><span class="rag-step">02</span><div><strong>Retrieve</strong><p>The system ranks portfolio passages for relevance.</p></div></div>
-          <div class="rag-flow-item"><span class="rag-step">03</span><div><strong>Grounded answer</strong><p>The model answers only with retrieved context and exposes its sources.</p></div></div>
-        </div>
-      </div>
-      <div class="rag-chat reveal" aria-label="Ask Prerna's portfolio assistant">
+<div class="rag-launcher">
+  <span class="rag-nudge">Ask me something</span>
+  <button class="rag-launch" id="ragLaunch" type="button" aria-haspopup="dialog" aria-controls="ragModal">Ask Prerna</button>
+</div>
+<div class="rag-modal" id="ragModal" role="dialog" aria-modal="true" aria-labelledby="ragTitle" aria-hidden="true">
+  <div class="rag-chat" aria-label="Ask Prerna's portfolio assistant">
         <div class="rag-chat-head">
-          <div class="rag-chat-label"><span class="rag-live-dot" aria-hidden="true"></span>Ask Prerna</div>
-          <span class="rag-mode" id="ragMode">RAG demo</span>
+          <div class="rag-chat-label" id="ragTitle"><span class="rag-live-dot" aria-hidden="true"></span>Ask Prerna</div>
+          <div style="display:flex;align-items:center;gap:.6rem"><span class="rag-mode" id="ragMode">RAG demo</span><button class="rag-close" id="ragClose" type="button" aria-label="Close assistant">×</button></div>
         </div>
         <div class="rag-messages" id="ragMessages" aria-live="polite">
           <div class="rag-message bot">Hi, I can answer questions about Prerna's experience, growth work, case studies, and builder projects. I will show the portfolio sources behind each answer.</div>
@@ -1619,11 +1604,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
           <input class="rag-input" id="ragInput" name="question" autocomplete="off" maxlength="280" placeholder="Ask about a project, metric, or skill..." required>
           <button class="rag-send" id="ragSend" type="submit">Ask</button>
         </form>
-      </div>
-    </div>
-    <p class="rag-disclaimer">Demo mode uses a small local portfolio index. When deployed with an API key, the same interface calls the server-side RAG endpoint.</p>
   </div>
-</section>
+</div>
 
 <!-- CONTACT -->
 <hr class="divider">
@@ -2091,6 +2073,30 @@ if (ragForm) ragForm.addEventListener('submit', event => {
   askPortfolioAssistant(document.getElementById('ragInput').value.trim());
 });
 document.querySelectorAll('.rag-prompt').forEach(button => button.addEventListener('click', () => askPortfolioAssistant(button.dataset.question)));
+
+const ragModal = document.getElementById('ragModal');
+const ragLaunch = document.getElementById('ragLaunch');
+const ragClose = document.getElementById('ragClose');
+let ragLastFocus = null;
+function openRagModal() {
+  if (!ragModal) return;
+  ragLastFocus = document.activeElement;
+  ragModal.classList.add('open');
+  ragModal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('rag-open');
+  requestAnimationFrame(() => document.getElementById('ragInput').focus());
+}
+function closeRagModal() {
+  if (!ragModal || !ragModal.classList.contains('open')) return;
+  ragModal.classList.remove('open');
+  ragModal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('rag-open');
+  if (ragLastFocus) ragLastFocus.focus();
+}
+if (ragLaunch) ragLaunch.addEventListener('click', openRagModal);
+if (ragClose) ragClose.addEventListener('click', closeRagModal);
+if (ragModal) ragModal.addEventListener('click', event => { if (event.target === ragModal) closeRagModal(); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape' && ragModal && ragModal.classList.contains('open')) closeRagModal(); });
 </script>
 </body>
 </html>

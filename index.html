@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/growth-workbench-3d-960.png" fetchpriority="high">
 <style>
   /* RANKED PRIORITY LIST; sequence genuinely matters here */
 .cs-ranked{padding:1.75rem 2.5rem;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:1.1rem}
@@ -690,7 +691,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 #hero .hero-avatar-wrap::after{content:"";position:absolute;inset:-16px;z-index:-1;border:1px solid var(--s2);transform:translate(-12px,14px);opacity:.58}
 .hero-avatar-wrap .hero-avatar{display:none!important}
 #hero .hero-avatar-wrap{position:absolute!important;right:max(1.5rem,calc((100vw - 1240px)/2))!important;top:50%!important;width:clamp(370px,38vw,540px)!important;aspect-ratio:1145/1374;transform:translate(-10%,-43%)!important;z-index:2!important;justify-self:auto!important}
-#hero .hero-avatar-wrap::before{content:"";position:absolute;inset:0;background:url('assets/growth-workbench-3d.png') center/contain no-repeat;filter:drop-shadow(16px 20px 0 rgba(8,5,12,.38));animation:workbenchFloat 6s ease-in-out infinite alternate}
+#hero .hero-avatar-wrap::before{content:"";position:absolute;inset:0;background:url('assets/growth-workbench-3d-960.png') center/contain no-repeat;filter:drop-shadow(16px 20px 0 rgba(8,5,12,.38));animation:workbenchFloat 6s ease-in-out infinite alternate}
 #hero .hero-avatar-wrap::after{inset:13% 9% 14% 13%;border:2px solid rgba(160,146,197,.48);transform:translate(-16px,18px);opacity:.8}
 @keyframes workbenchFloat{from{transform:translateY(0) rotate(-1.5deg)}to{transform:translateY(-11px) rotate(.8deg)}}
 #hero .hero-inner{position:relative;z-index:3!important;max-width:790px!important}
@@ -739,7 +740,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .sk-card{min-height:230px!important;padding:1.5rem!important;background:linear-gradient(145deg,#23192c,#17111d)!important;border:1px solid #554962!important;box-shadow:4px 4px 0 #0b090f!important}
 .sk-card:nth-child(2){background:linear-gradient(145deg,#1b2131,#17111d)!important}.sk-card:nth-child(3){background:linear-gradient(145deg,#2a1b32,#17111d)!important}.sk-card:nth-child(4){background:linear-gradient(145deg,#202034,#17111d)!important}
 .sk-card::before{background:var(--s2)!important}.sk-card:nth-child(2)::before{background:#91a8cc!important}.sk-card:nth-child(3)::before{background:#c783a7!important}.sk-card:nth-child(4)::before{background:#a092c5!important}
-.sk-card .sk-cat{color:var(--s2)!important}.sk-card:nth-child(2) .sk-cat{color:#b9c9e4!important}.sk-card:nth-child(3) .sk-cat{color:#e2a7c4!important}.sk-card .sk-dot{background:var(--s)!important}.sk-card .sk-name{color:#f7f0f8!important}.sk-card .sk-tag{color:#f7f0f8!important;border-color:#665775!important;background:rgba(15,12,19,.62)!important}
+.sk-card .sk-cat{color:var(--s2)!important;font-family:var(--fd);font-size:.85rem!important;font-weight:800!important;letter-spacing:.105em!important}.sk-card:nth-child(2) .sk-cat{color:#b9c9e4!important}.sk-card:nth-child(3) .sk-cat{color:#e2a7c4!important}.sk-card:nth-child(4) .sk-cat{color:#c6bddf!important}.sk-card .sk-dot{background:var(--s)!important}.sk-card .sk-name{color:#f7f0f8!important}.sk-card .sk-tag{font-weight:700!important;border-color:#665775!important;background:rgba(15,12,19,.62)!important}.sk-card:nth-child(1) .sk-tag{color:#ffe0a5!important;border-color:rgba(255,208,96,.52)!important;background:rgba(255,208,96,.1)!important}.sk-card:nth-child(2) .sk-tag{color:#d9e5ff!important;border-color:rgba(145,168,204,.58)!important;background:rgba(145,168,204,.13)!important}.sk-card:nth-child(3) .sk-tag{color:#ffd3e5!important;border-color:rgba(199,131,167,.58)!important;background:rgba(199,131,167,.13)!important}.sk-card:nth-child(4) .sk-tag{color:#e2d7ff!important;border-color:rgba(160,146,197,.58)!important;background:rgba(160,146,197,.13)!important}
 .sk-card .sk-items{gap:.6rem!important}.sk-card .sk-tags{border-color:#5a416a!important}
 #cursor-glow{background:radial-gradient(circle,rgba(199,131,167,.11) 0%,rgba(199,131,167,.04) 42%,transparent 70%)!important}
 .case-card,.build-card,.build-visual,.vital{border-radius:0!important}
@@ -846,7 +847,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <div id="vitals">
   <div class="vitals-row">
     <div class="vital reveal"><span class="vital-ey">Revenue &#183; Lenskart</span><span class="vital-n" data-target="6" data-prefix="&#8377;" data-suffix="Cr+">&#8377;0Cr+</span><div class="vital-l">Incremental annualised revenue across Lenskart@Home initiatives</div></div>
-    <div class="vital reveal"><span class="vital-ey">Revenue &#183; Bajaj Finserv Health</span><span class="vital-n" data-target="1.5" data-prefix="&#8377;" data-suffix="Cr+">&#8377;0Cr+</span><div class="vital-l">Selected revenue impact across launched Bajaj Finserv Health products</div></div>
+    <div class="vital reveal"><span class="vital-ey">Revenue &#183; Bajaj Finserv Health</span><span class="vital-n" data-target="1.5" data-prefix="&#8377;" data-suffix="Cr+">&#8377;0Cr+</span><div class="vital-l">Incremental annualised revenue across Bajaj Finserv Health initiatives</div></div>
     <div class="vital reveal"><span class="vital-ey">Lenskart@Home</span><span class="vital-n" data-target="84" data-prefix="&#8377;" data-suffix="Cr+ ARR">&#8377;0Cr+ ARR</span><div class="vital-l">India's largest at-home eyewear platform</div></div>
     <div class="vital reveal"><span class="vital-ey">Experience</span><span class="vital-n" data-target="5" data-suffix=" years">0 yrs</span><div class="vital-l">Across 3 industries</div></div>
   </div>
@@ -1414,12 +1415,16 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
       <span class="sk-cat">Technical</span>
       <div class="sk-items">
         <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Python — scripts &amp; automation</span></div>
-        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Figma — design &amp; prototyping</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">AI-assisted prototyping &amp; deployment</span></div>
+        <div class="sk-item"><span class="sk-dot"></span><span class="sk-name">Git-based versioning &amp; release workflows</span></div>
       </div>
       <div class="sk-tags">
         <span class="sk-tag">Python</span>
+        <span class="sk-tag">Codex</span>
+        <span class="sk-tag">GitHub</span>
+        <span class="sk-tag">Git</span>
         <span class="sk-tag">Vercel</span>
-        <span class="sk-tag">App script (VBA)</span>
+        <span class="sk-tag">Google Apps Script</span>
       </div>
     </div>
 

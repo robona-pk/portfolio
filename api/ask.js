@@ -26,6 +26,9 @@ const knowledgeBase = [
   }
 ];
 
+const courteousRedirect = 'I’m here to keep this conversation constructive. I can share evidence from Prerna’s work—her projects, product approach, outcomes, or skills—if that would be useful.';
+const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate)\b/i;
+
 function cosineSimilarity(left, right) {
   const dotProduct = left.reduce((sum, value, index) => sum + value * right[index], 0);
   const magnitude = Math.hypot(...left) * Math.hypot(...right);
@@ -58,6 +61,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   const question = typeof req.body?.question === 'string' ? req.body.question.trim() : '';
   if (!question || question.length > 280) return res.status(400).json({ error: 'Ask a question up to 280 characters.' });
+  if (unconstructiveLanguage.test(question)) return res.status(200).json({ answer: courteousRedirect, citations: [] });
   if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: 'RAG endpoint is not configured.' });
 
   let passages;

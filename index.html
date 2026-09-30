@@ -2023,6 +2023,9 @@ const portfolioKnowledge = [
   { source: 'Portfolio overview', answer: 'Prerna is a Growth and Adoption Product Manager with five years of experience across e-commerce, health-tech, and insurance. Her work focuses on activation, conversion, retention, and revenue growth.', text: 'Prerna Kapoor is a Growth and Adoption Product Manager with five years of experience improving activation, conversion, retention, and revenue. Her work spans e-commerce, health-tech, and insurance. She partners closely with design, engineering, operations, and commercial teams to take high-impact products from discovery through launch and iteration.', tags: 'about experience role background industries ecommerce health tech insurance collaboration' }
 ];
 
+const courteousRedirect = 'I’m here to keep this conversation constructive. I can share evidence from Prerna’s work—her projects, product approach, outcomes, or skills—if that would be useful.';
+const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate)\b/i;
+
 function retrievePortfolioContext(question) {
   const stopWords = new Set(['about','and','are','can','did','for','from','have','her','how','is','it','me','my','of','or','she','so','the','their','this','to','was','what','when','where','which','who','why','with','you']);
   const terms = (question.toLowerCase().match(/[a-z0-9]+/g) || []).filter(term => term.length > 2 && !stopWords.has(term));
@@ -2034,6 +2037,10 @@ function retrievePortfolioContext(question) {
 }
 
 function localRagAnswer(question) {
+  if (unconstructiveLanguage.test(question)) return {
+    answer: courteousRedirect,
+    citations: []
+  };
   const matches = retrievePortfolioContext(question);
   const direct = matches.filter(item => item.score > 0);
   if (!direct.length) return {

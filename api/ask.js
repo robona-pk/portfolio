@@ -28,6 +28,10 @@ const knowledgeBase = [
 
 const courteousRedirect = 'I’m here to keep this conversation constructive. I can share evidence from Prerna’s work—her projects, product approach, outcomes, or skills—if that would be useful.';
 const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate)\b/i;
+const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood at (her )?job\b/i;
+const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
+const careerMoveQuestion = /\b(switching (org|organisation|organization)|changing (org|organisation|organization|jobs?)|leaving|job change|new role|new opportunities)\b/i;
+const careerMoveAnswer = 'Prerna is exploring senior product roles where she can own high-impact products end to end and drive meaningful revenue growth. She is looking for the right scope to apply her growth, adoption, and cross-functional product experience.';
 
 function cosineSimilarity(left, right) {
   const dotProduct = left.reduce((sum, value, index) => sum + value * right[index], 0);
@@ -62,6 +66,8 @@ export default async function handler(req, res) {
   const question = typeof req.body?.question === 'string' ? req.body.question.trim() : '';
   if (!question || question.length > 280) return res.status(400).json({ error: 'Ask a question up to 280 characters.' });
   if (unconstructiveLanguage.test(question)) return res.status(200).json({ answer: courteousRedirect, citations: [] });
+  if (capabilityQuestion.test(question)) return res.status(200).json({ answer: capabilityAnswer, citations: ['Lenskart@Home case study', 'Bajaj Finserv Health case study'] });
+  if (careerMoveQuestion.test(question)) return res.status(200).json({ answer: careerMoveAnswer, citations: ['Portfolio overview'] });
   if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: 'RAG endpoint is not configured.' });
 
   let passages;

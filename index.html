@@ -874,6 +874,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .rag-launcher{right:1.15rem;bottom:1rem;display:block;z-index:320}
 .rag-nudge{display:block!important;position:absolute;right:76px;bottom:82px;width:max-content;max-width:210px;padding:.68rem .9rem;border:1px solid rgba(240,160,32,.48);border-radius:16px 16px 4px 16px;background:#241c11;color:#FFE7B5;box-shadow:0 12px 28px rgba(0,0,0,.3);font:700 .78rem var(--fb);line-height:1.25;white-space:normal;animation:ragNudgeIn .45s cubic-bezier(.16,1,.3,1) .7s both}
 .rag-nudge::after{content:"";position:absolute;right:-6px;bottom:9px;width:13px;height:13px;background:#241c11;border-top:1px solid rgba(240,160,32,.48);border-right:1px solid rgba(240,160,32,.48);transform:rotate(45deg);z-index:-1}
+.rag-launcher.active .rag-nudge{opacity:0;transform:translateY(6px);pointer-events:none}
 .rag-launch{display:block;width:112px;height:116px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;filter:drop-shadow(0 16px 13px rgba(0,0,0,.34));overflow:visible;animation:botFloat 4.8s ease-in-out infinite}
 .rag-launch::before{display:none}.rag-launch img{display:block;width:100%;height:100%;object-fit:contain;transform-origin:50% 80%;transition:transform .28s cubic-bezier(.16,1,.3,1),filter .28s}.rag-launch:hover{transform:none;box-shadow:none;filter:drop-shadow(0 20px 18px rgba(0,0,0,.42))}.rag-launch:hover img{transform:translateY(-5px) rotate(-3deg) scale(1.06)}.rag-launch:active{transform:none;box-shadow:none}.rag-launch:active img{transform:translateY(1px) scale(.96)}.rag-launch:focus-visible{outline:2px solid #FFD98A;outline-offset:4px;border-radius:50%}
 @keyframes botFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-7px) rotate(1.5deg)}}
@@ -2108,18 +2109,21 @@ document.querySelectorAll('.rag-prompt').forEach(button => button.addEventListen
 const ragModal = document.getElementById('ragModal');
 const ragLaunch = document.getElementById('ragLaunch');
 const ragClose = document.getElementById('ragClose');
+const ragLauncher = document.querySelector('.rag-launcher');
 let ragLastFocus = null;
 function openRagModal() {
   if (!ragModal) return;
   ragLastFocus = document.activeElement;
   ragModal.classList.add('open');
   ragModal.setAttribute('aria-hidden', 'false');
+  if (ragLauncher) ragLauncher.classList.add('active');
   requestAnimationFrame(() => document.getElementById('ragInput').focus());
 }
 function closeRagModal() {
   if (!ragModal || !ragModal.classList.contains('open')) return;
   ragModal.classList.remove('open');
   ragModal.setAttribute('aria-hidden', 'true');
+  if (ragLauncher) ragLauncher.classList.remove('active');
   if (ragLastFocus) ragLastFocus.focus();
 }
 if (ragLaunch) ragLaunch.addEventListener('click', openRagModal);

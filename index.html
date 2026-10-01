@@ -2036,8 +2036,12 @@ const identityQuestion = /\b(who is prerna|who is she|tell me about prerna|about
 const identityAnswer = 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years of experience across e-commerce, health-tech, and insurance. Her work focuses on activation, conversion, retention, and revenue growth.';
 const roleQuestion = /\b(what (does|is).{0,18}\b(role|job|title)|what is prerna.{0,18}\b(role|job|title))\b/i;
 const roleAnswer = 'Prerna is a Growth and Adoption Product Manager.';
-const locationQuestion = /\b(where is.{0,18}\bbased|where.{0,18}\bfrom|based where|location)\b/i;
+const hometownQuestion = /\b(where is.{0,18}\bfrom|where.{0,18}\bgrew up|hometown|from where)\b/i;
+const hometownAnswer = 'Prerna is from Delhi.';
+const locationQuestion = /\b(where is.{0,18}\bbased|based where|location)\b/i;
 const locationAnswer = 'Prerna is based in Bengaluru, India.';
+const availabilityQuestion = /\b(when.{0,24}\bavailable|is.{0,18}\bavailable|availability|schedule|book.{0,18}\b(call|time)|free to talk)\b/i;
+const availabilityAnswer = 'Prerna is open to new opportunities. For her availability or to start a conversation, please get in touch.';
 const employerQuestion = /\b(where (does|did).{0,18}\bwork|companies|employers?)\b/i;
 const employerAnswer = 'Prerna’s portfolio includes growth and product work at Lenskart and Bajaj Finserv Health.';
 const contactQuestion = /\b(how (can|do).{0,18}\b(contact|reach)|email|phone number|linkedin)\b/i;
@@ -2093,7 +2097,8 @@ async function retrievePortfolioContextSemantically(question) {
     const query = questionVector.tolist()[0];
     return portfolioKnowledge.map((item, index) => ({
       ...item,
-      score: query.reduce((sum, value, position) => sum + value * documentVectors.tolist()[index][position], 0)
+      score: query.reduce((sum, value, position) => sum + value * documentVectors.tolist()[index][position], 0),
+      semantic: true
     })).sort((a, b) => b.score - a.score).slice(0, 2);
   } catch (error) {
     return retrievePortfolioContext(question);
@@ -2137,9 +2142,18 @@ async function localRagAnswer(question) {
     answer: roleAnswer,
     citations: ['Portfolio overview']
   };
+  if (hometownQuestion.test(question)) return {
+    answer: hometownAnswer,
+    citations: []
+  };
   if (locationQuestion.test(question)) return {
     answer: locationAnswer,
     citations: ['Portfolio overview']
+  };
+  if (availabilityQuestion.test(question)) return {
+    answer: availabilityAnswer,
+    citations: [],
+    action: { label: 'Contact Prerna', href: '#contact' }
   };
   if (employerQuestion.test(question)) return {
     answer: employerAnswer,
@@ -2186,7 +2200,7 @@ async function localRagAnswer(question) {
     citations: []
   };
   const matches = await retrievePortfolioContextSemantically(question);
-  const direct = matches.filter(item => item.score > 0);
+  const direct = matches.filter(item => item.semantic ? item.score >= 0.38 : item.score > 0);
   if (!direct.length) return {
     answer: 'I do not have portfolio evidence to support that. I can help with questions about Prerna\'s projects, product approach, outcomes, or skills.',
     citations: []
@@ -2194,7 +2208,7 @@ async function localRagAnswer(question) {
   return { answer: direct[0].answer, citations: [direct[0].source] };
 }
 
-function appendRagMessage(kind, text, citations = []) {
+function appendRagMessage(kind, text, citations = [], action = null) {
   const feed = document.getElementById('ragMessages');
   if (!feed) return null;
   const message = document.createElement('div');
@@ -2213,6 +2227,15 @@ function appendRagMessage(kind, text, citations = []) {
     });
     message.appendChild(sourceList);
   }
+  if (action) {
+    const link = document.createElement('a');
+    link.className = 'rag-citation';
+    link.href = action.href;
+    link.textContent = action.label;
+    link.style.display = 'inline-block';
+    link.style.marginTop = '.65rem';
+    message.appendChild(link);
+  }
   feed.appendChild(message);
   feed.scrollTop = feed.scrollHeight;
   return message;
@@ -2226,12 +2249,12 @@ async function askPortfolioAssistant(question) {
   appendRagMessage('user', question);
   input.value = '';
   button.disabled = true;
-  const loading = appendRagMessage('bot loading', 'Searching Prerna’s portfolio on this device...');
+  const loading = appendRagMessage('bot loading', 'Looking through Prerna’s portfolio...');
   try {
     const result = await localRagAnswer(question);
     loading.remove();
-    mode.textContent = 'On-device RAG';
-    appendRagMessage('bot', result.answer, result.citations || []);
+    mode.textContent = 'Portfolio assistant';
+    appendRagMessage('bot', result.answer, result.citations || [], result.action || null);
   } catch (error) {
     loading.remove();
     mode.textContent = 'Portfolio assistant';

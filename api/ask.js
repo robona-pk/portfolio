@@ -102,6 +102,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   const question = typeof req.body?.question === 'string' ? req.body.question.trim() : '';
   if (!question || question.length > 280) return res.status(400).json({ error: 'Ask a question up to 280 characters.' });
+  return res.status(410).json({ error: 'This portfolio uses on-device open-source RAG and no longer provides a hosted model endpoint.' });
   if (promptInjection.test(question)) return res.status(200).json({ answer: outOfScopeAnswer, citations: [] });
   if (directedInsult.test(question) || (unconstructiveLanguage.test(question) && /\b(bot|assistant|you)\b/i.test(question))) return res.status(200).json({ answer: insultAnswer, citations: [] });
   if (personalQuestion.test(question)) return res.status(200).json({ answer: personalAnswer, citations: [] });

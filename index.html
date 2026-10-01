@@ -2077,7 +2077,30 @@ function retrievePortfolioContext(question) {
   }).sort((a, b) => b.score - a.score).slice(0, 2);
 }
 
-function localRagAnswer(question) {
+let portfolioEmbedderPromise;
+let portfolioVectorsPromise;
+
+async function retrievePortfolioContextSemantically(question) {
+  if (!window.createPortfolioEmbedder) return retrievePortfolioContext(question);
+  try {
+    portfolioEmbedderPromise ||= window.createPortfolioEmbedder();
+    const embedder = await portfolioEmbedderPromise;
+    portfolioVectorsPromise ||= embedder(portfolioKnowledge.map(item => `${item.source}. ${item.text}`), { pooling: 'mean', normalize: true });
+    const [questionVector, documentVectors] = await Promise.all([
+      embedder(question, { pooling: 'mean', normalize: true }),
+      portfolioVectorsPromise
+    ]);
+    const query = questionVector.tolist()[0];
+    return portfolioKnowledge.map((item, index) => ({
+      ...item,
+      score: query.reduce((sum, value, position) => sum + value * documentVectors.tolist()[index][position], 0)
+    })).sort((a, b) => b.score - a.score).slice(0, 2);
+  } catch (error) {
+    return retrievePortfolioContext(question);
+  }
+}
+
+async function localRagAnswer(question) {
   if (promptInjection.test(question)) return {
     answer: outOfScopeAnswer,
     citations: []
@@ -2162,7 +2185,7 @@ function localRagAnswer(question) {
     answer: outOfScopeAnswer,
     citations: []
   };
-  const matches = retrievePortfolioContext(question);
+  const matches = await retrievePortfolioContextSemantically(question);
   const direct = matches.filter(item => item.score > 0);
   if (!direct.length) return {
     answer: 'I do not have portfolio evidence to support that. I can help with questions about Prerna\'s projects, product approach, outcomes, or skills.',
@@ -2203,24 +2226,16 @@ async function askPortfolioAssistant(question) {
   appendRagMessage('user', question);
   input.value = '';
   button.disabled = true;
-  const loading = appendRagMessage('bot loading', 'Retrieving relevant portfolio passages...');
+  const loading = appendRagMessage('bot loading', 'Searching Prerna’s portfolio on this device...');
   try {
-    const request = await fetch('/api/ask', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question })
-    });
-    if (!request.ok) throw new Error('Endpoint unavailable');
-    const result = await request.json();
-    if (!result.answer) throw new Error('Empty response');
+    const result = await localRagAnswer(question);
     loading.remove();
-    mode.textContent = 'Live RAG';
+    mode.textContent = 'On-device RAG';
     appendRagMessage('bot', result.answer, result.citations || []);
   } catch (error) {
     loading.remove();
-    mode.textContent = 'RAG demo';
-    const result = localRagAnswer(question);
-    appendRagMessage('bot', result.answer, result.citations);
+    mode.textContent = 'Portfolio assistant';
+    appendRagMessage('bot', outOfScopeAnswer);
   } finally {
     button.disabled = false;
     input.focus();
@@ -2258,6 +2273,10 @@ if (ragLaunch) ragLaunch.addEventListener('click', openRagModal);
 if (ragClose) ragClose.addEventListener('click', closeRagModal);
 if (ragModal) ragModal.addEventListener('click', event => { if (event.target === ragModal) closeRagModal(); });
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && ragModal && ragModal.classList.contains('open')) closeRagModal(); });
+</script>
+<script type="module">
+  import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0';
+  window.createPortfolioEmbedder = () => pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', { dtype: 'q8' });
 </script>
 </body>
 </html>

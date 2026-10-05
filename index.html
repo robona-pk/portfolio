@@ -2031,8 +2031,9 @@ const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood a
 const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
 const skillsetQuestion = /\b(is (prerna|she) skilled|skillset|skills? (does|do).{0,18}\bhave|what are.{0,18}\bskills?|her skills|what (can|does).{0,18}\bdo|areas? of expertise|product skills?)\b/i;
 const personalityTraitQuestion = /\b(is (prerna|she).{0,18}\b(loud|quiet|introvert|extrovert|arrogant|friendly|kind|intense|serious|funny|likeable)|what (is|are).{0,18}\bpersonality|what is (prerna|she) like)\b/i;
-const companyQuestion = /\b(lenskart|bajaj|bajaj finserv health|lenskart@home|home trial)\b/i;
-const confidentialMetricQuestion = /\b(profit margin|gross margin|net margin|ebitda|p&l|profit|loss|valuation|gmv|unit economics|revenue breakdown|cost structure|budget|internal metrics?)\b/i;
+const companyQuestion = /\b(lenskart|lenksart|lens kart|bajaj|bajaj finserv health|lenskart@home|home trial)\b/i;
+const confidentialMetricQuestion = /\b(profit margin|gross margin|net margin|profitable|profitability|ebitda|p&l|profit|loss|valuation|gmv|unit economics|revenue breakdown|cost structure|budget|internal metrics?)\b/i;
+const companyContextQuestion = /\b(company strategy|business strategy|market share|competitors?|financial performance|future plans?|internal operations?)\b/i;
 const careerMoveQuestion = /\b(switching (org|organisation|organization)|changing (org|organisation|organization|jobs?)|leaving|job change|new role|new opportunities)\b/i;
 const careerMoveAnswer = 'Prerna is exploring senior product roles where she can own high-impact products end to end and drive meaningful revenue growth. She is looking for the right scope to apply her growth, adoption, and cross-functional product experience.';
 const experienceQuestion = /\b(how much|how many|years? of|total)\b.*\bexperience\b|\bexperience\b.*\b(how much|how many|years?|total)\b/i;
@@ -2062,7 +2063,7 @@ const hobbiesQuestion = /\b(hobb(y|ies)|outside work|drums?|lifting|fitness|weig
 const interestQuestion = /\b(interests?|what does.{0,18}\benjoy|what does.{0,18}\blove)\b/i;
 const promptInjection = /\b(ignore (all |any |the )?(previous|prior|above)|system prompt|developer message|jailbreak|reveal (your |the )?instructions|act as|pretend (to be|you are))\b/i;
 const externalKnowledgeQuestion = /\b(president|prime minister|capital of|weather|news|stock price|share price|crypto|bitcoin|election|sports score|recipe|joke|translate|current time)\b/i;
-const outOfScopeAnswer = 'This assistant is designed for questions about Prerna’s work and portfolio, rather than general knowledge. I can help with her experience, projects, product approach, outcomes, or skills.';
+const outOfScopeAnswer = 'I’m designed as a guide to Prerna’s work—not as a general web search. If you are assessing fit, ask about her product approach, growth outcomes, skills, career interests, or the projects she has built.';
 const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
 const assistantAnswer = 'I’m Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work and point to the relevant source where available.';
 const strengthsQuestion = /\b(strengths?|strong suit|best at|superpower)\b/i;
@@ -2136,6 +2137,10 @@ async function localRagAnswer(question) {
   };
   if (companyQuestion.test(question) && confidentialMetricQuestion.test(question)) return {
     answer: approvedKnowledge.confidentialData,
+    citations: []
+  };
+  if (companyQuestion.test(question) && companyContextQuestion.test(question)) return {
+    answer: approvedKnowledge.companyContext,
     citations: []
   };
   if (educationQuestion.test(question)) return { answer: approvedKnowledge.education, citations: [] };
@@ -2228,7 +2233,7 @@ async function localRagAnswer(question) {
     citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study']
   };
   if (!portfolioSubject.test(question) && !portfolioTopic.test(question)) return {
-    answer: outOfScopeAnswer,
+    answer: approvedKnowledge.outOfScope || outOfScopeAnswer,
     citations: []
   };
   const matches = await retrievePortfolioContextSemantically(question);

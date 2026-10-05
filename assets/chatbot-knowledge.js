@@ -13,7 +13,9 @@ window.ASK_PRERNA_KNOWLEDGE = {
     based: 'Prerna is based in Bengaluru, India.',
     hobbies: 'Outside work, Prerna lifts weights and plays the drums. Her fitness journey included losing 27 kg, and she is an enthusiastic nutritional-label nerd.',
     interests: 'Prerna enjoys conversations about dopamine detox, meeting new people, and solo travel for the perspectives and cultural knowledge it brings.',
-    personalProfile: 'Prerna is energetic, persistent, and drawn to meaningful challenges. She values steady progress and believes devotion to her future self must exceed attachment to her past.'
+    personalProfile: 'Prerna is energetic, persistent, and passionate about solving meaningful problems. She brings steady focus to difficult work, enjoys learning from people and new perspectives, and values deliberate progress over quick wins. Her philosophy is that devotion to her future self must exceed attachment to her past.',
+    skillset: 'Prerna combines growth and adoption product management with product discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, and cross-functional execution. She pairs those skills with SQL and BigQuery, GA4 and Firebase, cohort analysis, Python automation, and AI-assisted prototyping to move from insight to measurable business impact.',
+    confidentialData: 'That is confidential company information and is not part of Prerna’s public portfolio. I can share the outcomes she is authorised to discuss, including the published case-study metrics.'
   },
   declinedTopics: [
     'dating life', 'body or appearance', 'family', 'marital status', 'children', 'NSFW or sexual content', 'unverified health or personal-status claims'

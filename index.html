@@ -2029,6 +2029,10 @@ const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|s
 const insultAnswer = 'I’m here to keep the conversation thoughtful and respectful. I’d be glad to share Prerna’s work, ideas, and the projects she is building.';
 const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood at (her )?job\b/i;
 const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
+const skillsetQuestion = /\b(is (prerna|she) skilled|skillset|skills? (does|do).{0,18}\bhave|what are.{0,18}\bskills?|her skills|what (can|does).{0,18}\bdo|areas? of expertise|product skills?)\b/i;
+const personalityTraitQuestion = /\b(is (prerna|she).{0,18}\b(loud|quiet|introvert|extrovert|arrogant|friendly|kind|intense|serious|funny|likeable)|what (is|are).{0,18}\bpersonality|what is (prerna|she) like)\b/i;
+const companyQuestion = /\b(lenskart|bajaj|bajaj finserv health|lenskart@home|home trial)\b/i;
+const confidentialMetricQuestion = /\b(profit margin|gross margin|net margin|ebitda|p&l|profit|loss|valuation|gmv|unit economics|revenue breakdown|cost structure|budget|internal metrics?)\b/i;
 const careerMoveQuestion = /\b(switching (org|organisation|organization)|changing (org|organisation|organization|jobs?)|leaving|job change|new role|new opportunities)\b/i;
 const careerMoveAnswer = 'Prerna is exploring senior product roles where she can own high-impact products end to end and drive meaningful revenue growth. She is looking for the right scope to apply her growth, adoption, and cross-functional product experience.';
 const experienceQuestion = /\b(how much|how many|years? of|total)\b.*\bexperience\b|\bexperience\b.*\b(how much|how many|years?|total)\b/i;
@@ -2130,6 +2134,10 @@ async function localRagAnswer(question) {
     answer: personalStatusAnswer,
     citations: []
   };
+  if (companyQuestion.test(question) && confidentialMetricQuestion.test(question)) return {
+    answer: approvedKnowledge.confidentialData,
+    citations: []
+  };
   if (educationQuestion.test(question)) return { answer: approvedKnowledge.education, citations: [] };
   if (rolesQuestion.test(question)) return { answer: approvedKnowledge.roles, citations: [] };
   if (hobbiesQuestion.test(question)) return { answer: approvedKnowledge.hobbies, citations: [] };
@@ -2141,6 +2149,10 @@ async function localRagAnswer(question) {
   if (capabilityQuestion.test(question)) return {
     answer: capabilityAnswer,
     citations: ['Lenskart@Home case study', 'Bajaj Finserv Health case study']
+  };
+  if (skillsetQuestion.test(question)) return {
+    answer: approvedKnowledge.skillset,
+    citations: ['Product approach', 'Skills and tools']
   };
   if (careerMoveQuestion.test(question)) return {
     answer: approvedKnowledge.career || careerMoveAnswer,
@@ -2188,6 +2200,10 @@ async function localRagAnswer(question) {
     citations: ['Product approach', 'Lenskart@Home case study', 'Bajaj Finserv Health case study']
   };
   if (personalProfileQuestion.test(question)) return {
+    answer: approvedKnowledge.personalProfile || personalProfileAnswer,
+    citations: []
+  };
+  if (personalityTraitQuestion.test(question)) return {
     answer: approvedKnowledge.personalProfile || personalProfileAnswer,
     citations: []
   };

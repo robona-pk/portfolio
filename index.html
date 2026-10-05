@@ -2030,6 +2030,7 @@ const insultAnswer = 'I’m here to keep the conversation thoughtful and respect
 const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood at (her )?job\b/i;
 const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
 const skillsetQuestion = /\b(is (prerna|she) skilled|skillset|skills? (does|do).{0,18}\bhave|what are.{0,18}\bskills?|her skills|what (can|does).{0,18}\bdo|areas? of expertise|product skills?)\b/i;
+const productManagerStyleQuestion = /\b(how|what).{0,12}\b(prerna|she|her).{0,20}\b(as )?(a )?(product manager|pm)\b|\b(what kind of|what type of).{0,12}\b(product manager|pm)\b|\b(product management|pm).{0,10}\b(style|working style)\b|\bwork(ing)? with.{0,16}\b(prerna|her).{0,16}\b(product manager|pm)\b/i;
 const personalityTraitQuestion = /\b(is (prerna|she).{0,18}\b(loud|quiet|introvert|extrovert|arrogant|friendly|kind|intense|serious|funny|likeable)|what (is|are).{0,18}\bpersonality|what is (prerna|she) like)\b/i;
 const companyQuestion = /\b(lenskart|lenksart|lens kart|bajaj|bajaj finserv health|lenskart@home|home trial)\b/i;
 const confidentialMetricQuestion = /\b(profit margin|gross margin|net margin|profitable|profitability|ebitda|p&l|profit|loss|valuation|gmv|unit economics|revenue breakdown|cost structure|budget|internal metrics?)\b/i;
@@ -2193,6 +2194,10 @@ async function localRagAnswer(question) {
     answer: approvedKnowledge.goodbye,
     citations: [],
     action: { label: 'Let’s Talk', href: '#contact' }
+  };
+  if (productManagerStyleQuestion.test(question)) return {
+    answer: approvedKnowledge.productManagerStyle,
+    citations: ['Product approach', 'Portfolio overview']
   };
   if (personalityTraitQuestion.test(question)) return {
     answer: approvedKnowledge.personalProfile || personalProfileAnswer,

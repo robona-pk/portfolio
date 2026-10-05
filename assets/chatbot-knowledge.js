@@ -11,7 +11,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     availability: 'Prerna is open to a conversation about the next challenge. Reach out through the Let’s Talk section to connect.',
     hometown: 'Prerna is from Delhi.',
     based: 'Prerna is based in Bengaluru, India.',
-    hobbies: 'Outside work, Prerna lifts weights and plays the drums. Her fitness journey included losing 27 kg, and she is an enthusiastic nutritional-label nerd.',
+    hobbies: 'Outside work, Prerna lifts weights and plays the drums. Her fitness journey included losing 27 kg. She also enjoys travelling solo to meet new people and gain fresh perspectives.',
     interests: 'Prerna enjoys conversations about dopamine detox, meeting new people, and solo travel for the perspectives and cultural knowledge it brings.',
     lifePhilosophy: 'Prerna’s life philosophy is simple: devotion to her future self must exceed attachment to her past. For her, that means choosing discipline, growth, and new perspectives over staying comfortable.',
     personalProfile: 'Prerna is energetic, persistent, and passionate about solving meaningful problems. She brings steady focus to difficult work, enjoys learning from people and new perspectives, and values deliberate progress over quick wins. Her philosophy is that devotion to her future self must exceed attachment to her past.',

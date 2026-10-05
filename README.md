@@ -39,7 +39,36 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 
 ## Portfolio RAG assistant
 
-The floating **Ask Prerna** assistant is a deliberately inspectable RAG demo. It answers questions about Prerna’s portfolio, explains its scope when a question is unrelated, and shows the portfolio sources used for supported answers.
+### What it is and why it matters
+
+**Ask Prerna** is a floating portfolio assistant that turns a static portfolio into a guided conversation. For a hiring manager, it surfaces role fit, impact, skills, and interview-relevant context quickly. For a product and engineering reviewer, it demonstrates scoped knowledge, graceful boundaries, explainable retrieval, and an intentionally low-cost architecture.
+
+### One flow, from visitor to answer
+
+```text
+👤 Visitor question
+        ↓
+🛡️ Policy + knowledge-base check (`assets/chatbot-knowledge.js`)
+   ├─ approved fact / CTA / respectful boundary → ✨ direct response
+   └─ portfolio question → 🧠 MiniLM semantic embeddings in the browser
+                                   ↓
+                         🔎 cosine-similarity retrieval
+                                   ↓
+                    📚 cited portfolio passage + curated answer
+                                   ↓
+                         💬 chat response in the portfolio
+```
+
+### Stack at a glance
+
+- **Experience:** static HTML, CSS, and vanilla JavaScript; floating accessible chat UI.
+- **Knowledge and policy:** editable JavaScript source at `assets/chatbot-knowledge.js`; it holds approved personal/professional facts and declined-topic rules.
+- **Retrieval:** `Xenova/all-MiniLM-L6-v2`, an open-source, quantized embedding model loaded through Transformers.js and cached by the browser.
+- **Ranking:** client-side cosine similarity against the curated portfolio passages.
+- **Hosting:** GitHub + Vercel preview deployment; no backend model, database, API key, or per-question LLM charge.
+- **Product safeguards:** privacy boundaries, NSFW declines, graceful responses to insults, general-knowledge redirection, and no invented weakness/failure stories.
+
+To edit answers, update `assets/chatbot-knowledge.js` and redeploy. The file is the approved policy layer; `index.html` contains the chat routing and portfolio retrieval passages.
 
 ### Architecture
 

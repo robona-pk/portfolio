@@ -411,7 +411,7 @@ background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:te
 .rag-message{max-width:92%;font-size:.86rem;line-height:1.65;padding:.78rem .9rem;border:1px solid var(--border)}
 .rag-message.bot{align-self:flex-start;background:var(--bg2);color:var(--t2);border-left:2px solid #5B8CFF}.rag-message.user{align-self:flex-end;background:rgba(43,108,255,.14);color:var(--t1);border-color:rgba(91,140,255,.42)}
 .rag-message.loading{color:var(--t3);font-style:italic}.rag-message.error{border-left-color:#F87171}
-.rag-citations{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.65rem}.rag-citation{border:1px solid rgba(91,140,255,.38);color:#AFC7FF;font-size:.67rem;font-weight:700;padding:.2rem .45rem;background:rgba(43,108,255,.08)}
+.rag-action{display:inline-flex;align-items:center;margin-top:.7rem;border:1px solid rgba(91,140,255,.5);color:#AFC7FF;font-size:.72rem;font-weight:700;padding:.42rem .62rem;background:rgba(43,108,255,.1);text-decoration:none;transition:background .18s,border-color .18s,color .18s,transform .18s}.rag-action:hover,.rag-action:focus-visible{border-color:#AFC7FF;background:rgba(43,108,255,.2);color:#fff;outline:none}.rag-action:active{transform:translateY(1px)}
 .rag-prompts{display:flex;flex-wrap:wrap;gap:.45rem;padding:.75rem 1.15rem;border-top:1px solid var(--border)}
 .rag-prompt{appearance:none;background:transparent;border:1px solid var(--bhi);color:var(--t2);font-family:var(--fb);font-size:.72rem;padding:.42rem .6rem;cursor:pointer;transition:border-color .2s,color .2s}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:#5B8CFF;color:var(--t1);outline:none}
 .rag-form{display:flex;gap:.55rem;padding:1rem 1.15rem;border-top:1px solid var(--border)}.rag-input{min-width:0;flex:1;background:var(--bg);border:1px solid var(--bhi);border-radius:2px;color:var(--t1);font:inherit;font-size:.85rem;padding:.72rem .8rem;outline:none}.rag-input:focus{border-color:#5B8CFF}.rag-input::placeholder{color:var(--t3)}.rag-send{flex:0 0 auto;border:0;border-radius:2px;background:#2B6CFF;color:#fff;font:700 .78rem var(--fb);padding:.72rem .95rem;cursor:pointer;transition:transform .15s,opacity .15s}.rag-send:hover{opacity:.9}.rag-send:active{transform:translateY(1px)}.rag-send:disabled{opacity:.55;cursor:wait}
@@ -881,7 +881,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .rag-modal{position:fixed;inset:auto;right:1.35rem;bottom:120px;z-index:450;padding:0;background:transparent;backdrop-filter:none;align-items:flex-end;justify-content:flex-end}.rag-modal.open{display:flex}.rag-modal.open .rag-chat{animation:ragChatIn .24s cubic-bezier(.16,1,.3,1) both}@keyframes ragChatIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 .rag-chat{width:min(420px,calc(100vw - 2.7rem));border-color:rgba(240,160,32,.42);border-radius:28px;background:#171510;box-shadow:0 24px 65px rgba(0,0,0,.58),0 0 0 1px rgba(255,220,151,.05)}
 .rag-chat-head{background:linear-gradient(120deg,rgba(240,160,32,.2),rgba(240,160,32,.035));border-bottom-color:rgba(255,220,151,.1)}.rag-live-dot{background:#E5A534;box-shadow:0 0 0 4px rgba(240,160,32,.14)}.rag-close{background:rgba(255,255,255,.07);border-radius:50%}.rag-close:hover{background:rgba(240,160,32,.18);color:var(--t1)}
-.rag-message.bot{background:#201c14;border-color:rgba(255,220,151,.09);border-bottom-left-radius:6px}.rag-message.user{background:rgba(240,160,32,.12);border-color:rgba(240,160,32,.3);border-bottom-right-radius:6px}.rag-citation{border-color:rgba(240,160,32,.32);color:#FFD88A;background:rgba(240,160,32,.06)}
+.rag-message.bot{background:#201c14;border-color:rgba(255,220,151,.09);border-bottom-left-radius:6px}.rag-message.user{background:rgba(240,160,32,.12);border-color:rgba(240,160,32,.3);border-bottom-right-radius:6px}.rag-action{border-color:rgba(240,160,32,.42);color:#FFD88A;background:rgba(240,160,32,.08)}.rag-action:hover,.rag-action:focus-visible{border-color:#F3C45D;background:rgba(240,160,32,.16);color:#FFE7B5}
 .rag-prompts{border-top-color:rgba(255,220,151,.1)}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:#E5A534;color:#FFE2A4}.rag-input{background:#11100d;border-color:rgba(255,220,151,.15);border-radius:14px}.rag-input:focus{border-color:#E5A534}.rag-send{background:#D89524;color:#171108;border-radius:14px}.rag-send:hover{background:#F3C45D;color:#171108}
 @media(max-width:640px){.rag-launcher{right:.55rem;bottom:.65rem}.rag-launch{width:94px;height:98px}.rag-nudge{right:62px;bottom:72px;font-size:.72rem;max-width:170px}.rag-modal{right:.55rem;bottom:102px;padding:0;align-items:flex-end}.rag-chat{width:calc(100vw - 1.1rem);border-radius:22px}.rag-launch{animation-duration:5.5s}}
 @media(prefers-reduced-motion:reduce){.rag-launch{animation:none}.rag-launch img{transition:none}}
@@ -1624,7 +1624,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
           <div style="display:flex;align-items:center;gap:.6rem"><span class="rag-mode" id="ragMode">RAG demo</span><button class="rag-close" id="ragClose" type="button" aria-label="Close assistant">×</button></div>
         </div>
         <div class="rag-messages" id="ragMessages" aria-live="polite">
-          <div class="rag-message bot">Hi, I can answer questions about Prerna's experience, growth work, case studies, and builder projects. I will show the portfolio sources behind each answer.</div>
+          <div class="rag-message bot">Hi, I can answer questions about Prerna's experience, growth work, case studies, and builder projects.</div>
         </div>
         <div class="rag-prompts" aria-label="Suggested questions">
           <button class="rag-prompt" type="button" data-question="What impact did Prerna drive at Lenskart?">Lenskart impact</button>
@@ -2072,7 +2072,7 @@ const promptInjection = /\b(ignore (all |any |the )?(previous|prior|above)|syste
 const externalKnowledgeQuestion = /\b(president|prime minister|capital of|weather|news|stock price|share price|crypto|bitcoin|election|sports score|recipe|joke|translate|current time)\b/i;
 const outOfScopeAnswer = 'I’m designed as a guide to Prerna’s work—not as a general web search. If you are assessing fit, ask about her product approach, growth outcomes, skills, career interests, or the projects she has built.';
 const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
-const assistantAnswer = 'I’m Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work and point to the relevant source where available.';
+const assistantAnswer = 'I’m Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work.';
 const strengthsQuestion = /\b(strengths?|strong suit|best at|superpower)\b/i;
 const strengthsAnswer = 'Prerna brings energy, persistence, and a genuine appetite for difficult problems, alongside evidence-led product thinking. She turns behavioural insight into measurable experiments and carries work across product, operations, and lifecycle touchpoints—reflected in growth, activation, conversion, and retention outcomes across Lenskart and Bajaj Finserv Health.';
 const weaknessesQuestion = /\b(weakness|weaknesses|area(s)? (to|of) improve|shortcoming|development area)\b/i;
@@ -2347,24 +2347,11 @@ function appendRagMessage(kind, text, citations = [], action = null) {
   const copy = document.createElement('div');
   copy.textContent = text;
   message.appendChild(copy);
-  if (citations.length) {
-    const sourceList = document.createElement('div');
-    sourceList.className = 'rag-citations';
-    citations.forEach(source => {
-      const citation = document.createElement('span');
-      citation.className = 'rag-citation';
-      citation.textContent = source;
-      sourceList.appendChild(citation);
-    });
-    message.appendChild(sourceList);
-  }
   if (action) {
     const link = document.createElement('a');
-    link.className = 'rag-citation';
+    link.className = 'rag-action';
     link.href = action.href;
     link.textContent = action.label;
-    link.style.display = 'inline-block';
-    link.style.marginTop = '.65rem';
     message.appendChild(link);
   }
   feed.appendChild(message);

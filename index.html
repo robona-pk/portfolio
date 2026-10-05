@@ -2024,8 +2024,8 @@ const portfolioKnowledge = [
   { source: 'Portfolio overview', answer: 'Prerna is a Growth and Adoption Product Manager with five years of experience across e-commerce, health-tech, and insurance. Her work focuses on activation, conversion, retention, and revenue growth.', text: 'Prerna Kapoor is a Growth and Adoption Product Manager with five years of experience improving activation, conversion, retention, and revenue. Her work spans e-commerce, health-tech, and insurance. She partners closely with design, engineering, operations, and commercial teams to take high-impact products from discovery through launch and iteration.', tags: 'about experience role background industries ecommerce health tech insurance collaboration' }
 ];
 
-const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate)\b/i;
-const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|she|her|you|this bot|the bot|assistant)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent)\b|\b(?:prerna|she|her|you|this bot|the bot|assistant)\s+(?:is|are|was|were)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent)\b/i;
+const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate|overrated|toxic|rude|bossy|lazy|annoying|bad)\b/i;
+const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|she|her|you|this bot|the bot|assistant)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad)\b|\b(?:prerna|she|her|you|this bot|the bot|assistant)\s+(?:is|are|was|were)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad)\b/i;
 const insultAnswer = 'I’m here to keep the conversation thoughtful and respectful. I’d be glad to share Prerna’s work, ideas, and the projects she is building.';
 const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood at (her )?job\b/i;
 const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
@@ -2034,6 +2034,12 @@ const personalityTraitQuestion = /\b(is (prerna|she).{0,18}\b(loud|quiet|introve
 const companyQuestion = /\b(lenskart|lenksart|lens kart|bajaj|bajaj finserv health|lenskart@home|home trial)\b/i;
 const confidentialMetricQuestion = /\b(profit margin|gross margin|net margin|profitable|profitability|ebitda|p&l|profit|loss|valuation|gmv|unit economics|revenue breakdown|cost structure|budget|internal metrics?)\b/i;
 const companyContextQuestion = /\b(company strategy|business strategy|market share|competitors?|financial performance|future plans?|internal operations?)\b/i;
+const greetingQuestion = /^(hi|hello|hey|hiya|good morning|good afternoon|good evening)[!,. ]*$/i;
+const thanksQuestion = /\b(thanks|thank you|helpful|got it)\b/i;
+const goodbyeQuestion = /\b(bye|goodbye|see you|that is all|that'?s all)\b/i;
+const comparisonQuestion = /\b(better than|worse than|compare (her|prerna)|versus|vs\.?|rank her)\b/i;
+const careerLogisticsQuestion = /\b(notice period|expected salary|compensation|ctc|relocat|remote work|work from home|hybrid|visa|sponsor|interview slots?)\b/i;
+const privateLifestyleQuestion = /\b(smoke|drink|alcohol|party|diet|medical history|political views?|sexuality|orientation)\b/i;
 const careerMoveQuestion = /\b(switching (org|organisation|organization)|changing (org|organisation|organization|jobs?)|leaving|job change|new role|new opportunities)\b/i;
 const careerMoveAnswer = 'Prerna is exploring senior product roles where she can own high-impact products end to end and drive meaningful revenue growth. She is looking for the right scope to apply her growth, adoption, and cross-functional product experience.';
 const experienceQuestion = /\b(how much|how many|years? of|total)\b.*\bexperience\b|\bexperience\b.*\b(how much|how many|years?|total)\b/i;
@@ -2084,6 +2090,19 @@ const personalProfileAnswer = 'Prerna is energetic, persistent, and drawn to sol
 const portfolioSubject = /\b(prerna|she|her)\b/i;
 const portfolioTopic = /\b(lenskart|bajaj|health|home trial|product|growth|adoption|career|experience|skills?|tools?|projects?|work|case studies|revenue|activation|conversion|retention|sql|python|figma|vercel|company|industry|resume|background|portfolio|impact|metrics?)\b/i;
 
+function normalizeQuestion(value) {
+  const corrections = new Map([
+    ['proftiable', 'profitable'], ['profitible', 'profitable'], ['profitiable', 'profitable'],
+    ['lenksart', 'lenskart'], ['lens kart', 'lenskart'], ['bajaj finserv helth', 'bajaj finserv health'],
+    ['perosn', 'person'], ['presedient', 'president'], ['strefnths', 'strengths'],
+    ['experiene', 'experience'], ['experiance', 'experience'], ['availble', 'available'],
+    ['skilset', 'skillset'], ['marrried', 'married']
+  ]);
+  let normalized = value.toLowerCase().replace(/[^a-z0-9@+&.'?\s-]/g, ' ').replace(/\s+/g, ' ').trim();
+  corrections.forEach((replacement, typo) => { normalized = normalized.replaceAll(typo, replacement); });
+  return normalized;
+}
+
 function retrievePortfolioContext(question) {
   const stopWords = new Set(['about','and','are','can','did','for','from','have','her','how','is','it','me','my','of','or','she','so','the','their','this','to','was','what','when','where','which','who','why','with','you']);
   const terms = (question.toLowerCase().match(/[a-z0-9]+/g) || []).filter(term => term.length > 2 && !stopWords.has(term));
@@ -2119,6 +2138,18 @@ async function retrievePortfolioContextSemantically(question) {
 }
 
 async function localRagAnswer(question) {
+  question = normalizeQuestion(question);
+  if (greetingQuestion.test(question)) return { answer: approvedKnowledge.greeting, citations: [] };
+  if (thanksQuestion.test(question)) return { answer: approvedKnowledge.thanks, citations: [] };
+  if (goodbyeQuestion.test(question)) return {
+    answer: approvedKnowledge.goodbye,
+    citations: [],
+    action: { label: 'Let’s Talk', href: '#contact' }
+  };
+  if (personalityTraitQuestion.test(question)) return {
+    answer: approvedKnowledge.personalProfile || personalProfileAnswer,
+    citations: []
+  };
   if (promptInjection.test(question)) return {
     answer: outOfScopeAnswer,
     citations: []
@@ -2128,6 +2159,10 @@ async function localRagAnswer(question) {
     citations: []
   };
   if (personalQuestion.test(question)) return {
+    answer: personalAnswer,
+    citations: []
+  };
+  if (privateLifestyleQuestion.test(question)) return {
     answer: personalAnswer,
     citations: []
   };
@@ -2142,6 +2177,15 @@ async function localRagAnswer(question) {
   if (companyQuestion.test(question) && companyContextQuestion.test(question)) return {
     answer: approvedKnowledge.companyContext,
     citations: []
+  };
+  if (careerLogisticsQuestion.test(question)) return {
+    answer: approvedKnowledge.careerLogistics,
+    citations: [],
+    action: { label: 'Contact Prerna', href: '#contact' }
+  };
+  if (comparisonQuestion.test(question)) return {
+    answer: approvedKnowledge.comparison,
+    citations: ['Portfolio overview']
   };
   if (educationQuestion.test(question)) return { answer: approvedKnowledge.education, citations: [] };
   if (rolesQuestion.test(question)) return { answer: approvedKnowledge.roles, citations: [] };
@@ -2208,10 +2252,6 @@ async function localRagAnswer(question) {
     answer: approvedKnowledge.personalProfile || personalProfileAnswer,
     citations: []
   };
-  if (personalityTraitQuestion.test(question)) return {
-    answer: approvedKnowledge.personalProfile || personalProfileAnswer,
-    citations: []
-  };
   if (weaknessesQuestion.test(question) || undocumentedBehaviourQuestion.test(question)) return {
     answer: behaviouralBoundaryAnswer,
     citations: []
@@ -2239,8 +2279,9 @@ async function localRagAnswer(question) {
   const matches = await retrievePortfolioContextSemantically(question);
   const direct = matches.filter(item => item.semantic ? item.score >= 0.38 : item.score > 0);
   if (!direct.length) return {
-    answer: 'I do not have portfolio evidence to support that. I can help with questions about Prerna\'s projects, product approach, outcomes, or skills.',
-    citations: []
+    answer: approvedKnowledge.undocumented,
+    citations: [],
+    action: { label: 'Ask Prerna directly', href: '#contact' }
   };
   return { answer: direct[0].answer, citations: [direct[0].source] };
 }

@@ -17,7 +17,13 @@ window.ASK_PRERNA_KNOWLEDGE = {
     skillset: 'Prerna combines growth and adoption product management with product discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, and cross-functional execution. She pairs those skills with SQL and BigQuery, GA4 and Firebase, cohort analysis, Python automation, and AI-assisted prototyping to move from insight to measurable business impact.',
     confidentialData: 'That concerns confidential company financials or operating data, which Prerna cannot share. I can, however, discuss the public outcomes of her work at Lenskart@Home and Bajaj Finserv Health.',
     companyContext: 'I can speak to Prerna’s work and published outcomes at that company, but not company strategy, internal performance, or non-public financials.',
-    outOfScope: 'I’m designed as a guide to Prerna’s work—not as a general web search. If you are assessing fit, ask about her product approach, growth outcomes, skills, career interests, or the projects she has built.'
+    outOfScope: 'That sits outside what this portfolio assistant is designed to answer. If you are assessing Prerna, try asking about her product approach, growth outcomes, skills, career interests, or the projects she has built.',
+    undocumented: 'That detail is not included in Prerna’s approved profile, and I don’t want to guess. You can ask her directly through the Let’s Talk section.',
+    careerLogistics: 'Prerna has not published those logistics here. The best way to discuss notice period, compensation, relocation, remote preferences, or interview availability is to contact her directly.',
+    comparison: 'I wouldn’t make an unsupported comparison. The fairest way to assess Prerna is through her documented product decisions, measurable outcomes, and the scope she has owned.',
+    greeting: 'Hi! I can help you get to know Prerna—her product work, measurable outcomes, skills, career interests, and the person behind the portfolio. What would you like to explore?',
+    thanks: 'You’re welcome. If you’re evaluating Prerna for a role, I can also help with her strengths, product approach, experience, or selected outcomes.',
+    goodbye: 'Thanks for stopping by. If you’d like to continue the conversation with Prerna, use the Let’s Talk section below.'
   },
   declinedTopics: [
     'dating life', 'body or appearance', 'family', 'marital status', 'children', 'NSFW or sexual content', 'unverified health or personal-status claims'

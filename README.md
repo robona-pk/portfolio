@@ -37,7 +37,9 @@ This repository includes detailed case studies, product experiments, and technic
 **Prerna Kapoor**  
 Growth & Adoption Product Manager | Activation • Conversion • Retention • AI/Product
 
-## Portfolio RAG assistant
+## Portfolio retrieval assistant
+
+> **Terminology note:** this implementation is **not full RAG** in the strict technical sense. RAG (Retrieval-Augmented Generation) retrieves relevant material and then gives it to a generative model—typically an LLM—to compose a new answer. Ask Prerna performs **on-device semantic retrieval plus curated, policy-controlled responses**. It has the retrieval portion of a RAG architecture, but no generative LLM, by design: that keeps it private, predictable, and free per question.
 
 ### What it is and why it matters
 
@@ -92,7 +94,7 @@ Browser-side policy guard ──► open-source MiniLM embeddings ──► cosi
 | Component | Location | Responsibility |
 | --- | --- | --- |
 | Chat UI and static fallback | `index.html` | Floating chat window, source labels, local answer-policy checks, and a demo-safe fallback index. |
-| On-device RAG | `index.html` | Loads the open-source `Xenova/all-MiniLM-L6-v2` embedding model in the visitor’s browser and ranks the local knowledge bank. |
+| On-device semantic retrieval | `index.html` | Loads the open-source `Xenova/all-MiniLM-L6-v2` embedding model in the visitor’s browser and ranks the local knowledge bank. |
 | Portfolio knowledge | `portfolioKnowledge` in `index.html` | Curated case-study, product-approach, skills, and profile passages used for retrieval and cited answers. |
 | Retired API endpoint | `api/ask.js` | Returns `410 Gone`; it makes no model calls and requires no API key. |
 

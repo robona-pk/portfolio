@@ -2109,17 +2109,30 @@ function normalizeQuestion(value) {
   return normalized.split(' ').map(token => {
     if (token.length < 5 || vocabulary.includes(token)) return token;
     let closest = token;
-    let closestDistance = 3;
+    let closestDistance = Infinity;
+    let closestPrefix = 0;
     vocabulary.forEach(candidate => {
-      if (Math.abs(candidate.length - token.length) > 2) return;
+      if (Math.abs(candidate.length - token.length) > 3) return;
       const distance = editDistance(token, candidate);
       if (distance < closestDistance) {
         closest = candidate;
         closestDistance = distance;
+        closestPrefix = sharedPrefixLength(token, candidate);
       }
     });
-    return closestDistance <= 2 ? closest : token;
+    const adaptiveLimit = closest.length >= 8 && closestPrefix >= 4
+      ? 4
+      : closest.length >= 8
+        ? 3
+        : 2;
+    return closestDistance <= adaptiveLimit ? closest : token;
   }).join(' ');
+}
+
+function sharedPrefixLength(left, right) {
+  let length = 0;
+  while (length < left.length && length < right.length && left[length] === right[length]) length += 1;
+  return length;
 }
 
 function editDistance(left, right) {

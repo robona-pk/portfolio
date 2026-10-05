@@ -2068,6 +2068,7 @@ const educationQuestion = /\b(education|degree|university|college|stud(y|ied)|bi
 const rolesQuestion = /\b(preferred roles?|roles? (is|are).{0,18}\b(looking|open)|senior product manager|product manager role)\b/i;
 const hobbiesQuestion = /\b(hobb(y|ies)|outside work|drums?|lifting|fitness|weight loss|nutritional label|dopamine detox|solo travel)\b/i;
 const interestQuestion = /\b(interests?|what does.{0,18}\benjoy|what does.{0,18}\blove)\b/i;
+const lifePhilosophyQuestion = /\b(life philosophy|philosophy (in|on|about) life|personal philosophy|personal motto|life motto|mantra|outlook on life|what does.{0,18}\bbelieve in)\b/i;
 const promptInjection = /\b(ignore (all |any |the )?(previous|prior|above)|system prompt|developer message|jailbreak|reveal (your |the )?instructions|act as|pretend (to be|you are))\b/i;
 const externalKnowledgeQuestion = /\b(president|prime minister|capital of|weather|news|stock price|share price|crypto|bitcoin|election|sports score|recipe|joke|translate|current time)\b/i;
 const outOfScopeAnswer = 'I’m designed as a guide to Prerna’s work—not as a general web search. If you are assessing fit, ask about her product approach, growth outcomes, skills, career interests, or the projects she has built.';
@@ -2244,6 +2245,7 @@ async function localRagAnswer(question) {
   if (rolesQuestion.test(question)) return { answer: approvedKnowledge.roles, citations: [] };
   if (hobbiesQuestion.test(question)) return { answer: approvedKnowledge.hobbies, citations: [] };
   if (interestQuestion.test(question)) return { answer: approvedKnowledge.interests, citations: [] };
+  if (lifePhilosophyQuestion.test(question)) return { answer: approvedKnowledge.lifePhilosophy, citations: [] };
   if (externalKnowledgeQuestion.test(question)) return {
     answer: outOfScopeAnswer,
     citations: []

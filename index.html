@@ -2025,7 +2025,7 @@ const portfolioKnowledge = [
 
 const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate)\b/i;
 const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|she|her|you|this bot|the bot|assistant)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent)\b|\b(?:prerna|she|her|you|this bot|the bot|assistant)\s+(?:is|are|was|were)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent)\b/i;
-const insultAnswer = 'I don’t have portfolio evidence to support that characterisation. I can help with questions about Prerna’s work, projects, outcomes, or skills.';
+const insultAnswer = 'I’m here to keep the conversation thoughtful and respectful. I’d be glad to share Prerna’s work, ideas, and the projects she is building.';
 const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood at (her )?job\b/i;
 const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
 const careerMoveQuestion = /\b(switching (org|organisation|organization)|changing (org|organisation|organization|jobs?)|leaving|job change|new role|new opportunities)\b/i;
@@ -2048,6 +2048,8 @@ const contactQuestion = /\b(how (can|do).{0,18}\b(contact|reach)|email|phone num
 const contactAnswer = 'You can use the contact links in the portfolio to reach Prerna by email, phone, LinkedIn, or WhatsApp.';
 const personalQuestion = /\b(age|birthday|married|single|dating|boyfriend|girlfriend|husband|wife|family|children|home address|address|salary|religion|politics|vote|voting|live)\b/i;
 const personalAnswer = 'I only share portfolio information that Prerna has chosen to make public. I can help with her work, experience, projects, outcomes, or skills.';
+const personalStatusQuestion = /\b(dead|died|death|alive|ill|sick|hospital|health condition|pregnant|diagnosis)\b/i;
+const personalStatusAnswer = 'I can’t verify or speculate about personal-status claims. I’m here to share Prerna’s professional work, experience, and projects.';
 const promptInjection = /\b(ignore (all |any |the )?(previous|prior|above)|system prompt|developer message|jailbreak|reveal (your |the )?instructions|act as|pretend (to be|you are))\b/i;
 const externalKnowledgeQuestion = /\b(president|prime minister|capital of|weather|news|stock price|share price|crypto|bitcoin|election|sports score|recipe|joke|translate|current time)\b/i;
 const outOfScopeAnswer = 'This assistant is designed for questions about Prerna’s work and portfolio, rather than general knowledge. I can help with her experience, projects, product approach, outcomes, or skills.';
@@ -2116,6 +2118,10 @@ async function localRagAnswer(question) {
   };
   if (personalQuestion.test(question)) return {
     answer: personalAnswer,
+    citations: []
+  };
+  if (personalStatusQuestion.test(question)) return {
+    answer: personalStatusAnswer,
     citations: []
   };
   if (externalKnowledgeQuestion.test(question)) return {
@@ -2249,14 +2255,11 @@ async function askPortfolioAssistant(question) {
   appendRagMessage('user', question);
   input.value = '';
   button.disabled = true;
-  const loading = appendRagMessage('bot loading', 'Looking through Prerna’s portfolio...');
   try {
     const result = await localRagAnswer(question);
-    loading.remove();
     mode.textContent = 'Portfolio assistant';
     appendRagMessage('bot', result.answer, result.citations || [], result.action || null);
   } catch (error) {
-    loading.remove();
     mode.textContent = 'Portfolio assistant';
     appendRagMessage('bot', outOfScopeAnswer);
   } finally {

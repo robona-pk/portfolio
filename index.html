@@ -2100,7 +2100,42 @@ function normalizeQuestion(value) {
   ]);
   let normalized = value.toLowerCase().replace(/[^a-z0-9@+&.'?\s-]/g, ' ').replace(/\s+/g, ' ').trim();
   corrections.forEach((replacement, typo) => { normalized = normalized.replaceAll(typo, replacement); });
-  return normalized;
+  const vocabulary = [
+    'profitable', 'profitability', 'lenskart', 'bajaj', 'experience', 'strengths',
+    'skilled', 'skillset', 'available', 'personality', 'president', 'married',
+    'education', 'biotechnology', 'leadership', 'product', 'manager', 'revenue',
+    'retention', 'conversion', 'activation', 'margin', 'salary', 'contact'
+  ];
+  return normalized.split(' ').map(token => {
+    if (token.length < 5 || vocabulary.includes(token)) return token;
+    let closest = token;
+    let closestDistance = 3;
+    vocabulary.forEach(candidate => {
+      if (Math.abs(candidate.length - token.length) > 2) return;
+      const distance = editDistance(token, candidate);
+      if (distance < closestDistance) {
+        closest = candidate;
+        closestDistance = distance;
+      }
+    });
+    return closestDistance <= 2 ? closest : token;
+  }).join(' ');
+}
+
+function editDistance(left, right) {
+  const matrix = Array.from({ length: left.length + 1 }, (_, row) => [row]);
+  for (let column = 0; column <= right.length; column += 1) matrix[0][column] = column;
+  for (let row = 1; row <= left.length; row += 1) {
+    for (let column = 1; column <= right.length; column += 1) {
+      const substitution = left[row - 1] === right[column - 1] ? 0 : 1;
+      matrix[row][column] = Math.min(
+        matrix[row - 1][column] + 1,
+        matrix[row][column - 1] + 1,
+        matrix[row - 1][column - 1] + substitution
+      );
+    }
+  }
+  return matrix[left.length][right.length];
 }
 
 function retrievePortfolioContext(question) {

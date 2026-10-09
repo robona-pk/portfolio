@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;650;750&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box}html{color-scheme:dark}body{margin:0;background:#0a0907;color:#f0ecd8;font:15px/1.55 Inter,sans-serif}button,select,textarea{font:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:48px 0 80px}.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end;padding-bottom:28px;border-bottom:1px solid #302a1e}.kicker{margin:0 0 8px;color:#e3a83f;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.top h1{margin:0;font:750 clamp(34px,6vw,64px)/.98 "Bricolage Grotesque",sans-serif;letter-spacing:-.04em}.intro{max-width:720px;margin:18px 0 0;color:#bdb6a4}.top a{color:#f1c56e}.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}.button{border:1px solid #51442d;border-radius:10px;background:#17140f;color:#f0ecd8;padding:10px 14px;font-weight:650;cursor:pointer}.button:hover,.button:focus-visible{border-color:#e3a83f;outline:none}.button.primary{background:#d99a2c;color:#171108;border-color:#d99a2c}.button:disabled{opacity:.45;cursor:not-allowed}.status{min-height:24px;margin:16px 0;color:#e7c98f}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:24px 0;background:#302a1e;border:1px solid #302a1e;border-radius:14px;overflow:hidden}.metric{background:#12100c;padding:16px}.metric span{display:block;color:#918a7a;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.metric strong{display:block;margin-top:5px;font:650 23px "Bricolage Grotesque",sans-serif}.toolbar{display:grid;grid-template-columns:1fr 220px;gap:12px;margin:26px 0 14px}.toolbar input,.toolbar select{width:100%;border:1px solid #393124;border-radius:10px;background:#11100d;color:#f0ecd8;padding:11px 12px}.toolbar input:focus,.toolbar select:focus,.review textarea:focus,.review select:focus{border-color:#e3a83f;outline:none}.eval-list{display:grid;gap:10px}.eval{border:1px solid #302a1e;border-radius:14px;background:#11100d;overflow:hidden}.eval summary{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:14px;align-items:center;padding:16px 18px;cursor:pointer;list-style:none}.eval summary::-webkit-details-marker{display:none}.number{color:#e3a83f;font:650 13px "Bricolage Grotesque",sans-serif}.question{font-weight:600}.meta{display:flex;gap:8px;align-items:center;color:#8f8878;font-size:12px}.badge{border:1px solid #403725;border-radius:999px;padding:3px 8px;white-space:nowrap}.badge.correct{border-color:#56745d;color:#a9d6b2}.badge.incorrect{border-color:#80504a;color:#e7aaa1}.badge.running{border-color:#9a7430;color:#f0c772}.body{padding:0 18px 18px;border-top:1px solid #28231a}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-top:18px}.label{margin:0 0 7px;color:#918a7a;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.facts{margin:0;padding-left:18px;color:#d1cab9}.answer{min-height:94px;margin:0;padding:13px;border:1px solid #2d281e;border-radius:10px;background:#0b0a08;color:#eee7d6;white-space:pre-wrap}.run-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px;color:#918a7a;font-size:12px}.review{display:grid;grid-template-columns:180px 160px minmax(220px,1fr) auto;gap:10px;align-items:end;margin-top:18px}.review>label,.reason-field{display:grid;gap:6px;color:#aaa291;font-size:12px}.review select,.review textarea{border:1px solid #393124;border-radius:9px;background:#0b0a08;color:#f0ecd8;padding:9px}.review textarea{min-height:58px;resize:vertical}.reason-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.dictate{position:relative;display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid #ff9f89;border-radius:11px;background:#ef6a4c;color:#180b08;cursor:pointer;box-shadow:0 4px 0 #8f3423;transition:transform .16s ease,background .16s ease,box-shadow .16s ease}.dictate svg{width:19px;height:19px;stroke:currentColor}.dictate:hover{background:#ff8268;transform:translateY(-1px);box-shadow:0 5px 0 #8f3423}.dictate:focus-visible{outline:3px solid rgba(255,159,137,.35);outline-offset:3px}.dictate:active{transform:translateY(2px);box-shadow:0 2px 0 #8f3423}.dictate[aria-pressed="true"]{background:#f4c65d;border-color:#ffe09b;color:#171108;box-shadow:0 4px 0 #8c681b}.dictate:disabled{cursor:not-allowed;opacity:.42;box-shadow:none;transform:none}.empty{color:#827b6e}.telemetry{margin-top:42px;padding-top:26px;border-top:1px solid #302a1e}.telemetry h2{margin:0 0 8px;font:650 28px "Bricolage Grotesque",sans-serif}.telemetry p{max-width:800px;color:#bdb6a4}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.field{padding:12px;border:1px solid #302a1e;border-radius:10px;background:#11100d}.field code{color:#efbd60}.field span{display:block;margin-top:4px;color:#8f8878;font-size:12px}.engine{position:absolute;width:1px;height:1px;border:0;clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden}@media(max-width:820px){.top{grid-template-columns:1fr}.controls{justify-content:flex-start}.metrics{grid-template-columns:repeat(2,1fr)}.toolbar,.grid,.review,.fields{grid-template-columns:1fr}.eval summary{grid-template-columns:38px minmax(0,1fr)}.meta{grid-column:2}}
+    *{box-sizing:border-box}html{color-scheme:dark}body{margin:0;background:#0a0907;color:#f0ecd8;font:15px/1.55 Inter,sans-serif}button,select,textarea{font:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:48px 0 80px}.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end;padding-bottom:28px;border-bottom:1px solid #302a1e}.kicker{margin:0 0 8px;color:#e3a83f;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.top h1{margin:0;font:750 clamp(34px,6vw,64px)/.98 "Bricolage Grotesque",sans-serif;letter-spacing:-.04em}.intro{max-width:720px;margin:18px 0 0;color:#bdb6a4}.top a{color:#f1c56e}.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}.button{border:1px solid #51442d;border-radius:10px;background:#17140f;color:#f0ecd8;padding:10px 14px;font-weight:650;cursor:pointer;white-space:nowrap}.button:hover,.button:focus-visible{border-color:#e3a83f;outline:none}.button.primary{background:#d99a2c;color:#171108;border-color:#d99a2c}.button.targeted{border-color:#8d6829;background:#211a0e;color:#f0c772}.button.targeted:hover,.button.targeted:focus-visible{background:#2a2112;border-color:#d99a2c}.button:disabled{opacity:.45;cursor:not-allowed}.status{min-height:24px;margin:16px 0;color:#e7c98f}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:24px 0;background:#302a1e;border:1px solid #302a1e;border-radius:14px;overflow:hidden}.metric{background:#12100c;padding:16px}.metric span{display:block;color:#918a7a;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.metric strong{display:block;margin-top:5px;font:650 23px "Bricolage Grotesque",sans-serif}.toolbar{display:grid;grid-template-columns:minmax(0,1fr) 200px 200px;gap:12px;margin:26px 0 14px}.toolbar input,.toolbar select{width:100%;border:1px solid #393124;border-radius:10px;background:#11100d;color:#f0ecd8;padding:11px 12px}.toolbar input:focus,.toolbar select:focus,.review textarea:focus,.review select:focus{border-color:#e3a83f;outline:none}.eval-list{display:grid;gap:10px}.eval{border:1px solid #302a1e;border-radius:14px;background:#11100d;overflow:hidden}.eval summary{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:14px;align-items:center;padding:16px 18px;cursor:pointer;list-style:none}.eval summary::-webkit-details-marker{display:none}.number{color:#e3a83f;font:650 13px "Bricolage Grotesque",sans-serif}.question{font-weight:600}.meta{display:flex;gap:8px;align-items:center;color:#8f8878;font-size:12px}.badge{border:1px solid #403725;border-radius:999px;padding:3px 8px;white-space:nowrap}.badge.correct{border-color:#56745d;color:#a9d6b2}.badge.incorrect{border-color:#80504a;color:#e7aaa1}.badge.running{border-color:#9a7430;color:#f0c772}.body{padding:0 18px 18px;border-top:1px solid #28231a}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-top:18px}.label{margin:0 0 7px;color:#918a7a;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.facts{margin:0;padding-left:18px;color:#d1cab9}.answer{min-height:94px;margin:0;padding:13px;border:1px solid #2d281e;border-radius:10px;background:#0b0a08;color:#eee7d6;white-space:pre-wrap}.run-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px;color:#918a7a;font-size:12px}.review{display:grid;grid-template-columns:180px 160px minmax(220px,1fr) auto;gap:10px;align-items:end;margin-top:18px}.review>label,.reason-field{display:grid;gap:6px;color:#aaa291;font-size:12px}.review select,.review textarea{border:1px solid #393124;border-radius:9px;background:#0b0a08;color:#f0ecd8;padding:9px}.review textarea{min-height:58px;resize:vertical}.reason-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.dictate{position:relative;display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid #ff9f89;border-radius:11px;background:#ef6a4c;color:#180b08;cursor:pointer;box-shadow:0 4px 0 #8f3423;transition:transform .16s ease,background .16s ease,box-shadow .16s ease}.dictate svg{width:19px;height:19px;stroke:currentColor}.dictate:hover{background:#ff8268;transform:translateY(-1px);box-shadow:0 5px 0 #8f3423}.dictate:focus-visible{outline:3px solid rgba(255,159,137,.35);outline-offset:3px}.dictate:active{transform:translateY(2px);box-shadow:0 2px 0 #8f3423}.dictate[aria-pressed="true"]{background:#f4c65d;border-color:#ffe09b;color:#171108;box-shadow:0 4px 0 #8c681b}.dictate:disabled{cursor:not-allowed;opacity:.42;box-shadow:none;transform:none}.empty{color:#827b6e}.telemetry{margin-top:42px;padding-top:26px;border-top:1px solid #302a1e}.telemetry h2{margin:0 0 8px;font:650 28px "Bricolage Grotesque",sans-serif}.telemetry p{max-width:800px;color:#bdb6a4}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.field{padding:12px;border:1px solid #302a1e;border-radius:10px;background:#11100d}.field code{color:#efbd60}.field span{display:block;margin-top:4px;color:#8f8878;font-size:12px}.engine{position:absolute;width:1px;height:1px;border:0;clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden}@media(max-width:820px){.top{grid-template-columns:1fr}.controls{justify-content:flex-start}.metrics{grid-template-columns:repeat(2,1fr)}.toolbar,.grid,.review,.fields{grid-template-columns:1fr}.eval summary{grid-template-columns:38px minmax(0,1fr)}.meta{grid-column:2}}
   </style>
 </head>
 <body>
@@ -18,12 +18,13 @@
       <div>
         <p class="kicker">Ask Prerna quality system</p>
         <h1>Evaluation console</h1>
-        <p class="intro">Run the 50-question dataset against the same preproduction assistant, inspect every answer, record a verdict and reason, and export your review. Select the coral microphone beside a Reason field to speak your feedback. Reviews stay in this browser until you export or clear them.</p>
+        <p class="intro">Run all 50 questions or rerun only those marked Incorrect. Import a previous export to continue its answers, verdicts, ratings, and comments in this browser. Select the coral microphone beside a Reason field to speak your feedback.</p>
       </div>
       <div class="controls">
         <button class="button primary" id="runAll" type="button">Run all 50</button>
+        <button class="button targeted" id="runIncorrect" type="button" disabled>Run incorrect (0)</button>
         <button class="button" id="stopRun" type="button" disabled>Stop</button>
-        <button class="button" id="importRun" type="button">Import review</button>
+        <button class="button" id="importRun" type="button" title="Restore a previously exported review and continue where you left off">Import review</button>
         <input id="importFile" type="file" accept="application/json,.json" hidden>
         <button class="button" id="exportRun" type="button">Export JSON</button>
         <button class="button" id="clearRun" type="button">Clear results</button>
@@ -36,6 +37,7 @@
     <div class="toolbar">
       <input id="search" type="search" placeholder="Filter by question, category, or expected fact" aria-label="Filter evaluations">
       <select id="category" aria-label="Filter by category"><option value="">All categories</option></select>
+      <select id="verdict" aria-label="Filter by verdict"><option value="">All verdicts</option><option value="incorrect">Incorrect only</option><option value="correct">Correct only</option><option value="unreviewed">Not reviewed only</option></select>
     </div>
     <section class="eval-list" id="evalList" aria-label="Evaluation cases"></section>
 
@@ -73,6 +75,7 @@
     const microphoneIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>';
     const stopIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="12" height="12" x="6" y="6" rx="2"/></svg>';
     let stopRequested = false;
+    let batchRunning = false;
     let activeDictation = null;
 
     function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
@@ -108,7 +111,13 @@
     function render() {
       const query = document.getElementById('search').value.toLowerCase();
       const category = document.getElementById('category').value;
-      const filtered = dataset.filter(item => (!category || item.category === category) && `${item.question} ${item.category} ${item.expectedFacts.join(' ')}`.toLowerCase().includes(query));
+      const verdict = document.getElementById('verdict').value;
+      const filtered = dataset.filter(item => {
+        const savedVerdict = state[item.id]?.verdict || 'unreviewed';
+        return (!category || item.category === category)
+          && (!verdict || savedVerdict === verdict)
+          && `${item.question} ${item.category} ${item.expectedFacts.join(' ')}`.toLowerCase().includes(query);
+      });
       list.innerHTML = filtered.map((item,index) => {
         const review = state[item.id] || {};
         const result = review.result;
@@ -120,10 +129,16 @@
           <div class="body">
             <div class="grid"><div><p class="label">Expected response type</p><p>${escapeHtml(item.expectedType)}</p><p class="label">Expected facts</p><ul class="facts">${item.expectedFacts.map(fact => `<li>${escapeHtml(fact)}</li>`).join('')}</ul><p class="label">Expected sources</p><p>${escapeHtml(item.expectedSources.join(', ') || 'Policy or profile answer bank')}</p></div>
             <div><p class="label">Actual answer</p><p class="answer">${result ? escapeHtml(result.answer) : '<span class="empty">Not run yet.</span>'}</p>${result ? `<div class="run-meta"><span>${escapeHtml(result.answerMode)}</span><span>${result.totalLatencyMs} ms</span><span>${result.inputTokens} in / ${result.outputTokens} out</span><span>Sources: ${escapeHtml(sources)}</span><span>Fallback: ${result.fallback ? 'yes' : 'no'}</span>${result.action ? `<span>Action: ${escapeHtml(result.action.label)} → ${escapeHtml(result.action.href)}</span>` : ''}${result.error ? `<span>Error: ${escapeHtml(result.error)}</span>` : ''}</div>` : ''}</div></div>
-            <div class="review"><label>Verdict<select data-field="verdict"><option value="unreviewed">Not reviewed</option><option value="correct" ${review.verdict==='correct'?'selected':''}>Correct</option><option value="incorrect" ${review.verdict==='incorrect'?'selected':''}>Incorrect</option></select></label><label>Helpfulness<select data-field="helpfulness"><option value="">Not rated</option>${[1,2,3,4,5].map(n => `<option value="${n}" ${String(review.helpfulness)===String(n)?'selected':''}>${n} / 5</option>`).join('')}</select></label><div class="reason-field"><div class="reason-head"><label for="reason-${escapeHtml(item.id)}">Reason</label><button class="dictate" type="button" data-dictate aria-label="${SpeechRecognitionAPI ? 'Start voice dictation' : 'Voice dictation unavailable'}" title="${SpeechRecognitionAPI ? 'Speak your feedback' : 'Voice dictation unavailable in this browser'}" aria-pressed="false" ${SpeechRecognitionAPI ? '' : 'disabled'}>${microphoneIcon}</button></div><textarea id="reason-${escapeHtml(item.id)}" data-field="reason" placeholder="Why is it correct or incorrect?">${escapeHtml(review.reason || '')}</textarea></div><button class="button run-one" type="button" ${review.running?'disabled':''}>${result?'Run again':'Run case'}</button></div>
+            <div class="review"><label>Verdict<select data-field="verdict"><option value="unreviewed">Not reviewed</option><option value="correct" ${review.verdict==='correct'?'selected':''}>Correct</option><option value="incorrect" ${review.verdict==='incorrect'?'selected':''}>Incorrect</option></select></label><label>Helpfulness<select data-field="helpfulness"><option value="">Not rated</option>${[1,2,3,4,5].map(n => `<option value="${n}" ${String(review.helpfulness)===String(n)?'selected':''}>${n} / 5</option>`).join('')}</select></label><div class="reason-field"><div class="reason-head"><label for="reason-${escapeHtml(item.id)}">Reason</label><button class="dictate" type="button" data-dictate aria-label="${SpeechRecognitionAPI ? 'Start voice dictation' : 'Voice dictation unavailable'}" title="${SpeechRecognitionAPI ? 'Speak your feedback' : 'Voice dictation unavailable in this browser'}" aria-pressed="false" ${SpeechRecognitionAPI ? '' : 'disabled'}>${microphoneIcon}</button></div><textarea id="reason-${escapeHtml(item.id)}" data-field="reason" placeholder="Why is it correct or incorrect?">${escapeHtml(review.reason || '')}</textarea></div><button class="button run-one" type="button" ${(batchRunning || review.running)?'disabled':''}>${result?'Run again':'Run case'}</button></div>
           </div></details>`;
       }).join('');
       updateMetrics();
+      const incorrectCount = dataset.filter(item => state[item.id]?.verdict === 'incorrect').length;
+      const runIncorrect = document.getElementById('runIncorrect');
+      runIncorrect.textContent = `Run incorrect (${incorrectCount})`;
+      runIncorrect.disabled = batchRunning || incorrectCount === 0;
+      document.getElementById('runAll').disabled = batchRunning;
+      document.getElementById('stopRun').disabled = !batchRunning;
     }
 
     async function waitForEngine() {
@@ -220,17 +235,27 @@
       }
     }
 
-    document.getElementById('runAll').addEventListener('click', async () => {
+    async function runBatch(cases, label) {
+      if (!cases.length || batchRunning) return;
       stopRequested = false;
-      document.getElementById('runAll').disabled = true;
-      document.getElementById('stopRun').disabled = false;
-      for (let index=0; index<dataset.length && !stopRequested; index+=1) {
-        status.textContent = `Running ${index+1} of ${dataset.length}`;
-        await runCase(dataset[index].id);
+      batchRunning = true;
+      render();
+      for (let index=0; index<cases.length && !stopRequested; index+=1) {
+        status.textContent = `Running ${index+1} of ${cases.length} ${label}`;
+        await runCase(cases[index].id);
       }
-      document.getElementById('runAll').disabled = false;
-      document.getElementById('stopRun').disabled = true;
-      status.textContent = stopRequested ? 'Run stopped. Completed results were saved.' : 'All 50 evaluations completed.';
+      batchRunning = false;
+      render();
+      status.textContent = stopRequested
+        ? 'Run stopped. Completed results were saved.'
+        : label === 'incorrect cases'
+          ? `Reran ${cases.length} incorrect evaluations. Review the new answers, then update their verdicts.`
+          : 'All 50 evaluations completed.';
+    }
+    document.getElementById('runAll').addEventListener('click', () => runBatch(dataset, 'evaluations'));
+    document.getElementById('runIncorrect').addEventListener('click', () => {
+      const incorrectCases = dataset.filter(item => state[item.id]?.verdict === 'incorrect');
+      runBatch(incorrectCases, 'incorrect cases');
     });
     document.getElementById('stopRun').addEventListener('click', () => { stopRequested = true; status.textContent = 'Stopping after the current case...'; });
     document.getElementById('importRun').addEventListener('click', () => document.getElementById('importFile').click());
@@ -263,6 +288,7 @@
     document.getElementById('clearRun').addEventListener('click', () => { if (!confirm('Clear all saved answers and reviews in this browser?')) return; Object.keys(state).forEach(key => delete state[key]); save(); render(); status.textContent='Saved evaluation results cleared.'; });
     document.getElementById('search').addEventListener('input', render);
     document.getElementById('category').addEventListener('change', render);
+    document.getElementById('verdict').addEventListener('change', render);
     list.addEventListener('click', event => {
       const dictateButton = event.target.closest('[data-dictate]');
       if (dictateButton) { startDictation(dictateButton); return; }

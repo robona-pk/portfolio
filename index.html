@@ -2034,9 +2034,9 @@ const portfolioKnowledge = [
   { source: 'Portfolio overview', answer: 'Prerna is a Growth and Adoption Product Manager with five years of experience across e-commerce, health-tech, and insurance. Her work focuses on activation, conversion, retention, and revenue growth.', text: 'Prerna Kapoor is a Growth and Adoption Product Manager with five years of experience improving activation, conversion, retention, and revenue. Her work spans e-commerce, health-tech, and insurance. She partners closely with design, engineering, operations, and commercial teams to take high-impact products from discovery through launch and iteration.', tags: 'about experience role background industries ecommerce health tech insurance collaboration' }
 ];
 
-const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate|overrated|toxic|rude|bossy|lazy|annoying|bad)\b/i;
-const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|she|her|you|this bot|the bot|assistant)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad)\b|\b(?:prerna|she|her|you|this bot|the bot|assistant)\s+(?:is|are|was|were)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad)\b/i;
-const insultAnswer = 'I’m here to keep the conversation thoughtful and respectful. I’d be glad to share Prerna’s work, ideas, and the projects she is building.';
+const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b/i;
+const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|she|her|you|this bot|the bot|assistant)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b|\b(?:prerna|she|her|you|this bot|the bot|assistant)\s+(?:is|are|was|were)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b/i;
+const insultAnswer = 'Let’s keep the conversation respectful and focused on Prerna’s work. I can help with her experience, product approach, projects, skills, or outcomes.';
 const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood at (her )?job\b/i;
 const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
 const skillsetQuestion = /\b(is (prerna|she) skilled|skillset|skills? (does|do).{0,18}\bhave|what are.{0,18}\bskills?|her skills|what (can|does).{0,18}\bdo|areas? of expertise|product skills?)\b/i;
@@ -2364,6 +2364,7 @@ function appendRagMessage(kind, text, citations = [], action = null) {
     link.className = 'rag-action';
     link.href = action.href;
     link.textContent = action.label;
+    link.addEventListener('click', handleRagActionNavigation);
     message.appendChild(link);
   }
   feed.appendChild(message);
@@ -2413,12 +2414,28 @@ function openRagModal() {
   if (window.posthog) posthog.capture('portfolio_assistant_opened');
   requestAnimationFrame(() => document.getElementById('ragInput').focus());
 }
-function closeRagModal() {
+function closeRagModal(restoreFocus = true) {
   if (!ragModal || !ragModal.classList.contains('open')) return;
   ragModal.classList.remove('open');
   ragModal.setAttribute('aria-hidden', 'true');
   if (ragLauncher) ragLauncher.classList.remove('active');
-  if (ragLastFocus) ragLastFocus.focus();
+  if (restoreFocus && ragLastFocus) ragLastFocus.focus();
+}
+function handleRagActionNavigation(event) {
+  const href = event.currentTarget.getAttribute('href');
+  if (!href || !href.startsWith('#')) return;
+  const target = document.querySelector(href);
+  if (!target) return;
+  event.preventDefault();
+  closeRagModal(false);
+  history.pushState(null, '', href);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  requestAnimationFrame(() => {
+    target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    const focusTarget = target.querySelector('h2') || target;
+    if (!focusTarget.hasAttribute('tabindex')) focusTarget.setAttribute('tabindex', '-1');
+    window.setTimeout(() => focusTarget.focus({ preventScroll: true }), reduceMotion ? 0 : 500);
+  });
 }
 if (ragLaunch) ragLaunch.addEventListener('click', openRagModal);
 if (ragClose) ragClose.addEventListener('click', closeRagModal);

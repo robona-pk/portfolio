@@ -12,6 +12,18 @@ The second reviewed export contained 28 correct and 22 incorrect answers, with a
 
 The approved answer bank, retrieval passages, routing, expected facts, and case-study actions were updated from this feedback. Case-study actions now close the assistant and open the corresponding case modal. No private evaluation export is committed to the repository.
 
+## Third run
+
+The third reviewed export reached 45 correct answers out of 50, while average helpfulness remained 3.9 out of 5. The five remaining comments were deterministic editorial issues rather than retrieval or generation failures:
+
+- availability needed a more direct invitation and a `Talk to Prerna` action;
+- strengths needed more modest, less self-referential phrasing;
+- collaboration needed Prerna's actual philosophy of keeping partners close to the solution space, aligning stakeholders, and sharing business outcomes;
+- insurance pre-authorisation needed clearer grammar around manual Vidal entry, OCR, and NER;
+- the failure boundary needed to avoid saying that Prerna had not “published” a story.
+
+All five approved answers and their evaluation expectations were revised. The attached export remains private and uncommitted.
+
 ## Outcome
 
 All 50 responses in Prerna's exported evaluation have now been reviewed. Prerna's verdicts and reasons for questions 1-10 are preserved. Questions 11-50 were reviewed against the approved answer bank, published portfolio evidence, privacy rules, and the quality standard visible in those first ten reviews.

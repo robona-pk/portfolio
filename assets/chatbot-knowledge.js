@@ -8,7 +8,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     education: 'Prerna studied Biotechnology Engineering at SRM Institute of Science and Technology in Kattankulathur, Tamil Nadu.',
     career: 'Prerna is always looking out for the next challenge to conquer. Feel free to reach out and start a conversation.',
     roles: 'Prerna is interested in Product Manager and Senior Product Manager roles where she can own high-intent journeys end to end and turn adoption problems into measurable customer and business outcomes—especially in B2C and AI-enabled products.',
-    availability: 'Prerna is always curious about the next meaningful challenge. If there is an interesting product problem or role worth exploring, the best next step is a conversation through Let’s Talk.',
+    availability: 'Prerna is always curious about the next meaningful challenge. If there is an interesting product problem or role worth exploring, the best next step is to talk to her directly.',
     hometown: 'Prerna grew up in Delhi and has lived in Chennai, Pune, and Hyderabad. Those moves have made her adaptable and open to different cultures and perspectives. She is now based in Bengaluru.',
     based: 'Prerna is based in Bengaluru, India.',
     hobbies: 'Outside work, Prerna lifts weights and plays the drums. She also enjoys travelling solo to meet new people and gain fresh perspectives.',

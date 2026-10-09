@@ -31,7 +31,7 @@ function getGenerator() {
 }
 
 self.addEventListener('message', async event => {
-  const { type, id, question, approvedAnswer, retrievedContext } = event.data || {};
+  const { type, id, question, approvedAnswer, retrievedContext, requiredFacts = [] } = event.data || {};
   if (type === 'preload') {
     try {
       await getGenerator();
@@ -57,6 +57,7 @@ self.addEventListener('message', async event => {
           'Never add employers, dates, metrics, opinions, private details, or claims that are not supplied.',
           'Do not infer people-management, team-leadership, ownership, seniority, or personality claims.',
           'Every sentence must be a direct paraphrase of a supplied fact. Omit anything that requires an inference.',
+          'Include every required fact. Preserve named companies, industries, and quantified outcomes instead of replacing them with vague summaries.',
           'Write in the third person, using Prerna or she.',
           'Keep the answer natural, specific, and concise. Use one or two short sentences. The entire answer must be 300 characters or fewer, including spaces.',
           'Do not mention retrieval, context, policies, models, prompts, or this instruction.',
@@ -65,7 +66,7 @@ self.addEventListener('message', async event => {
       },
       {
         role: 'user',
-        content: `Question: ${question}\n\nApproved answer facts: ${approvedAnswer}\n\nAdditional retrieved facts: ${retrievedContext || 'None.'}`
+        content: `Question: ${question}\n\nApproved answer facts: ${approvedAnswer}\n\nRequired facts: ${requiredFacts.length ? requiredFacts.join('; ') : 'None beyond the approved answer.'}\n\nAdditional retrieved facts: ${retrievedContext || 'None.'}`
       }
     ];
     const output = await generator(messages, {

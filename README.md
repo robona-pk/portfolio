@@ -142,6 +142,8 @@ The tradeoff is a large first-use download. The official 4-bit ONNX model file i
 
 Open `/eval.html` on the preview deployment to run the 50-question evaluation dataset. Each case displays expected facts, expected sources, the actual answer, answer mode, latency, token estimates, fallback state, and errors. Reviews are stored in the current browser and can be exported as JSON.
 
+Evaluation feedback is human review data, not automatic model training. When a review exposes a missing fact, update both the case in `assets/eval-dataset.js` and the approved answer or source material used by the chatbot. Required facts can then be passed to Qwen and validated; if Qwen omits one, the assistant returns the complete approved answer instead.
+
 Live requests emit anonymous PostHog events with redacted question text, retrieved sources and scores, final answer, fallback state, error, retrieval and generation models, total latency, approximate input and output tokens, zero estimated API cost, and model cache state. Separate events record helpfulness and downstream resume, case-study, and contact clicks. See `TELEMETRY.md` for the full event dictionary and dashboard setup.
 
 ### Vercel preproduction

@@ -2044,7 +2044,7 @@ const portfolioKnowledge = [
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-09.2',
+  rulesVersion: '2026-10-09.3',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   directAnswerThreshold: 0.38,
@@ -2079,7 +2079,8 @@ const careerMoveAnswer = 'Prerna is exploring senior product roles where she can
 const experienceQuestion = /\b(how much|how many|years? of|total)\b.*\bexperience\b|\bexperience\b.*\b(how much|how many|years?|total)\b/i;
 const experienceAnswer = 'Prerna has 5+ years of experience as a Growth and Adoption Product Manager, spanning e-commerce, health-tech, and insurance.';
 const identityQuestion = /\b(who is prerna|who is she|tell me about prerna|about prerna)\b/i;
-const identityAnswer = 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years of experience across e-commerce, health-tech, and insurance. Her work focuses on activation, conversion, retention, and revenue growth.';
+const identityAnswer = 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years across e-commerce, health-tech, and insurance. At Lenskart, her initiatives contributed ₹6Cr+ in annualised revenue; at Bajaj Finserv Health, she built a 0→1 diabetes wellness business that generated ₹28L in five months.';
+const identityRequiredFacts = ['Growth and Adoption Product Manager', '5+ years', 'e-commerce', 'health-tech', 'insurance', 'Lenskart', '₹6Cr+', 'Bajaj Finserv Health', '₹28L'];
 const roleQuestion = /\b(what (does|is).{0,18}\b(role|job|title)|what is prerna.{0,18}\b(role|job|title))\b/i;
 const roleAnswer = 'Prerna is a Growth and Adoption Product Manager.';
 const hometownQuestion = /\b(where is.{0,18}\bfrom|where.{0,18}\bgrew up|hometown|from where)\b/i;
@@ -2314,7 +2315,8 @@ async function localRagAnswer(question) {
   };
   if (identityQuestion.test(question)) return {
     answer: identityAnswer,
-    citations: ['Portfolio overview']
+    citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'],
+    requiredFacts: identityRequiredFacts
   };
   if (roleQuestion.test(question)) return {
     answer: roleAnswer,
@@ -2451,7 +2453,7 @@ function generateWithQwen(payload) {
   });
 }
 
-function validateGeneratedAnswer(answer, groundingText) {
+function validateGeneratedAnswer(answer, groundingText, requiredFacts = []) {
   if (typeof answer !== 'string') return null;
   const clean = answer.replace(/[—–]/g, '-').replace(/\s+/g, ' ').trim();
   if (clean.length < 12 || clean.length > RAG_CONFIG.maximumGeneratedAnswerCharacters || /<[^>]+>/.test(clean)) return null;
@@ -2459,6 +2461,8 @@ function validateGeneratedAnswer(answer, groundingText) {
   const allowedNumbers = new Set(groundingText.match(/\b\d+(?:\.\d+)?\b/g) || []);
   const generatedNumbers = clean.match(/\b\d+(?:\.\d+)?\b/g) || [];
   if (generatedNumbers.some(number => !allowedNumbers.has(number))) return null;
+  const normalizedAnswer = clean.toLowerCase().replace(/\s+/g, ' ');
+  if (requiredFacts.some(fact => !normalizedAnswer.includes(String(fact).toLowerCase()))) return null;
   return clean;
 }
 
@@ -2486,9 +2490,10 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
     const generation = await generateWithQwen({
       question: normalizeQuestion(question),
       approvedAnswer: result.answer,
-      retrievedContext
+      retrievedContext,
+      requiredFacts: result.requiredFacts || []
     });
-    const validated = validateGeneratedAnswer(generation.answer, groundingText);
+    const validated = validateGeneratedAnswer(generation.answer, groundingText, result.requiredFacts || []);
     return {
       answer: validated || result.answer,
       retrievedSources: [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])],

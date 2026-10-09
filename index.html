@@ -2044,12 +2044,13 @@ const portfolioKnowledge = [
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-09.1',
+  rulesVersion: '2026-10-09.2',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   directAnswerThreshold: 0.38,
   generationContextThreshold: 0.30,
   lexicalMinimumScore: 1,
+  maximumGeneratedAnswerCharacters: 300,
   fallbackAnswer: 'I don’t have that information available.',
   estimatedInputCostPerMillionTokensUsd: 0,
   estimatedOutputCostPerMillionTokensUsd: 0
@@ -2218,6 +2219,17 @@ async function retrievePortfolioContextSemantically(question) {
   } catch (error) {
     return retrievePortfolioContext(question);
   }
+}
+
+function warmPortfolioModels() {
+  const worker = getQwenWorker();
+  if (worker) worker.postMessage({ type: 'preload' });
+  if (!window.createPortfolioEmbedder) return;
+  portfolioEmbedderPromise ||= window.createPortfolioEmbedder();
+  portfolioVectorsPromise ||= portfolioEmbedderPromise.then(embedder => embedder(
+    portfolioKnowledge.map(item => `${item.source}. ${item.text}`),
+    { pooling: 'mean', normalize: true }
+  ));
 }
 
 async function localRagAnswer(question) {
@@ -2442,7 +2454,7 @@ function generateWithQwen(payload) {
 function validateGeneratedAnswer(answer, groundingText) {
   if (typeof answer !== 'string') return null;
   const clean = answer.replace(/[—–]/g, '-').replace(/\s+/g, ' ').trim();
-  if (clean.length < 12 || clean.length > 700 || /<[^>]+>/.test(clean)) return null;
+  if (clean.length < 12 || clean.length > RAG_CONFIG.maximumGeneratedAnswerCharacters || /<[^>]+>/.test(clean)) return null;
   if (/\b(manages?|leads?|supervises?) (a |the )?(team|teams|people|staff)\b/i.test(clean)) return null;
   const allowedNumbers = new Set(groundingText.match(/\b\d+(?:\.\d+)?\b/g) || []);
   const generatedNumbers = clean.match(/\b\d+(?:\.\d+)?\b/g) || [];
@@ -2690,6 +2702,7 @@ function openRagModal() {
   ragModal.setAttribute('aria-hidden', 'false');
   if (ragLauncher) ragLauncher.classList.add('active');
   if (window.posthog) posthog.capture('portfolio_assistant_opened');
+  warmPortfolioModels();
   requestAnimationFrame(() => document.getElementById('ragInput').focus());
 }
 function closeRagModal(restoreFocus = true) {

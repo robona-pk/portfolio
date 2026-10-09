@@ -34,7 +34,9 @@ The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 | Lexical minimum score | `1` | Minimum keyword match when semantic retrieval is unavailable |
 | Unsupported fallback | `I don’t have that information available.` | Returned when approved context is insufficient |
 
-Generated responses are rejected when they are empty, malformed, too long, introduce a number absent from the supplied facts, or infer that Prerna manages or leads a team. A rejected response falls back to the approved answer.
+Qwen is limited to 72 new tokens. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce a number absent from the supplied facts, or infer that Prerna manages or leads a team. A rejected response falls back to the approved answer.
+
+The embedding index and Qwen begin warming when the chat opens. This reduces perceived first-answer latency but does not eliminate the initial model download. Later answers in the same browser benefit from the model cache.
 
 ## Live request event
 

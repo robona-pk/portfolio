@@ -69,8 +69,9 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 - **Knowledge and policy:** editable JavaScript source at `assets/chatbot-knowledge.js`; it holds approved personal/professional facts and declined-topic rules.
 - **Retrieval:** `Xenova/all-MiniLM-L6-v2`, an open-source, quantized embedding model loaded through Transformers.js and cached by the browser.
 - **Generation:** `onnx-community/Qwen2.5-0.5B-Instruct` in 4-bit format, running in a Web Worker through Transformers.js and WebGPU.
+- **Warm-up:** opening the chat starts the embedding index and Qwen download/initialisation in the background, so part of the first-answer delay happens while the visitor reads or types.
 - **Ranking:** client-side cosine similarity against the curated portfolio passages.
-- **Validation:** generated answers are rejected if they are empty, malformed, too long, or introduce numbers that are not present in the retrieved facts.
+- **Validation:** Qwen is limited to 72 new tokens and every generated answer is hard-capped at 300 characters. Answers are rejected if they are empty, malformed, too long, or introduce numbers that are not present in the retrieved facts.
 - **Hosting:** GitHub + Vercel preview deployment; no backend model, database, API key, or per-question API charge.
 - **Product safeguards:** privacy boundaries, NSFW declines, graceful responses to insults, general-knowledge redirection, and no invented weakness/failure stories.
 

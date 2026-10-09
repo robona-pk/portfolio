@@ -1,5 +1,17 @@
 # Ask Prerna evaluation audit
 
+## Follow-up run
+
+The second reviewed export contained 28 correct and 22 incorrect answers, with an average helpfulness score of 3.9 out of 5. The remaining gaps were more specific than the first run:
+
+- recruiter answers were accurate but still too generic or self-promotional;
+- AI-building experience and newer tools such as Claude Code and PostHog were missing;
+- case-study answers needed more problem context and direct case-study actions;
+- the family question needed an earlier privacy route;
+- the failure question needed an honest boundary plus an invitation to discuss it directly.
+
+The approved answer bank, retrieval passages, routing, expected facts, and case-study actions were updated from this feedback. Case-study actions now close the assistant and open the corresponding case modal. No private evaluation export is committed to the repository.
+
 ## Outcome
 
 All 50 responses in Prerna's exported evaluation have now been reviewed. Prerna's verdicts and reasons for questions 1-10 are preserved. Questions 11-50 were reviewed against the approved answer bank, published portfolio evidence, privacy rules, and the quality standard visible in those first ten reviews.

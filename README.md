@@ -141,7 +141,9 @@ The tradeoff for generative questions is a large first-use download. The officia
 
 ### Evaluation and observability
 
-Open `/eval.html` on the preview deployment to run the 50-question evaluation dataset. Each case displays expected facts, expected sources, the actual answer, answer mode, latency, token estimates, fallback state, and errors. Reviews are stored in the current browser and can be exported or imported as JSON.
+Open `/eval.html` on the preview deployment to run the 50-question evaluation dataset. Each case displays expected facts, expected sources, the actual answer, answer mode, latency, token estimates, fallback state, and errors. Reviews are stored in the current browser and can be exported or imported as JSON. Each Reason field also includes browser voice dictation for faster review.
+
+Voice dictation uses the browser's Web Speech API, not Qwen. It requires microphone permission and is available only in supporting browsers. Depending on the browser, speech may be processed by the browser provider. The resulting transcript is stored and exported exactly like typed review text; it is not sent to PostHog by this console.
 
 Evaluation feedback is human review data, not automatic model training. When a review exposes a missing fact, update both the case in `assets/eval-dataset.js` and the approved answer or source material used by the chatbot. Required facts can then be passed to Qwen and validated; if Qwen omits one, the assistant returns the complete approved answer instead.
 

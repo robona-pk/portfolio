@@ -10,10 +10,12 @@ Open `/eval.html` on the preproduction deployment.
 2. Open each result and compare the answer with the expected facts, response type, and sources.
 3. Mark the result **Correct** or **Incorrect**.
 4. Give it a helpfulness score from 1 to 5.
-5. Record why the answer is correct or incorrect.
+5. Record why the answer is correct or incorrect. You can type in the Reason field or select **Dictate**, speak naturally, and select **Stop**.
 6. Export the review as JSON when you want to share or archive it.
 
 Answers and manual reviews are stored in the current browser with `localStorage`. They are not uploaded automatically. Exporting produces a dated JSON file containing the dataset, answers, telemetry, verdicts, helpfulness ratings, and reviewer reasons.
+
+Dictation uses the browser's Web Speech API and requires microphone permission. Browser support varies, and some browsers may process speech through their provider. The evaluation console stores only the resulting transcript in its normal local review data and does not send evaluation reviews to PostHog.
 
 ## Source-only answer contract
 

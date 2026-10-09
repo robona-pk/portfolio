@@ -2045,7 +2045,7 @@ const portfolioKnowledge = [
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-09.4',
+  rulesVersion: '2026-10-09.5',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   directAnswerThreshold: 0.38,
@@ -2092,7 +2092,7 @@ const locationAnswer = 'Prerna is based in Bengaluru, India.';
 const availabilityQuestion = /\b(when.{0,24}\bavailable|is.{0,18}\bavailable|availability|schedule|book.{0,18}\b(call|time)|free to talk)\b/i;
 const availabilityAnswer = 'Prerna is open to new opportunities. For her availability or to start a conversation, please get in touch.';
 const employerQuestion = /\b(where (does|did).{0,18}\bwork|companies|employers?)\b/i;
-const employerAnswer = 'Prerna has 5+ years of total product experience, including growth and product work at Lenskart and Bajaj Finserv Health.';
+const employerAnswer = 'Prerna has 5+ years across e-commerce, health-tech, and insurance, with product roles at Lenskart and Bajaj Finserv Health. Alongside that work, she builds AI-enabled product prototypes, including this portfolio assistant and a voice-booking agent.';
 const contactQuestion = /\b(how (can|do).{0,18}\b(contact|reach)|email|phone number|linkedin)\b/i;
 const contactAnswer = 'You can use the contact links in the portfolio to reach Prerna by email, phone, LinkedIn, or WhatsApp.';
 const personalQuestion = /\b(age|birthday|married|single|dating|boyfriend|girlfriend|husband|wife|family|children|home address|address|religion|politics|vote|voting|live|body|appearance|nsfw|sex|sexual)\b/i;
@@ -2119,10 +2119,10 @@ const leadershipQuestion = /\b(leadership style|lead|leader|manage people|manage
 const leadershipAnswer = 'Prerna’s documented style is cross-functional and outcome-led: she works with design, engineering, operations, and commercial teams from discovery through launch and iteration, aligning around measurable customer and business outcomes.';
 const problemSolvingQuestion = /\b(problem.solv|how (does|would).{0,32}\b(approach|solve|prioriti[sz]e|decide|decision)|decision.?making)\b/i;
 const problemSolvingAnswer = 'Prerna starts with a behavioural break in the customer journey, turns it into a measurable hypothesis, tests the smallest useful intervention, and measures activation, conversion, retention, customer outcomes, and business impact.';
-const motivationQuestion = /\bmotivat\w*\b|\bwhat (does|drives).{0,24}\bher\b|\bwhy product\b|\bwhy (does|did).{0,24}\bproduct\b/i;
-const motivationAnswer = 'Prerna’s portfolio centres on moments of high customer intent where a journey breaks—such as an abandoned booking, unclear choice, unread report, or post-purchase issue—and turning those moments into durable growth systems.';
+const motivationQuestion = /\bmotivat\w*\b|\bwhat drives (prerna|her)\b|\bwhy (product|pm)\b|\bwhy (does|did).{0,24}\b(product|pm)\b/i;
+const motivationAnswer = 'Prerna is motivated by constant evolution, both as a person and a product manager. She especially values customer delight and hearing that someone used a product she built; positive or critical feedback both help her improve.';
 const hiringQuestion = /\b(why (should|would).{0,24}\b(hire|choose)|why hire|fit for|good fit)\b/i;
-const hiringAnswer = 'For a growth and adoption role, Prerna brings 5+ years across e-commerce, health-tech, and insurance. Her work contributed ₹6Cr+ in annualised revenue at Lenskart and built a ₹28L 0-to-1 wellness business at Bajaj Finserv Health, alongside measurable product and operational outcomes.';
+const hiringAnswer = 'Prerna combines proven commercial impact with a builder’s curiosity: ₹6Cr+ in annualised revenue at Lenskart and a ₹28L 0-to-1 wellness business at Bajaj Finserv Health. Across e-commerce, health-tech, and insurance, she keeps evolving her craft through AI-enabled product experiments.';
 const undocumentedBehaviourQuestion = /\b(conflict|disagreement|failure|failed|mistake|feedback|pressure|stress|difficult (situation|conversation)|challenge)\b/i;
 const personalProfileQuestion = /\b(how is (prerna|she) as a person|what (is|are) (prerna|she).{0,24}\b(person|personality|like)|personality|values|life philosophy)\b/i;
 const personalProfileAnswer = 'Prerna is energetic, persistent, and drawn to solving meaningful challenges. She cares about steady, deliberate progress and brings that mindset to both work and life. Her philosophy is simple: devotion to her future self must exceed attachment to her past.';
@@ -2132,7 +2132,7 @@ const homeTrialPilotAnswer = 'A three-week pan-India pilot increased completed h
 const lenskartCustomerQuestion = /\b(lenskart|home[- ]?trial)\b.{0,32}\b(customer experience|nps|check[- ]?ins?)\b|\b(customer experience|nps)\b.{0,32}\blenskart\b/i;
 const lenskartCustomerAnswer = 'At Lenskart, territory ownership and 48-hour check-ins improved NPS for the called cohort from 41 to 60 in one month.';
 const diabetesBusinessQuestion = /\bdiabetes\b.{0,24}\b(wellness|business|product)\b|\b(wellness|business)\b.{0,24}\bdiabetes\b/i;
-const diabetesBusinessAnswer = 'At Bajaj Finserv Health, Prerna built a diabetes wellness business from 0 to 1, generating ₹28L in revenue within five months.';
+const diabetesBusinessAnswer = 'At Bajaj Finserv Health, Prerna found that customers trusted doctors more than standalone wellness brands. She used that insight to launch a white-labelled diabetes programme with doctor partners, building the business from 0 to 1 and generating ₹28L in five months.';
 const healthReportsQuestion = /\b(smart health reports?|health files?)\b/i;
 const healthReportsAnswer = 'Smart Health Reports increased active Health Files users by 8 times and generated ₹7L+ in incremental monthly recurring revenue.';
 const doctorListingQuestion = /\bdoctor\b.{0,24}\b(listing|reorder|quality score|ctr)\b|\b(listing|reorder)\b.{0,24}\bdoctor\b/i;

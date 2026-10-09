@@ -12,7 +12,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     hometown: 'Prerna grew up in Delhi and has lived in Chennai, Pune, and Hyderabad. She is now based in Bengaluru.',
     based: 'Prerna is based in Bengaluru, India.',
     hobbies: 'Outside work, Prerna lifts weights and plays the drums. She also enjoys travelling solo to meet new people and gain fresh perspectives.',
-    interests: 'Prerna enjoys conversations about dopamine detox, meeting new people, and solo travel for the perspectives and cultural knowledge it brings.',
+    interests: 'Prerna can happily go deep on dopamine detox and how it changed her life. She also loves swapping stories with new people and talking about solo travel, culture, and the fresh perspectives that come from experiencing a place independently.',
     lifePhilosophy: 'Prerna’s life philosophy is simple: devotion to her future self must exceed attachment to her past. For her, that means choosing discipline, growth, and new perspectives over staying comfortable.',
     personalProfile: 'Prerna is energetic, persistent, and passionate about meaningful problems. She enjoys learning from people and new perspectives, values deliberate progress over quick wins, and believes devotion to her future self must exceed attachment to her past.',
     answerScope: 'Ask about Prerna’s experience, product style, skills, strengths, education, career interests, location, hobbies, life philosophy, or documented work at Lenskart and Bajaj Finserv Health. Good starting points are her product approach, measurable impact, or interests outside work.',

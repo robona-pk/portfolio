@@ -883,6 +883,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .rag-chat-head{background:linear-gradient(120deg,rgba(240,160,32,.2),rgba(240,160,32,.035));border-bottom-color:rgba(255,220,151,.1)}.rag-live-dot{background:#E5A534;box-shadow:0 0 0 4px rgba(240,160,32,.14)}.rag-close{background:rgba(255,255,255,.07);border-radius:50%}.rag-close:hover{background:rgba(240,160,32,.18);color:var(--t1)}
 .rag-message.bot{background:#201c14;border-color:rgba(255,220,151,.09);border-bottom-left-radius:6px}.rag-message.user{background:rgba(240,160,32,.12);border-color:rgba(240,160,32,.3);border-bottom-right-radius:6px}.rag-action{border-color:rgba(240,160,32,.42);color:#FFD88A;background:rgba(240,160,32,.08)}.rag-action:hover,.rag-action:focus-visible{border-color:#F3C45D;background:rgba(240,160,32,.16);color:#FFE7B5}
 .rag-feedback{display:flex;align-items:center;gap:.4rem;margin-top:.65rem;padding-top:.55rem;border-top:1px solid rgba(255,220,151,.09)}.rag-feedback-label{font-size:.68rem;color:var(--t3);margin-right:.15rem}.rag-feedback button{appearance:none;border:1px solid rgba(255,220,151,.18);background:transparent;color:var(--t2);font:600 .66rem var(--fb);padding:.28rem .45rem;border-radius:7px;cursor:pointer}.rag-feedback button:hover,.rag-feedback button:focus-visible{border-color:#E5A534;color:#FFE2A4;outline:none}.rag-feedback button[aria-pressed="true"]{background:rgba(240,160,32,.15);border-color:#E5A534;color:#FFE2A4}.rag-feedback-saved{font-size:.66rem;color:#FFD88A}
+.rag-feedback{flex-wrap:wrap}.rag-feedback button:disabled{cursor:default;opacity:.62}.rag-feedback button[aria-pressed="true"]:disabled{opacity:1}.rag-feedback-reasons{display:none;flex:0 0 100%;gap:.35rem;flex-wrap:wrap;padding-top:.2rem}.rag-feedback-reasons.open{display:flex}.rag-feedback-reasons .rag-feedback-prompt{flex:0 0 100%;font-size:.66rem;color:var(--t3);margin:0 0 .05rem}.rag-feedback-reasons button{font-weight:500;padding:.3rem .5rem}
 .rag-prompts{border-top-color:rgba(255,220,151,.1)}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:#E5A534;color:#FFE2A4}.rag-input{background:#11100d;border-color:rgba(255,220,151,.15);border-radius:14px}.rag-input:focus{border-color:#E5A534}.rag-send{background:#D89524;color:#171108;border-radius:14px}.rag-send:hover{background:#F3C45D;color:#171108}
 @media(max-width:640px){.rag-launcher{right:.55rem;bottom:.65rem}.rag-launch{width:94px;height:98px}.rag-nudge{right:62px;bottom:72px;font-size:.72rem;max-width:170px}.rag-modal{right:.55rem;bottom:102px;padding:0;align-items:flex-end}.rag-chat{width:calc(100vw - 1.1rem);border-radius:22px}.rag-launch{animation-duration:5.5s}}
 @media(prefers-reduced-motion:reduce){.rag-launch{animation:none}.rag-launch img{transition:none}}
@@ -2695,28 +2696,77 @@ function appendRagMessage(kind, text, citations = [], action = null, requestId =
     label.className = 'rag-feedback-label';
     label.textContent = 'Was this helpful?';
     feedback.appendChild(label);
-    [['Yes', 1], ['No', 0]].forEach(([buttonLabel, rating]) => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.textContent = buttonLabel;
-      button.setAttribute('aria-pressed', 'false');
-      button.addEventListener('click', () => {
-        feedback.querySelectorAll('button').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+    const reasons = document.createElement('div');
+    reasons.className = 'rag-feedback-reasons';
+    reasons.setAttribute('role', 'group');
+    reasons.setAttribute('aria-label', 'Why was this answer not helpful?');
+    const reasonPrompt = document.createElement('p');
+    reasonPrompt.className = 'rag-feedback-prompt';
+    reasonPrompt.textContent = 'What could be better?';
+    reasons.appendChild(reasonPrompt);
+    const reasonOptions = [
+      ['Missing information', 'missing_information'],
+      ['Incorrect information', 'incorrect_information'],
+      ['Irrelevant answer', 'irrelevant_answer'],
+      ['Too verbose', 'too_verbose'],
+      ['Poor tone', 'poor_tone']
+    ];
+    reasonOptions.forEach(([reasonLabel, reasonValue]) => {
+      const reasonButton = document.createElement('button');
+      reasonButton.type = 'button';
+      reasonButton.textContent = reasonLabel;
+      reasonButton.setAttribute('aria-pressed', 'false');
+      reasonButton.addEventListener('click', () => {
+        reasons.querySelectorAll('button').forEach(item => {
+          item.disabled = true;
+          item.setAttribute('aria-pressed', String(item === reasonButton));
+        });
         let saved = feedback.querySelector('.rag-feedback-saved');
         if (!saved) {
           saved = document.createElement('span');
           saved.className = 'rag-feedback-saved';
           feedback.appendChild(saved);
         }
-        saved.textContent = 'Saved';
+        saved.textContent = 'Thanks, saved.';
+        if (window.posthog) posthog.capture('portfolio_assistant_feedback_reason', {
+          request_id: requestId,
+          feedback_reason: reasonValue,
+          $process_person_profile: false
+        });
+      }, { once: true });
+      reasons.appendChild(reasonButton);
+    });
+    [['Yes', 1], ['No', 0]].forEach(([buttonLabel, rating]) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = buttonLabel;
+      button.setAttribute('aria-pressed', 'false');
+      button.addEventListener('click', () => {
+        feedback.querySelectorAll(':scope > button').forEach(item => {
+          item.disabled = true;
+          item.setAttribute('aria-pressed', String(item === button));
+        });
+        let saved = feedback.querySelector('.rag-feedback-saved');
+        if (rating === 0) {
+          reasons.classList.add('open');
+          if (saved) saved.remove();
+        } else {
+          if (!saved) {
+            saved = document.createElement('span');
+            saved.className = 'rag-feedback-saved';
+            feedback.appendChild(saved);
+          }
+          saved.textContent = 'Thanks, saved.';
+        }
         if (window.posthog) posthog.capture('portfolio_assistant_helpfulness', {
           request_id: requestId,
           helpfulness_rating: rating,
           $process_person_profile: false
         });
-      });
+      }, { once: true });
       feedback.appendChild(button);
     });
+    feedback.appendChild(reasons);
     message.appendChild(feedback);
   }
   feed.appendChild(message);

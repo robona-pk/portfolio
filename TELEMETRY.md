@@ -72,6 +72,15 @@ One anonymous event is captured after each completed visitor request. Evaluation
 - `request_id`
 - `helpfulness_rating`: `1` for Yes and `0` for No
 
+When a visitor selects **No**, the interface asks what could be better. The available reasons are missing information, incorrect information, irrelevant answer, too verbose, and poor tone.
+
+### `portfolio_assistant_feedback_reason`
+
+- `request_id`
+- `feedback_reason`: `missing_information`, `incorrect_information`, `irrelevant_answer`, `too_verbose`, or `poor_tone`
+
+Join this event to `portfolio_assistant_response` and `portfolio_assistant_helpfulness` using `request_id`. No free-text reason is collected from portfolio visitors.
+
 ### `portfolio_conversion`
 
 - `conversion_type`: `resume_click`, `case_study_click`, or `contact_click`
@@ -90,11 +99,12 @@ Create a dashboard named **Ask Prerna health** and add these insights:
 3. **Fallback rate**: percentage of responses where `fallback = true`.
 4. **Error rate**: percentage where `error` is not empty.
 5. **Helpfulness rate**: average `helpfulness_rating` on `portfolio_assistant_helpfulness`.
-6. **Cache effectiveness**: breakdown by `generation_cache_hit` and `retrieval_cache_hit`.
-7. **Token volume**: sum `input_tokens_estimate` and `output_tokens_estimate`.
-8. **Estimated cost**: sum `estimated_cost_usd`.
-9. **Conversions after chat**: funnel from `portfolio_assistant_response` to `portfolio_conversion`, broken down by `conversion_type`.
-10. **Sources used**: breakdown of `retrieved_sources` to see which parts of the portfolio answer the most questions.
+6. **Negative-feedback reasons**: count `portfolio_assistant_feedback_reason`, broken down by `feedback_reason`.
+7. **Cache effectiveness**: breakdown by `generation_cache_hit` and `retrieval_cache_hit`.
+8. **Token volume**: sum `input_tokens_estimate` and `output_tokens_estimate`.
+9. **Estimated cost**: sum `estimated_cost_usd`.
+10. **Conversions after chat**: funnel from `portfolio_assistant_response` to `portfolio_conversion`, broken down by `conversion_type`.
+11. **Sources used**: breakdown of `retrieved_sources` to see which parts of the portfolio answer the most questions.
 
 For latency percentiles, create a SQL insight with the following query and save it to the dashboard:
 

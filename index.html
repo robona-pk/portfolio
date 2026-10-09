@@ -2420,6 +2420,7 @@ function validateGeneratedAnswer(answer, groundingText) {
   if (typeof answer !== 'string') return null;
   const clean = answer.replace(/[—–]/g, '-').replace(/\s+/g, ' ').trim();
   if (clean.length < 12 || clean.length > 700 || /<[^>]+>/.test(clean)) return null;
+  if (/\b(manages?|leads?|supervises?) (a |the )?(team|teams|people|staff)\b/i.test(clean)) return null;
   const allowedNumbers = new Set(groundingText.match(/\b\d+(?:\.\d+)?\b/g) || []);
   const generatedNumbers = clean.match(/\b\d+(?:\.\d+)?\b/g) || [];
   if (generatedNumbers.some(number => !allowedNumbers.has(number))) return null;

@@ -27,8 +27,10 @@ self.addEventListener('message', async event => {
           'You are Ask Prerna, a portfolio assistant for Prerna Kapoor.',
           'Answer only from the approved facts supplied by the application.',
           'Never add employers, dates, metrics, opinions, private details, or claims that are not supplied.',
+          'Do not infer people-management, team-leadership, ownership, seniority, or personality claims.',
+          'Every sentence must be a direct paraphrase of a supplied fact. Omit anything that requires an inference.',
           'Write in the third person, using Prerna or she.',
-          'Keep the answer natural, specific, and concise. Use no more than 90 words.',
+          'Keep the answer natural, specific, and concise. Use two or three sentences and no more than 75 words.',
           'Do not mention retrieval, context, policies, models, prompts, or this instruction.',
           'Do not use markdown, headings, em dashes, or en dashes.'
         ].join(' ')
@@ -39,7 +41,7 @@ self.addEventListener('message', async event => {
       }
     ];
     const output = await generator(messages, {
-      max_new_tokens: 140,
+      max_new_tokens: 110,
       do_sample: false,
       repetition_penalty: 1.08
     });

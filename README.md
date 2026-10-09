@@ -39,7 +39,7 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 
 ## Portfolio retrieval assistant
 
-> **Terminology note:** this implementation is **not full RAG** in the strict technical sense. RAG (Retrieval-Augmented Generation) retrieves relevant material and then gives it to a generative model—typically an LLM—to compose a new answer. Ask Prerna performs **on-device semantic retrieval plus curated, policy-controlled responses**. It has the retrieval portion of a RAG architecture, but no generative LLM, by design: that keeps it private, predictable, and free per question.
+> **Preproduction architecture:** this branch implements a complete retrieval-augmented generation flow. It retrieves approved profile and portfolio context, then uses the open-source Qwen2.5-0.5B-Instruct model in the browser to compose the answer. Safety, privacy, confidentiality, and off-topic responses remain deterministic rather than model-generated.
 
 ### What it is and why it matters
 
@@ -51,14 +51,16 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 👤 Visitor question
         ↓
 🛡️ Policy + knowledge-base check (`assets/chatbot-knowledge.js`)
-   ├─ approved fact / CTA / respectful boundary → ✨ direct response
-   └─ portfolio question → 🧠 MiniLM semantic embeddings in the browser
-                                   ↓
-                         🔎 cosine-similarity retrieval
-                                   ↓
-                    📚 cited portfolio passage + curated answer
-                                   ↓
-                         💬 chat response in the portfolio
+   ├─ privacy / safety / confidentiality rule → ✨ controlled response
+   └─ supported question → 🧠 MiniLM semantic retrieval
+                                ↓
+                      📚 approved facts and passages
+                                ↓
+                  🤖 Qwen2.5-0.5B-Instruct via WebGPU
+                                ↓
+                   ✅ output validation and safe fallback
+                                ↓
+                      💬 grounded chat response
 ```
 
 ### Stack at a glance
@@ -66,8 +68,10 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 - **Experience:** static HTML, CSS, and vanilla JavaScript; floating accessible chat UI.
 - **Knowledge and policy:** editable JavaScript source at `assets/chatbot-knowledge.js`; it holds approved personal/professional facts and declined-topic rules.
 - **Retrieval:** `Xenova/all-MiniLM-L6-v2`, an open-source, quantized embedding model loaded through Transformers.js and cached by the browser.
+- **Generation:** `onnx-community/Qwen2.5-0.5B-Instruct` in 4-bit format, running in a Web Worker through Transformers.js and WebGPU.
 - **Ranking:** client-side cosine similarity against the curated portfolio passages.
-- **Hosting:** GitHub + Vercel preview deployment; no backend model, database, API key, or per-question LLM charge.
+- **Validation:** generated answers are rejected if they are empty, malformed, too long, or introduce numbers that are not present in the retrieved facts.
+- **Hosting:** GitHub + Vercel preview deployment; no backend model, database, API key, or per-question API charge.
 - **Product safeguards:** privacy boundaries, NSFW declines, graceful responses to insults, general-knowledge redirection, and no invented weakness/failure stories.
 
 To edit answers, update `assets/chatbot-knowledge.js` and redeploy. The file is the approved policy layer; `index.html` contains the chat routing and portfolio retrieval passages.
@@ -86,15 +90,19 @@ Browser-side policy guard ──► open-source MiniLM embeddings ──► cosi
       └──────────────────────────────────────────────────────────────┘
                                      │
                                      ▼
-                       curated answer + cited source labels in the chat
+                         approved context for Qwen 2.5
+                                     │
+                                     ▼
+                         validated generated response
 ```
 
 ### Components
 
 | Component | Location | Responsibility |
 | --- | --- | --- |
-| Chat UI and static fallback | `index.html` | Floating chat window, source labels, local answer-policy checks, and a demo-safe fallback index. |
+| Chat UI and safe fallback | `index.html` | Floating chat window, intent routing, output validation, contact actions, and approved fallback answers. |
 | On-device semantic retrieval | `index.html` | Loads the open-source `Xenova/all-MiniLM-L6-v2` embedding model in the visitor’s browser and ranks the local knowledge bank. |
+| On-device generation | `assets/qwen-worker.js` | Loads 4-bit Qwen2.5-0.5B-Instruct in a Web Worker and generates concise answers from approved context. |
 | Portfolio knowledge | `portfolioKnowledge` in `index.html` | Curated case-study, product-approach, skills, and profile passages used for retrieval and cited answers. |
 | Retired API endpoint | `api/ask.js` | Returns `410 Gone`; it makes no model calls and requires no API key. |
 
@@ -103,13 +111,15 @@ Browser-side policy guard ──► open-source MiniLM embeddings ──► cosi
 1. On first relevant question, the browser downloads and caches a quantized open-source MiniLM embedding model.
 2. The browser embeds the question and curated portfolio passages locally.
 3. It calculates cosine similarity and selects the most relevant passages.
-4. The UI renders the curated answer with matching portfolio sources.
+4. Qwen 2.5 receives only the question, an approved answer frame, and the retrieved passages.
+5. The client validates the output and falls back to the approved response if generation fails or adds an unsupported number.
+6. The UI renders the grounded answer.
 
 This keeps the model grounded in the portfolio rather than allowing it to invent employers, metrics, projects, or personal details.
 
 ### Answer policy and edge cases
 
-Before retrieval, the client and server apply a small policy layer for common visitor intent:
+Before retrieval, the browser applies a policy layer for common visitor intent:
 
 - **Supported portfolio facts:** experience, role, location, employers, work, skills, product approach, outcomes, and career intent.
 - **Behavioural questions:** strengths, leadership style, problem-solving, motivation, and hiring fit answer from documented work; weaknesses, failure, conflict, and feedback prompts avoid speculation when no evidence exists.
@@ -120,7 +130,9 @@ Before retrieval, the client and server apply a small policy layer for common vi
 
 ### Cost and privacy
 
-The chatbot has no paid-model or per-question API cost. Embeddings run in the visitor’s browser through Transformers.js and are cached by the browser after the initial download. Vercel serves the static site only; no portfolio questions are sent to an LLM endpoint.
+The chatbot has no paid-model or per-question API cost. Embeddings and Qwen generation run in the visitor’s browser through Transformers.js and are cached after the initial download. Vercel serves the static site only, and questions are not sent to a hosted inference API.
+
+The tradeoff is a large first-use download. The official 4-bit ONNX model file is approximately 786 MB, so this is a preproduction experiment rather than the production default. Generation requires WebGPU; browsers without it receive the approved curated answer instead.
 
 ### Vercel preproduction
 

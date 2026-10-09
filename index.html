@@ -2353,6 +2353,99 @@ async function localRagAnswer(question) {
   return { answer: direct[0].answer, citations: [direct[0].source] };
 }
 
+const policyControlledAnswers = new Set([
+  approvedKnowledge.greeting,
+  approvedKnowledge.thanks,
+  approvedKnowledge.answerScope,
+  approvedKnowledge.goodbye,
+  approvedKnowledge.confidentialData,
+  approvedKnowledge.companyContext,
+  approvedKnowledge.careerLogistics,
+  approvedKnowledge.comparison,
+  approvedKnowledge.outOfScope,
+  approvedKnowledge.undocumented,
+  insultAnswer,
+  personalAnswer,
+  personalStatusAnswer,
+  outOfScopeAnswer,
+  assistantAnswer,
+  behaviouralBoundaryAnswer,
+  contactAnswer
+].filter(Boolean));
+
+let qwenWorker;
+let qwenRequestId = 0;
+const qwenRequests = new Map();
+
+function getQwenWorker() {
+  if (!('gpu' in navigator) || !window.Worker) return null;
+  if (qwenWorker) return qwenWorker;
+  qwenWorker = new Worker('assets/qwen-worker.js', { type: 'module' });
+  qwenWorker.addEventListener('message', event => {
+    if (event.data?.type === 'progress') return;
+    const request = qwenRequests.get(event.data?.id);
+    if (!request) return;
+    window.clearTimeout(request.timeout);
+    qwenRequests.delete(event.data.id);
+    if (event.data.type === 'result') request.resolve(event.data.answer);
+    else request.reject(new Error(event.data.message || 'Generation failed.'));
+  });
+  qwenWorker.addEventListener('error', error => {
+    qwenRequests.forEach(request => {
+      window.clearTimeout(request.timeout);
+      request.reject(error);
+    });
+    qwenRequests.clear();
+    qwenWorker.terminate();
+    qwenWorker = null;
+  });
+  return qwenWorker;
+}
+
+function generateWithQwen(payload) {
+  const worker = getQwenWorker();
+  if (!worker) return Promise.reject(new Error('WebGPU is unavailable.'));
+  const id = `qwen-${++qwenRequestId}`;
+  return new Promise((resolve, reject) => {
+    const timeout = window.setTimeout(() => {
+      qwenRequests.delete(id);
+      reject(new Error('Generation timed out.'));
+    }, 300000);
+    qwenRequests.set(id, { resolve, reject, timeout });
+    worker.postMessage({ id, ...payload });
+  });
+}
+
+function validateGeneratedAnswer(answer, groundingText) {
+  if (typeof answer !== 'string') return null;
+  const clean = answer.replace(/[—–]/g, '-').replace(/\s+/g, ' ').trim();
+  if (clean.length < 12 || clean.length > 700 || /<[^>]+>/.test(clean)) return null;
+  const allowedNumbers = new Set(groundingText.match(/\b\d+(?:\.\d+)?\b/g) || []);
+  const generatedNumbers = clean.match(/\b\d+(?:\.\d+)?\b/g) || [];
+  if (generatedNumbers.some(number => !allowedNumbers.has(number))) return null;
+  return clean;
+}
+
+async function generatePortfolioAnswer(question, result) {
+  if (result.action || policyControlledAnswers.has(result.answer)) return result.answer;
+  const matches = await retrievePortfolioContextSemantically(question);
+  const relevant = matches
+    .filter(item => item.semantic ? item.score >= 0.3 : item.score > 0)
+    .slice(0, 2);
+  const retrievedContext = relevant.map(item => `${item.source}: ${item.text}`).join('\n');
+  const groundingText = `${result.answer}\n${retrievedContext}`;
+  try {
+    const generated = await generateWithQwen({
+      question: normalizeQuestion(question),
+      approvedAnswer: result.answer,
+      retrievedContext
+    });
+    return validateGeneratedAnswer(generated, groundingText) || result.answer;
+  } catch (error) {
+    return result.answer;
+  }
+}
+
 function appendRagMessage(kind, text, citations = [], action = null) {
   const feed = document.getElementById('ragMessages');
   if (!feed) return null;
@@ -2384,8 +2477,10 @@ async function askPortfolioAssistant(question) {
   button.disabled = true;
   try {
     const result = await localRagAnswer(question);
+    mode.textContent = policyControlledAnswers.has(result.answer) || result.action ? 'Portfolio assistant' : 'Preparing answer...';
+    const answer = await generatePortfolioAnswer(question, result);
     mode.textContent = 'Portfolio assistant';
-    appendRagMessage('bot', result.answer, result.citations || [], result.action || null);
+    appendRagMessage('bot', answer, result.citations || [], result.action || null);
   } catch (error) {
     mode.textContent = 'Portfolio assistant';
     appendRagMessage('bot', outOfScopeAnswer);

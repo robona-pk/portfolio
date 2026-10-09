@@ -23,7 +23,7 @@ The assistant may answer only from:
 - Portfolio passages in `portfolioKnowledge` inside `index.html`
 - The visitor's question
 
-Qwen is instructed to paraphrase supplied facts rather than introduce claims. It must not infer people management, seniority, private details, dates, employers, metrics, ownership, or personality traits.
+Known recruiter questions, published metrics, confidentiality rules, and safety boundaries return approved answers without generation. Qwen is reserved for open-ended synthesis. It is instructed to paraphrase supplied facts rather than introduce claims and must not infer people management, seniority, private details, dates, employers, metrics, ownership, or personality traits.
 
 The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 
@@ -36,7 +36,7 @@ The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 
 Qwen is limited to 72 new tokens. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce a number absent from the supplied facts, or infer that Prerna manages or leads a team. A rejected response falls back to the approved answer.
 
-The embedding index and Qwen begin warming when the chat opens. This reduces perceived first-answer latency but does not eliminate the initial model download. Later answers in the same browser benefit from the model cache.
+The embedding index and Qwen begin warming when the chat opens. Known questions answer immediately while that happens. Open-ended questions may still experience the initial model download; later answers in the same browser benefit from the model cache.
 
 ## Live request event
 

@@ -78,7 +78,7 @@
       const sorted = [...values].sort((a,b) => a-b);
       return sorted[Math.min(sorted.length - 1, Math.ceil(point * sorted.length) - 1)];
     }
-    function formatMs(value) { return value ? `${Number(value).toLocaleString()} ms` : 'No data'; }
+    function formatMs(value) { return Number.isFinite(value) ? `${Number(value).toLocaleString()} ms` : 'No data'; }
 
     function updateMetrics() {
       const results = Object.values(state).map(item => item.result).filter(Boolean);

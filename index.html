@@ -2044,7 +2044,7 @@ const portfolioKnowledge = [
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-09.3',
+  rulesVersion: '2026-10-09.4',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   directAnswerThreshold: 0.38,
@@ -2062,7 +2062,8 @@ const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|s
 const insultAnswer = 'Let’s keep the conversation respectful and focused on Prerna’s work. I can help with her experience, product approach, projects, skills, or outcomes.';
 const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood at (her )?job\b/i;
 const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
-const skillsetQuestion = /\b(is (prerna|she) skilled|skillset|skills? (does|do).{0,18}\bhave|what are.{0,18}\bskills?|her skills|what (can|does).{0,18}\bdo|areas? of expertise|product skills?)\b/i;
+const skillsetQuestion = /\b(is (prerna|she) skilled|skillset|skills? (does|do).{0,18}\bhave|what are.{0,18}\bskills?|her skills|areas? of expertise|product skills?|a[ /-]?b testing|go-to-market|gtm)\b/i;
+const toolsQuestion = /\b(analytics|technical|tech) tools?\b|\b(which|what) tools?\b|\b(sql|bigquery|ga4|firebase|python|clevertap|tableau|power bi)\b/i;
 const productManagerStyleQuestion = /\b(how|what).{0,12}\b(prerna|she|her).{0,20}\b(as )?(a )?(product manager|pm)\b|\b(what kind of|what type of).{0,12}\b(product manager|pm)\b|\b(product management|pm).{0,10}\b(style|working style)\b|\bwork(ing)? with.{0,16}\b(prerna|her).{0,16}\b(product manager|pm)\b/i;
 const personalityTraitQuestion = /\b(is (prerna|she).{0,18}\b(loud|quiet|introvert|extrovert|arrogant|friendly|kind|intense|serious|funny|likeable)|what (is|are).{0,18}\bpersonality|what is (prerna|she) like)\b/i;
 const companyQuestion = /\b(lenskart|lenksart|lens kart|bajaj|bajaj finserv health|lenskart@home|home trial)\b/i;
@@ -2074,15 +2075,15 @@ const goodbyeQuestion = /\b(bye|goodbye|see you|that is all|that'?s all)\b/i;
 const comparisonQuestion = /\b(better than|worse than|compare (her|prerna)|versus|vs\.?|rank her)\b/i;
 const careerLogisticsQuestion = /\b(notice period|expected salary|compensation|ctc|relocat|remote work|work from home|hybrid|visa|sponsor|interview slots?)\b/i;
 const privateLifestyleQuestion = /\b(smoke|drink|alcohol|party|diet|medical history|political views?|sexuality|orientation)\b/i;
-const careerMoveQuestion = /\b(switching (org|organisation|organization)|changing (org|organisation|organization|jobs?)|leaving|job change|new role|new opportunities)\b/i;
+const careerMoveQuestion = /\bwhy\b.{0,40}\b(switch\w*|chang\w*|leav\w*)\b|\b(job change|next challenge|new role|new opportunit\w*)\b/i;
 const careerMoveAnswer = 'Prerna is exploring senior product roles where she can own high-impact products end to end and drive meaningful revenue growth. She is looking for the right scope to apply her growth, adoption, and cross-functional product experience.';
 const experienceQuestion = /\b(how much|how many|years? of|total)\b.*\bexperience\b|\bexperience\b.*\b(how much|how many|years?|total)\b/i;
-const experienceAnswer = 'Prerna has 5+ years of experience as a Growth and Adoption Product Manager, spanning e-commerce, health-tech, and insurance.';
+const experienceAnswer = 'Prerna has 5+ years of product experience across e-commerce, health-tech, and insurance, including work at Lenskart and Bajaj Finserv Health.';
 const identityQuestion = /\b(who is prerna|who is she|tell me about prerna|about prerna)\b/i;
 const identityAnswer = 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years across e-commerce, health-tech, and insurance. At Lenskart, her initiatives contributed ₹6Cr+ in annualised revenue; at Bajaj Finserv Health, she built a 0→1 diabetes wellness business that generated ₹28L in five months.';
 const identityRequiredFacts = ['Growth and Adoption Product Manager', '5+ years', 'e-commerce', 'health-tech', 'insurance', 'Lenskart', '₹6Cr+', 'Bajaj Finserv Health', '₹28L'];
-const roleQuestion = /\b(what (does|is).{0,18}\b(role|job|title)|what is prerna.{0,18}\b(role|job|title))\b/i;
-const roleAnswer = 'Prerna is a Growth and Adoption Product Manager.';
+const roleQuestion = /\bwhat does (prerna|she) do\b|\b(what (does|is).{0,18}\b(role|job|title)|what is prerna.{0,18}\b(role|job|title))\b/i;
+const roleAnswer = 'Prerna is a Growth and Adoption Product Manager with 5+ years across e-commerce, health-tech, and insurance. She uses customer insight and data to find journey breaks, run measurable experiments, and grow products and businesses.';
 const hometownQuestion = /\b(where is.{0,18}\bfrom|where.{0,18}\bgrew up|hometown|from where)\b/i;
 const hometownAnswer = 'Prerna is from Delhi.';
 const locationQuestion = /\b(where is.{0,18}\bbased|based where|where (is|does) (prerna|she)( now| currently)?|current(ly)? (based|located|city)|location)\b/i;
@@ -2090,7 +2091,7 @@ const locationAnswer = 'Prerna is based in Bengaluru, India.';
 const availabilityQuestion = /\b(when.{0,24}\bavailable|is.{0,18}\bavailable|availability|schedule|book.{0,18}\b(call|time)|free to talk)\b/i;
 const availabilityAnswer = 'Prerna is open to new opportunities. For her availability or to start a conversation, please get in touch.';
 const employerQuestion = /\b(where (does|did).{0,18}\bwork|companies|employers?)\b/i;
-const employerAnswer = 'Prerna’s portfolio includes growth and product work at Lenskart and Bajaj Finserv Health.';
+const employerAnswer = 'Prerna has 5+ years of total product experience, including growth and product work at Lenskart and Bajaj Finserv Health.';
 const contactQuestion = /\b(how (can|do).{0,18}\b(contact|reach)|email|phone number|linkedin)\b/i;
 const contactAnswer = 'You can use the contact links in the portfolio to reach Prerna by email, phone, LinkedIn, or WhatsApp.';
 const personalQuestion = /\b(age|birthday|married|single|dating|boyfriend|girlfriend|husband|wife|family|children|home address|address|religion|politics|vote|voting|live|body|appearance|nsfw|sex|sexual)\b/i;
@@ -2101,7 +2102,7 @@ const approvedKnowledge = window.ASK_PRERNA_KNOWLEDGE?.approvedAnswers || {};
 const educationQuestion = /\b(education|degree|university|college|stud(y|ied)|biotechnology|srm)\b/i;
 const rolesQuestion = /\b(preferred roles?|roles? (is|are).{0,18}\b(looking|open)|senior product manager|product manager role)\b/i;
 const hobbiesQuestion = /\b(hobb(y|ies)|outside (of )?work|free time|spare time|leisure|after work|when (she|prerna) is not working|drums?|lifting|fitness|weight loss|nutritional label|dopamine detox|solo travel)\b/i;
-const interestQuestion = /\b(interests?|what does.{0,18}\benjoy|what does.{0,18}\blove)\b/i;
+const interestQuestion = /\b(interests?|what topics?.{0,20}\b(enjoy|like|love|talk)|what does.{0,18}\benjoy|what does.{0,18}\blove)\b/i;
 const lifePhilosophyQuestion = /\b(life philosophy|philosophy (in|on|about) life|personal philosophy|personal motto|life motto|mantra|outlook on life|what does.{0,18}\bbelieve in)\b/i;
 const promptInjection = /\b(ignore (all |any |the )?(previous|prior|above)|system prompt|developer message|jailbreak|reveal (your |the )?instructions|act as|pretend (to be|you are))\b/i;
 const externalKnowledgeQuestion = /\b(president|prime minister|capital of|weather|news|stock price|share price|crypto|bitcoin|election|sports score|recipe|joke|translate|current time)\b/i;
@@ -2110,20 +2111,37 @@ const answerScopeQuestion = /\b(what (questions?|things?|topics?) can (you|this 
 const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
 const assistantAnswer = 'I’m Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work.';
 const strengthsQuestion = /\b(strengths?|strong suit|best at|superpower)\b/i;
-const strengthsAnswer = 'Prerna brings energy, persistence, and a genuine appetite for difficult problems, alongside evidence-led product thinking. She turns behavioural insight into measurable experiments and carries work across product, operations, and lifecycle touchpoints—reflected in growth, activation, conversion, and retention outcomes across Lenskart and Bajaj Finserv Health.';
+const strengthsAnswer = 'Prerna brings energy, persistence, and an appetite for difficult problems alongside evidence-led product thinking. She turns behavioural insight into measurable experiments and carries work across product, operations, and lifecycle touchpoints.';
 const weaknessesQuestion = /\b(weakness|weaknesses|area(s)? (to|of) improve|shortcoming|development area)\b/i;
 const behaviouralBoundaryAnswer = 'I don’t have portfolio evidence to make a personal assessment of that, and I wouldn’t speculate. I can share Prerna’s documented approach to product work, collaboration, and measurable outcomes.';
 const leadershipQuestion = /\b(leadership style|lead|leader|manage people|manage teams?|collaborat|work(ing)? style|cross[- ]functional)\b/i;
 const leadershipAnswer = 'Prerna’s documented style is cross-functional and outcome-led: she works with design, engineering, operations, and commercial teams from discovery through launch and iteration, aligning around measurable customer and business outcomes.';
 const problemSolvingQuestion = /\b(problem.solv|how (does|would).{0,32}\b(approach|solve|prioriti[sz]e|decide|decision)|decision.?making)\b/i;
 const problemSolvingAnswer = 'Prerna starts with a behavioural break in the customer journey, turns it into a measurable hypothesis, tests the smallest useful intervention, and measures activation, conversion, retention, customer outcomes, and business impact.';
-const motivationQuestion = /\b(motivat|what (does|drives).{0,24}\bher|why product|why (does|did).{0,24}\bproduct)\b/i;
+const motivationQuestion = /\bmotivat\w*\b|\bwhat (does|drives).{0,24}\bher\b|\bwhy product\b|\bwhy (does|did).{0,24}\bproduct\b/i;
 const motivationAnswer = 'Prerna’s portfolio centres on moments of high customer intent where a journey breaks—such as an abandoned booking, unclear choice, unread report, or post-purchase issue—and turning those moments into durable growth systems.';
 const hiringQuestion = /\b(why (should|would).{0,24}\b(hire|choose)|why hire|fit for|good fit)\b/i;
-const hiringAnswer = 'For a growth and adoption product role, Prerna brings 5+ years across e-commerce, health-tech, and insurance, plus evidence of measurable revenue, activation, conversion, retention, and operational outcomes.';
+const hiringAnswer = 'For a growth and adoption role, Prerna brings 5+ years across e-commerce, health-tech, and insurance. Her work contributed ₹6Cr+ in annualised revenue at Lenskart and built a ₹28L 0-to-1 wellness business at Bajaj Finserv Health, alongside measurable product and operational outcomes.';
 const undocumentedBehaviourQuestion = /\b(conflict|disagreement|failure|failed|mistake|feedback|pressure|stress|difficult (situation|conversation)|challenge)\b/i;
 const personalProfileQuestion = /\b(how is (prerna|she) as a person|what (is|are) (prerna|she).{0,24}\b(person|personality|like)|personality|values|life philosophy)\b/i;
 const personalProfileAnswer = 'Prerna is energetic, persistent, and drawn to solving meaningful challenges. She cares about steady, deliberate progress and brings that mindset to both work and life. Her philosophy is simple: devotion to her future self must exceed attachment to her past.';
+const unsupportedPersonalFactQuestion = /\b(favou?rite|favorite)\b.{0,24}\b(book|film|movie|song|music|food|colour|color|place|author)\b/i;
+const homeTrialPilotQuestion = /\bpan[- ]india\b.{0,30}\b(home[- ]?trial|pilot)\b|\bhome[- ]?trial\b.{0,30}\bpilot\b/i;
+const homeTrialPilotAnswer = 'A three-week pan-India pilot increased completed home-trial bookings by 7 percent versus the weekly baseline.';
+const lenskartCustomerQuestion = /\b(lenskart|home[- ]?trial)\b.{0,32}\b(customer experience|nps|check[- ]?ins?)\b|\b(customer experience|nps)\b.{0,32}\blenskart\b/i;
+const lenskartCustomerAnswer = 'At Lenskart, territory ownership and 48-hour check-ins improved NPS for the called cohort from 41 to 60 in one month.';
+const diabetesBusinessQuestion = /\bdiabetes\b.{0,24}\b(wellness|business|product)\b|\b(wellness|business)\b.{0,24}\bdiabetes\b/i;
+const diabetesBusinessAnswer = 'At Bajaj Finserv Health, Prerna built a diabetes wellness business from 0 to 1, generating ₹28L in revenue within five months.';
+const healthReportsQuestion = /\b(smart health reports?|health files?)\b/i;
+const healthReportsAnswer = 'Smart Health Reports increased active Health Files users by 8 times and generated ₹7L+ in incremental monthly recurring revenue.';
+const doctorListingQuestion = /\bdoctor\b.{0,24}\b(listing|reorder|quality score|ctr)\b|\b(listing|reorder)\b.{0,24}\bdoctor\b/i;
+const doctorListingAnswer = 'Reordering the doctor listing improved click-through rate by 18 percent and annual revenue by 11.6 percent.';
+const preAuthorisationQuestion = /\b(pre[- ]?authori[sz]ation|insurance automation)\b/i;
+const preAuthorisationAnswer = 'Automating insurance pre-authorisation improved throughput by 26 percent and saved ₹17L annually.';
+const lenskartImpactQuestion = /\bimpact\b.{0,24}\blenskart\b|\blenskart\b.{0,24}\b(impact|outcomes?|results?)\b/i;
+const lenskartImpactAnswer = 'At Lenskart, Prerna’s initiatives contributed ₹6Cr+ in incremental annualised revenue, including ₹1.8Cr from personalised home trials. A pan-India pilot also lifted completed home-trial bookings by 7 percent.';
+const bajajWorkQuestion = /\bwhat did\b.{0,24}\b(prerna|she)\b.{0,24}\b(at|for) bajaj\b|\bwork(ed)? on\b.{0,24}\bbajaj\b/i;
+const bajajWorkAnswer = 'At Bajaj Finserv Health, Prerna built products across wellness, diagnostics, consultations, insurance, and digital health. Outcomes included a ₹28L 0-to-1 wellness business, 8 times Health Files adoption, an 18 percent CTR lift, and 26 percent higher pre-authorisation throughput.';
 const portfolioSubject = /\b(prerna|she|her)\b/i;
 const portfolioTopic = /\b(lenskart|bajaj|health|home trial|product|growth|adoption|career|experience|skills?|tools?|projects?|work|case studies|revenue|activation|conversion|retention|sql|python|figma|vercel|company|industry|resume|background|portfolio|impact|metrics?)\b/i;
 
@@ -2243,6 +2261,10 @@ async function localRagAnswer(question) {
     citations: [],
     action: { label: 'Let’s Talk', href: '#contact' }
   };
+  if (motivationQuestion.test(question)) return {
+    answer: motivationAnswer,
+    citations: ['Product approach']
+  };
   if (productManagerStyleQuestion.test(question)) return {
     answer: approvedKnowledge.productManagerStyle,
     citations: ['Product approach', 'Portfolio overview']
@@ -2252,7 +2274,7 @@ async function localRagAnswer(question) {
     citations: []
   };
   if (promptInjection.test(question)) return {
-    answer: outOfScopeAnswer,
+    answer: approvedKnowledge.promptInjection || outOfScopeAnswer,
     citations: []
   };
   if (directedInsult.test(question) || (unconstructiveLanguage.test(question) && /\b(bot|assistant|you)\b/i.test(question))) return {
@@ -2269,6 +2291,14 @@ async function localRagAnswer(question) {
   };
   if (personalStatusQuestion.test(question)) return {
     answer: personalStatusAnswer,
+    citations: []
+  };
+  if (unsupportedPersonalFactQuestion.test(question)) return {
+    answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
+    citations: []
+  };
+  if (weaknessesQuestion.test(question) || undocumentedBehaviourQuestion.test(question)) return {
+    answer: behaviouralBoundaryAnswer,
     citations: []
   };
   if (companyQuestion.test(question) && confidentialMetricQuestion.test(question)) return {
@@ -2293,6 +2323,14 @@ async function localRagAnswer(question) {
   if (hobbiesQuestion.test(question)) return { answer: approvedKnowledge.hobbies, citations: [] };
   if (interestQuestion.test(question)) return { answer: approvedKnowledge.interests, citations: [] };
   if (lifePhilosophyQuestion.test(question)) return { answer: approvedKnowledge.lifePhilosophy, citations: [] };
+  if (lenskartImpactQuestion.test(question)) return { answer: lenskartImpactAnswer, citations: ['Lenskart@Home case study'] };
+  if (bajajWorkQuestion.test(question)) return { answer: bajajWorkAnswer, citations: ['Bajaj Finserv Health case study'] };
+  if (homeTrialPilotQuestion.test(question)) return { answer: homeTrialPilotAnswer, citations: ['Lenskart@Home case study'] };
+  if (lenskartCustomerQuestion.test(question)) return { answer: lenskartCustomerAnswer, citations: ['Lenskart@Home case study'] };
+  if (diabetesBusinessQuestion.test(question)) return { answer: diabetesBusinessAnswer, citations: ['Bajaj Finserv Health case study'] };
+  if (healthReportsQuestion.test(question)) return { answer: healthReportsAnswer, citations: ['Bajaj Finserv Health case study'] };
+  if (doctorListingQuestion.test(question)) return { answer: doctorListingAnswer, citations: ['Bajaj Finserv Health case study'] };
+  if (preAuthorisationQuestion.test(question)) return { answer: preAuthorisationAnswer, citations: ['Bajaj Finserv Health case study'] };
   if (externalKnowledgeQuestion.test(question)) return {
     answer: outOfScopeAnswer,
     citations: []
@@ -2305,9 +2343,14 @@ async function localRagAnswer(question) {
     answer: approvedKnowledge.skillset,
     citations: ['Product approach', 'Skills and tools']
   };
+  if (toolsQuestion.test(question)) return {
+    answer: approvedKnowledge.tools || approvedKnowledge.skillset,
+    citations: ['Skills and tools']
+  };
   if (careerMoveQuestion.test(question)) return {
     answer: approvedKnowledge.career || careerMoveAnswer,
-    citations: ['Portfolio overview']
+    citations: ['Portfolio overview'],
+    action: { label: 'Let’s Talk', href: '#contact' }
   };
   if (experienceQuestion.test(question)) return {
     answer: experienceAnswer,
@@ -2355,20 +2398,12 @@ async function localRagAnswer(question) {
     answer: approvedKnowledge.personalProfile || personalProfileAnswer,
     citations: []
   };
-  if (weaknessesQuestion.test(question) || undocumentedBehaviourQuestion.test(question)) return {
-    answer: behaviouralBoundaryAnswer,
-    citations: []
-  };
   if (leadershipQuestion.test(question)) return {
     answer: leadershipAnswer,
     citations: ['Portfolio overview']
   };
   if (problemSolvingQuestion.test(question)) return {
     answer: problemSolvingAnswer,
-    citations: ['Product approach']
-  };
-  if (motivationQuestion.test(question)) return {
-    answer: motivationAnswer,
     citations: ['Product approach']
   };
   if (hiringQuestion.test(question)) return {
@@ -2391,6 +2426,7 @@ async function localRagAnswer(question) {
 }
 
 const policyControlledAnswers = new Set([
+  ...Object.values(approvedKnowledge),
   approvedKnowledge.greeting,
   approvedKnowledge.thanks,
   approvedKnowledge.answerScope,
@@ -2407,7 +2443,30 @@ const policyControlledAnswers = new Set([
   outOfScopeAnswer,
   assistantAnswer,
   behaviouralBoundaryAnswer,
-  contactAnswer
+  contactAnswer,
+  capabilityAnswer,
+  careerMoveAnswer,
+  experienceAnswer,
+  identityAnswer,
+  roleAnswer,
+  hometownAnswer,
+  locationAnswer,
+  availabilityAnswer,
+  employerAnswer,
+  strengthsAnswer,
+  leadershipAnswer,
+  problemSolvingAnswer,
+  motivationAnswer,
+  hiringAnswer,
+  personalProfileAnswer,
+  homeTrialPilotAnswer,
+  lenskartCustomerAnswer,
+  diabetesBusinessAnswer,
+  healthReportsAnswer,
+  doctorListingAnswer,
+  preAuthorisationAnswer,
+  lenskartImpactAnswer,
+  bajajWorkAnswer
 ].filter(Boolean));
 
 let qwenWorker;

@@ -39,7 +39,7 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 
 ## Portfolio retrieval assistant
 
-> **Preproduction architecture:** this branch implements a complete retrieval-augmented generation flow. It retrieves approved profile and portfolio context, then uses the open-source Qwen2.5-0.5B-Instruct model in the browser to compose the answer. Safety, privacy, confidentiality, and off-topic responses remain deterministic rather than model-generated.
+> **Preproduction architecture:** this branch implements a hybrid retrieval assistant. High-confidence recruiter questions, published metrics, and safety boundaries use approved deterministic answers. Open-ended portfolio questions retrieve approved context and can use the open-source Qwen2.5-0.5B-Instruct model in the browser to compose a response.
 
 ### What it is and why it matters
 
@@ -52,15 +52,16 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
         ↓
 🛡️ Policy + knowledge-base check (`assets/chatbot-knowledge.js`)
    ├─ privacy / safety / confidentiality rule → ✨ controlled response
-   └─ supported question → 🧠 MiniLM semantic retrieval
-                                ↓
-                      📚 approved facts and passages
-                                ↓
-                  🤖 Qwen2.5-0.5B-Instruct via WebGPU
-                                ↓
-                   ✅ output validation and safe fallback
-                                ↓
-                      💬 grounded chat response
+   ├─ known recruiter / evidence question → ✅ approved concise answer
+   └─ open-ended supported question → 🧠 MiniLM semantic retrieval
+                                           ↓
+                                 📚 approved facts and passages
+                                           ↓
+                             🤖 Qwen2.5-0.5B-Instruct via WebGPU
+                                           ↓
+                              ✅ output validation and safe fallback
+                                           ↓
+                                 💬 grounded chat response
 ```
 
 ### Stack at a glance
@@ -68,7 +69,7 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 - **Experience:** static HTML, CSS, and vanilla JavaScript; floating accessible chat UI.
 - **Knowledge and policy:** editable JavaScript source at `assets/chatbot-knowledge.js`; it holds approved personal/professional facts and declined-topic rules.
 - **Retrieval:** `Xenova/all-MiniLM-L6-v2`, an open-source, quantized embedding model loaded through Transformers.js and cached by the browser.
-- **Generation:** `onnx-community/Qwen2.5-0.5B-Instruct` in 4-bit format, running in a Web Worker through Transformers.js and WebGPU.
+- **Generation:** `onnx-community/Qwen2.5-0.5B-Instruct` in 4-bit format, running in a Web Worker through Transformers.js and WebGPU for open-ended synthesis only.
 - **Warm-up:** opening the chat starts the embedding index and Qwen download/initialisation in the background, so part of the first-answer delay happens while the visitor reads or types.
 - **Ranking:** client-side cosine similarity against the curated portfolio passages.
 - **Validation:** Qwen is limited to 72 new tokens and every generated answer is hard-capped at 300 characters. Answers are rejected if they are empty, malformed, too long, or introduce numbers that are not present in the retrieved facts.
@@ -83,8 +84,8 @@ To edit answers, update `assets/chatbot-knowledge.js` and redeploy. The file is 
 Visitor question
       │
       ▼
-Answer-policy guard ──► graceful redirect / profile answer / privacy boundary
-      │ (portfolio question)
+Answer-policy guard ──► graceful redirect / approved recruiter answer / privacy boundary
+      │ (open-ended portfolio question)
       ▼
 Browser-side policy guard ──► open-source MiniLM embeddings ──► cosine ranking
       │                                                              │
@@ -115,11 +116,11 @@ Browser-side policy guard ──► open-source MiniLM embeddings ──► cosi
 1. On first relevant question, the browser downloads and caches a quantized open-source MiniLM embedding model.
 2. The browser embeds the question and curated portfolio passages locally.
 3. It calculates cosine similarity and selects the most relevant passages.
-4. Qwen 2.5 receives only the question, an approved answer frame, and the retrieved passages.
+4. Known recruiter and case-study questions return an approved concise answer immediately. For open-ended questions, Qwen 2.5 receives only the question, an approved answer frame, and the retrieved passages.
 5. The client validates the output and falls back to the approved response if generation fails or adds an unsupported number.
 6. The UI renders the grounded answer.
 
-This keeps the model grounded in the portfolio rather than allowing it to invent employers, metrics, projects, or personal details.
+This keeps factual answers stable while still demonstrating generation where synthesis is useful. It also prevents the model from inventing employers, metrics, projects, or personal details.
 
 ### Answer policy and edge cases
 
@@ -134,9 +135,9 @@ Before retrieval, the browser applies a policy layer for common visitor intent:
 
 ### Cost and privacy
 
-The chatbot has no paid-model or per-question API cost. Embeddings and Qwen generation run in the visitor’s browser through Transformers.js and are cached after the initial download. Vercel serves the static site only, and questions are not sent to a hosted inference API.
+The chatbot has no paid-model or per-question API cost. When needed, embeddings and Qwen generation run in the visitor’s browser through Transformers.js and are cached after the initial download. Known questions do not wait for either model. Vercel serves the static site only, and questions are not sent to a hosted inference API.
 
-The tradeoff is a large first-use download. The official 4-bit ONNX model file is approximately 786 MB, so this is a preproduction experiment rather than the production default. Generation requires WebGPU; browsers without it receive the approved curated answer instead.
+The tradeoff for generative questions is a large first-use download. The official 4-bit ONNX model file is approximately 786 MB, so this is a preproduction experiment rather than the production default. Generation requires WebGPU; browsers without it receive the approved curated answer instead.
 
 ### Evaluation and observability
 

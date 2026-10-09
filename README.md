@@ -140,7 +140,7 @@ The tradeoff is a large first-use download. The official 4-bit ONNX model file i
 
 ### Evaluation and observability
 
-Open `/eval.html` on the preview deployment to run the 50-question evaluation dataset. Each case displays expected facts, expected sources, the actual answer, answer mode, latency, token estimates, fallback state, and errors. Reviews are stored in the current browser and can be exported as JSON.
+Open `/eval.html` on the preview deployment to run the 50-question evaluation dataset. Each case displays expected facts, expected sources, the actual answer, answer mode, latency, token estimates, fallback state, and errors. Reviews are stored in the current browser and can be exported or imported as JSON.
 
 Evaluation feedback is human review data, not automatic model training. When a review exposes a missing fact, update both the case in `assets/eval-dataset.js` and the approved answer or source material used by the chatbot. Required facts can then be passed to Qwen and validated; if Qwen omits one, the assistant returns the complete approved answer instead.
 

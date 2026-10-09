@@ -23,6 +23,8 @@
       <div class="controls">
         <button class="button primary" id="runAll" type="button">Run all 50</button>
         <button class="button" id="stopRun" type="button" disabled>Stop</button>
+        <button class="button" id="importRun" type="button">Import review</button>
+        <input id="importFile" type="file" accept="application/json,.json" hidden>
         <button class="button" id="exportRun" type="button">Export JSON</button>
         <button class="button" id="clearRun" type="button">Clear results</button>
       </div>
@@ -159,8 +161,30 @@
       status.textContent = stopRequested ? 'Run stopped. Completed results were saved.' : 'All 50 evaluations completed.';
     });
     document.getElementById('stopRun').addEventListener('click', () => { stopRequested = true; status.textContent = 'Stopping after the current case...'; });
+    document.getElementById('importRun').addEventListener('click', () => document.getElementById('importFile').click());
+    document.getElementById('importFile').addEventListener('change', async event => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      try {
+        const payload = JSON.parse(await file.text());
+        if (!Array.isArray(payload.reviews)) throw new Error('This file does not contain evaluation reviews.');
+        const validIds = new Set(dataset.map(item => item.id));
+        let imported = 0;
+        payload.reviews.forEach(review => {
+          if (!review?.id || !validIds.has(review.id)) return;
+          const { result, verdict, helpfulness, reason, reviewedBy } = review;
+          state[review.id] = { ...state[review.id], ...(result ? { result } : {}), ...(verdict ? { verdict } : {}), ...(helpfulness ? { helpfulness } : {}), ...(reason ? { reason } : {}), ...(reviewedBy ? { reviewedBy } : {}) };
+          imported += 1;
+        });
+        save(); render(); status.textContent = `Imported ${imported} evaluation reviews from ${file.name}.`;
+      } catch (error) {
+        status.textContent = `Import failed: ${error.message}`;
+      } finally {
+        event.target.value = '';
+      }
+    });
     document.getElementById('exportRun').addEventListener('click', () => {
-      const payload = { exportedAt:new Date().toISOString(), datasetVersion:'2026-10-09.1', reviews:dataset.map(item => ({ ...item, ...(state[item.id] || {}) })) };
+      const payload = { exportedAt:new Date().toISOString(), datasetVersion:'2026-10-09.2', reviews:dataset.map(item => ({ ...item, ...(state[item.id] || {}) })) };
       const url = URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
       const link = document.createElement('a'); link.href=url; link.download=`ask-prerna-evals-${new Date().toISOString().slice(0,10)}.json`; link.click(); URL.revokeObjectURL(url);
     });

@@ -21,7 +21,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     confidentialData: 'That concerns confidential company financials or operating data, which Prerna cannot share. I can, however, discuss the public outcomes of her work at Lenskart@Home and Bajaj Finserv Health.',
     companyContext: 'I can speak to Prerna’s work and published outcomes at that company, but not company strategy, internal performance, or non-public financials.',
     outOfScope: 'That sits outside what this portfolio assistant is designed to answer. If you are assessing Prerna, try asking about her product approach, growth outcomes, skills, career interests, or the projects she has built.',
-    undocumented: 'That detail is not included in Prerna’s approved profile, and I don’t want to guess. You can ask her directly through the Let’s Talk section.',
+    undocumented: 'I don’t have that information available.',
     careerLogistics: 'Prerna has not published those logistics here. The best way to discuss notice period, compensation, relocation, remote preferences, or interview availability is to contact her directly.',
     comparison: 'I wouldn’t make an unsupported comparison. The fairest way to assess Prerna is through her documented product decisions, measurable outcomes, and the scope she has owned.',
     greeting: 'Hi! I can help you get to know Prerna—her product work, measurable outcomes, skills, career interests, and the person behind the portfolio. What would you like to explore?',

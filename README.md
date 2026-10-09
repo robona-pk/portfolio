@@ -104,6 +104,9 @@ Browser-side policy guard ──► open-source MiniLM embeddings ──► cosi
 | On-device semantic retrieval | `index.html` | Loads the open-source `Xenova/all-MiniLM-L6-v2` embedding model in the visitor’s browser and ranks the local knowledge bank. |
 | On-device generation | `assets/qwen-worker.js` | Loads 4-bit Qwen2.5-0.5B-Instruct in a Web Worker and generates concise answers from approved context. |
 | Portfolio knowledge | `portfolioKnowledge` in `index.html` | Curated case-study, product-approach, skills, and profile passages used for retrieval and cited answers. |
+| Evaluation dataset | `assets/eval-dataset.js` | Fifty profile, work, privacy, abuse, off-topic, unsupported, and prompt-injection tests with expected facts and sources. |
+| Evaluation console | `eval.html` | Runs the dataset, shows latency and cache metrics, stores manual verdicts and reasons, and exports JSON. |
+| Telemetry specification | `TELEMETRY.md` | Event dictionary, threshold contract, privacy decisions, and PostHog dashboard recipe. |
 | Retired API endpoint | `api/ask.js` | Returns `410 Gone`; it makes no model calls and requires no API key. |
 
 ### Retrieval flow
@@ -133,6 +136,12 @@ Before retrieval, the browser applies a policy layer for common visitor intent:
 The chatbot has no paid-model or per-question API cost. Embeddings and Qwen generation run in the visitor’s browser through Transformers.js and are cached after the initial download. Vercel serves the static site only, and questions are not sent to a hosted inference API.
 
 The tradeoff is a large first-use download. The official 4-bit ONNX model file is approximately 786 MB, so this is a preproduction experiment rather than the production default. Generation requires WebGPU; browsers without it receive the approved curated answer instead.
+
+### Evaluation and observability
+
+Open `/eval.html` on the preview deployment to run the 50-question evaluation dataset. Each case displays expected facts, expected sources, the actual answer, answer mode, latency, token estimates, fallback state, and errors. Reviews are stored in the current browser and can be exported as JSON.
+
+Live requests emit anonymous PostHog events with redacted question text, retrieved sources and scores, final answer, fallback state, error, retrieval and generation models, total latency, approximate input and output tokens, zero estimated API cost, and model cache state. Separate events record helpfulness and downstream resume, case-study, and contact clicks. See `TELEMETRY.md` for the full event dictionary and dashboard setup.
 
 ### Vercel preproduction
 

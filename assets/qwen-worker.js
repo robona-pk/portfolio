@@ -2,6 +2,7 @@ import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers
 
 const MODEL_ID = 'onnx-community/Qwen2.5-0.5B-Instruct';
 let generatorPromise;
+let generatorReady = false;
 
 function getGenerator() {
   generatorPromise ||= pipeline('text-generation', MODEL_ID, {
@@ -19,7 +20,9 @@ self.addEventListener('message', async event => {
   if (!id || !question || !approvedAnswer) return;
 
   try {
+    const cacheHit = generatorReady;
     const generator = await getGenerator();
+    generatorReady = true;
     const messages = [
       {
         role: 'system',
@@ -47,7 +50,7 @@ self.addEventListener('message', async event => {
     });
     const answer = output?.[0]?.generated_text?.at?.(-1)?.content?.trim();
     if (!answer) throw new Error('The model returned an empty answer.');
-    self.postMessage({ type: 'result', id, answer });
+    self.postMessage({ type: 'result', id, answer, cacheHit });
   } catch (error) {
     self.postMessage({ type: 'error', id, message: error?.message || 'Generation failed.' });
   }

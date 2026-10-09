@@ -882,6 +882,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .rag-chat{width:min(420px,calc(100vw - 2.7rem));border-color:rgba(240,160,32,.42);border-radius:28px;background:#171510;box-shadow:0 24px 65px rgba(0,0,0,.58),0 0 0 1px rgba(255,220,151,.05)}
 .rag-chat-head{background:linear-gradient(120deg,rgba(240,160,32,.2),rgba(240,160,32,.035));border-bottom-color:rgba(255,220,151,.1)}.rag-live-dot{background:#E5A534;box-shadow:0 0 0 4px rgba(240,160,32,.14)}.rag-close{background:rgba(255,255,255,.07);border-radius:50%}.rag-close:hover{background:rgba(240,160,32,.18);color:var(--t1)}
 .rag-message.bot{background:#201c14;border-color:rgba(255,220,151,.09);border-bottom-left-radius:6px}.rag-message.user{background:rgba(240,160,32,.12);border-color:rgba(240,160,32,.3);border-bottom-right-radius:6px}.rag-action{border-color:rgba(240,160,32,.42);color:#FFD88A;background:rgba(240,160,32,.08)}.rag-action:hover,.rag-action:focus-visible{border-color:#F3C45D;background:rgba(240,160,32,.16);color:#FFE7B5}
+.rag-feedback{display:flex;align-items:center;gap:.4rem;margin-top:.65rem;padding-top:.55rem;border-top:1px solid rgba(255,220,151,.09)}.rag-feedback-label{font-size:.68rem;color:var(--t3);margin-right:.15rem}.rag-feedback button{appearance:none;border:1px solid rgba(255,220,151,.18);background:transparent;color:var(--t2);font:600 .66rem var(--fb);padding:.28rem .45rem;border-radius:7px;cursor:pointer}.rag-feedback button:hover,.rag-feedback button:focus-visible{border-color:#E5A534;color:#FFE2A4;outline:none}.rag-feedback button[aria-pressed="true"]{background:rgba(240,160,32,.15);border-color:#E5A534;color:#FFE2A4}.rag-feedback-saved{font-size:.66rem;color:#FFD88A}
 .rag-prompts{border-top-color:rgba(255,220,151,.1)}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:#E5A534;color:#FFE2A4}.rag-input{background:#11100d;border-color:rgba(255,220,151,.15);border-radius:14px}.rag-input:focus{border-color:#E5A534}.rag-send{background:#D89524;color:#171108;border-radius:14px}.rag-send:hover{background:#F3C45D;color:#171108}
 @media(max-width:640px){.rag-launcher{right:.55rem;bottom:.65rem}.rag-launch{width:94px;height:98px}.rag-nudge{right:62px;bottom:72px;font-size:.72rem;max-width:170px}.rag-modal{right:.55rem;bottom:102px;padding:0;align-items:flex-end}.rag-chat{width:calc(100vw - 1.1rem);border-radius:22px}.rag-launch{animation-duration:5.5s}}
 @media(prefers-reduced-motion:reduce){.rag-launch{animation:none}.rag-launch img{transition:none}}
@@ -1727,7 +1728,15 @@ function openCase(n) {
   const closeBtn = caseOverlay.querySelector('.case-modal-close');
   if (closeBtn) closeBtn.focus();
   history.pushState({ caseModal: n }, '', '#case-' + n);
-  if (window.posthog) posthog.capture('case_study_opened', { case_study_id: String(n) });
+  if (window.posthog) {
+    posthog.capture('case_study_opened', { case_study_id: String(n) });
+    posthog.capture('portfolio_conversion', {
+      conversion_type: 'case_study_click',
+      case_study_id: String(n),
+      assistant_request_id: lastAssistantRequestId || '',
+      $process_person_profile: false
+    });
+  }
 }
 
 function closeCase(fromPopState) {
@@ -2033,6 +2042,19 @@ const portfolioKnowledge = [
   { source: 'Skills and tools', answer: 'Prerna combines growth and adoption strategy with SQL, BigQuery, GA4, Firebase, A/B testing, cohort analysis, Python automation, and AI-assisted prototyping. Her toolset includes Figma, CleverTap, Tableau, Power BI, Codex, GitHub, Vercel, and Google Apps Script.', text: 'Prerna brings growth and adoption strategy, funnel optimisation, lifecycle and retention strategy, SQL and BigQuery, GA4 and Firebase, A/B testing, cohort and behavioural segmentation, Python for scripts and automation, AI-assisted prototyping and deployment, Git-based release workflows, and tools including Notion, Jira, Figma, Miro, CleverTap, Tableau, Power BI, Codex, GitHub, Vercel, and Google Apps Script.', tags: 'skills tools technical python sql bigquery analytics ai codex github vercel figma product manager' },
   { source: 'Portfolio overview', answer: 'Prerna is a Growth and Adoption Product Manager with five years of experience across e-commerce, health-tech, and insurance. Her work focuses on activation, conversion, retention, and revenue growth.', text: 'Prerna Kapoor is a Growth and Adoption Product Manager with five years of experience improving activation, conversion, retention, and revenue. Her work spans e-commerce, health-tech, and insurance. She partners closely with design, engineering, operations, and commercial teams to take high-impact products from discovery through launch and iteration.', tags: 'about experience role background industries ecommerce health tech insurance collaboration' }
 ];
+
+const RAG_CONFIG = Object.freeze({
+  rulesVersion: '2026-10-09.1',
+  retrievalModel: 'Xenova/all-MiniLM-L6-v2',
+  generationModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
+  directAnswerThreshold: 0.38,
+  generationContextThreshold: 0.30,
+  lexicalMinimumScore: 1,
+  fallbackAnswer: 'I don’t have that information available.',
+  estimatedInputCostPerMillionTokensUsd: 0,
+  estimatedOutputCostPerMillionTokensUsd: 0
+});
+window.ASK_PRERNA_RAG_CONFIG = RAG_CONFIG;
 
 const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b/i;
 const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|she|her|you|this bot|the bot|assistant)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b|\b(?:prerna|she|her|you|this bot|the bot|assistant)\s+(?:is|are|was|were)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b/i;
@@ -2344,11 +2366,12 @@ async function localRagAnswer(question) {
     citations: []
   };
   const matches = await retrievePortfolioContextSemantically(question);
-  const direct = matches.filter(item => item.semantic ? item.score >= 0.38 : item.score > 0);
+  const direct = matches.filter(item => item.semantic
+    ? item.score >= RAG_CONFIG.directAnswerThreshold
+    : item.score >= RAG_CONFIG.lexicalMinimumScore);
   if (!direct.length) return {
-    answer: approvedKnowledge.undocumented,
-    citations: [],
-    action: { label: 'Ask Prerna directly', href: '#contact' }
+    answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
+    citations: []
   };
   return { answer: direct[0].answer, citations: [direct[0].source] };
 }
@@ -2387,7 +2410,7 @@ function getQwenWorker() {
     if (!request) return;
     window.clearTimeout(request.timeout);
     qwenRequests.delete(event.data.id);
-    if (event.data.type === 'result') request.resolve(event.data.answer);
+    if (event.data.type === 'result') request.resolve(event.data);
     else request.reject(new Error(event.data.message || 'Generation failed.'));
   });
   qwenWorker.addEventListener('error', error => {
@@ -2427,27 +2450,153 @@ function validateGeneratedAnswer(answer, groundingText) {
   return clean;
 }
 
-async function generatePortfolioAnswer(question, result) {
-  if (result.action || policyControlledAnswers.has(result.answer)) return result.answer;
+async function generatePortfolioAnswer(question, result, retrievalCacheHit = false) {
+  if (result.action || policyControlledAnswers.has(result.answer)) return {
+    answer: result.answer,
+    retrievedSources: result.citations || [],
+    retrievalScores: [],
+    answerMode: result.answer === (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer) ? 'unsupported_fallback' : 'policy',
+    fallback: result.answer === (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer),
+    fallbackReason: result.answer === (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer) ? 'insufficient_context' : '',
+    error: '',
+    retrievalCacheHit,
+    generationCacheHit: false
+  };
   const matches = await retrievePortfolioContextSemantically(question);
   const relevant = matches
-    .filter(item => item.semantic ? item.score >= 0.3 : item.score > 0)
+    .filter(item => item.semantic
+      ? item.score >= RAG_CONFIG.generationContextThreshold
+      : item.score >= RAG_CONFIG.lexicalMinimumScore)
     .slice(0, 2);
   const retrievedContext = relevant.map(item => `${item.source}: ${item.text}`).join('\n');
   const groundingText = `${result.answer}\n${retrievedContext}`;
   try {
-    const generated = await generateWithQwen({
+    const generation = await generateWithQwen({
       question: normalizeQuestion(question),
       approvedAnswer: result.answer,
       retrievedContext
     });
-    return validateGeneratedAnswer(generated, groundingText) || result.answer;
+    const validated = validateGeneratedAnswer(generation.answer, groundingText);
+    return {
+      answer: validated || result.answer,
+      retrievedSources: [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])],
+      retrievalScores: relevant.map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
+      answerMode: validated ? 'qwen' : 'curated_fallback',
+      fallback: !validated,
+      fallbackReason: validated ? '' : 'output_validation_failed',
+      error: '',
+      retrievalCacheHit,
+      generationCacheHit: Boolean(generation.cacheHit)
+    };
   } catch (error) {
-    return result.answer;
+    return {
+      answer: result.answer,
+      retrievedSources: [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])],
+      retrievalScores: relevant.map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
+      answerMode: 'curated_fallback',
+      fallback: true,
+      fallbackReason: 'generation_unavailable',
+      error: error?.message || 'Generation failed.',
+      retrievalCacheHit,
+      generationCacheHit: false
+    };
   }
 }
 
-function appendRagMessage(kind, text, citations = [], action = null) {
+function estimateTokenCount(value) {
+  return Math.max(1, Math.ceil(String(value || '').length / 4));
+}
+
+function redactTelemetryText(value) {
+  return String(value || '')
+    .replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, '[email redacted]')
+    .replace(/(?:\+?\d[\d\s().-]{7,}\d)/g, '[phone redacted]')
+    .slice(0, 500);
+}
+
+function createRequestId() {
+  return window.crypto?.randomUUID?.() || `request-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+async function resolvePortfolioRequest(question) {
+  const startedAt = performance.now();
+  const requestId = createRequestId();
+  const retrievalCacheHit = Boolean(portfolioVectorsPromise);
+  try {
+    const routed = await localRagAnswer(question);
+    const resolved = await generatePortfolioAnswer(question, routed, retrievalCacheHit);
+    const totalLatencyMs = Math.round(performance.now() - startedAt);
+    const groundingInput = `${question}\n${routed.answer}\n${resolved.retrievedSources.join('\n')}`;
+    const inputTokens = estimateTokenCount(groundingInput);
+    const outputTokens = estimateTokenCount(resolved.answer);
+    return {
+      requestId,
+      question,
+      action: routed.action || null,
+      citations: routed.citations || [],
+      ...resolved,
+      retrievalModel: RAG_CONFIG.retrievalModel,
+      generationModel: resolved.answerMode === 'qwen' ? RAG_CONFIG.generationModel : '',
+      inputTokens,
+      outputTokens,
+      estimatedCostUsd: 0,
+      totalLatencyMs,
+      rulesVersion: RAG_CONFIG.rulesVersion
+    };
+  } catch (error) {
+    return {
+      requestId,
+      question,
+      answer: RAG_CONFIG.fallbackAnswer,
+      action: null,
+      citations: [],
+      retrievedSources: [],
+      retrievalScores: [],
+      answerMode: 'error_fallback',
+      fallback: true,
+      fallbackReason: 'request_error',
+      error: error?.message || 'Request failed.',
+      retrievalCacheHit: Boolean(portfolioVectorsPromise),
+      generationCacheHit: false,
+      retrievalModel: RAG_CONFIG.retrievalModel,
+      generationModel: '',
+      inputTokens: estimateTokenCount(question),
+      outputTokens: estimateTokenCount(RAG_CONFIG.fallbackAnswer),
+      estimatedCostUsd: 0,
+      totalLatencyMs: Math.round(performance.now() - startedAt),
+      rulesVersion: RAG_CONFIG.rulesVersion
+    };
+  }
+}
+
+function captureAssistantTelemetry(result) {
+  if (!window.posthog || new URLSearchParams(window.location.search).has('eval')) return;
+  posthog.capture('portfolio_assistant_response', {
+    request_id: result.requestId,
+    user_question: redactTelemetryText(result.question),
+    retrieved_sources: result.retrievedSources,
+    retrieval_scores: result.retrievalScores,
+    answer: result.answer,
+    answer_mode: result.answerMode,
+    fallback: result.fallback,
+    fallback_reason: result.fallbackReason,
+    error: result.error,
+    retrieval_model: result.retrievalModel,
+    generation_model: result.generationModel,
+    total_latency_ms: result.totalLatencyMs,
+    input_tokens_estimate: result.inputTokens,
+    output_tokens_estimate: result.outputTokens,
+    estimated_cost_usd: result.estimatedCostUsd,
+    retrieval_cache_hit: result.retrievalCacheHit,
+    generation_cache_hit: result.generationCacheHit,
+    rules_version: result.rulesVersion,
+    $process_person_profile: false
+  });
+}
+
+let lastAssistantRequestId = '';
+
+function appendRagMessage(kind, text, citations = [], action = null, requestId = '') {
   const feed = document.getElementById('ragMessages');
   if (!feed) return null;
   const message = document.createElement('div');
@@ -2463,6 +2612,37 @@ function appendRagMessage(kind, text, citations = [], action = null) {
     link.addEventListener('click', handleRagActionNavigation);
     message.appendChild(link);
   }
+  if (kind === 'bot' && requestId) {
+    const feedback = document.createElement('div');
+    feedback.className = 'rag-feedback';
+    const label = document.createElement('span');
+    label.className = 'rag-feedback-label';
+    label.textContent = 'Was this helpful?';
+    feedback.appendChild(label);
+    [['Yes', 1], ['No', 0]].forEach(([buttonLabel, rating]) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = buttonLabel;
+      button.setAttribute('aria-pressed', 'false');
+      button.addEventListener('click', () => {
+        feedback.querySelectorAll('button').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+        let saved = feedback.querySelector('.rag-feedback-saved');
+        if (!saved) {
+          saved = document.createElement('span');
+          saved.className = 'rag-feedback-saved';
+          feedback.appendChild(saved);
+        }
+        saved.textContent = 'Saved';
+        if (window.posthog) posthog.capture('portfolio_assistant_helpfulness', {
+          request_id: requestId,
+          helpfulness_rating: rating,
+          $process_person_profile: false
+        });
+      });
+      feedback.appendChild(button);
+    });
+    message.appendChild(feedback);
+  }
   feed.appendChild(message);
   feed.scrollTop = feed.scrollHeight;
   return message;
@@ -2477,19 +2657,19 @@ async function askPortfolioAssistant(question) {
   input.value = '';
   button.disabled = true;
   try {
-    const result = await localRagAnswer(question);
-    mode.textContent = policyControlledAnswers.has(result.answer) || result.action ? 'Portfolio assistant' : 'Preparing answer...';
-    const answer = await generatePortfolioAnswer(question, result);
+    mode.textContent = 'Preparing answer...';
+    const result = await resolvePortfolioRequest(question);
     mode.textContent = 'Portfolio assistant';
-    appendRagMessage('bot', answer, result.citations || [], result.action || null);
-  } catch (error) {
-    mode.textContent = 'Portfolio assistant';
-    appendRagMessage('bot', outOfScopeAnswer);
+    lastAssistantRequestId = result.requestId;
+    captureAssistantTelemetry(result);
+    appendRagMessage('bot', result.answer, result.citations, result.action, result.requestId);
   } finally {
     button.disabled = false;
     input.focus();
   }
 }
+
+window.runPortfolioEval = question => resolvePortfolioRequest(question);
 
 const ragForm = document.getElementById('ragForm');
 if (ragForm) ragForm.addEventListener('submit', event => {
@@ -2545,13 +2725,21 @@ document.addEventListener('click', event => {
   if (!link || !window.posthog) return;
   const href = link.getAttribute('href') || '';
   let eventName = '';
-  if (href.includes('drive.google.com')) eventName = 'resume_opened';
+  let conversionType = '';
+  if (href.includes('drive.google.com')) { eventName = 'resume_opened'; conversionType = 'resume_click'; }
   else if (href.includes('linkedin.com')) eventName = 'linkedin_opened';
   else if (href.includes('github.com')) eventName = 'github_opened';
-  else if (href.startsWith('mailto:')) eventName = 'email_contact_clicked';
-  else if (href.startsWith('tel:')) eventName = 'phone_contact_clicked';
-  else if (href.includes('wa.me')) eventName = 'whatsapp_contact_clicked';
+  else if (href.startsWith('mailto:')) { eventName = 'email_contact_clicked'; conversionType = 'contact_click'; }
+  else if (href.startsWith('tel:')) { eventName = 'phone_contact_clicked'; conversionType = 'contact_click'; }
+  else if (href.includes('wa.me')) { eventName = 'whatsapp_contact_clicked'; conversionType = 'contact_click'; }
+  else if (href === '#contact') { eventName = 'contact_section_opened'; conversionType = 'contact_click'; }
   if (eventName) posthog.capture(eventName, { link_location: link.closest('#hero') ? 'hero' : link.closest('#contact') ? 'contact' : 'page' });
+  if (conversionType) posthog.capture('portfolio_conversion', {
+    conversion_type: conversionType,
+    link_location: link.closest('#hero') ? 'hero' : link.closest('#contact') ? 'contact' : 'page',
+    assistant_request_id: lastAssistantRequestId || '',
+    $process_person_profile: false
+  });
 });
 </script>
 <script type="module">

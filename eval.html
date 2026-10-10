@@ -61,11 +61,11 @@
     </section>
   </main>
 
-  <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-10.6" title="Ask Prerna evaluation engine"></iframe>
-  <script src="assets/eval-dataset.js"></script>
+  <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-10.8" title="Ask Prerna evaluation engine"></iframe>
+  <script src="assets/eval-dataset.js?v=2026-10-10.8"></script>
   <script>
     const STORAGE_KEY = 'ask-prerna-eval-reviews-v1';
-    const CASE_TIMEOUT_MS = 45000;
+    const CASE_TIMEOUT_MS = 90000;
     const dataset = window.ASK_PRERNA_EVALS || [];
     const state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     const list = document.getElementById('evalList');
@@ -128,8 +128,8 @@
         return `<details class="eval" data-id="${item.id}" ${openEvals.has(item.id) ? 'open' : ''}>
           <summary><span class="number">${String(dataset.indexOf(item)+1).padStart(2,'0')}</span><span class="question">${escapeHtml(item.question)}</span><span class="meta"><span>${escapeHtml(item.category)}</span><span class="badge ${badge}">${badgeText}</span></span></summary>
           <div class="body">
-            <div class="grid"><div><p class="label">Expected response type</p><p>${escapeHtml(item.expectedType)}</p><p class="label">Expected facts</p><ul class="facts">${item.expectedFacts.map(fact => `<li>${escapeHtml(fact)}</li>`).join('')}</ul><p class="label">Expected sources</p><p>${escapeHtml(item.expectedSources.join(', ') || 'Policy or profile answer bank')}</p></div>
-            <div><p class="label">Actual answer</p><p class="answer">${result ? escapeHtml(result.answer) : '<span class="empty">Not run yet.</span>'}</p>${result ? `<div class="run-meta"><span>${escapeHtml(result.answerMode)}</span><span>${result.totalLatencyMs} ms</span><span>${result.inputTokens} in / ${result.outputTokens} out</span><span>Sources: ${escapeHtml(sources)}</span><span>Fallback: ${result.fallback ? 'yes' : 'no'}</span>${result.action ? `<span>Action: ${escapeHtml(result.action.label)} → ${escapeHtml(result.action.href)}</span>` : ''}${result.error ? `<span>Error: ${escapeHtml(result.error)}</span>` : ''}</div>` : ''}</div></div>
+            <div class="grid"><div><p class="label">Expected response type</p><p>${escapeHtml(item.expectedType)}</p><p class="label">Expected facts</p><ul class="facts">${item.expectedFacts.map(fact => `<li>${escapeHtml(fact)}</li>`).join('')}</ul>${item.expectedSignals?.length ? `<p class="label">Expected guardrail signals</p><ul class="facts">${item.expectedSignals.map(signal => `<li>${escapeHtml(signal)}</li>`).join('')}</ul>` : ''}<p class="label">Expected sources</p><p>${escapeHtml(item.expectedSources.join(', ') || 'Policy or profile answer bank')}</p></div>
+            <div><p class="label">Actual answer</p><p class="answer">${result ? escapeHtml(result.answer) : '<span class="empty">Not run yet.</span>'}</p>${result ? `<div class="run-meta"><span>${escapeHtml(result.answerMode)}</span><span>${result.totalLatencyMs} ms</span><span>${result.inputTokens} in / ${result.outputTokens} out</span><span>Sources: ${escapeHtml(sources)}</span><span>Fallback: ${result.fallback ? 'yes' : 'no'}</span><span>Security: ${escapeHtml(result.securityMode || 'not recorded')} ${Number.isFinite(result.securityScore) ? `(${result.securityScore})` : ''}</span>${result.action ? `<span>Action: ${escapeHtml(result.action.label)} → ${escapeHtml(result.action.href)}</span>` : ''}${result.error ? `<span>Error: ${escapeHtml(result.error)}</span>` : ''}</div>` : ''}</div></div>
             <div class="review"><label>Verdict<select data-field="verdict"><option value="unreviewed">Not reviewed</option><option value="correct" ${review.verdict==='correct'?'selected':''}>Correct</option><option value="incorrect" ${review.verdict==='incorrect'?'selected':''}>Incorrect</option></select></label><label>Helpfulness<select data-field="helpfulness"><option value="">Not rated</option>${[1,2,3,4,5].map(n => `<option value="${n}" ${String(review.helpfulness)===String(n)?'selected':''}>${n} / 5</option>`).join('')}</select></label><div class="reason-field"><div class="reason-head"><label for="reason-${escapeHtml(item.id)}">Reason</label><button class="dictate" type="button" data-dictate aria-label="${SpeechRecognitionAPI ? 'Start voice dictation' : 'Voice dictation unavailable'}" title="${SpeechRecognitionAPI ? 'Speak your feedback' : 'Voice dictation unavailable in this browser'}" aria-pressed="false" ${SpeechRecognitionAPI ? '' : 'disabled'}>${microphoneIcon}</button></div><textarea id="reason-${escapeHtml(item.id)}" data-field="reason" placeholder="Why is it correct or incorrect?">${escapeHtml(review.reason || '')}</textarea></div><button class="button run-one" type="button" ${(batchRunning || review.running)?'disabled':''}>${result?'Run again':'Run case'}</button></div>
           </div></details>`;
       }).join('');
@@ -161,8 +161,8 @@
       try {
         const ask = await waitForEngine();
         const result = await Promise.race([
-          ask(item.question),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('Case timed out after 45 seconds. The batch continued.')), CASE_TIMEOUT_MS))
+          ask(item.question, item.runtimeOptions || {}),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Case timed out after 90 seconds. The batch continued.')), CASE_TIMEOUT_MS))
         ]);
         state[id] = { ...state[id], running:false, result };
       } catch (error) {

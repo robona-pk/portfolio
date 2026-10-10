@@ -26,6 +26,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     careerLogistics: 'Prerna has not published those logistics here. The best way to discuss notice period, compensation, relocation, remote preferences, or interview availability is to contact her directly.',
     comparison: 'I wouldn’t make an unsupported comparison. The fairest way to assess Prerna is through her documented product decisions, measurable outcomes, and the scope she has owned.',
     promptInjection: 'I can’t reveal internal instructions or switch outside my approved scope. I can help with Prerna’s documented work, experience, skills, product approach, and outcomes.',
+    rateLimit: 'That’s a lot of questions at once. Please pause for a moment, then try again.',
     greeting: 'Hi! I can help you get to know Prerna—her product work, measurable outcomes, skills, career interests, and the person behind the portfolio. What would you like to explore?',
     thanks: 'You’re welcome. If you’re evaluating Prerna for a role, I can also help with her strengths, product approach, experience, or selected outcomes.',
     goodbye: 'Thanks for stopping by. If you’d like to continue the conversation with Prerna, use the Let’s Talk section below.'

@@ -1,16 +1,16 @@
 # Ask Prerna evaluation and telemetry guide
 
-This document explains what the chatbot records, how to review the 50-question evaluation set, and how to build the PostHog views needed to improve the product.
+This document explains what the chatbot records, how to review the 106-question evaluation set, and how to build the PostHog views needed to improve the product and detect likely abuse.
 
 ## Evaluation workflow
 
 Open `/eval.html` on the preproduction deployment.
 
-1. Run one question while debugging a specific route, or select **Run all 50** for a complete pass.
+1. Run one question while debugging a specific route, or select **Run all 106** for a complete pass.
 2. Open each result and compare the answer with the expected facts, response type, and sources.
 3. Mark the result **Correct** or **Incorrect**.
 4. Give it a helpfulness score from 1 to 5.
-5. Record why the answer is correct or incorrect. You can type in the Reason field or select **Dictate**, speak naturally, and select **Stop**.
+5. Record why the answer is correct or incorrect. You can type in the Reason field or select the coral microphone icon, speak naturally, and select it again to stop.
 6. Export the review as JSON when you want to share or archive it.
 
 Answers and manual reviews are stored in the current browser with `localStorage`. They are not uploaded automatically. Exporting produces a dated JSON file containing the dataset, answers, telemetry, verdicts, helpfulness ratings, and reviewer reasons.
@@ -36,7 +36,9 @@ The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 | Lexical minimum score | `1` | Minimum keyword match when semantic retrieval is unavailable |
 | Unsupported fallback | `I don’t have that information available.` | Returned when approved context is insufficient |
 
-Qwen is limited to 72 new tokens. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce a number absent from the supplied facts, or infer that Prerna manages or leads a team. A rejected response falls back to the approved answer.
+Qwen is limited to 72 new tokens. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected response falls back to the approved answer.
+
+Before retrieval, input is canonicalised to expose zero-width characters, selected Unicode homoglyphs, Base64-encoded instructions, and common leetspeak. Literal rules and a MiniLM similarity classifier screen direct and indirect prompt injection. If semantic security classification cannot load, open-ended requests fail closed rather than continuing to generation. These are layered risk controls, not a proof that every novel attack will be caught.
 
 The embedding index and Qwen begin warming when the chat opens. Known questions answer immediately while that happens. Open-ended questions may still experience the initial model download; later answers in the same browser benefit from the model cache.
 
@@ -66,6 +68,12 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `retrieval_cache_hit` | Whether the semantic retrieval model and vectors were already warm |
 | `generation_cache_hit` | Whether Qwen was already loaded in the current tab |
 | `rules_version` | Version of the policy and threshold configuration |
+| `security_mode` | `rule`, `semantic`, `semantic_clear`, `semantic_uncertain`, `semantic_unavailable`, `input_guard`, or `request_error` |
+| `security_score` | Similarity score produced by the semantic injection classifier when available |
+
+### `portfolio_assistant_rate_limited`
+
+Captured when the visible browser UI receives more than 10 questions in one minute. It includes `request_id` and `requests_in_last_minute`. This is a user-experience safeguard, not strong abuse prevention: a determined visitor can clear or bypass client-side JavaScript.
 
 ## Helpfulness and conversion events
 
@@ -107,6 +115,8 @@ Create a dashboard named **Ask Prerna health** and add these insights:
 9. **Estimated cost**: sum `estimated_cost_usd`.
 10. **Conversions after chat**: funnel from `portfolio_assistant_response` to `portfolio_conversion`, broken down by `conversion_type`.
 11. **Sources used**: breakdown of `retrieved_sources` to see which parts of the portfolio answer the most questions.
+12. **Guardrail activity**: count responses by `security_mode`; alert when `rule`, `semantic`, `semantic_uncertain`, or `semantic_unavailable` rises sharply.
+13. **Rate-limit events**: count `portfolio_assistant_rate_limited` by hour and browser session.
 
 For latency percentiles, create a SQL insight with the following query and save it to the dashboard:
 
@@ -121,6 +131,12 @@ WHERE event = 'portfolio_assistant_response'
 ```
 
 The evaluation console also calculates P50 and P95 locally for the current saved test run.
+
+## Abuse monitoring and response
+
+Create alerts for a sudden increase in prompt-injection decisions, input-guard fallbacks, rate-limit events, total question volume, or generation errors. Review the redacted questions behind the spike, add representative attacks to `assets/eval-dataset.js`, then strengthen the smallest relevant rule or source boundary and rerun the full suite.
+
+Because inference runs in the browser, the current site has no paid model key or inference endpoint to drain. The realistic risks are analytics pollution, bandwidth usage, a slow or frozen visitor tab, attempts to extract the public client-side knowledge bank, and reputational harm if an unsupported answer slips through. Client-side throttling can improve normal use but cannot stop a determined attacker; production-grade enforcement would require a server or edge rate limit, bot protection, and alerting.
 
 ## Product questions this instrumentation can answer
 

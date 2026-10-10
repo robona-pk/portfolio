@@ -50,8 +50,9 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 ```text
 👤 Visitor question
         ↓
-🛡️ Policy + knowledge-base check (`assets/chatbot-knowledge.js`)
-   ├─ privacy / safety / confidentiality rule → ✨ controlled response
+🛡️ Input + injection checks (rules, Unicode cleanup, semantic classifier)
+   ├─ unsafe / uncertain request → ✨ controlled response
+   ├─ privacy / confidentiality rule → ✨ controlled response
    ├─ known recruiter / evidence question → ✅ approved concise answer
    └─ open-ended supported question → 🧠 MiniLM semantic retrieval
                                            ↓
@@ -72,9 +73,9 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 - **Generation:** `onnx-community/Qwen2.5-0.5B-Instruct` in 4-bit format, running in a Web Worker through Transformers.js and WebGPU for open-ended synthesis only.
 - **Warm-up:** opening the chat starts the embedding index and Qwen download/initialisation in the background, so part of the first-answer delay happens while the visitor reads or types.
 - **Ranking:** client-side cosine similarity against the curated portfolio passages.
-- **Validation:** Qwen is limited to 72 new tokens and every generated answer is hard-capped at 300 characters. Answers are rejected if they are empty, malformed, too long, or introduce numbers that are not present in the retrieved facts.
+- **Validation:** Qwen is limited to 72 new tokens and every generated answer is hard-capped at 300 characters. Sentence-level semantic grounding, exact quantified-claim checks, private-topic checks, proper-noun checks, and prompt-leakage checks reject unsupported output.
 - **Hosting:** GitHub + Vercel preview deployment; no backend model, database, API key, or per-question API charge.
-- **Product safeguards:** privacy boundaries, NSFW declines, graceful responses to insults, general-knowledge redirection, and no invented weakness/failure stories.
+- **Product safeguards:** privacy boundaries, NSFW declines, graceful responses to insults, general-knowledge redirection, no invented weakness/failure stories, a 500-character input limit, and a best-effort browser throttle of 10 questions per minute.
 
 To edit answers, update `assets/chatbot-knowledge.js` and redeploy. The file is the approved policy layer; `index.html` contains the chat routing and portfolio retrieval passages.
 
@@ -106,7 +107,7 @@ Browser-side policy guard ──► open-source MiniLM embeddings ──► cosi
 | On-device semantic retrieval | `index.html` | Loads the open-source `Xenova/all-MiniLM-L6-v2` embedding model in the visitor’s browser and ranks the local knowledge bank. |
 | On-device generation | `assets/qwen-worker.js` | Loads 4-bit Qwen2.5-0.5B-Instruct in a Web Worker and generates concise answers from approved context. |
 | Portfolio knowledge | `portfolioKnowledge` in `index.html` | Curated case-study, product-approach, skills, and profile passages used for retrieval and cited answers. |
-| Evaluation dataset | `assets/eval-dataset.js` | Fifty profile, work, privacy, abuse, off-topic, unsupported, and prompt-injection tests with expected facts and sources. |
+| Evaluation dataset | `assets/eval-dataset.js` | 106 profile, work, privacy, abuse, off-topic, typo, resilience, output-validation, and adversarial prompt-injection tests with expected facts and sources. |
 | Evaluation console | `eval.html` | Runs the dataset, shows latency and cache metrics, stores manual verdicts and reasons, and exports JSON. |
 | Telemetry specification | `TELEMETRY.md` | Event dictionary, threshold contract, privacy decisions, and PostHog dashboard recipe. |
 | Retired API endpoint | `api/ask.js` | Returns `410 Gone`; it makes no model calls and requires no API key. |
@@ -117,7 +118,7 @@ Browser-side policy guard ──► open-source MiniLM embeddings ──► cosi
 2. The browser embeds the question and curated portfolio passages locally.
 3. It calculates cosine similarity and selects the most relevant passages.
 4. Known recruiter and case-study questions return an approved concise answer immediately. For open-ended questions, Qwen 2.5 receives only the question, an approved answer frame, and the retrieved passages.
-5. The client validates the output and falls back to the approved response if generation fails or adds an unsupported number.
+5. The client validates each generated sentence against retrieved evidence and falls back to the approved response if generation fails, leaks prompt language, adds an unsupported claim, or cannot be verified.
 6. The UI renders the grounded answer.
 
 This keeps factual answers stable while still demonstrating generation where synthesis is useful. It also prevents the model from inventing employers, metrics, projects, or personal details.
@@ -131,7 +132,9 @@ Before retrieval, the browser applies a policy layer for common visitor intent:
 - **Personal questions:** salary, family, relationships, private address, and other personal details receive a privacy-respecting boundary.
 - **Insults:** the assistant responds calmly and asks the visitor to keep the question evidence-based.
 - **Out-of-scope questions:** general knowledge, politics, news, weather, jokes, and similar requests are redirected to the portfolio’s purpose.
-- **Prompt injection attempts:** requests to ignore instructions or expose internal instructions stay within the assistant’s portfolio-only scope.
+- **Prompt injection attempts:** literal rules plus a MiniLM similarity classifier cover direct, obfuscated, Unicode, Base64, multilingual, and mixed valid-question/injection attempts. Uncertain or unavailable security classification fails closed to an approved boundary response.
+
+This classifier is a retrieval-based security heuristic, not a formally trained security model, and it is not foolproof. The evaluation suite includes false-positive cases so ordinary recruiter questions remain answerable.
 
 ### Cost and privacy
 
@@ -141,13 +144,15 @@ The tradeoff for generative questions is a large first-use download. The officia
 
 ### Evaluation and observability
 
-Open `/eval.html` on the preview deployment to run the 50-question evaluation dataset. Each case displays expected facts, expected sources, the actual answer, answer mode, latency, token estimates, fallback state, and errors. Reviews are stored in the current browser and can be exported or imported as JSON. Each Reason field also includes browser voice dictation for faster review.
+Open `/eval.html` on the preview deployment to run the 106-question evaluation dataset. Each case displays expected facts, expected sources, the actual answer, answer mode, latency, security decision, token estimates, fallback state, and errors. Reviews are stored in the current browser and can be exported or imported as JSON. Each Reason field also includes browser voice dictation for faster review.
 
 Voice dictation uses the browser's Web Speech API, not Qwen. It requires microphone permission and is available only in supporting browsers. Depending on the browser, speech may be processed by the browser provider. The resulting transcript is stored and exported exactly like typed review text; it is not sent to PostHog by this console.
 
 Evaluation feedback is human review data, not automatic model training. When a review exposes a missing fact, update both the case in `assets/eval-dataset.js` and the approved answer or source material used by the chatbot. Required facts can then be passed to Qwen and validated; if Qwen omits one, the assistant returns the complete approved answer instead.
 
 Live requests emit anonymous PostHog events with redacted question text, retrieved sources and scores, final answer, fallback state, error, retrieval and generation models, total latency, approximate input and output tokens, zero estimated API cost, and model cache state. Separate events record helpfulness, structured reasons for unhelpful answers, and downstream resume, case-study, and contact clicks. See `TELEMETRY.md` for the full event dictionary and dashboard setup.
+
+The current preproduction security review and remaining production gates are documented in `evaluations/PREPROD-SECURITY-AUDIT-2026-10-10.md`.
 
 ### Vercel preproduction
 

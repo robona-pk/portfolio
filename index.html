@@ -794,7 +794,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .sk-card::before{background:var(--s2)!important}.sk-card:nth-child(2)::before{background:#91a8cc!important}.sk-card:nth-child(3)::before{background:#c783a7!important}.sk-card:nth-child(4)::before{background:#a092c5!important}
 .sk-card .sk-cat{color:var(--s2)!important;font-family:var(--fd);font-size:.85rem!important;font-weight:800!important;letter-spacing:.105em!important}.sk-card:nth-child(2) .sk-cat{color:#b9c9e4!important}.sk-card:nth-child(3) .sk-cat{color:#e2a7c4!important}.sk-card:nth-child(4) .sk-cat{color:#c6bddf!important}.sk-card .sk-dot{background:var(--s)!important}.sk-card .sk-name{color:#f7f0f8!important}.sk-card .sk-tag{font-weight:700!important;border-color:#665775!important;background:rgba(15,12,19,.62)!important}.sk-card:nth-child(1) .sk-tag{color:#ffe0a5!important;border-color:rgba(255,208,96,.52)!important;background:rgba(255,208,96,.1)!important}.sk-card:nth-child(2) .sk-tag{color:#d9e5ff!important;border-color:rgba(145,168,204,.58)!important;background:rgba(145,168,204,.13)!important}.sk-card:nth-child(3) .sk-tag{color:#ffd3e5!important;border-color:rgba(199,131,167,.58)!important;background:rgba(199,131,167,.13)!important}.sk-card:nth-child(4) .sk-tag{color:#e2d7ff!important;border-color:rgba(160,146,197,.58)!important;background:rgba(160,146,197,.13)!important}
 .sk-card .sk-items{gap:.6rem!important}.sk-card .sk-tags{border-color:#5a416a!important}
-#liquid-cursor{filter:drop-shadow(0 2px 7px rgba(8,5,12,.55))}
+#liquid-cursor{filter:none}
 .case-card,.build-card,.build-visual,.vital{border-radius:0!important}
 .sec-mark::before{content:"";display:block;width:9px;height:9px;flex:0 0 9px;background:var(--s2);transform:rotate(45deg)}
 .hobby-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}
@@ -1793,8 +1793,8 @@ progressEl.id = 'scroll-progress';
 document.body.prepend(progressEl);
 
 /* ═══════════════════════════════════════════════════════
-   LIQUID INK CURSOR
-   Warm ivory keeps the point precise; amber ink follows the portfolio accent.
+   MAGNETIC FLUID CURSOR
+   A restrained ivory point with a soft, short-lived echo.
 ═══════════════════════════════════════════════════════ */
 (() => {
   const finePointer = window.matchMedia('(pointer:fine)');
@@ -1808,13 +1808,14 @@ document.body.prepend(progressEl);
   document.documentElement.classList.add('liquid-cursor-active');
 
   const context = canvas.getContext('2d', { alpha: true });
-  const ink = Array.from({ length: 12 }, (_, index) => ({
+  const echo = Array.from({ length: 5 }, (_, index) => ({
     x: -80,
     y: -80,
-    radius: Math.max(2.2, 10.5 - index * .72)
+    radius: Math.max(1.2, 3 - index * .38)
   }));
-  const droplets = [];
   const pointer = { x: -80, y: -80, visible: false, interactive: false, pressed: false };
+  const visual = { x: -80, y: -80 };
+  const magnet = { x: -80, y: -80 };
   let pixelRatio = 1;
   let animationFrame = 0;
   let hasPointerPosition = false;
@@ -1831,87 +1832,66 @@ document.body.prepend(progressEl);
   function setCursorContext(target) {
     const element = target instanceof Element ? target : null;
     const overFormField = Boolean(element?.closest('input,textarea,select,[contenteditable="true"]'));
-    pointer.interactive = !overFormField && Boolean(element?.closest('a,button,summary,[role="button"],label'));
-    canvas.classList.toggle('visible', pointer.visible && !overFormField);
-  }
-
-  function releaseDroplets(x, y) {
-    for (let index = 0; index < 5; index += 1) {
-      const angle = (Math.PI * 2 * index) / 5 + Math.random() * .3;
-      const speed = 1.5 + Math.random() * 1.8;
-      droplets.push({
-        x,
-        y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        radius: 2.8 + Math.random() * 2,
-        life: 1
-      });
+    const interactiveElement = !overFormField
+      ? element?.closest('a,button,summary,[role="button"],label')
+      : null;
+    pointer.interactive = Boolean(interactiveElement);
+    if (interactiveElement) {
+      const rect = interactiveElement.getBoundingClientRect();
+      magnet.x = pointer.x + (rect.left + rect.width / 2 - pointer.x) * .12;
+      magnet.y = pointer.y + (rect.top + rect.height / 2 - pointer.y) * .12;
+    } else {
+      magnet.x = pointer.x;
+      magnet.y = pointer.y;
     }
+    canvas.classList.toggle('visible', pointer.visible && !overFormField);
   }
 
   function drawLiquidCursor() {
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-    const lead = ink[0];
-    lead.x += (pointer.x - lead.x) * .34;
-    lead.y += (pointer.y - lead.y) * .34;
-    for (let index = 1; index < ink.length; index += 1) {
-      const previous = ink[index - 1];
-      const point = ink[index];
-      point.x += (previous.x - point.x) * (.38 - index * .008);
-      point.y += (previous.y - point.y) * (.38 - index * .008);
+    const targetX = pointer.interactive ? magnet.x : pointer.x;
+    const targetY = pointer.interactive ? magnet.y : pointer.y;
+    visual.x += (targetX - visual.x) * .48;
+    visual.y += (targetY - visual.y) * .48;
+
+    const lead = echo[0];
+    lead.x += (visual.x - lead.x) * .42;
+    lead.y += (visual.y - lead.y) * .42;
+    for (let index = 1; index < echo.length; index += 1) {
+      const previous = echo[index - 1];
+      const point = echo[index];
+      point.x += (previous.x - point.x) * (.4 - index * .025);
+      point.y += (previous.y - point.y) * (.4 - index * .025);
     }
 
     if (pointer.visible) {
       context.lineCap = 'round';
       context.lineJoin = 'round';
-      for (let index = ink.length - 1; index > 0; index -= 1) {
-        const point = ink[index];
-        const previous = ink[index - 1];
-        const alpha = .14 + ((ink.length - index) / ink.length) * .48;
+      for (let index = echo.length - 1; index > 0; index -= 1) {
+        const point = echo[index];
+        const previous = echo[index - 1];
+        const alpha = .025 + ((echo.length - index) / echo.length) * .075;
         context.beginPath();
         context.moveTo(point.x, point.y);
         context.lineTo(previous.x, previous.y);
-        context.lineWidth = point.radius * 1.7;
-        context.strokeStyle = `rgba(225,184,91,${alpha})`;
+        context.lineWidth = point.radius;
+        context.strokeStyle = `rgba(215,202,220,${alpha})`;
         context.stroke();
       }
 
-      ink.forEach((point, index) => {
-        const alpha = .1 + ((ink.length - index) / ink.length) * .28;
+      if (pointer.interactive) {
         context.beginPath();
-        context.arc(point.x, point.y, point.radius, 0, Math.PI * 2);
-        context.fillStyle = `rgba(225,184,91,${alpha})`;
-        context.fill();
-      });
+        context.arc(visual.x, visual.y, pointer.pressed ? 7 : 10, 0, Math.PI * 2);
+        context.lineWidth = 1;
+        context.strokeStyle = 'rgba(247,240,248,.42)';
+        context.stroke();
+      }
 
-      const headRadius = pointer.pressed ? 5 : pointer.interactive ? 14 : 8;
       context.beginPath();
-      context.arc(pointer.x, pointer.y, headRadius, 0, Math.PI * 2);
-      context.fillStyle = pointer.interactive ? 'rgba(225,184,91,.28)' : 'rgba(225,184,91,.18)';
-      context.fill();
-      context.lineWidth = pointer.interactive ? 1.5 : 1;
-      context.strokeStyle = '#e1b85b';
-      context.stroke();
-      context.beginPath();
-      context.arc(pointer.x, pointer.y, pointer.pressed ? 2.5 : 3.5, 0, Math.PI * 2);
+      context.arc(visual.x, visual.y, pointer.pressed ? 2.2 : 3.5, 0, Math.PI * 2);
       context.fillStyle = '#f7f0f8';
       context.fill();
-    }
-
-    for (let index = droplets.length - 1; index >= 0; index -= 1) {
-      const drop = droplets[index];
-      drop.x += drop.vx;
-      drop.y += drop.vy;
-      drop.vx *= .94;
-      drop.vy = drop.vy * .94 + .025;
-      drop.life -= .045;
-      context.beginPath();
-      context.arc(drop.x, drop.y, drop.radius * Math.max(drop.life, 0), 0, Math.PI * 2);
-      context.fillStyle = `rgba(247,240,248,${Math.max(drop.life, 0) * .72})`;
-      context.fill();
-      if (drop.life <= 0) droplets.splice(index, 1);
     }
 
     animationFrame = window.requestAnimationFrame(drawLiquidCursor);
@@ -1922,7 +1902,11 @@ document.body.prepend(progressEl);
     pointer.x = event.clientX;
     pointer.y = event.clientY;
     if (!hasPointerPosition) {
-      ink.forEach(point => {
+      visual.x = pointer.x;
+      visual.y = pointer.y;
+      magnet.x = pointer.x;
+      magnet.y = pointer.y;
+      echo.forEach(point => {
         point.x = pointer.x;
         point.y = pointer.y;
       });
@@ -1934,7 +1918,6 @@ document.body.prepend(progressEl);
   document.addEventListener('pointerdown', event => {
     if (event.pointerType && event.pointerType !== 'mouse') return;
     pointer.pressed = true;
-    releaseDroplets(event.clientX, event.clientY);
   }, { passive: true });
   document.addEventListener('pointerup', () => { pointer.pressed = false; }, { passive: true });
   document.addEventListener('mouseleave', () => {

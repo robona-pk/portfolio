@@ -1794,7 +1794,7 @@ document.body.prepend(progressEl);
 
 /* ═══════════════════════════════════════════════════════
    MAGNETIC FLUID CURSOR
-   A restrained ivory point with a soft, short-lived echo.
+   A visible ivory point with a tapered spring ribbon.
 ═══════════════════════════════════════════════════════ */
 (() => {
   const finePointer = window.matchMedia('(pointer:fine)');
@@ -1808,10 +1808,10 @@ document.body.prepend(progressEl);
   document.documentElement.classList.add('liquid-cursor-active');
 
   const context = canvas.getContext('2d', { alpha: true });
-  const echo = Array.from({ length: 5 }, (_, index) => ({
+  const echo = Array.from({ length: 6 }, (_, index) => ({
     x: -80,
     y: -80,
-    radius: Math.max(1.2, 3 - index * .38)
+    radius: Math.max(1.4, 6.2 - index * .9)
   }));
   const pointer = { x: -80, y: -80, visible: false, interactive: false, pressed: false };
   const visual = { x: -80, y: -80 };
@@ -1838,8 +1838,8 @@ document.body.prepend(progressEl);
     pointer.interactive = Boolean(interactiveElement);
     if (interactiveElement) {
       const rect = interactiveElement.getBoundingClientRect();
-      magnet.x = pointer.x + (rect.left + rect.width / 2 - pointer.x) * .12;
-      magnet.y = pointer.y + (rect.top + rect.height / 2 - pointer.y) * .12;
+      magnet.x = pointer.x + (rect.left + rect.width / 2 - pointer.x) * .16;
+      magnet.y = pointer.y + (rect.top + rect.height / 2 - pointer.y) * .16;
     } else {
       magnet.x = pointer.x;
       magnet.y = pointer.y;
@@ -1852,17 +1852,18 @@ document.body.prepend(progressEl);
 
     const targetX = pointer.interactive ? magnet.x : pointer.x;
     const targetY = pointer.interactive ? magnet.y : pointer.y;
-    visual.x += (targetX - visual.x) * .48;
-    visual.y += (targetY - visual.y) * .48;
+    visual.x += (targetX - visual.x) * .52;
+    visual.y += (targetY - visual.y) * .52;
 
     const lead = echo[0];
-    lead.x += (visual.x - lead.x) * .42;
-    lead.y += (visual.y - lead.y) * .42;
+    lead.x += (visual.x - lead.x) * .5;
+    lead.y += (visual.y - lead.y) * .5;
     for (let index = 1; index < echo.length; index += 1) {
       const previous = echo[index - 1];
       const point = echo[index];
-      point.x += (previous.x - point.x) * (.4 - index * .025);
-      point.y += (previous.y - point.y) * (.4 - index * .025);
+      const spring = .52 - index * .025;
+      point.x += (previous.x - point.x) * spring;
+      point.y += (previous.y - point.y) * spring;
     }
 
     if (pointer.visible) {
@@ -1871,25 +1872,32 @@ document.body.prepend(progressEl);
       for (let index = echo.length - 1; index > 0; index -= 1) {
         const point = echo[index];
         const previous = echo[index - 1];
-        const alpha = .025 + ((echo.length - index) / echo.length) * .075;
+        const progress = (echo.length - index) / echo.length;
+        const midpointX = (point.x + previous.x) / 2;
+        const midpointY = (point.y + previous.y) / 2;
         context.beginPath();
         context.moveTo(point.x, point.y);
-        context.lineTo(previous.x, previous.y);
+        context.quadraticCurveTo(midpointX, midpointY, previous.x, previous.y);
         context.lineWidth = point.radius;
-        context.strokeStyle = `rgba(215,202,220,${alpha})`;
-        context.stroke();
-      }
-
-      if (pointer.interactive) {
-        context.beginPath();
-        context.arc(visual.x, visual.y, pointer.pressed ? 7 : 10, 0, Math.PI * 2);
-        context.lineWidth = 1;
-        context.strokeStyle = 'rgba(247,240,248,.42)';
+        context.strokeStyle = `rgba(247,240,248,${.055 + progress * .22})`;
         context.stroke();
       }
 
       context.beginPath();
-      context.arc(visual.x, visual.y, pointer.pressed ? 2.2 : 3.5, 0, Math.PI * 2);
+      context.arc(lead.x, lead.y, 7.5, 0, Math.PI * 2);
+      context.fillStyle = 'rgba(186,113,154,.09)';
+      context.fill();
+
+      if (pointer.interactive) {
+        context.beginPath();
+        context.arc(visual.x, visual.y, pointer.pressed ? 8 : 12, 0, Math.PI * 2);
+        context.lineWidth = 1.25;
+        context.strokeStyle = 'rgba(247,240,248,.62)';
+        context.stroke();
+      }
+
+      context.beginPath();
+      context.arc(visual.x, visual.y, pointer.pressed ? 3.8 : 6, 0, Math.PI * 2);
       context.fillStyle = '#f7f0f8';
       context.fill();
     }

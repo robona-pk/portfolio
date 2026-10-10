@@ -18,10 +18,10 @@
       <div>
         <p class="kicker">Ask Prerna quality system</p>
         <h1>Evaluation console</h1>
-        <p class="intro">Run all 50 questions or rerun only those marked Incorrect. Import a previous export to continue its answers, verdicts, ratings, and comments in this browser. Select the coral microphone beside a Reason field to speak your feedback.</p>
+        <p class="intro">Run the complete evaluation suite or rerun only those marked Incorrect. Import a previous export to continue its answers, verdicts, ratings, and comments in this browser. Select the coral microphone beside a Reason field to speak your feedback.</p>
       </div>
       <div class="controls">
-        <button class="button primary" id="runAll" type="button">Run all 50</button>
+        <button class="button primary" id="runAll" type="button">Run all</button>
         <button class="button targeted" id="runIncorrect" type="button" disabled>Run incorrect (0)</button>
         <button class="button" id="stopRun" type="button" disabled>Stop</button>
         <button class="button" id="importRun" type="button" title="Restore a previously exported review and continue where you left off">Import review</button>
@@ -61,10 +61,11 @@
     </section>
   </main>
 
-  <iframe class="engine" id="engine" src="index.html?eval=1" title="Ask Prerna evaluation engine"></iframe>
+  <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-10.6" title="Ask Prerna evaluation engine"></iframe>
   <script src="assets/eval-dataset.js"></script>
   <script>
     const STORAGE_KEY = 'ask-prerna-eval-reviews-v1';
+    const CASE_TIMEOUT_MS = 45000;
     const dataset = window.ASK_PRERNA_EVALS || [];
     const state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     const list = document.getElementById('evalList');
@@ -137,7 +138,9 @@
       const runIncorrect = document.getElementById('runIncorrect');
       runIncorrect.textContent = `Run incorrect (${incorrectCount})`;
       runIncorrect.disabled = batchRunning || incorrectCount === 0;
-      document.getElementById('runAll').disabled = batchRunning;
+      const runAll = document.getElementById('runAll');
+      runAll.textContent = `Run all ${dataset.length}`;
+      runAll.disabled = batchRunning;
       document.getElementById('stopRun').disabled = !batchRunning;
     }
 
@@ -157,7 +160,10 @@
       status.textContent = `Running ${item.id}: ${item.question}`;
       try {
         const ask = await waitForEngine();
-        const result = await ask(item.question);
+        const result = await Promise.race([
+          ask(item.question),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Case timed out after 45 seconds. The batch continued.')), CASE_TIMEOUT_MS))
+        ]);
         state[id] = { ...state[id], running:false, result };
       } catch (error) {
         state[id] = { ...state[id], running:false, result:{ answer:'', error:error.message, fallback:true, totalLatencyMs:0, inputTokens:0, outputTokens:0, retrievedSources:[] } };
@@ -250,7 +256,7 @@
         ? 'Run stopped. Completed results were saved.'
         : label === 'incorrect cases'
           ? `Reran ${cases.length} incorrect evaluations. Review the new answers, then update their verdicts.`
-          : 'All 50 evaluations completed.';
+          : `All ${dataset.length} evaluations completed.`;
     }
     document.getElementById('runAll').addEventListener('click', () => runBatch(dataset, 'evaluations'));
     document.getElementById('runIncorrect').addEventListener('click', () => {
@@ -281,7 +287,7 @@
       }
     });
     document.getElementById('exportRun').addEventListener('click', () => {
-      const payload = { exportedAt:new Date().toISOString(), datasetVersion:'2026-10-09.5', reviews:dataset.map(item => ({ ...item, ...(state[item.id] || {}) })) };
+      const payload = { exportedAt:new Date().toISOString(), datasetVersion:'2026-10-10.6', reviews:dataset.map(item => ({ ...item, ...(state[item.id] || {}) })) };
       const url = URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
       const link = document.createElement('a'); link.href=url; link.download=`ask-prerna-evals-${new Date().toISOString().slice(0,10)}.json`; link.click(); URL.revokeObjectURL(url);
     });
@@ -300,7 +306,7 @@
     list.addEventListener('input', event => { if (event.target.dataset.field!=='reason') return; const id=event.target.closest('.eval').dataset.id; state[id]={...state[id],reason:event.target.value}; save(); updateMetrics(); });
 
     [...new Set(dataset.map(item => item.category))].sort().forEach(value => { const option=document.createElement('option'); option.value=value; option.textContent=value; document.getElementById('category').appendChild(option); });
-    engine.addEventListener('load', () => { status.textContent = 'Ready. Run one case or all 50.'; });
+    engine.addEventListener('load', () => { status.textContent = `Ready. Run one case or all ${dataset.length}.`; });
     render();
   </script>
 </body>

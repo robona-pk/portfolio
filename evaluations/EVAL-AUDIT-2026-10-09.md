@@ -34,6 +34,14 @@ All 50 responses in Prerna's exported evaluation have now been reviewed. Prerna'
 - Strongest area: deterministic privacy, confidentiality, abuse, and off-topic handling
 - Weakest area: Qwen-generated factual and behavioural answers
 
+## Fourth run and robustness expansion
+
+The fourth reviewed export reached 49 correct answers out of 50, with average helpfulness of 3.9 out of 5. The only remaining incorrect answer was the strengths response: it sounded too self-congratulatory, used awkward wording, and did not clearly explain Prerna's comfort with ambiguity.
+
+The strengths answer now focuses on energy, persistence, curiosity, navigating ambiguity, and using behavioural evidence instead of assuming an answer. The suite has also expanded from 50 to 80 cases with 30 paraphrase and spelling-error tests covering profile facts, behavioural questions, tools, case studies, confidentiality, privacy, insults, prompt injection, and off-topic requests.
+
+Local validation of the expanded suite produced a P50 of 0 ms and P95 of 1 ms for deterministic policy routes. Those figures do not represent a cold Qwen generation: the tested questions were answered by approved policy routes, while the open-source model remains reserved for open-ended synthesis.
+
 The reviewed data is in `ask-prerna-evals-reviewed-2026-10-09.json`. Each response includes a verdict, helpfulness score, and reason.
 
 ## What the audit found

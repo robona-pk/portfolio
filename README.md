@@ -99,7 +99,7 @@ flowchart TD
 | Work or recruiter question | “What impact did she drive at Lenskart?” | ✅ Approved answer bank |
 | Open-ended portfolio question | “How does customer research shape her decisions?” | 🔎 Retrieval + 🤖 Qwen |
 | Private or confidential | “What is Lenskart's profit margin?” | 📜 Policy layer |
-| Insult or unsafe request | “Why is she…?” | 📜 Respectful policy response |
+| Inappropriate or unsafe question | — | 📜 Respectful policy response |
 | Unrelated question | “Who is the US president?” | 📜 Scope boundary |
 | Missing evidence | An unpublished personal or work detail | 🤷 Safe fallback |
 
@@ -201,18 +201,59 @@ flowchart LR
 - Speak feedback through voice dictation or type a reason.
 - Export or import the review as JSON for the next iteration.
 
-### Product metrics I monitor
+### How live feedback improves the bot
 
-| Quality | Performance | Business value |
+Every chatbot answer asks **“Was this helpful?”**
+
+- 👍 **Helpful:** PostHog records a positive helpfulness signal.
+- 👎 **Not helpful:** the visitor can select **Missing information**, **Incorrect information**, **Irrelevant answer**, **Too verbose**, or **Poor tone**.
+- 🔗 The rating and reason are joined to the original question and answer through a request ID.
+- 🔍 I review patterns to identify whether the problem is the knowledge base, retrieval, routing, generation, or tone.
+- 🛠️ I update the relevant layer, rerun the golden dataset, and check that the fix does not break another answer.
+
+This creates a continuous product loop:
+
+`💬 Answer → 👍/👎 Feedback → 📊 PostHog analysis → 🛠️ Improvement → 🧪 Regression test → 🚀 Release`
+
+## PostHog: measuring the portfolio as a product
+
+PostHog is used for more than chatbot performance. It shows whether visitors discover relevant work, engage with the portfolio, and take a meaningful next step.
+
+### Portfolio funnel
+
+| Funnel stage | Product question | Signals monitored |
 | --- | --- | --- |
-| Correctness and helpfulness | P50/P95 latency | Resume clicks |
-| Fallback and error rate | Cache hit/miss | Case-study clicks |
-| Retrieved sources | Input/output tokens | Contact clicks |
-| Safety decisions | Estimated cost | Questions visitors ask |
+| **Reach** | Are people finding the portfolio? | Page views, anonymous visitors, traffic source and campaign |
+| **Explore** | Which work attracts interest? | Case-study opens and chatbot opens |
+| **Engage** | Are visitors meaningfully interacting? | Questions asked, question themes, helpfulness and feedback reasons |
+| **Consider** | Do visitors want more evidence? | Resume clicks and repeated case-study exploration |
+| **Convert** | Do visitors want to speak with me? | Contact-section, email, phone and WhatsApp clicks |
+
+### AI product health
+
+| Quality | Performance and cost | Safety |
+| --- | --- | --- |
+| Correctness and helpfulness | P50/P95 latency | Injection decisions |
+| Fallback and error rate | Cache hit/miss | Rate-limit events |
+| Retrieved sources | Input/output tokens | Unsupported-output rejections |
+| Feedback reasons | Estimated cost | Fail-closed responses |
 
 The golden dataset is a **testing benchmark**, not the chatbot's knowledge base and not training data. This is **human-as-judge evaluation**, not automatic model training. Feedback is used to improve the answer bank, retrieval, guardrails, and regression suite; Qwen is not silently retrained.
 
 See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluations/PREPROD-SECURITY-AUDIT-2026-10-10.md).
+
+## Product changelog
+
+| Stage | What we had | Gap or insight | What changed and why |
+| --- | --- | --- | --- |
+| **1. First chatbot** | A separate portfolio section with retrieval-based answers | Visitors had to scroll to find it; many did not know what to ask | Replaced it with a visible floating bot and starter questions |
+| **2. Curated answer bank** | Broad portfolio matching | Insults, private questions, confidentiality and unrelated queries could return irrelevant work answers | Added deterministic routing and an approved policy layer for safe, graceful responses |
+| **3. Better portfolio coverage** | Mostly project and company information | Recruiter questions about experience, skills, personality, location and hobbies were inconsistent | Expanded the approved knowledge base with verified professional and personal-profile facts |
+| **4. Semantic retrieval** | Keyword and static-text matching | Misspellings and paraphrased questions were easy to misroute | Added fuzzy correction and MiniLM semantic retrieval to match meaning rather than exact words |
+| **5. Open-source generation** | Retrieved, prewritten responses only | The experience demonstrated retrieval but not generative AI | Added browser-hosted Qwen 2.5 for concise synthesis from retrieved evidence, with ₹0 model API cost |
+| **6. Evaluation system** | Manual spot checks | Improvements could fix one answer while breaking another | Built the golden dataset and eval console with human-as-judge review, incorrect-only reruns, voice feedback and JSON export |
+| **7. Production hardening** | Basic keyword guardrails | Obfuscated injections, invented claims and component failures needed stronger handling | Added semantic injection detection, Unicode checks, grounding validation, fail-closed fallbacks and throttling |
+| **8. Product analytics** | Technical latency and answer logs | Bot quality alone did not show whether the portfolio created recruiter interest | Added PostHog portfolio funnels, structured feedback and resume, case-study and contact conversions |
 
 ## Cost and trade-offs
 
@@ -220,16 +261,5 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 - **Fast path:** approved answers return without waiting for Qwen.
 - **Trade-off:** the first generative answer may be slower because the browser must download and initialise Qwen.
 - **Compatibility:** if WebGPU is unavailable, the bot returns the approved retrieved answer.
-
-## Where to make changes
-
-| To change… | Edit… |
-| --- | --- |
-| Approved facts and policy responses | `assets/chatbot-knowledge.js` |
-| Retrieval passages and routing | `index.html` |
-| Qwen generation settings | `assets/qwen-worker.js` |
-| Golden evaluation dataset | `assets/eval-dataset.js` |
-| Evaluation interface | `eval.html` |
-| Analytics definitions | `TELEMETRY.md` |
 
 The preproduction build is connected to the `codex/portfolio-rag-preprod` branch and is intentionally separate from production.

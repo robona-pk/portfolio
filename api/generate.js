@@ -9,7 +9,7 @@ const SOURCE_LIBRARY = Object.freeze({
   },
   'Product approach': {
     answer: 'Prerna starts with a behavioural break in the customer journey, turns it into a measurable hypothesis, and tests the smallest useful intervention. She measures activation, conversion, retention, customer outcomes, and business impact.',
-    text: 'Prerna focuses on behavioural breaks in customer journeys such as an abandoned booking, an unclear choice, an unread report, or a post-purchase issue. She forms measurable hypotheses, tests the smallest viable intervention, designs adoption mechanics across product, operations, and lifecycle touchpoints, and measures activation, conversion, retention, customer outcomes, and business impact.'
+    text: 'Prerna focuses on behavioural breaks in customer journeys such as an abandoned booking, an unclear choice, an unread report, or a post-purchase issue. She uses customer research to form measurable hypotheses, tests the smallest viable intervention, designs adoption mechanics across product, operations, and lifecycle touchpoints, and measures activation, conversion, retention, customer outcomes, and business impact.'
   },
   'Skills and tools': {
     answer: 'Prerna combines growth and adoption strategy with SQL, BigQuery, GA4, Firebase, A/B testing, PostHog, Python automation, and AI-assisted prototyping. Her builder toolset includes Codex, Claude Code, Gemini, MiniLM, GitHub, and Vercel.',

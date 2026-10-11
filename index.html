@@ -1697,7 +1697,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-11.4"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-11.6"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2194,9 +2194,10 @@ const portfolioKnowledge = [
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-11.5',
+  rulesVersion: '2026-10-11.6',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
+  comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   relevanceSemanticThreshold: 0.24,
   relevanceLexicalCoverageThreshold: 0.5,
   relevanceLexicalMinimumMatches: 1,
@@ -2218,7 +2219,7 @@ const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood a
 const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
 const skillsetQuestion = /\b(is (prerna|she) skilled|skillset|skills? (does|do).{0,18}\bhave|what (?:product and technical |product |technical )?skills?\b|what are.{0,18}\bskills?|her skills|skills and tools|areas? of expertise|product skills?|pm capabilities|a[ /-]?b testing|go-to-market|gtm)\b/i;
 const toolsQuestion = /\b(analytics|technical|tech|ai)(?:\s+and\s+\w+)?\s+tools?\b|\b(which|what) tools?\b|\b(sql|bigquery|ga4|firebase|python|clevertap|tableau|power bi)\b/i;
-const productManagerStyleQuestion = /\b(how|what).{0,12}\b(prerna|she|her).{0,20}\b(as )?(a )?(product manager|pm)\b|\b(what kind of|what type of).{0,12}\b(product manager|pm)\b|\b(product management|pm).{0,10}\b(style|working style)\b|\bpm\b.{0,12}\b(working style|style)\b|\bwork(ing)? with.{0,16}\b(prerna|her).{0,16}\b(product manager|pm)\b/i;
+const productManagerStyleQuestion = /\b(how|what).{0,12}\b(prerna|she|her).{0,20}\b(as )?(a )?(product manager|pm)\b|\b(what kind of|what type of).{0,12}\b(product manager|pm)\b|\b(product management|pm).{0,10}\b(style|working style)\b|\bpm\b.{0,12}\b(working style|style)\b|\bwork(ing)? with.{0,16}\b(prerna|her).{0,16}\b(product manager|pm)\b|\bwhat(?:'s|s| is)?\s+(?:her|prerna(?:'s)?)\s+work(?:ing)?\s+(?:style|like)\b/i;
 const personalityTraitQuestion = /\b(is (prerna|she).{0,18}\b(loud|quiet|introvert|extrovert|arrogant|friendly|kind|intense|serious|funny|likeable)|what (is|are).{0,18}\bpersonality|what is (prerna|she) like|describe (prerna|her).{0,16}\b(person|personality))\b/i;
 const companyQuestion = /\b(lenskart|lenksart|lens kart|bajaj|bajaj finserv health|lenskart@home|home trial)\b/i;
 const confidentialMetricQuestion = /\b(profit margin|gross margin|net margin|profitable|profitability|making money|ebitda|p&l|profit|loss|valuation|gmv|unit economics|revenue breakdown|cost structure|budget|internal metrics?)\b/i;
@@ -2246,6 +2247,7 @@ const availabilityQuestion = /\b(when.{0,24}\bavailable|is.{0,18}\bavailable|ava
 const availabilityAnswer = 'Prerna is open to new opportunities. For her availability or to start a conversation, please get in touch.';
 const employerQuestion = /\b(where (does|did).{0,18}\bwork|companies|employers?)\b/i;
 const employerAnswer = 'Prerna has 5+ years across e-commerce, health-tech, and insurance, with product roles at Lenskart and Bajaj Finserv Health. Alongside those roles, she builds AI-enabled product experiments, including this portfolio assistant.';
+const employmentSeparationQuestion = /\b(fired|sacked|terminated|laid\s+off|let\s+go|asked\s+to\s+leave|forced\s+to\s+leave|resigned|quit)\b.{0,36}\b(prerna|she|her|lenskart|bajaj)\b|\b(prerna|she|her)\b.{0,36}\b(fired|sacked|terminated|laid\s+off|let\s+go|asked\s+to\s+leave|forced\s+to\s+leave|resigned|quit)\b|\b(fired|sacked|terminated|laid\s+off|let\s+go|asked\s+to\s+leave|forced\s+to\s+leave|resigned|quit)\b.{0,20}\bfrom\b.{0,20}\b(lenskart|bajaj)\b/i;
 const contactQuestion = /\b(how (can|do).{0,18}\b(contact|reach)|email|phone number|linkedin)\b/i;
 const contactAnswer = 'You can use the contact links in the portfolio to reach Prerna by email, phone, LinkedIn, or WhatsApp.';
 const personalQuestion = /\b(age|birthday|married|single|dating|boyfriend|girlfriend|husband|wife|family|children|home address|address|religion|politics|vote|voting|live|body|appearance|nsfw|sex|sexual)\b/i;
@@ -2282,7 +2284,7 @@ const strengthsAnswer = 'Prerna’s strengths are her energy and persistence. Sh
 const weaknessesQuestion = /\b(weakness|weaknesses|area(s)? (to|of) improve|shortcoming|development area)\b/i;
 const behaviouralBoundaryAnswer = 'I don’t have portfolio evidence to make a personal assessment of that, and I wouldn’t speculate. I can share Prerna’s documented approach to product work, collaboration, and measurable outcomes.';
 const leadershipQuestion = /\b(leadership style|lead|leader|manage people|manage teams?|collaborat|work(ing)? style|cross[- ]functional|stakeholders?|align stakeholders?)\b/i;
-const leadershipAnswer = 'Prerna keeps cross-functional partners close to the solution space so the product reflects customer, technical, operational, and commercial realities—not only a product view. She prioritises stakeholder alignment and shared business outcomes. At Lenskart, that approach helped move the called cohort’s NPS from 41 to 60 in one month.';
+const leadershipAnswer = 'Prerna keeps design, engineering, operations, and commercial partners close to the problem so decisions reflect customer, technical, and business realities. She prefers early alignment, clear ownership, and shared outcomes over working in a product silo.';
 const problemSolvingQuestion = /\b(problem.solv|how (does|would).{0,32}\b(approach|solve|tackle|prioriti[sz]e|decide|decision)|tackle.{0,20}\b(product )?problems?|decision.?making)\b/i;
 const problemSolvingAnswer = 'Prerna starts by finding where customer intent breaks, then turns the evidence into a measurable hypothesis and tests the smallest useful intervention. At Lenskart, that approach shaped a personalised home-trial journey that generated ₹1.8Cr in annualised revenue.';
 const motivationQuestion = /\bmotivat\w*\b|\bwhat drives (prerna|her)\b|\bwhy (product|pm)\b|\bwhy (does|did).{0,24}\b(product|pm)\b/i;
@@ -2596,6 +2598,12 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     answer: approvedKnowledge.promptInjection || outOfScopeAnswer,
     citations: []
   };
+  if (employmentSeparationQuestion.test(question)) return {
+    answer: approvedKnowledge.employmentSeparation,
+    citations: [],
+    action: unsupportedContactAction,
+    policyOnly: true
+  };
   if (personalStatusQuestion.test(question)) return {
     answer: personalStatusAnswer,
     citations: []
@@ -2743,8 +2751,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   };
   if (leadershipQuestion.test(question)) return {
     answer: leadershipAnswer,
-    citations: ['Portfolio overview', 'Lenskart@Home case study'],
-    action: { label: 'Read the O2O case study', href: '#case-2' }
+    citations: ['Portfolio overview']
   };
   if (problemSolvingQuestion.test(question)) return {
     answer: problemSolvingAnswer,
@@ -2838,6 +2845,57 @@ async function generateWithGemini(payload, runtimeOptions = {}) {
   }
 }
 
+let qwenWorker;
+let qwenRequestId = 0;
+const qwenRequests = new Map();
+
+function getQwenWorker(runtimeOptions = {}) {
+  if (runtimeOptions.disableWebGPU || !('gpu' in navigator) || !window.Worker) return null;
+  if (qwenWorker) return qwenWorker;
+  qwenWorker = new Worker('assets/qwen-worker.js?v=2026-10-11.5', { type: 'module' });
+  qwenWorker.addEventListener('message', event => {
+    if (event.data?.type === 'progress') return;
+    const request = qwenRequests.get(event.data?.id);
+    if (!request) return;
+    window.clearTimeout(request.timeout);
+    qwenRequests.delete(event.data.id);
+    if (event.data.type === 'result') request.resolve(event.data);
+    else request.reject(new Error(event.data.message || 'Qwen generation failed.'));
+  });
+  qwenWorker.addEventListener('error', error => {
+    qwenRequests.forEach(request => {
+      window.clearTimeout(request.timeout);
+      request.reject(error);
+    });
+    qwenRequests.clear();
+    qwenWorker.terminate();
+    qwenWorker = null;
+  });
+  return qwenWorker;
+}
+
+function generateWithQwen(payload, runtimeOptions = {}) {
+  if (runtimeOptions.mockGeneratedAnswer) return Promise.resolve({
+    answer: runtimeOptions.mockGeneratedAnswer,
+    model: RAG_CONFIG.comparisonModel,
+    cacheHit: true,
+    inputTokens: estimateTokenCount(JSON.stringify(payload)),
+    outputTokens: estimateTokenCount(runtimeOptions.mockGeneratedAnswer)
+  });
+  if (runtimeOptions.forceGenerationFailure) return Promise.reject(new Error('Forced generation failure for resilience testing.'));
+  const worker = getQwenWorker(runtimeOptions);
+  if (!worker) return Promise.reject(new Error('Qwen comparison requires a browser with WebGPU support.'));
+  const id = `qwen-${++qwenRequestId}`;
+  return new Promise((resolve, reject) => {
+    const timeout = window.setTimeout(() => {
+      qwenRequests.delete(id);
+      reject(new Error('Qwen comparison timed out while loading or generating.'));
+    }, 180000);
+    qwenRequests.set(id, { resolve, reject, timeout });
+    worker.postMessage({ id, ...payload });
+  });
+}
+
 const groundingStopWords = new Set(['about','after','also','and','are','because','been','being','but','can','does','for','from','had','has','have','her','into','its','more','only','over','prerna','she','that','the','their','this','through','to','was','were','which','with']);
 
 function groundingTerms(value) {
@@ -2906,26 +2964,35 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
   const relevant = matches.filter(isRelevantRetrievalMatch).slice(0, 2);
   const retrievedContext = relevant.map(item => `${item.source}: ${item.text}`).join('\n');
   const groundingText = `${result.answer}\n${retrievedContext}`;
+  const generationProvider = runtimeOptions.generationProvider === 'qwen' ? 'qwen' : 'gemini';
   try {
-    const generation = await generateWithGemini({
-      question: normalizeQuestion(question),
-      approvedAnswer: result.answer,
-      sources: [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])]
-    }, runtimeOptions);
+    const sources = [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])];
+    const generation = generationProvider === 'qwen'
+      ? await generateWithQwen({
+        question: normalizeQuestion(question),
+        approvedAnswer: result.answer,
+        retrievedContext,
+        requiredFacts: result.requiredFacts || []
+      }, runtimeOptions)
+      : await generateWithGemini({
+        question: normalizeQuestion(question),
+        approvedAnswer: result.answer,
+        sources
+      }, runtimeOptions);
     const validated = await validateGeneratedAnswer(generation.answer, groundingText, result.requiredFacts || [], runtimeOptions);
     return {
       answer: validated || result.answer,
       retrievedSources: [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])],
       retrievalScores: relevant.map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
-      answerMode: validated ? 'gemini' : 'curated_fallback',
+      answerMode: validated ? generationProvider : 'curated_fallback',
       fallback: !validated,
       fallbackReason: validated ? '' : 'output_validation_failed',
       error: '',
       retrievalCacheHit,
-      generationCacheHit: false,
-      generationInputTokens: Number(generation.inputTokens || 0),
-      generationOutputTokens: Number(generation.outputTokens || 0),
-      generationModel: generation.model || RAG_CONFIG.generationModel
+      generationCacheHit: Boolean(generation.cacheHit),
+      generationInputTokens: Number(generation.inputTokens || estimateTokenCount(JSON.stringify({ question, result, retrievedContext }))),
+      generationOutputTokens: Number(generation.outputTokens || estimateTokenCount(generation.answer)),
+      generationModel: generation.model || (generationProvider === 'qwen' ? RAG_CONFIG.comparisonModel : RAG_CONFIG.generationModel)
     };
   } catch (error) {
     return {
@@ -3052,9 +3119,7 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
       citations: routed.citations || [],
       ...resolved,
       retrievalModel: RAG_CONFIG.retrievalModel,
-      generationModel: resolved.answerMode === 'gemini'
-        ? (resolved.generationModel || RAG_CONFIG.generationModel)
-        : '',
+      generationModel: ['gemini', 'qwen'].includes(resolved.answerMode) ? resolved.generationModel : '',
       inputTokens,
       outputTokens,
       estimatedCostUsd,

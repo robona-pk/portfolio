@@ -1,17 +1,19 @@
 # Ask Prerna evaluation and telemetry guide
 
-This document explains what the chatbot records, how to review the 110-question evaluation set, and how to build the PostHog views needed to improve the product and detect likely abuse.
+This document explains what the chatbot records, how to review the 113-question evaluation set, and how to build the PostHog views needed to improve the product and detect likely abuse.
 
 ## Evaluation workflow
 
 Open `/eval.html` on the preproduction deployment.
 
-1. Run one question while debugging a specific route, or select **Run all 110** for a complete pass.
+1. Run one question while debugging a specific route, or select **Run all 113** for a complete pass.
 2. Open each result and compare the answer with the expected facts, response type, and sources.
 3. Mark the result **Correct** or **Incorrect**.
 4. Give it a helpfulness score from 1 to 5.
 5. Record why the answer is correct or incorrect. You can type in the Reason field or select the coral microphone icon, speak naturally, and select it again to stop.
 6. Export the review as JSON when you want to share or archive it.
+
+Use **Compare models** on an individual open-ended case to run Gemini Flash-Lite and Qwen 2.5 against the same retrieved evidence. Compare factual completeness, tone, concision, fallback behaviour, and latency. Qwen runs locally through WebGPU and may take several minutes on its first run; if WebGPU is unavailable, the console records that limitation instead of changing the live bot.
 
 Answers and manual reviews are stored in the current browser with `localStorage`. They are not uploaded automatically. Exporting produces a dated JSON file containing the dataset, answers, telemetry, verdicts, helpfulness ratings, and reviewer reasons.
 
@@ -31,9 +33,9 @@ The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 
 | Setting | Value | Purpose |
 | --- | ---: | --- |
-| Direct semantic answer threshold | `0.38` | Minimum cosine score for a retrieved portfolio answer |
-| Generation context threshold | `0.30` | Minimum cosine score for a passage supplied to Gemini |
-| Lexical minimum score | `1` | Minimum keyword match when semantic retrieval is unavailable |
+| Semantic relevance threshold | `0.24` | Minimum cosine score after hybrid reranking |
+| Meaningful-term coverage | `0.50` | At least half of the non-generic question topics must appear in the evidence |
+| Minimum topic matches | `1` | Rejects passages that are only close because of generic words such as “Prerna”, “work”, or “product” |
 | Unsupported fallback | `I don’t have that information right now. You can reach out to Prerna to ask her directly.` | Returned with a contact CTA when approved context is insufficient |
 
 Gemini is limited to 120 output tokens and a 10-second browser response budget. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected or slow response falls back to the approved answer.

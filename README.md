@@ -115,7 +115,7 @@ flowchart TD
 - ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
 - ⚡ **Latency controls:** deterministic questions avoid AI generation; repeated clicks are blocked; semantic safety has an 8-second ceiling and Gemini has a 10-second ceiling before an approved fallback is shown.
-- 🧪 **Golden evaluation dataset:** 110 fixed test cases define the expected facts, sources, response type, and safety behaviour.
+- 🧪 **Golden evaluation dataset:** 113 fixed test cases define the expected facts, sources, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
 - 🚀 **Hosting:** GitHub + Vercel. The Gemini key is stored as a server-side Vercel environment variable.
 
@@ -153,7 +153,7 @@ These controls reduce risk but are not foolproof. The client-side knowledge base
 
 ## Golden evaluation dataset and eval console
 
-The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 110 cases are the benchmark used to test the **whole RAG system**—routing, retrieval, policy responses, Gemini output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
+The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 113 cases are the benchmark used to test the **whole RAG system**—routing, retrieval, policy responses, Gemini output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
 
 Each golden case contains:
 
@@ -165,9 +165,11 @@ Each golden case contains:
 
 The [**eval console**](eval.html) runs these cases through the real chatbot and brings the expected and actual results together for review.
 
+For an open-ended case, **Compare models** runs the same question, retrieval, approved evidence, validation rules, and length limit through Gemini Flash-Lite and browser-hosted Qwen 2.5. The side-by-side output isolates generator quality from retrieval or routing quality and shows each model's latency, answer mode, and fallback status. Qwen is evaluation-only; it is not used by the visitor-facing bot.
+
 ```mermaid
 flowchart LR
-    A["🏆 Golden dataset<br/>110 test cases"] --> B["▶️ Run through the live bot"]
+    A["🏆 Golden dataset<br/>113 test cases"] --> B["▶️ Run through the live bot"]
     B --> C["📋 Compare with<br/>expected facts and sources"]
     C --> D["👤 Human-as-judge review"]
     D --> E{"Correct and helpful?"}
@@ -200,6 +202,7 @@ flowchart LR
 ### What the reviewer can do
 
 - Run all cases or rerun only those marked incorrect.
+- Compare Gemini Flash-Lite and Qwen 2.5 side by side on an individual case.
 - Compare the answer with expected facts, sources and guardrail behaviour.
 - Mark it **Correct** or **Incorrect** and give a 1–5 helpfulness score.
 - Speak feedback through voice dictation or type a reason.
@@ -260,6 +263,7 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 | **8. Product analytics** | Technical latency and answer logs | Bot quality alone did not show whether the portfolio created recruiter interest | Added PostHog portfolio funnels, structured feedback and resume, case-study and contact conversions |
 | **9. Latency fast path** | Every question waited for the semantic security model; opening chat preloaded the embedding index | Even fixed answers could take seconds, and the Skills nudge appeared unresponsive | Routed approved intents before model loading, made MiniLM lazy, blocked duplicate requests, added visible progress, and capped the Qwen wait at 12 seconds |
 | **10. Hosted generation** | Qwen generated answers inside each visitor's browser | The first generative answer depended on a large model download, WebGPU support, and device performance | Replaced Qwen generation with Gemini Flash-Lite behind a protected Vercel endpoint; MiniLM retrieval, approved facts, output validation, and fail-closed fallbacks remain unchanged |
+| **11. Evidence-gated retrieval and model comparison** | Semantic similarity alone could accept the closest irrelevant passage, while generator comparisons were subjective | Added meaningful-topic coverage as a second retrieval gate and a Qwen-versus-Gemini comparison inside the eval console |
 
 ## Cost and trade-offs
 

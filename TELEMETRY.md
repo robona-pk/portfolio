@@ -36,11 +36,11 @@ The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 | Lexical minimum score | `1` | Minimum keyword match when semantic retrieval is unavailable |
 | Unsupported fallback | `I don’t have that information available.` | Returned when approved context is insufficient |
 
-Qwen is limited to 72 new tokens. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected response falls back to the approved answer.
+Qwen is limited to 72 new tokens and a 12-second response budget. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected or slow response falls back to the approved answer.
 
-Before retrieval, input is canonicalised to expose zero-width characters, selected Unicode homoglyphs, Base64-encoded instructions, and common leetspeak. Literal rules and a MiniLM similarity classifier screen direct and indirect prompt injection. If semantic security classification cannot load, open-ended requests fail closed rather than continuing to generation. These are layered risk controls, not a proof that every novel attack will be caught.
+Before retrieval, input is canonicalised to expose zero-width characters, selected Unicode homoglyphs, Base64-encoded instructions, and common leetspeak. Literal rules screen every request. Questions that match a deterministic approved answer or policy boundary return that fixed response without loading an AI model; because visitor text is never supplied to generation on this path, it cannot alter the answer. Unmatched open-ended questions also pass through the MiniLM injection classifier before retrieval or generation. If semantic security classification cannot load, those open-ended requests fail closed. These are layered risk controls, not a proof that every novel attack will be caught.
 
-The embedding index and Qwen begin warming when the chat opens. Known questions answer immediately while that happens. Open-ended questions may still experience the initial model download; later answers in the same browser benefit from the model cache.
+MiniLM and Qwen load only when an open-ended request needs them. This keeps approved recruiter questions and policy responses fast and avoids spending a visitor's bandwidth merely because the chat was opened. An open-ended first request can still experience model-download latency; the response budget prevents it from appearing frozen, and later answers in the same browser benefit from the model cache.
 
 ## Live request event
 
@@ -68,7 +68,7 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `retrieval_cache_hit` | Whether the semantic retrieval model and vectors were already warm |
 | `generation_cache_hit` | Whether Qwen was already loaded in the current tab |
 | `rules_version` | Version of the policy and threshold configuration |
-| `security_mode` | `rule`, `semantic`, `semantic_clear`, `semantic_uncertain`, `semantic_unavailable`, `input_guard`, or `request_error` |
+| `security_mode` | `fast_policy`, `rule`, `semantic`, `semantic_clear`, `semantic_uncertain`, `semantic_unavailable`, `semantic_timeout`, `input_guard`, or `request_error` |
 | `security_score` | Similarity score produced by the semantic injection classifier when available |
 
 ### `portfolio_assistant_rate_limited`

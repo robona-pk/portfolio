@@ -414,7 +414,7 @@ background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:te
 .rag-message.loading{color:var(--t3);font-style:italic}.rag-message.error{border-left-color:#F87171}
 .rag-action{display:inline-flex;align-items:center;margin-top:.7rem;border:1px solid rgba(91,140,255,.5);color:#AFC7FF;font-size:.72rem;font-weight:700;padding:.42rem .62rem;background:rgba(43,108,255,.1);text-decoration:none;transition:background .18s,border-color .18s,color .18s,transform .18s}.rag-action:hover,.rag-action:focus-visible{border-color:#AFC7FF;background:rgba(43,108,255,.2);color:#fff;outline:none}.rag-action:active{transform:translateY(1px)}
 .rag-prompts{display:flex;flex-wrap:wrap;gap:.45rem;padding:.75rem 1.15rem;border-top:1px solid var(--border)}
-.rag-prompt{appearance:none;background:transparent;border:1px solid var(--bhi);color:var(--t2);font-family:var(--fb);font-size:.72rem;padding:.42rem .6rem;cursor:pointer;transition:border-color .2s,color .2s}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:#5B8CFF;color:var(--t1);outline:none}
+.rag-prompt{appearance:none;background:transparent;border:1px solid var(--bhi);color:var(--t2);font-family:var(--fb);font-size:.72rem;padding:.42rem .6rem;cursor:pointer;transition:border-color .2s,color .2s}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:#5B8CFF;color:var(--t1);outline:none}.rag-prompt:disabled{cursor:wait;opacity:.5}
 .rag-form{display:flex;gap:.55rem;padding:1rem 1.15rem;border-top:1px solid var(--border)}.rag-input{min-width:0;flex:1;background:var(--bg);border:1px solid var(--bhi);border-radius:2px;color:var(--t1);font:inherit;font-size:.85rem;padding:.72rem .8rem;outline:none}.rag-input:focus{border-color:#5B8CFF}.rag-input::placeholder{color:var(--t3)}.rag-send{flex:0 0 auto;border:0;border-radius:2px;background:#2B6CFF;color:#fff;font:700 .78rem var(--fb);padding:.72rem .95rem;cursor:pointer;transition:transform .15s,opacity .15s}.rag-send:hover{opacity:.9}.rag-send:active{transform:translateY(1px)}.rag-send:disabled{opacity:.55;cursor:wait}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
@@ -2189,7 +2189,7 @@ const portfolioKnowledge = [
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-10.8',
+  rulesVersion: '2026-10-11.1',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   directAnswerThreshold: 0.38,
@@ -2197,6 +2197,8 @@ const RAG_CONFIG = Object.freeze({
   lexicalMinimumScore: 1,
   maximumQuestionCharacters: 500,
   maximumGeneratedAnswerCharacters: 300,
+  maximumSecurityWaitMs: 8000,
+  maximumGenerationWaitMs: 12000,
   maximumRequestsPerMinute: 10,
   fallbackAnswer: 'I don’t have that information available.',
   estimatedInputCostPerMillionTokensUsd: 0,
@@ -2209,7 +2211,7 @@ const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|s
 const insultAnswer = 'Let’s keep the conversation respectful and focused on Prerna’s work. I can help with her experience, product approach, projects, skills, or outcomes.';
 const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood at (her )?job\b/i;
 const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
-const skillsetQuestion = /\b(is (prerna|she) skilled|skillset|skills? (does|do).{0,18}\bhave|what are.{0,18}\bskills?|her skills|areas? of expertise|product skills?|pm capabilities|a[ /-]?b testing|go-to-market|gtm)\b/i;
+const skillsetQuestion = /\b(is (prerna|she) skilled|skillset|skills? (does|do).{0,18}\bhave|what (?:product and technical |product |technical )?skills?\b|what are.{0,18}\bskills?|her skills|skills and tools|areas? of expertise|product skills?|pm capabilities|a[ /-]?b testing|go-to-market|gtm)\b/i;
 const toolsQuestion = /\b(analytics|technical|tech|ai)(?:\s+and\s+\w+)?\s+tools?\b|\b(which|what) tools?\b|\b(sql|bigquery|ga4|firebase|python|clevertap|tableau|power bi)\b/i;
 const productManagerStyleQuestion = /\b(how|what).{0,12}\b(prerna|she|her).{0,20}\b(as )?(a )?(product manager|pm)\b|\b(what kind of|what type of).{0,12}\b(product manager|pm)\b|\b(product management|pm).{0,10}\b(style|working style)\b|\bpm\b.{0,12}\b(working style|style)\b|\bwork(ing)? with.{0,16}\b(prerna|her).{0,16}\b(product manager|pm)\b/i;
 const personalityTraitQuestion = /\b(is (prerna|she).{0,18}\b(loud|quiet|introvert|extrovert|arrogant|friendly|kind|intense|serious|funny|likeable)|what (is|are).{0,18}\bpersonality|what is (prerna|she) like|describe (prerna|her).{0,16}\b(person|personality))\b/i;
@@ -2514,23 +2516,6 @@ async function retrievePortfolioContextSemantically(question, runtimeOptions = {
   }
 }
 
-function warmPortfolioModels() {
-  if (!window.createPortfolioEmbedder) return;
-  portfolioEmbedderPromise ||= window.createPortfolioEmbedder();
-  portfolioVectorsPromise ||= portfolioEmbedderPromise.then(embedder => embedder(
-    portfolioKnowledge.map(item => `${item.source}. ${item.text}`),
-    { pooling: 'mean', normalize: true }
-  ));
-  injectionVectorsPromise ||= portfolioEmbedderPromise.then(embedder => embedder(
-    injectionExamples,
-    { pooling: 'mean', normalize: true }
-  ));
-  benignSecurityVectorsPromise ||= portfolioEmbedderPromise.then(embedder => embedder(
-    benignSecurityExamples,
-    { pooling: 'mean', normalize: true }
-  ));
-}
-
 async function localRagAnswer(question, originalQuestion = question, runtimeOptions = {}) {
   const rawQuestion = String(originalQuestion || '').toLowerCase();
   question = normalizeQuestion(question);
@@ -2715,6 +2700,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     answer: hiringAnswer,
     citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study']
   };
+  if (runtimeOptions.deterministicOnly) return null;
   if (!portfolioSubject.test(question) && !portfolioTopic.test(question)) return {
     answer: approvedKnowledge.outOfScope || outOfScopeAnswer,
     citations: []
@@ -2781,7 +2767,7 @@ const qwenRequests = new Map();
 function getQwenWorker(runtimeOptions = {}) {
   if (runtimeOptions.disableWebGPU || !('gpu' in navigator) || !window.Worker) return null;
   if (qwenWorker) return qwenWorker;
-  qwenWorker = new Worker('assets/qwen-worker.js?v=2026-10-10.8', { type: 'module' });
+  qwenWorker = new Worker('assets/qwen-worker.js?v=2026-10-11.1', { type: 'module' });
   qwenWorker.addEventListener('message', event => {
     if (event.data?.type === 'progress') return;
     const request = qwenRequests.get(event.data?.id);
@@ -2813,7 +2799,7 @@ function generateWithQwen(payload, runtimeOptions = {}) {
     const timeout = window.setTimeout(() => {
       qwenRequests.delete(id);
       reject(new Error('Generation timed out.'));
-    }, 300000);
+    }, RAG_CONFIG.maximumGenerationWaitMs);
     qwenRequests.set(id, { resolve, reject, timeout });
     worker.postMessage({ id, ...payload });
   });
@@ -2937,6 +2923,16 @@ function createRequestId() {
   return window.crypto?.randomUUID?.() || `request-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function withTimeLimit(promise, waitMs, fallbackValue) {
+  let timeout;
+  return Promise.race([
+    promise.finally(() => window.clearTimeout(timeout)),
+    new Promise(resolve => {
+      timeout = window.setTimeout(() => resolve(fallbackValue), waitMs);
+    })
+  ]);
+}
+
 async function resolvePortfolioRequest(question, runtimeOptions = {}) {
   const startedAt = performance.now();
   const requestId = createRequestId();
@@ -2973,12 +2969,30 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
     const rawConfidentialCompanyQuestion = /\b(lenskart|lenksart|lenscart|bajaj)\b/.test(rawQuestion)
       && /\b(profit|profitable|profitability|margin|making money|revenue breakdown|internal revenue|ebitda|valuation|unit economics)\b/.test(rawQuestion);
     const normalizedQuestion = rawConfidentialCompanyQuestion ? rawQuestion : normalizeQuestion(question);
-    const security = await classifyPromptInjection(visitorQuestion, runtimeOptions);
+    const canonicalSecurityQuestion = canonicalizeSecurityText(visitorQuestion);
+    const literalInjection = promptInjection.test(canonicalSecurityQuestion);
+    const candidateDeterministicRoute = literalInjection
+      ? null
+      : await localRagAnswer(normalizedQuestion, visitorQuestion, { ...runtimeOptions, deterministicOnly: true });
+    const deterministicRoute = candidateDeterministicRoute?.answer === approvedKnowledge.promptInjection
+      ? null
+      : candidateDeterministicRoute;
+    const security = deterministicRoute
+      ? { blocked: false, uncertain: false, score: 0, mode: 'fast_policy', available: true }
+      : await withTimeLimit(
+        classifyPromptInjection(visitorQuestion, runtimeOptions),
+        RAG_CONFIG.maximumSecurityWaitMs,
+        { blocked: false, uncertain: false, score: 0, mode: 'semantic_timeout', available: false }
+      );
     let routed;
     if (security.blocked || security.uncertain) {
       routed = { answer: approvedKnowledge.promptInjection || outOfScopeAnswer, citations: [], policyOnly: true };
+    } else if (security.available === false && !deterministicRoute) {
+      routed = { answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer, citations: [], policyOnly: true };
     } else if (rawConfidentialCompanyQuestion || (companyQuestion.test(normalizedQuestion) && confidentialMetricQuestion.test(normalizedQuestion))) {
       routed = { answer: approvedKnowledge.confidentialData, citations: [], policyOnly: true };
+    } else if (deterministicRoute) {
+      routed = deterministicRoute;
     } else {
       routed = await localRagAnswer(normalizedQuestion, visitorQuestion, runtimeOptions);
     }
@@ -3168,7 +3182,7 @@ async function askPortfolioAssistant(question) {
   const input = document.getElementById('ragInput');
   const button = document.getElementById('ragSend');
   const mode = document.getElementById('ragMode');
-  if (!question) return;
+  if (!question || assistantRequestInFlight) return;
   appendRagMessage('user', question);
   input.value = '';
   const now = Date.now();
@@ -3184,22 +3198,32 @@ async function askPortfolioAssistant(question) {
     return;
   }
   recentAssistantRequests.push(now);
+  assistantRequestInFlight = true;
   button.disabled = true;
+  document.querySelectorAll('.rag-prompt').forEach(prompt => { prompt.disabled = true; });
+  const loadingMessage = appendRagMessage('bot', 'Thinking…');
+  document.getElementById('ragMessages')?.setAttribute('aria-busy', 'true');
   try {
     mode.textContent = 'Preparing answer...';
     const result = await resolvePortfolioRequest(question);
     mode.textContent = 'Portfolio assistant';
     lastAssistantRequestId = result.requestId;
     captureAssistantTelemetry(result);
+    loadingMessage?.remove();
     appendRagMessage('bot', result.answer, result.citations, result.action, result.requestId);
   } finally {
+    loadingMessage?.remove();
+    assistantRequestInFlight = false;
     button.disabled = false;
+    document.querySelectorAll('.rag-prompt').forEach(prompt => { prompt.disabled = false; });
+    document.getElementById('ragMessages')?.setAttribute('aria-busy', 'false');
     input.focus();
   }
 }
 
 const portfolioEvalMode = new URLSearchParams(window.location.search).has('eval');
 let recentAssistantRequests = [];
+let assistantRequestInFlight = false;
 window.runPortfolioEval = (question, runtimeOptions = {}) => resolvePortfolioRequest(question, portfolioEvalMode ? runtimeOptions : {});
 
 const ragForm = document.getElementById('ragForm');
@@ -3221,7 +3245,6 @@ function openRagModal() {
   ragModal.setAttribute('aria-hidden', 'false');
   if (ragLauncher) ragLauncher.classList.add('active');
   if (window.posthog) posthog.capture('portfolio_assistant_opened');
-  warmPortfolioModels();
   requestAnimationFrame(() => document.getElementById('ragInput').focus());
 }
 function closeRagModal(restoreFocus = true) {

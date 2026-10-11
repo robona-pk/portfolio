@@ -53,14 +53,14 @@ The diagram is designed to be read from top to bottom. Each colour represents a 
 ```mermaid
 flowchart TD
     A["👤 Visitor asks a question"] --> B["🧹 Clean spelling and hidden characters"]
-    B --> C{"🛡️ Safe question?"}
+    B --> C{"🧭 Approved intent<br/>or policy case?"}
 
-    C -- "No / uncertain" --> D["📜 Policy response<br/>Decline safely"]
-    C -- "Yes" --> E{"🧭 What kind of question is it?"}
+    C -- "Known fact or<br/>recruiter question" --> G["✅ Approved answer bank<br/>Instant fast path"]
+    C -- "Private, insulting,<br/>confidential or unrelated" --> F["📜 Policy answer bank<br/>Respectful boundary"]
+    C -- "Not matched" --> E{"🛡️ Semantic injection check"}
 
-    E -- "Private, insulting,<br/>confidential or unrelated" --> F["📜 Policy answer bank<br/>Respectful boundary"]
-    E -- "Known fact or<br/>common recruiter question" --> G["✅ Approved answer bank<br/>Fast, fixed answer"]
-    E -- "Open-ended but<br/>about Prerna" --> H["🔎 MiniLM retrieval<br/>Find relevant approved facts"]
+    E -- "Attack or uncertain" --> D["📜 Policy response<br/>Decline safely"]
+    E -- "Safe and about Prerna" --> H["🔎 MiniLM retrieval<br/>Find relevant approved facts"]
     E -- "No reliable information" --> I["🤷 Safe fallback<br/>I don't have that information"]
 
     H --> J["📚 Selected portfolio evidence"]
@@ -113,6 +113,7 @@ flowchart TD
 - 🤖 **Generation:** Qwen2.5-0.5B-Instruct writes short responses for supported, open-ended questions.
 - ⚙️ **AI runtime:** Transformers.js + WebGPU run MiniLM and Qwen inside the browser.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
+- ⚡ **Latency controls:** deterministic questions avoid model loading; repeated clicks are blocked; semantic safety has an 8-second ceiling and Qwen has a 12-second ceiling before an approved fallback is shown.
 - 🧪 **Golden evaluation dataset:** 106 fixed test cases define the expected facts, sources, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
 - 🚀 **Hosting:** GitHub + Vercel. No database or paid model API is required.
@@ -254,11 +255,12 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 | **6. Evaluation system** | Manual spot checks | Improvements could fix one answer while breaking another | Built the golden dataset and eval console with human-as-judge review, incorrect-only reruns, voice feedback and JSON export |
 | **7. Production hardening** | Basic keyword guardrails | Obfuscated injections, invented claims and component failures needed stronger handling | Added semantic injection detection, Unicode checks, grounding validation, fail-closed fallbacks and throttling |
 | **8. Product analytics** | Technical latency and answer logs | Bot quality alone did not show whether the portfolio created recruiter interest | Added PostHog portfolio funnels, structured feedback and resume, case-study and contact conversions |
+| **9. Latency fast path** | Every question waited for the semantic security model; opening chat preloaded the embedding index | Even fixed answers could take seconds, and the Skills nudge appeared unresponsive | Routed approved intents before model loading, made MiniLM lazy, blocked duplicate requests, added visible progress, and capped the Qwen wait at 12 seconds |
 
 ## Cost and trade-offs
 
 - **Model cost per question:** ₹0—the open-source models run locally in the browser.
-- **Fast path:** approved answers return without waiting for Qwen.
+- **Fast path:** approved answers return without waiting for MiniLM or Qwen.
 - **Trade-off:** the first generative answer may be slower because the browser must download and initialise Qwen.
 - **Compatibility:** if WebGPU is unavailable, the bot returns the approved retrieved answer.
 

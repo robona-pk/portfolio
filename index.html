@@ -897,11 +897,12 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .rag-chat{width:min(420px,calc(100vw - 2.7rem));border-color:rgba(240,160,32,.42);border-radius:28px;background:#171510;box-shadow:0 24px 65px rgba(0,0,0,.58),0 0 0 1px rgba(255,220,151,.05)}
 .rag-chat-head{background:linear-gradient(120deg,rgba(240,160,32,.2),rgba(240,160,32,.035));border-bottom-color:rgba(255,220,151,.1)}.rag-live-dot{background:#E5A534;box-shadow:0 0 0 4px rgba(240,160,32,.14)}.rag-close{background:rgba(255,255,255,.07);border-radius:50%}.rag-close:hover{background:rgba(240,160,32,.18);color:var(--t1)}
 .rag-message.bot{background:#201c14;border-color:rgba(255,220,151,.09);border-bottom-left-radius:6px}.rag-message.user{background:rgba(240,160,32,.12);border-color:rgba(240,160,32,.3);border-bottom-right-radius:6px}.rag-action{border-color:rgba(240,160,32,.42);color:#FFD88A;background:rgba(240,160,32,.08)}.rag-action:hover,.rag-action:focus-visible{border-color:#F3C45D;background:rgba(240,160,32,.16);color:#FFE7B5}
+.rag-build-note{display:flex;align-items:center;gap:.65rem;max-width:92%;padding:.1rem .1rem .1rem .2rem;color:#A9A397;font-size:.71rem;line-height:1.45}.rag-build-icon{display:grid;place-items:center;flex:0 0 auto;width:1.2rem;height:1.2rem;border:1px solid rgba(255,216,138,.34);border-radius:50%;color:#FFD88A;font:700 .68rem var(--fd)}.rag-build-copy{min-width:0}.rag-build-link{color:#FFD88A;font-weight:700;text-decoration:none;white-space:nowrap}.rag-build-link:hover,.rag-build-link:focus-visible{color:#FFF0CB;text-decoration:underline;text-underline-offset:3px;outline:none}.rag-build-note.is-leaving{opacity:0;transform:translateY(-4px);transition:opacity .16s ease,transform .16s ease}
 .rag-feedback{display:flex;align-items:center;gap:.4rem;margin-top:.65rem;padding-top:.55rem;border-top:1px solid rgba(255,220,151,.09)}.rag-feedback-label{font-size:.68rem;color:var(--t3);margin-right:.15rem}.rag-feedback button{appearance:none;border:1px solid rgba(255,220,151,.18);background:transparent;color:var(--t2);font:600 .66rem var(--fb);padding:.28rem .45rem;border-radius:7px;cursor:pointer}.rag-feedback button:hover,.rag-feedback button:focus-visible{border-color:#E5A534;color:#FFE2A4;outline:none}.rag-feedback button[aria-pressed="true"]{background:rgba(240,160,32,.15);border-color:#E5A534;color:#FFE2A4}.rag-feedback-saved{font-size:.66rem;color:#FFD88A}
 .rag-feedback{flex-wrap:wrap}.rag-feedback button:disabled{cursor:default;opacity:.62}.rag-feedback button[aria-pressed="true"]:disabled{opacity:1}.rag-feedback-reasons{display:none;flex:0 0 100%;gap:.35rem;flex-wrap:wrap;padding-top:.2rem}.rag-feedback-reasons.open{display:flex}.rag-feedback-reasons .rag-feedback-prompt{flex:0 0 100%;font-size:.66rem;color:var(--t3);margin:0 0 .05rem}.rag-feedback-reasons button{font-weight:500;padding:.3rem .5rem}
 .rag-prompts{border-top-color:rgba(255,220,151,.1)}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:#E5A534;color:#FFE2A4}.rag-input{background:#11100d;border-color:rgba(255,220,151,.15);border-radius:14px}.rag-input:focus{border-color:#E5A534}.rag-send{background:#D89524;color:#171108;border-radius:14px}.rag-send:hover{background:#F3C45D;color:#171108}
 @media(max-width:640px){.rag-launcher{right:.55rem;bottom:.65rem}.rag-launch{width:94px;height:98px}.rag-nudge{display:none!important}.rag-modal{right:.55rem;bottom:102px;padding:0;align-items:flex-end}.rag-chat{width:calc(100vw - 1.1rem);border-radius:22px}.rag-launch{animation-duration:5.5s}}
-@media(prefers-reduced-motion:reduce){.rag-launch{animation:none}.rag-launch img{transition:none}}
+@media(prefers-reduced-motion:reduce){.rag-launch{animation:none}.rag-launch img,.rag-build-note.is-leaving{transition:none}}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -1651,6 +1652,10 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
         </div>
         <div class="rag-messages" id="ragMessages" aria-live="polite">
           <div class="rag-message bot">Hi, I can answer questions about Prerna's experience, growth work, case studies, and builder projects.</div>
+          <div class="rag-build-note" id="ragBuildNote">
+            <span class="rag-build-icon" aria-hidden="true">i</span>
+            <span class="rag-build-copy">Built with an approved knowledge base, semantic retrieval, and browser-based Qwen. <a class="rag-build-link" id="ragBuildLink" href="https://github.com/robona-pk/portfolio#ask-prerna--portfolio-chatbot" target="_blank" rel="noopener">How it works ↗</a></span>
+          </div>
         </div>
         <div class="rag-prompts" aria-label="Suggested questions">
           <button class="rag-prompt" type="button" data-question="What can I ask her?">What can I ask her?</button>
@@ -3198,6 +3203,11 @@ async function askPortfolioAssistant(question) {
   const button = document.getElementById('ragSend');
   const mode = document.getElementById('ragMode');
   if (!question || assistantRequestInFlight) return;
+  const buildNote = document.getElementById('ragBuildNote');
+  if (buildNote) {
+    buildNote.classList.add('is-leaving');
+    window.setTimeout(() => buildNote.remove(), 170);
+  }
   appendRagMessage('user', question);
   input.value = '';
   const now = Date.now();
@@ -3242,6 +3252,13 @@ let assistantRequestInFlight = false;
 window.runPortfolioEval = (question, runtimeOptions = {}) => resolvePortfolioRequest(question, portfolioEvalMode ? runtimeOptions : {});
 
 const ragForm = document.getElementById('ragForm');
+const ragBuildLink = document.getElementById('ragBuildLink');
+if (ragBuildLink) ragBuildLink.addEventListener('click', () => {
+  if (window.posthog) posthog.capture('portfolio_assistant_architecture_opened', {
+    placement: 'empty_state',
+    $process_person_profile: false
+  });
+});
 if (ragForm) ragForm.addEventListener('submit', event => {
   event.preventDefault();
   askPortfolioAssistant(document.getElementById('ragInput').value.trim());

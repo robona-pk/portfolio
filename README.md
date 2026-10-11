@@ -37,125 +37,172 @@ This repository includes detailed case studies, product experiments, and technic
 **Prerna Kapoor**  
 Growth & Adoption Product Manager | Activation • Conversion • Retention • AI/Product
 
-## Portfolio retrieval assistant
+## Ask Prerna — portfolio chatbot
 
-> **Preproduction architecture:** this branch implements a hybrid retrieval assistant. High-confidence recruiter questions, published metrics, and safety boundaries use approved deterministic answers. Open-ended portfolio questions retrieve approved context and can use the open-source Qwen2.5-0.5B-Instruct model in the browser to compose a response.
+**Ask Prerna** helps visitors explore my experience, skills, projects, outcomes, and product philosophy without searching through the full portfolio.
 
-### What it is and why it matters
+- Recruiters get quick, evidence-based answers.
+- The bot stays within information I have approved.
+- Open-ended questions can use an open-source AI model, **Qwen 2.5**.
+- It runs in the visitor's browser, so there is no paid AI API call per question.
 
-**Ask Prerna** is a floating portfolio assistant that turns a static portfolio into a guided conversation. For a hiring manager, it surfaces role fit, impact, skills, and interview-relevant context quickly. For a product and engineering reviewer, it demonstrates scoped knowledge, graceful boundaries, explainable retrieval, and an intentionally low-cost architecture.
+## How one question becomes an answer
 
-### One flow, from visitor to answer
+The diagram is designed to be read from top to bottom. Each colour represents a different decision path.
 
-```text
-👤 Visitor question
-        ↓
-🛡️ Input + injection checks (rules, Unicode cleanup, semantic classifier)
-   ├─ unsafe / uncertain request → ✨ controlled response
-   ├─ privacy / confidentiality rule → ✨ controlled response
-   ├─ known recruiter / evidence question → ✅ approved concise answer
-   └─ open-ended supported question → 🧠 MiniLM semantic retrieval
-                                           ↓
-                                 📚 approved facts and passages
-                                           ↓
-                             🤖 Qwen2.5-0.5B-Instruct via WebGPU
-                                           ↓
-                              ✅ output validation and safe fallback
-                                           ↓
-                                 💬 grounded chat response
+```mermaid
+flowchart TD
+    A["👤 Visitor asks a question"] --> B["🧹 Clean spelling and hidden characters"]
+    B --> C{"🛡️ Safe question?"}
+
+    C -- "No / uncertain" --> D["📜 Policy response<br/>Decline safely"]
+    C -- "Yes" --> E{"🧭 What kind of question is it?"}
+
+    E -- "Private, insulting,<br/>confidential or unrelated" --> F["📜 Policy answer bank<br/>Respectful boundary"]
+    E -- "Known fact or<br/>common recruiter question" --> G["✅ Approved answer bank<br/>Fast, fixed answer"]
+    E -- "Open-ended but<br/>about Prerna" --> H["🔎 MiniLM retrieval<br/>Find relevant approved facts"]
+    E -- "No reliable information" --> I["🤷 Safe fallback<br/>I don't have that information"]
+
+    H --> J["📚 Selected portfolio evidence"]
+    J --> K["🤖 Qwen 2.5<br/>Writes a short answer"]
+    K --> L{"🔍 Is every claim supported?"}
+    L -- "Yes" --> M["💬 Show Qwen's answer"]
+    L -- "No / model unavailable" --> N["↩️ Show approved retrieved answer"]
+
+    D --> O["📊 Record anonymous quality data"]
+    F --> O
+    G --> O
+    I --> O
+    M --> O
+    N --> O
+
+    classDef visitor fill:#fff3cf,stroke:#9a6500,color:#2a2115;
+    classDef decision fill:#f1e8ff,stroke:#6941a5,color:#251b35;
+    classDef policy fill:#ffe8df,stroke:#a84a28,color:#351b13;
+    classDef retrieval fill:#e2f4ef,stroke:#277766,color:#12342d;
+    classDef ai fill:#e7efff,stroke:#3f64a8,color:#172743;
+    classDef output fill:#edf6dd,stroke:#5d7f25,color:#263611;
+
+    class A,B visitor;
+    class C,E,L decision;
+    class D,F,I policy;
+    class H,J retrieval;
+    class K,M ai;
+    class G,N,O output;
 ```
 
-### Stack at a glance
+### Who answers what?
 
-- **Experience:** static HTML, CSS, and vanilla JavaScript; floating accessible chat UI.
-- **Knowledge and policy:** editable JavaScript source at `assets/chatbot-knowledge.js`; it holds approved personal/professional facts and declined-topic rules.
-- **Retrieval:** `Xenova/all-MiniLM-L6-v2`, an open-source, quantized embedding model loaded through Transformers.js and cached by the browser.
-- **Generation:** `onnx-community/Qwen2.5-0.5B-Instruct` in 4-bit format, running in a Web Worker through Transformers.js and WebGPU for open-ended synthesis only.
-- **Warm-up:** opening the chat starts the embedding index and Qwen download/initialisation in the background, so part of the first-answer delay happens while the visitor reads or types.
-- **Ranking:** client-side cosine similarity against the curated portfolio passages.
-- **Validation:** Qwen is limited to 72 new tokens and every generated answer is hard-capped at 300 characters. Sentence-level semantic grounding, exact quantified-claim checks, private-topic checks, proper-noun checks, and prompt-leakage checks reject unsupported output.
-- **Hosting:** GitHub + Vercel preview deployment; no backend model, database, API key, or per-question API charge.
-- **Product safeguards:** privacy boundaries, NSFW declines, graceful responses to insults, general-knowledge redirection, no invented weakness/failure stories, a 500-character input limit, and a best-effort browser throttle of 10 questions per minute.
-
-To edit answers, update `assets/chatbot-knowledge.js` and redeploy. The file is the approved policy layer; `index.html` contains the chat routing and portfolio retrieval passages.
-
-### Architecture
-
-```text
-Visitor question
-      │
-      ▼
-Answer-policy guard ──► graceful redirect / approved recruiter answer / privacy boundary
-      │ (open-ended portfolio question)
-      ▼
-Browser-side policy guard ──► open-source MiniLM embeddings ──► cosine ranking
-      │                                                              │
-      └──────────────────────────────────────────────────────────────┘
-                                     │
-                                     ▼
-                         approved context for Qwen 2.5
-                                     │
-                                     ▼
-                         validated generated response
-```
-
-### Components
-
-| Component | Location | Responsibility |
+| Question type | Example | Answered by |
 | --- | --- | --- |
-| Chat UI and safe fallback | `index.html` | Floating chat window, intent routing, output validation, contact actions, and approved fallback answers. |
-| On-device semantic retrieval | `index.html` | Loads the open-source `Xenova/all-MiniLM-L6-v2` embedding model in the visitor’s browser and ranks the local knowledge bank. |
-| On-device generation | `assets/qwen-worker.js` | Loads 4-bit Qwen2.5-0.5B-Instruct in a Web Worker and generates concise answers from approved context. |
-| Portfolio knowledge | `portfolioKnowledge` in `index.html` | Curated case-study, product-approach, skills, and profile passages used for retrieval and cited answers. |
-| Evaluation dataset | `assets/eval-dataset.js` | 106 profile, work, privacy, abuse, off-topic, typo, resilience, output-validation, and adversarial prompt-injection tests with expected facts and sources. |
-| Evaluation console | `eval.html` | Runs the dataset, shows latency and cache metrics, stores manual verdicts and reasons, and exports JSON. |
-| Telemetry specification | `TELEMETRY.md` | Event dictionary, threshold contract, privacy decisions, and PostHog dashboard recipe. |
-| Retired API endpoint | `api/ask.js` | Returns `410 Gone`; it makes no model calls and requires no API key. |
+| Known portfolio fact | “How much experience does she have?” | ✅ Approved answer bank |
+| Work or recruiter question | “What impact did she drive at Lenskart?” | ✅ Approved answer bank |
+| Open-ended portfolio question | “How does customer research shape her decisions?” | 🔎 Retrieval + 🤖 Qwen |
+| Private or confidential | “What is Lenskart's profit margin?” | 📜 Policy layer |
+| Insult or unsafe request | “Why is she…?” | 📜 Respectful policy response |
+| Unrelated question | “Who is the US president?” | 📜 Scope boundary |
+| Missing evidence | An unpublished personal or work detail | 🤷 Safe fallback |
 
-### Retrieval flow
+> **Important:** Qwen does not decide the facts. It can only rewrite information retrieved from the approved knowledge base. If its answer cannot be verified, the bot uses the approved answer instead.
 
-1. On first relevant question, the browser downloads and caches a quantized open-source MiniLM embedding model.
-2. The browser embeds the question and curated portfolio passages locally.
-3. It calculates cosine similarity and selects the most relevant passages.
-4. Known recruiter and case-study questions return an approved concise answer immediately. For open-ended questions, Qwen 2.5 receives only the question, an approved answer frame, and the retrieved passages.
-5. The client validates each generated sentence against retrieved evidence and falls back to the approved response if generation fails, leaks prompt language, adds an unsupported claim, or cannot be verified.
-6. The UI renders the grounded answer.
+## Tech stack—in plain English
 
-This keeps factual answers stable while still demonstrating generation where synthesis is useful. It also prevents the model from inventing employers, metrics, projects, or personal details.
+- 🖥️ **Interface:** HTML, CSS, and JavaScript create the floating chat window.
+- 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js` and the curated portfolio passages in `index.html`.
+- 🔎 **Retrieval:** MiniLM finds the approved passages closest in meaning to the question.
+- 🤖 **Generation:** Qwen2.5-0.5B-Instruct writes short responses for supported, open-ended questions.
+- ⚙️ **AI runtime:** Transformers.js + WebGPU run MiniLM and Qwen inside the browser.
+- ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
+- 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
+- 🚀 **Hosting:** GitHub + Vercel. No database or paid model API is required.
 
-### Answer policy and edge cases
+<details>
+<summary><strong>🛡️ Safety controls</strong></summary>
 
-Before retrieval, the browser applies a policy layer for common visitor intent:
+- Detects direct and disguised prompt-injection attempts.
+- Handles common spelling errors and selected Unicode or zero-width tricks.
+- Limits questions to 500 characters and generated answers to 300 characters.
+- Falls back safely when retrieval, WebGPU, or Qwen is unavailable.
+- Applies a best-effort browser limit of 10 questions per minute.
+- Keeps private, NSFW, confidential, and unsupported topics out of answers.
 
-- **Supported portfolio facts:** experience, role, location, employers, work, skills, product approach, outcomes, and career intent.
-- **Behavioural questions:** strengths, leadership style, problem-solving, motivation, and hiring fit answer from documented work; weaknesses, failure, conflict, and feedback prompts avoid speculation when no evidence exists.
-- **Personal questions:** salary, family, relationships, private address, and other personal details receive a privacy-respecting boundary.
-- **Insults:** the assistant responds calmly and asks the visitor to keep the question evidence-based.
-- **Out-of-scope questions:** general knowledge, politics, news, weather, jokes, and similar requests are redirected to the portfolio’s purpose.
-- **Prompt injection attempts:** literal rules plus a MiniLM similarity classifier cover direct, obfuscated, Unicode, Base64, multilingual, and mixed valid-question/injection attempts. Uncertain or unavailable security classification fails closed to an approved boundary response.
+These controls reduce risk but are not foolproof. The client-side knowledge base should be treated as publicly visible.
 
-This classifier is a retrieval-based security heuristic, not a formally trained security model, and it is not foolproof. The evaluation suite includes false-positive cases so ordinary recruiter questions remain answerable.
+</details>
 
-### Cost and privacy
+## How I evaluate the AI
 
-The chatbot has no paid-model or per-question API cost. When needed, embeddings and Qwen generation run in the visitor’s browser through Transformers.js and are cached after the initial download. Known questions do not wait for either model. Vercel serves the static site only, and questions are not sent to a hosted inference API.
+The evaluation console at `eval.html` is the quality-control system for the chatbot. It tests the **whole RAG experience**—routing, retrieval, policy responses, Qwen output, fallbacks, safety, and response time.
 
-The tradeoff for generative questions is a large first-use download. The official 4-bit ONNX model file is approximately 786 MB, so this is a preproduction experiment rather than the production default. Generation requires WebGPU; browsers without it receive the approved curated answer instead.
+```mermaid
+flowchart LR
+    A["🧪 106 test questions"] --> B["▶️ Run through the live bot"]
+    B --> C["📋 Compare with<br/>expected facts and sources"]
+    C --> D["👤 Human-as-judge review"]
+    D --> E{"Correct and helpful?"}
+    E -- "No" --> F["🛠️ Fix knowledge,<br/>routing or guardrail"]
+    F --> A
+    E -- "Yes" --> G["✅ Keep as regression test"]
+    G --> H["📊 Monitor real-user results"]
 
-### Evaluation and observability
+    classDef test fill:#fff3cf,stroke:#9a6500,color:#2a2115;
+    classDef review fill:#f1e8ff,stroke:#6941a5,color:#251b35;
+    classDef improve fill:#ffe8df,stroke:#a84a28,color:#351b13;
+    classDef pass fill:#e2f4ef,stroke:#277766,color:#12342d;
 
-Open `/eval.html` on the preview deployment to run the 106-question evaluation dataset. Each case displays expected facts, expected sources, the actual answer, answer mode, latency, security decision, token estimates, fallback state, and errors. Reviews are stored in the current browser and can be exported or imported as JSON. Each Reason field also includes browser voice dictation for faster review.
+    class A,B,C test;
+    class D,E review;
+    class F improve;
+    class G,H pass;
+```
 
-Voice dictation uses the browser's Web Speech API, not Qwen. It requires microphone permission and is available only in supporting browsers. Depending on the browser, speech may be processed by the browser provider. The resulting transcript is stored and exported exactly like typed review text; it is not sent to PostHog by this console.
+### What the 106 cases cover
 
-Evaluation feedback is human review data, not automatic model training. When a review exposes a missing fact, update both the case in `assets/eval-dataset.js` and the approved answer or source material used by the chatbot. Required facts can then be passed to Qwen and validated; if Qwen omits one, the assistant returns the complete approved answer instead.
+- ✅ Profile facts, skills, experience, work and measurable outcomes
+- ✍️ Paraphrases, misspellings and fuzzy matching
+- 🔒 Private, confidential, insulting and unrelated questions
+- 🧨 Direct, disguised, multilingual and Unicode prompt injections
+- 🚫 Invented metrics, fake employers, prompt leakage and unsupported claims
+- 📴 Missing WebGPU, failed model loading and retrieval failures
+- 🎯 False-positive checks so valid recruiter questions are not blocked
 
-Live requests emit anonymous PostHog events with redacted question text, retrieved sources and scores, final answer, fallback state, error, retrieval and generation models, total latency, approximate input and output tokens, zero estimated API cost, and model cache state. Separate events record helpfulness, structured reasons for unhelpful answers, and downstream resume, case-study, and contact clicks. See `TELEMETRY.md` for the full event dictionary and dashboard setup.
+### What the reviewer can do
 
-The current preproduction security review and remaining production gates are documented in `evaluations/PREPROD-SECURITY-AUDIT-2026-10-10.md`.
+- Run all cases or rerun only those marked incorrect.
+- Compare the answer with expected facts, sources and guardrail behaviour.
+- Mark it **Correct** or **Incorrect** and give a 1–5 helpfulness score.
+- Speak feedback through voice dictation or type a reason.
+- Export or import the review as JSON for the next iteration.
 
-### Vercel preproduction
+### Product metrics I monitor
 
-The current chatbot preproduction deployment is the Vercel preview connected to `codex/portfolio-rag-preprod`. It is intentionally separate from the existing user-owned `preprod` branch, so chatbot work can be reviewed without overwriting unrelated preproduction changes. No production promotion is performed by this repository workflow.
+| Quality | Performance | Business value |
+| --- | --- | --- |
+| Correctness and helpfulness | P50/P95 latency | Resume clicks |
+| Fallback and error rate | Cache hit/miss | Case-study clicks |
+| Retrieved sources | Input/output tokens | Contact clicks |
+| Safety decisions | Estimated cost | Questions visitors ask |
 
-No AI API keys are required for this deployment.
+This is **human-as-judge evaluation**, not automatic model training. Feedback is used to improve the answer bank, retrieval, guardrails, and regression tests; Qwen is not silently retrained.
+
+See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluations/PREPROD-SECURITY-AUDIT-2026-10-10.md).
+
+## Cost and trade-offs
+
+- **Model cost per question:** ₹0—the open-source models run locally in the browser.
+- **Fast path:** approved answers return without waiting for Qwen.
+- **Trade-off:** the first generative answer may be slower because the browser must download and initialise Qwen.
+- **Compatibility:** if WebGPU is unavailable, the bot returns the approved retrieved answer.
+
+## Where to make changes
+
+| To change… | Edit… |
+| --- | --- |
+| Approved facts and policy responses | `assets/chatbot-knowledge.js` |
+| Retrieval passages and routing | `index.html` |
+| Qwen generation settings | `assets/qwen-worker.js` |
+| Evaluation questions | `assets/eval-dataset.js` |
+| Evaluation interface | `eval.html` |
+| Analytics definitions | `TELEMETRY.md` |
+
+The preproduction build is connected to the `codex/portfolio-rag-preprod` branch and is intentionally separate from production.

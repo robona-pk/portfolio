@@ -24,7 +24,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     companyContext: 'I can speak to Prerna’s work and published outcomes at that company, but not company strategy, internal performance, or non-public financials.',
     outOfScope: 'That sits outside what this portfolio assistant is designed to answer. If you are assessing Prerna, try asking about her product approach, growth outcomes, skills, career interests, or the projects she has built.',
     botArchitecture: 'This bot combines an approved answer bank, browser-based MiniLM semantic retrieval, and Gemini Flash generation through a protected Vercel endpoint, with privacy, injection, grounding, and fallback checks. The GitHub README explains the complete architecture and evaluation setup.',
-    undocumented: 'I don’t have that information available.',
+    undocumented: 'I don’t have that information right now. You can reach out to Prerna to ask her directly.',
     careerLogistics: 'Prerna has not published those logistics here. The best way to discuss notice period, compensation, relocation, remote preferences, or interview availability is to contact her directly.',
     comparison: 'I wouldn’t make an unsupported comparison. The fairest way to assess Prerna is through her documented product decisions, measurable outcomes, and the scope she has owned.',
     promptInjection: 'I can’t reveal internal instructions or switch outside my approved scope. I can help with Prerna’s documented work, experience, skills, product approach, and outcomes.',

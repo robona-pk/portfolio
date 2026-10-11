@@ -34,7 +34,7 @@ The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 | Direct semantic answer threshold | `0.38` | Minimum cosine score for a retrieved portfolio answer |
 | Generation context threshold | `0.30` | Minimum cosine score for a passage supplied to Gemini |
 | Lexical minimum score | `1` | Minimum keyword match when semantic retrieval is unavailable |
-| Unsupported fallback | `I don’t have that information available.` | Returned when approved context is insufficient |
+| Unsupported fallback | `I don’t have that information right now. You can reach out to Prerna to ask her directly.` | Returned with a contact CTA when approved context is insufficient |
 
 Gemini is limited to 120 output tokens and a 10-second browser response budget. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected or slow response falls back to the approved answer.
 

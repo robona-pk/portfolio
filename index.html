@@ -2188,18 +2188,18 @@ function send() {
 const portfolioKnowledge = [
   { source: 'Lenskart@Home case study', answer: 'At Lenskart, Prerna helped reposition home trials from an eye-test-led journey into a fashion-forward way to try frames at home. Her initiatives contributed ₹6Cr+ in annualised revenue, including ₹1.8Cr from personalisation; a pan-India pilot lifted bookings 7%.', text: 'At Lenskart, Prerna helped reposition Lenskart@Home from an eye-test-led feature into a more fashion-forward way to try frames at home. She owned growth initiatives across this O2O experience, including home trials, store ownership, and post-purchase journeys. Her initiatives contributed more than ₹6Cr in incremental annualised revenue. A personalised home-trial experience generated ₹1.8Cr annualised incremental revenue across five cities. A three-week pan-India pilot improved completed home-trial bookings by 7 percent versus the weekly baseline. Territory ownership and 48-hour check-ins improved NPS for the called cohort from 41 to 60 in one month.', tags: 'lenskart home trial fashion eyewear o2o revenue booking nps customer experience growth' },
   { source: 'Bajaj Finserv Health case study', answer: 'At Bajaj Finserv Health, Prerna worked across wellness, diagnostics, consultations, insurance, and digital health. Outcomes included ₹28L revenue, 8x Health Files adoption, an 18% doctor-listing CTR lift, and 26% higher pre-authorisation throughput.', text: 'At Bajaj Finserv Health, Prerna built and scaled products across wellness, diagnostics, consultations, insurance, and digital health from discovery and strategy through launch, GTM, and iteration. She built a diabetes wellness business from 0 to 1, generating ₹28L revenue in five months. Research showed 7 in 10 customers searched Google to understand lab-report parameters; Smart Health Reports made results clearer, increased active Health Files users 8 times, and generated ₹7L+ incremental MRR. Doctor results had been ordered almost randomly; a two-layer score used experience, ratings, and fair fees, gated by attendance and profile quality. It improved CTR 18 percent and annual revenue 11.6 percent. For insurance pre-authorisation, operations teams had collected patient documents and manually entered their details into the Vidal portal. Email intake, OCR, and NER reduced that manual work, improved throughput 26 percent, and saved ₹17L annually.', tags: 'bajaj health wellness diagnostics consultation insurance health reports doctor listing ctr revenue operations ocr ner vidal' },
-  { source: 'Product approach', answer: 'Prerna starts with a behavioural break in the customer journey, turns it into a measurable hypothesis, and tests the smallest useful intervention. She measures activation, conversion, retention, customer outcomes, and business impact.', text: 'Prerna focuses on behavioural breaks in customer journeys such as an abandoned booking, an unclear choice, an unread report, or a post-purchase issue. She forms measurable hypotheses, tests the smallest viable intervention, designs adoption mechanics across product, operations, and lifecycle touchpoints, and measures activation, conversion, retention, customer outcomes, and business impact.', tags: 'approach how work methodology experiment experimentation activation conversion retention hypothesis customer journey' },
+  { source: 'Product approach', answer: 'Prerna starts with a behavioural break in the customer journey, turns it into a measurable hypothesis, and tests the smallest useful intervention. She measures activation, conversion, retention, customer outcomes, and business impact.', text: 'Prerna focuses on behavioural breaks in customer journeys such as an abandoned booking, an unclear choice, an unread report, or a post-purchase issue. She uses customer research to form measurable hypotheses, tests the smallest viable intervention, designs adoption mechanics across product, operations, and lifecycle touchpoints, and measures activation, conversion, retention, customer outcomes, and business impact.', tags: 'approach how work methodology experiment experimentation activation conversion retention hypothesis customer research journey adoption' },
   { source: 'Skills and tools', answer: 'Prerna combines growth and adoption strategy with SQL, BigQuery, GA4, Firebase, A/B testing, PostHog, Python automation, and AI-assisted prototyping. Her builder toolset includes Codex, Claude Code, Gemini, MiniLM, GitHub, and Vercel.', text: 'Prerna brings growth and adoption strategy, funnel optimisation, lifecycle and retention strategy, SQL and BigQuery, GA4 and Firebase, A/B testing, cohort and behavioural segmentation, Python automation, and AI-assisted prototyping. Tools include Notion, Jira, Figma, Miro, CleverTap, Tableau, Power BI, PostHog, Codex, Claude Code, Gemini, MiniLM, GitHub, Vercel, and Google Apps Script.', tags: 'skills tools technical python sql bigquery analytics ai gemini minilm codex claude code posthog github vercel figma product manager' },
   { source: 'Portfolio overview', answer: 'Prerna is a Growth and Adoption Product Manager with 5+ years across e-commerce, health-tech, and insurance. Alongside measurable commercial work, she builds AI-enabled product experiments.', text: 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years improving activation, conversion, retention, and revenue across e-commerce, health-tech, and insurance. She partners with design, engineering, operations, and commercial teams from discovery through iteration. Alongside her core roles, she builds AI-enabled product experiments.', tags: 'about experience role background industries ecommerce health tech insurance collaboration ai builder' }
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-11.4',
+  rulesVersion: '2026-10-11.5',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
-  directAnswerThreshold: 0.38,
-  generationContextThreshold: 0.30,
-  lexicalMinimumScore: 1,
+  relevanceSemanticThreshold: 0.24,
+  relevanceLexicalCoverageThreshold: 0.5,
+  relevanceLexicalMinimumMatches: 1,
   maximumQuestionCharacters: 500,
   maximumGeneratedAnswerCharacters: 300,
   maximumSecurityWaitMs: 8000,
@@ -2252,8 +2252,16 @@ const personalQuestion = /\b(age|birthday|married|single|dating|boyfriend|girlfr
 const personalAnswer = 'Prerna keeps her family and personal life private. This assistant is limited to her professional experience, product work, skills, and the interests she has chosen to share publicly.';
 const personalStatusQuestion = /\b(dead|died|death|alive|ill|sick|hospital|health condition|pregnant|diagnosis)\b/i;
 const personalStatusAnswer = 'I can’t verify or speculate about personal-status claims. I’m here to share Prerna’s professional work, experience, and projects.';
-const currentMoodQuestion = /\b(?:how|what)\b.{0,12}\b(?:prerna(?:'s)?|she|her)\b.{0,16}\b(?:mood|feeling|emotional state)\b|\b(?:is|does)\b.{0,8}\b(?:prerna|she)\b.{0,8}\b(?:happy|sad|angry|upset|feeling)\b.{0,8}\b(?:today|now|right now)\b/i;
 const approvedKnowledge = window.ASK_PRERNA_KNOWLEDGE?.approvedAnswers || {};
+const unsupportedContactAction = Object.freeze({ label: 'Ask Prerna directly', href: '#contact' });
+function unsupportedPortfolioResponse() {
+  return {
+    answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
+    citations: [],
+    action: unsupportedContactAction,
+    policyOnly: true
+  };
+}
 const educationQuestion = /\b(education|degree|university|college|stud(y|ied)|biotechnology|srm)\b/i;
 const rolesQuestion = /\b(preferred roles?|roles? (is|are).{0,18}\b(looking|open)|senior product manager|product manager role)\b/i;
 const dopamineDetoxQuestion = /\b(dopamine detox|dopamine fast(?:ing)?|detox(?:ing)? from dopamine)\b/i;
@@ -2396,13 +2404,38 @@ function editDistance(left, right) {
   return matrix[left.length][right.length];
 }
 
+const RETRIEVAL_GENERIC_TERMS = new Set([
+  'about','and','answer','anything','are','background','can','could','currently','details','did','does','doing','experience','explain','for','from','give','has','have','help','her','how','information','is','it','know','manager','me','my','now','of','on','or','please','portfolio','prerna','product','really','role','she','something','tell','the','their','this','to','was','were','what','when','where','which','who','why','with','work','would','you'
+]);
+
+function getRetrievalTerms(question) {
+  return [...new Set((String(question || '').toLowerCase().match(/[a-z0-9]+/g) || [])
+    .filter(term => term.length > 2 && !RETRIEVAL_GENERIC_TERMS.has(term)))];
+}
+
+function getLexicalRelevance(question, item) {
+  const terms = getRetrievalTerms(question);
+  const words = new Set(`${item.source} ${item.text} ${item.tags}`.toLowerCase().match(/[a-z0-9]+/g) || []);
+  const matches = terms.filter(term => words.has(term));
+  return {
+    lexicalScore: matches.length,
+    lexicalCoverage: terms.length ? matches.length / terms.length : 0,
+    retrievalTerms: terms,
+    matchedTerms: matches
+  };
+}
+
+function isRelevantRetrievalMatch(item) {
+  const lexicalMatch = item.lexicalScore >= RAG_CONFIG.relevanceLexicalMinimumMatches
+    && item.lexicalCoverage >= RAG_CONFIG.relevanceLexicalCoverageThreshold;
+  if (!lexicalMatch) return false;
+  return item.semantic ? item.score >= RAG_CONFIG.relevanceSemanticThreshold : true;
+}
+
 function retrievePortfolioContext(question) {
-  const stopWords = new Set(['about','and','are','can','did','for','from','have','her','how','is','it','me','my','of','or','she','so','the','their','this','to','was','what','when','where','which','who','why','with','you']);
-  const terms = (question.toLowerCase().match(/[a-z0-9]+/g) || []).filter(term => term.length > 2 && !stopWords.has(term));
   return portfolioKnowledge.map(item => {
-    const haystack = `${item.text} ${item.tags}`.toLowerCase();
-    const score = terms.reduce((total, term) => total + (haystack.includes(term) ? 1 : 0), 0);
-    return { ...item, score };
+    const lexical = getLexicalRelevance(question, item);
+    return { ...item, score: lexical.lexicalScore, ...lexical, semantic: false };
   }).sort((a, b) => b.score - a.score).slice(0, 2);
 }
 
@@ -2519,11 +2552,17 @@ async function retrievePortfolioContextSemantically(question, runtimeOptions = {
       portfolioVectorsPromise
     ]);
     const queries = questionVectors.tolist();
-    return portfolioKnowledge.map((item, index) => ({
-      ...item,
-      score: Math.max(...queries.map(query => query.reduce((sum, value, position) => sum + value * documentVectors.tolist()[index][position], 0))),
-      semantic: true
-    })).sort((a, b) => b.score - a.score).slice(0, 2);
+    return portfolioKnowledge.map((item, index) => {
+      const lexical = getLexicalRelevance(normalizedQuestion, item);
+      const score = Math.max(...queries.map(query => query.reduce((sum, value, position) => sum + value * documentVectors.tolist()[index][position], 0)));
+      return {
+        ...item,
+        score,
+        ...lexical,
+        hybridScore: score + Math.min(lexical.lexicalScore, 3) * 0.08,
+        semantic: true
+      };
+    }).sort((a, b) => b.hybridScore - a.hybridScore).slice(0, 2);
   } catch (error) {
     return retrievePortfolioContext(normalizedQuestion);
   }
@@ -2561,11 +2600,6 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     answer: personalStatusAnswer,
     citations: []
   };
-  if (currentMoodQuestion.test(question)) return {
-    answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
-    citations: [],
-    policyOnly: true
-  };
   if (personalQuestion.test(question) || privateLifestyleQuestion.test(question)) return {
     answer: personalAnswer,
     citations: []
@@ -2582,10 +2616,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     answer: approvedKnowledge.personalProfile || personalProfileAnswer,
     citations: []
   };
-  if (unsupportedPersonalFactQuestion.test(question)) return {
-    answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
-    citations: []
-  };
+  if (unsupportedPersonalFactQuestion.test(question)) return unsupportedPortfolioResponse();
   if (failureQuestion.test(question)) return {
     answer: failureAnswer,
     citations: [],
@@ -2730,13 +2761,8 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     citations: []
   };
   const matches = await retrievePortfolioContextSemantically(originalQuestion, runtimeOptions);
-  const direct = matches.filter(item => item.semantic
-    ? item.score >= RAG_CONFIG.directAnswerThreshold
-    : item.score >= RAG_CONFIG.lexicalMinimumScore);
-  if (!direct.length) return {
-    answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
-    citations: []
-  };
+  const direct = matches.filter(isRelevantRetrievalMatch);
+  if (!direct.length) return unsupportedPortfolioResponse();
   return { answer: direct[0].answer, citations: [direct[0].source] };
 }
 
@@ -2877,11 +2903,7 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
     generationModel: ''
   };
   const matches = await retrievePortfolioContextSemantically(question, runtimeOptions);
-  const relevant = matches
-    .filter(item => item.semantic
-      ? item.score >= RAG_CONFIG.generationContextThreshold
-      : item.score >= RAG_CONFIG.lexicalMinimumScore)
-    .slice(0, 2);
+  const relevant = matches.filter(isRelevantRetrievalMatch).slice(0, 2);
   const retrievedContext = relevant.map(item => `${item.source}: ${item.text}`).join('\n');
   const groundingText = `${result.answer}\n${retrievedContext}`;
   try {
@@ -3003,7 +3025,7 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
     if (security.blocked || security.uncertain) {
       routed = { answer: approvedKnowledge.promptInjection || outOfScopeAnswer, citations: [], policyOnly: true };
     } else if (security.available === false && !deterministicRoute) {
-      routed = { answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer, citations: [], policyOnly: true };
+      routed = unsupportedPortfolioResponse();
     } else if (rawConfidentialCompanyQuestion || (companyQuestion.test(normalizedQuestion) && confidentialMetricQuestion.test(normalizedQuestion))) {
       routed = { answer: approvedKnowledge.confidentialData, citations: [], policyOnly: true };
     } else if (deterministicRoute) {
@@ -3012,7 +3034,7 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
       routed = await localRagAnswer(normalizedQuestion, visitorQuestion, runtimeOptions);
     }
     if (security.available === false && !routed.policyOnly && !routed.action && !policyControlledAnswers.has(routed.answer)) {
-      routed = { answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer, citations: [], policyOnly: true };
+      routed = unsupportedPortfolioResponse();
     }
     const resolved = await generatePortfolioAnswer(visitorQuestion, routed, retrievalCacheHit, runtimeOptions);
     const totalLatencyMs = Math.round(performance.now() - startedAt);

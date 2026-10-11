@@ -60,10 +60,11 @@ flowchart TD
     C -- "Not matched" --> E{"🛡️ Semantic injection check"}
 
     E -- "Attack or uncertain" --> D["📜 Policy response<br/>Decline safely"]
-    E -- "Safe and about Prerna" --> H["🔎 MiniLM retrieval<br/>Find relevant approved facts"]
-    E -- "No reliable information" --> I["🤷 Safe fallback<br/>I don't have that information"]
+    E -- "Safe and about Prerna" --> H["🔎 Hybrid retrieval<br/>Meaning + topic evidence"]
+    H --> P{"🎯 Relevant enough?<br/>Similarity + word coverage"}
+    P -- "No" --> I["🤷 Safe fallback + contact CTA<br/>Ask Prerna directly"]
+    P -- "Yes" --> J["📚 Selected portfolio evidence"]
 
-    H --> J["📚 Selected portfolio evidence"]
     J --> K["🤖 Gemini Flash-Lite<br/>Writes a short answer"]
     K --> L{"🔍 Is every claim supported?"}
     L -- "Yes" --> M["💬 Show Gemini's answer"]
@@ -84,7 +85,7 @@ flowchart TD
     classDef output fill:#edf6dd,stroke:#5d7f25,color:#263611;
 
     class A,B visitor;
-    class C,E,L decision;
+    class C,E,P,L decision;
     class D,F,I policy;
     class H,J retrieval;
     class K,M ai;
@@ -109,7 +110,7 @@ flowchart TD
 
 - 🖥️ **Interface:** HTML, CSS, and JavaScript create the floating chat window.
 - 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js` and the curated portfolio passages in `index.html`.
-- 🔎 **Retrieval:** MiniLM finds the approved passages closest in meaning to the question.
+- 🔎 **Retrieval:** MiniLM finds passages with similar meaning, then a strict relevance gate also requires meaningful topic-word coverage. A passage is rejected if it is merely the closest bad match.
 - 🤖 **Generation:** Gemini Flash-Lite writes short responses for supported, open-ended questions through `/api/generate`.
 - ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
@@ -125,7 +126,8 @@ flowchart TD
 | **Knowledge base** | The approved facts and portfolio passages the bot is allowed to use. |
 | **Policy layer** | Rules for privacy, confidentiality, abuse, irrelevant questions, and prompt injection. |
 | **Deterministic routing** | Code that sends known question types to a fixed approved response instead of asking Gemini. |
-| **Semantic retrieval** | MiniLM matches a question to passages with a similar meaning, not only identical keywords. |
+| **Hybrid retrieval** | MiniLM measures semantic similarity, while lexical coverage checks that meaningful question topics actually appear in the evidence. Both must pass. |
+| **Relevance gate** | The acceptance rule that rejects the nearest passage when it does not genuinely answer the question. Rejected questions receive the safe fallback and contact CTA. |
 | **Generator** | Gemini writes a concise answer using only the approved answer and retrieved evidence. |
 | **Grounding checks** | Output checks verify that Gemini's claims are supported by the retrieved sources. |
 | **Fail-closed fallback** | If the system is uncertain or a component fails, it returns an approved safe answer. |

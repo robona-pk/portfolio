@@ -25,22 +25,22 @@ The assistant may answer only from:
 - Portfolio passages in `portfolioKnowledge` inside `index.html`
 - The visitor's question
 
-Known recruiter questions, published metrics, confidentiality rules, and safety boundaries return approved answers without generation. Qwen is reserved for open-ended synthesis. It is instructed to paraphrase supplied facts rather than introduce claims and must not infer people management, seniority, private details, dates, employers, metrics, ownership, or personality traits.
+Known recruiter questions, published metrics, confidentiality rules, and safety boundaries return approved answers without generation. Gemini is reserved for open-ended synthesis through a protected Vercel endpoint. It is instructed to paraphrase supplied facts rather than introduce claims and must not infer people management, seniority, private details, dates, employers, metrics, ownership, or personality traits.
 
 The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 
 | Setting | Value | Purpose |
 | --- | ---: | --- |
 | Direct semantic answer threshold | `0.38` | Minimum cosine score for a retrieved portfolio answer |
-| Generation context threshold | `0.30` | Minimum cosine score for a passage supplied to Qwen |
+| Generation context threshold | `0.30` | Minimum cosine score for a passage supplied to Gemini |
 | Lexical minimum score | `1` | Minimum keyword match when semantic retrieval is unavailable |
 | Unsupported fallback | `I don’t have that information available.` | Returned when approved context is insufficient |
 
-Qwen is limited to 72 new tokens and a 12-second response budget. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected or slow response falls back to the approved answer.
+Gemini is limited to 120 output tokens and a 10-second browser response budget. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected or slow response falls back to the approved answer.
 
 Before retrieval, input is canonicalised to expose zero-width characters, selected Unicode homoglyphs, Base64-encoded instructions, and common leetspeak. Literal rules screen every request. Questions that match a deterministic approved answer or policy boundary return that fixed response without loading an AI model; because visitor text is never supplied to generation on this path, it cannot alter the answer. Unmatched open-ended questions also pass through the MiniLM injection classifier before retrieval or generation. If semantic security classification cannot load, those open-ended requests fail closed. These are layered risk controls, not a proof that every novel attack will be caught.
 
-MiniLM and Qwen load only when an open-ended request needs them. This keeps approved recruiter questions and policy responses fast and avoids spending a visitor's bandwidth merely because the chat was opened. An open-ended first request can still experience model-download latency; the response budget prevents it from appearing frozen, and later answers in the same browser benefit from the model cache.
+MiniLM loads only when an open-ended request needs semantic checks or retrieval. Approved recruiter questions and policy responses stay on the fast path. Gemini runs server-side, so visitors no longer download a generation model or depend on WebGPU; an open-ended request can still experience network, Vercel, or provider latency.
 
 ## Live request event
 
@@ -55,18 +55,18 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `retrieved_sources` | Source names used by the answer path |
 | `retrieval_scores` | Source and cosine score pairs used for generation |
 | `answer` | Final answer displayed to the visitor |
-| `answer_mode` | `qwen`, `policy`, `curated_fallback`, `unsupported_fallback`, or `error_fallback` |
+| `answer_mode` | `gemini`, `policy`, `curated_fallback`, `unsupported_fallback`, or `error_fallback` |
 | `fallback` | Whether a safe fallback was used |
 | `fallback_reason` | Why the fallback occurred |
 | `error` | Request or generation error when present |
 | `retrieval_model` | Embedding model used for retrieval |
-| `generation_model` | Generation model when Qwen produced the final answer |
+| `generation_model` | Generation model when Gemini produced the final answer |
 | `total_latency_ms` | Total time from submitted question to final answer |
 | `input_tokens_estimate` | Approximate input tokens using a four-characters-per-token estimate |
 | `output_tokens_estimate` | Approximate output tokens using the same estimate |
-| `estimated_cost_usd` | `0` for the browser-hosted open-source model |
+| `estimated_cost_usd` | Paid-rate reference estimate for Gemini generation; actual cost may be `0` while within free-tier quota |
 | `retrieval_cache_hit` | Whether the semantic retrieval model and vectors were already warm |
-| `generation_cache_hit` | Whether Qwen was already loaded in the current tab |
+| `generation_cache_hit` | Whether a generated answer was reused from cache; hosted Gemini calls currently report false |
 | `rules_version` | Version of the policy and threshold configuration |
 | `security_mode` | `fast_policy`, `rule`, `semantic`, `semantic_clear`, `semantic_uncertain`, `semantic_unavailable`, `semantic_timeout`, `input_guard`, or `request_error` |
 | `security_score` | Similarity score produced by the semantic injection classifier when available |
@@ -136,15 +136,15 @@ The evaluation console also calculates P50 and P95 locally for the current saved
 
 Create alerts for a sudden increase in prompt-injection decisions, input-guard fallbacks, rate-limit events, total question volume, or generation errors. Review the redacted questions behind the spike, add representative attacks to `assets/eval-dataset.js`, then strengthen the smallest relevant rule or source boundary and rerun the full suite.
 
-Because inference runs in the browser, the current site has no paid model key or inference endpoint to drain. The realistic risks are analytics pollution, bandwidth usage, a slow or frozen visitor tab, attempts to extract the public client-side knowledge bank, and reputational harm if an unsupported answer slips through. Client-side throttling can improve normal use but cannot stop a determined attacker; production-grade enforcement would require a server or edge rate limit, bot protection, and alerting.
+Gemini uses a server-side key, so abuse can consume quota or create cost. The endpoint applies same-origin checks, a best-effort per-IP rate limit, input limits, and allowlists for approved answers and sources; the key never reaches the browser. Monitor generation errors, latency, request spikes, and estimated cost. For stronger production enforcement, add durable edge rate limiting and bot protection because serverless in-memory limits are not globally authoritative.
 
 ## Product questions this instrumentation can answer
 
 - What do recruiters ask most often?
 - Which supported questions still trigger fallbacks?
 - Which portfolio sources are doing useful work?
-- Is the first uncached Qwen response too slow?
-- Are warm responses fast enough to justify browser-side generation?
+- Is the first Gemini response too slow?
+- Are hosted responses reliable across browsers and devices?
 - Which answers receive negative helpfulness feedback?
 - Which questions are followed by resume, case study, or contact clicks?
 - Does the generative answer improve conversion compared with the curated fallback?

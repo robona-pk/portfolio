@@ -50,7 +50,7 @@
         <div class="field"><code>output_tokens_estimate</code><span>Approximate generated answer tokens.</span></div>
         <div class="field"><code>estimated_cost_usd</code><span>Zero for the browser-hosted open-source model.</span></div>
         <div class="field"><code>retrieval_cache_hit</code><span>Whether the semantic index was already warm.</span></div>
-        <div class="field"><code>generation_cache_hit</code><span>Whether Qwen was already loaded in this tab.</span></div>
+        <div class="field"><code>generation_cache_hit</code><span>Whether a generated answer was reused from cache. Hosted Gemini calls currently report false.</span></div>
         <div class="field"><code>retrieved_sources</code><span>Portfolio sources supplied to the answer path.</span></div>
         <div class="field"><code>fallback</code><span>Whether a safe fallback was returned.</span></div>
         <div class="field"><code>error</code><span>Generation or request failure, when present.</span></div>
@@ -61,8 +61,8 @@
     </section>
   </main>
 
-  <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-11.3" title="Ask Prerna evaluation engine"></iframe>
-  <script src="assets/eval-dataset.js?v=2026-10-11.3"></script>
+  <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-11.4" title="Ask Prerna evaluation engine"></iframe>
+  <script src="assets/eval-dataset.js?v=2026-10-11.4"></script>
   <script>
     const STORAGE_KEY = 'ask-prerna-eval-reviews-v1';
     const CASE_TIMEOUT_MS = 90000;

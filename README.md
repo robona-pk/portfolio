@@ -43,8 +43,8 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 
 - Recruiters get quick, evidence-based answers.
 - The bot stays within information I have approved.
-- Open-ended questions can use an open-source AI model, **Qwen 2.5**.
-- It runs in the visitor's browser, so there is no paid AI API call per question.
+- Open-ended questions can use **Gemini Flash-Lite** to phrase concise, natural answers.
+- Gemini runs behind a protected Vercel endpoint; its API key is never exposed in the browser.
 
 ## How one question becomes an answer
 
@@ -64,9 +64,9 @@ flowchart TD
     E -- "No reliable information" --> I["🤷 Safe fallback<br/>I don't have that information"]
 
     H --> J["📚 Selected portfolio evidence"]
-    J --> K["🤖 Qwen 2.5<br/>Writes a short answer"]
+    J --> K["🤖 Gemini Flash-Lite<br/>Writes a short answer"]
     K --> L{"🔍 Is every claim supported?"}
-    L -- "Yes" --> M["💬 Show Qwen's answer"]
+    L -- "Yes" --> M["💬 Show Gemini's answer"]
     L -- "No / model unavailable" --> N["↩️ Show approved retrieved answer"]
 
     D --> O["📊 Record anonymous quality data"]
@@ -97,26 +97,26 @@ flowchart TD
 | --- | --- | --- |
 | Known portfolio fact | “How much experience does she have?” | ✅ Approved answer bank |
 | Work or recruiter question | “What impact did she drive at Lenskart?” | ✅ Approved answer bank |
-| Open-ended portfolio question | “How does customer research shape her decisions?” | 🔎 Retrieval + 🤖 Qwen |
+| Open-ended portfolio question | “How does customer research shape her decisions?” | 🔎 Retrieval + 🤖 Gemini |
 | Private or confidential | “What is Lenskart's profit margin?” | 📜 Policy layer |
 | Inappropriate or unsafe question | — | 📜 Respectful policy response |
 | Unrelated question | “Who is the US president?” | 📜 Scope boundary |
 | Missing evidence | An unpublished personal or work detail | 🤷 Safe fallback |
 
-> **Important:** Qwen does not decide the facts. It can only rewrite information retrieved from the approved knowledge base. If its answer cannot be verified, the bot uses the approved answer instead.
+> **Important:** Gemini does not decide the facts. It can only rewrite an approved answer using retrieved portfolio evidence. If its output cannot be verified, the bot shows the approved answer instead.
 
 ## Tech stack—in plain English
 
 - 🖥️ **Interface:** HTML, CSS, and JavaScript create the floating chat window.
 - 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js` and the curated portfolio passages in `index.html`.
 - 🔎 **Retrieval:** MiniLM finds the approved passages closest in meaning to the question.
-- 🤖 **Generation:** Qwen2.5-0.5B-Instruct writes short responses for supported, open-ended questions.
-- ⚙️ **AI runtime:** Transformers.js + WebGPU run MiniLM and Qwen inside the browser.
+- 🤖 **Generation:** Gemini Flash-Lite writes short responses for supported, open-ended questions through `/api/generate`.
+- ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
-- ⚡ **Latency controls:** deterministic questions avoid model loading; repeated clicks are blocked; semantic safety has an 8-second ceiling and Qwen has a 12-second ceiling before an approved fallback is shown.
+- ⚡ **Latency controls:** deterministic questions avoid AI generation; repeated clicks are blocked; semantic safety has an 8-second ceiling and Gemini has a 10-second ceiling before an approved fallback is shown.
 - 🧪 **Golden evaluation dataset:** 108 fixed test cases define the expected facts, sources, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
-- 🚀 **Hosting:** GitHub + Vercel. No database or paid model API is required.
+- 🚀 **Hosting:** GitHub + Vercel. The Gemini key is stored as a server-side Vercel environment variable.
 
 ## Terminology used in this project
 
@@ -124,10 +124,10 @@ flowchart TD
 | --- | --- |
 | **Knowledge base** | The approved facts and portfolio passages the bot is allowed to use. |
 | **Policy layer** | Rules for privacy, confidentiality, abuse, irrelevant questions, and prompt injection. |
-| **Deterministic routing** | Code that sends known question types to a fixed approved response instead of asking Qwen. |
+| **Deterministic routing** | Code that sends known question types to a fixed approved response instead of asking Gemini. |
 | **Semantic retrieval** | MiniLM matches a question to passages with a similar meaning, not only identical keywords. |
-| **Generator** | Qwen writes a concise answer using only the retrieved evidence. |
-| **Grounding checks** | Output checks verify that Qwen's claims are supported by the retrieved sources. |
+| **Generator** | Gemini writes a concise answer using only the approved answer and retrieved evidence. |
+| **Grounding checks** | Output checks verify that Gemini's claims are supported by the retrieved sources. |
 | **Fail-closed fallback** | If the system is uncertain or a component fails, it returns an approved safe answer. |
 | **Golden evaluation dataset** | A fixed benchmark of questions with human-defined expected facts, sources, response types, and guardrail behaviour. |
 | **Regression test** | A golden case that is rerun after changes to ensure a previously working behaviour has not broken. |
@@ -140,7 +140,8 @@ flowchart TD
 - Detects direct and disguised prompt-injection attempts.
 - Handles common spelling errors and selected Unicode or zero-width tricks.
 - Limits questions to 500 characters and generated answers to 300 characters.
-- Falls back safely when retrieval, WebGPU, or Qwen is unavailable.
+- Falls back safely when retrieval or the Gemini endpoint is unavailable, rate-limited, or slow.
+- Keeps the Gemini API key on the server and accepts only allowlisted approved answers and sources.
 - Applies a best-effort browser limit of 10 questions per minute.
 - Keeps private, NSFW, confidential, and unsupported topics out of answers.
 
@@ -150,7 +151,7 @@ These controls reduce risk but are not foolproof. The client-side knowledge base
 
 ## Golden evaluation dataset and eval console
 
-The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 108 cases are the benchmark used to test the **whole RAG system**—routing, retrieval, policy responses, Qwen output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
+The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 108 cases are the benchmark used to test the **whole RAG system**—routing, retrieval, policy responses, Gemini output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
 
 Each golden case contains:
 
@@ -191,7 +192,7 @@ flowchart LR
 - 🔒 Private, confidential, insulting and unrelated questions
 - 🧨 Direct, disguised, multilingual and Unicode prompt injections
 - 🚫 Invented metrics, fake employers, prompt leakage and unsupported claims
-- 📴 Missing WebGPU, failed model loading and retrieval failures
+- 📴 Unavailable generation endpoint, timeouts and retrieval failures
 - 🎯 False-positive checks so valid recruiter questions are not blocked
 
 ### What the reviewer can do
@@ -239,7 +240,7 @@ PostHog is used for more than chatbot performance. It shows whether visitors dis
 | Retrieved sources | Input/output tokens | Unsupported-output rejections |
 | Feedback reasons | Estimated cost | Fail-closed responses |
 
-The golden dataset is a **testing benchmark**, not the chatbot's knowledge base and not training data. This is **human-as-judge evaluation**, not automatic model training. Feedback is used to improve the answer bank, retrieval, guardrails, and regression suite; Qwen is not silently retrained.
+The golden dataset is a **testing benchmark**, not the chatbot's knowledge base and not training data. This is **human-as-judge evaluation**, not automatic model training. Feedback is used to improve the answer bank, retrieval, guardrails, and regression suite; Gemini is not silently retrained.
 
 See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluations/PREPROD-SECURITY-AUDIT-2026-10-10.md).
 
@@ -256,12 +257,15 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 | **7. Production hardening** | Basic keyword guardrails | Obfuscated injections, invented claims and component failures needed stronger handling | Added semantic injection detection, Unicode checks, grounding validation, fail-closed fallbacks and throttling |
 | **8. Product analytics** | Technical latency and answer logs | Bot quality alone did not show whether the portfolio created recruiter interest | Added PostHog portfolio funnels, structured feedback and resume, case-study and contact conversions |
 | **9. Latency fast path** | Every question waited for the semantic security model; opening chat preloaded the embedding index | Even fixed answers could take seconds, and the Skills nudge appeared unresponsive | Routed approved intents before model loading, made MiniLM lazy, blocked duplicate requests, added visible progress, and capped the Qwen wait at 12 seconds |
+| **10. Hosted generation** | Qwen generated answers inside each visitor's browser | The first generative answer depended on a large model download, WebGPU support, and device performance | Replaced Qwen generation with Gemini Flash-Lite behind a protected Vercel endpoint; MiniLM retrieval, approved facts, output validation, and fail-closed fallbacks remain unchanged |
 
 ## Cost and trade-offs
 
-- **Model cost per question:** ₹0—the open-source models run locally in the browser.
-- **Fast path:** approved answers return without waiting for MiniLM or Qwen.
-- **Trade-off:** the first generative answer may be slower because the browser must download and initialise Qwen.
-- **Compatibility:** if WebGPU is unavailable, the bot returns the approved retrieved answer.
+- **Model cost:** expected to remain ₹0 while the project stays within Gemini's free-tier quota; telemetry also records a paid-rate estimate for visibility.
+- **Fast path:** approved and policy answers return without calling Gemini.
+- **Trade-off:** open-ended generation now depends on a network service and its quota instead of the visitor's device.
+- **Compatibility:** generation no longer requires WebGPU; if Gemini fails or times out, the bot returns the approved answer.
+- **Privacy:** only public portfolio questions and allowlisted evidence should reach Gemini. Email addresses and phone numbers are redacted server-side.
+- **Free-tier caveat:** Google's free tier is quota-based, not guaranteed as a one-month trial, and its data-use terms differ from the paid tier. Recheck current terms before production use.
 
 The preproduction build is connected to the `codex/portfolio-rag-preprod` branch and is intentionally separate from production.

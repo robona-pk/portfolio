@@ -13,7 +13,9 @@ Open `/eval.html` on the preproduction deployment.
 5. Record why the answer is correct or incorrect. You can type in the Reason field or select the coral microphone icon, speak naturally, and select it again to stop.
 6. Export the review as JSON when you want to share or archive it.
 
-Use **Compare models** on an individual open-ended case to run Gemini Flash-Lite and Qwen 2.5 against the same retrieved evidence. Compare factual completeness, tone, concision, fallback behaviour, and latency. Qwen runs locally through WebGPU and may take several minutes on its first run; if WebGPU is unavailable, the console records that limitation instead of changing the live bot.
+Use **Compare models** on an individual open-ended case to run Gemini Flash-Lite and Qwen 2.5 against the same retrieved evidence. Compare factual completeness, tone, concision, fallback behaviour, total latency, and model-generation latency. Qwen runs locally through WebGPU and may take several minutes on its first run; if WebGPU is unavailable, the console records that limitation instead of changing the live bot.
+
+Use the **Answer source** filter to isolate policy answers, accepted LLM answers, fallbacks, guardrails, or errors. Model-generation latency is shown as **Not used** when a policy or guardrail answer bypassed the model. For generated answers, it measures the generation step, including provider or local-model overhead. Total latency still includes routing, security checks, retrieval, validation, and generation.
 
 Answers and manual reviews are stored in the current browser with `localStorage`. They are not uploaded automatically. Exporting produces a dated JSON file containing the dataset, answers, telemetry, verdicts, helpfulness ratings, and reviewer reasons.
 
@@ -63,6 +65,7 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `error` | Request or generation error when present |
 | `retrieval_model` | Embedding model used for retrieval |
 | `generation_model` | Generation model when Gemini produced the final answer |
+| `generation_latency_ms` | Time spent in the generation step; zero when no model was used |
 | `total_latency_ms` | Total time from submitted question to final answer |
 | `input_tokens_estimate` | Approximate input tokens using a four-characters-per-token estimate |
 | `output_tokens_estimate` | Approximate output tokens using the same estimate |

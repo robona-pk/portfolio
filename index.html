@@ -2194,7 +2194,7 @@ const portfolioKnowledge = [
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-11.6',
+  rulesVersion: '2026-10-12.1',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2958,13 +2958,15 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
     generationCacheHit: false,
     generationInputTokens: 0,
     generationOutputTokens: 0,
-    generationModel: ''
+    generationModel: '',
+    generationLatencyMs: 0
   };
   const matches = await retrievePortfolioContextSemantically(question, runtimeOptions);
   const relevant = matches.filter(isRelevantRetrievalMatch).slice(0, 2);
   const retrievedContext = relevant.map(item => `${item.source}: ${item.text}`).join('\n');
   const groundingText = `${result.answer}\n${retrievedContext}`;
   const generationProvider = runtimeOptions.generationProvider === 'qwen' ? 'qwen' : 'gemini';
+  const generationStartedAt = performance.now();
   try {
     const sources = [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])];
     const generation = generationProvider === 'qwen'
@@ -2979,6 +2981,7 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
         approvedAnswer: result.answer,
         sources
       }, runtimeOptions);
+    const generationLatencyMs = Math.round(performance.now() - generationStartedAt);
     const validated = await validateGeneratedAnswer(generation.answer, groundingText, result.requiredFacts || [], runtimeOptions);
     return {
       answer: validated || result.answer,
@@ -2992,7 +2995,8 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
       generationCacheHit: Boolean(generation.cacheHit),
       generationInputTokens: Number(generation.inputTokens || estimateTokenCount(JSON.stringify({ question, result, retrievedContext }))),
       generationOutputTokens: Number(generation.outputTokens || estimateTokenCount(generation.answer)),
-      generationModel: generation.model || (generationProvider === 'qwen' ? RAG_CONFIG.comparisonModel : RAG_CONFIG.generationModel)
+      generationModel: generation.model || (generationProvider === 'qwen' ? RAG_CONFIG.comparisonModel : RAG_CONFIG.generationModel),
+      generationLatencyMs
     };
   } catch (error) {
     return {
@@ -3007,7 +3011,8 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
       generationCacheHit: false,
       generationInputTokens: 0,
       generationOutputTokens: 0,
-      generationModel: ''
+      generationModel: generationProvider === 'qwen' ? RAG_CONFIG.comparisonModel : RAG_CONFIG.generationModel,
+      generationLatencyMs: Math.round(performance.now() - generationStartedAt)
     };
   }
 }
@@ -3058,6 +3063,7 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
         error: '',
         retrievalCacheHit,
         generationCacheHit: false,
+        generationLatencyMs: 0,
         retrievalModel: RAG_CONFIG.retrievalModel,
         generationModel: '',
         inputTokens: estimateTokenCount(visitorQuestion.slice(0, RAG_CONFIG.maximumQuestionCharacters)),
@@ -3108,7 +3114,7 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
     const groundingInput = `${question}\n${routed.answer}\n${resolved.retrievedSources.join('\n')}`;
     const inputTokens = resolved.generationInputTokens || estimateTokenCount(groundingInput);
     const outputTokens = resolved.generationOutputTokens || estimateTokenCount(resolved.answer);
-    const estimatedCostUsd = resolved.answerMode === 'gemini'
+    const estimatedCostUsd = resolved.generationModel === RAG_CONFIG.generationModel && resolved.generationInputTokens > 0
       ? (inputTokens / 1000000 * RAG_CONFIG.estimatedInputCostPerMillionTokensUsd)
         + (outputTokens / 1000000 * RAG_CONFIG.estimatedOutputCostPerMillionTokensUsd)
       : 0;
@@ -3119,7 +3125,7 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
       citations: routed.citations || [],
       ...resolved,
       retrievalModel: RAG_CONFIG.retrievalModel,
-      generationModel: ['gemini', 'qwen'].includes(resolved.answerMode) ? resolved.generationModel : '',
+      generationModel: resolved.generationModel || '',
       inputTokens,
       outputTokens,
       estimatedCostUsd,
@@ -3143,6 +3149,7 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
       error: error?.message || 'Request failed.',
       retrievalCacheHit: Boolean(portfolioVectorsPromise),
       generationCacheHit: false,
+      generationLatencyMs: 0,
       retrievalModel: RAG_CONFIG.retrievalModel,
       generationModel: '',
       inputTokens: estimateTokenCount(question),
@@ -3170,6 +3177,7 @@ function captureAssistantTelemetry(result) {
     error: result.error,
     retrieval_model: result.retrievalModel,
     generation_model: result.generationModel,
+    generation_latency_ms: result.generationLatencyMs,
     total_latency_ms: result.totalLatencyMs,
     input_tokens_estimate: result.inputTokens,
     output_tokens_estimate: result.outputTokens,

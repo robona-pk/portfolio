@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;650;750&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box}html{color-scheme:dark}body{margin:0;background:#0a0907;color:#f0ecd8;font:15px/1.55 Inter,sans-serif}button,select,textarea{font:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:48px 0 80px}.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end;padding-bottom:28px;border-bottom:1px solid #302a1e}.kicker{margin:0 0 8px;color:#e3a83f;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.top h1{margin:0;font:750 clamp(34px,6vw,64px)/.98 "Bricolage Grotesque",sans-serif;letter-spacing:-.04em}.intro{max-width:720px;margin:18px 0 0;color:#bdb6a4}.top a{color:#f1c56e}.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}.button{border:1px solid #51442d;border-radius:10px;background:#17140f;color:#f0ecd8;padding:10px 14px;font-weight:650;cursor:pointer;white-space:nowrap}.button:hover,.button:focus-visible{border-color:#e3a83f;outline:none}.button.primary{background:#d99a2c;color:#171108;border-color:#d99a2c}.button.targeted{border-color:#8d6829;background:#211a0e;color:#f0c772}.button.targeted:hover,.button.targeted:focus-visible{background:#2a2112;border-color:#d99a2c}.button:disabled{opacity:.45;cursor:not-allowed}.status{min-height:24px;margin:16px 0;color:#e7c98f}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:24px 0;background:#302a1e;border:1px solid #302a1e;border-radius:14px;overflow:hidden}.metric{background:#12100c;padding:16px}.metric span{display:block;color:#918a7a;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.metric strong{display:block;margin-top:5px;font:650 23px "Bricolage Grotesque",sans-serif}.toolbar{display:grid;grid-template-columns:minmax(0,1fr) 200px 200px;gap:12px;margin:26px 0 14px}.toolbar input,.toolbar select{width:100%;border:1px solid #393124;border-radius:10px;background:#11100d;color:#f0ecd8;padding:11px 12px}.toolbar input:focus,.toolbar select:focus,.review textarea:focus,.review select:focus{border-color:#e3a83f;outline:none}.eval-list{display:grid;gap:10px}.eval{border:1px solid #302a1e;border-radius:14px;background:#11100d;overflow:hidden}.eval summary{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:14px;align-items:center;padding:16px 18px;cursor:pointer;list-style:none}.eval summary::-webkit-details-marker{display:none}.number{color:#e3a83f;font:650 13px "Bricolage Grotesque",sans-serif}.question{font-weight:600}.meta{display:flex;gap:8px;align-items:center;color:#8f8878;font-size:12px}.badge{border:1px solid #403725;border-radius:999px;padding:3px 8px;white-space:nowrap}.badge.correct{border-color:#56745d;color:#a9d6b2}.badge.incorrect{border-color:#80504a;color:#e7aaa1}.badge.running{border-color:#9a7430;color:#f0c772}.body{padding:0 18px 18px;border-top:1px solid #28231a}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-top:18px}.label{margin:0 0 7px;color:#918a7a;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.facts{margin:0;padding-left:18px;color:#d1cab9}.answer{min-height:94px;margin:0;padding:13px;border:1px solid #2d281e;border-radius:10px;background:#0b0a08;color:#eee7d6;white-space:pre-wrap}.run-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px;color:#918a7a;font-size:12px}.review{display:grid;grid-template-columns:180px 160px minmax(220px,1fr) auto;gap:10px;align-items:end;margin-top:18px}.review>label,.reason-field{display:grid;gap:6px;color:#aaa291;font-size:12px}.review select,.review textarea{border:1px solid #393124;border-radius:9px;background:#0b0a08;color:#f0ecd8;padding:9px}.review textarea{min-height:58px;resize:vertical}.reason-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.dictate{position:relative;display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid #ff9f89;border-radius:11px;background:#ef6a4c;color:#180b08;cursor:pointer;box-shadow:0 4px 0 #8f3423;transition:transform .16s ease,background .16s ease,box-shadow .16s ease}.dictate svg{width:19px;height:19px;stroke:currentColor}.dictate:hover{background:#ff8268;transform:translateY(-1px);box-shadow:0 5px 0 #8f3423}.dictate:focus-visible{outline:3px solid rgba(255,159,137,.35);outline-offset:3px}.dictate:active{transform:translateY(2px);box-shadow:0 2px 0 #8f3423}.dictate[aria-pressed="true"]{background:#f4c65d;border-color:#ffe09b;color:#171108;box-shadow:0 4px 0 #8c681b}.dictate:disabled{cursor:not-allowed;opacity:.42;box-shadow:none;transform:none}.empty{color:#827b6e}.telemetry{margin-top:42px;padding-top:26px;border-top:1px solid #302a1e}.telemetry h2{margin:0 0 8px;font:650 28px "Bricolage Grotesque",sans-serif}.telemetry p{max-width:800px;color:#bdb6a4}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.field{padding:12px;border:1px solid #302a1e;border-radius:10px;background:#11100d}.field code{color:#efbd60}.field span{display:block;margin-top:4px;color:#8f8878;font-size:12px}.engine{position:absolute;width:1px;height:1px;border:0;clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden}@media(max-width:820px){.top{grid-template-columns:1fr}.controls{justify-content:flex-start}.metrics{grid-template-columns:repeat(2,1fr)}.toolbar,.grid,.review,.fields{grid-template-columns:1fr}.eval summary{grid-template-columns:38px minmax(0,1fr)}.meta{grid-column:2}}
+    *{box-sizing:border-box}html{color-scheme:dark}body{margin:0;background:#0a0907;color:#f0ecd8;font:15px/1.55 Inter,sans-serif}button,select,textarea{font:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:48px 0 80px}.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end;padding-bottom:28px;border-bottom:1px solid #302a1e}.kicker{margin:0 0 8px;color:#e3a83f;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.top h1{margin:0;font:750 clamp(34px,6vw,64px)/.98 "Bricolage Grotesque",sans-serif;letter-spacing:-.04em}.intro{max-width:720px;margin:18px 0 0;color:#bdb6a4}.top a{color:#f1c56e}.controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}.button{border:1px solid #51442d;border-radius:10px;background:#17140f;color:#f0ecd8;padding:10px 14px;font-weight:650;cursor:pointer;white-space:nowrap}.button:hover,.button:focus-visible{border-color:#e3a83f;outline:none}.button.primary{background:#d99a2c;color:#171108;border-color:#d99a2c}.button.targeted{border-color:#8d6829;background:#211a0e;color:#f0c772}.button.targeted:hover,.button.targeted:focus-visible{background:#2a2112;border-color:#d99a2c}.button:disabled{opacity:.45;cursor:not-allowed}.status{min-height:24px;margin:16px 0;color:#e7c98f}.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;margin:24px 0;background:#302a1e;border:1px solid #302a1e;border-radius:14px;overflow:hidden}.metric{background:#12100c;padding:16px}.metric span{display:block;color:#918a7a;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.metric strong{display:block;margin-top:5px;font:650 23px "Bricolage Grotesque",sans-serif}.toolbar{display:grid;grid-template-columns:minmax(0,1fr) repeat(3,minmax(160px,190px));gap:12px;margin:26px 0 14px}.toolbar input,.toolbar select{width:100%;border:1px solid #393124;border-radius:10px;background:#11100d;color:#f0ecd8;padding:11px 12px}.toolbar input:focus,.toolbar select:focus,.review textarea:focus,.review select:focus{border-color:#e3a83f;outline:none}.eval-list{display:grid;gap:10px}.eval{border:1px solid #302a1e;border-radius:14px;background:#11100d;overflow:hidden}.eval summary{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:14px;align-items:center;padding:16px 18px;cursor:pointer;list-style:none}.eval summary::-webkit-details-marker{display:none}.number{color:#e3a83f;font:650 13px "Bricolage Grotesque",sans-serif}.question{font-weight:600}.meta{display:flex;gap:8px;align-items:center;color:#8f8878;font-size:12px}.badge{border:1px solid #403725;border-radius:999px;padding:3px 8px;white-space:nowrap}.badge.correct{border-color:#56745d;color:#a9d6b2}.badge.incorrect{border-color:#80504a;color:#e7aaa1}.badge.running{border-color:#9a7430;color:#f0c772}.body{padding:0 18px 18px;border-top:1px solid #28231a}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-top:18px}.label{margin:0 0 7px;color:#918a7a;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.facts{margin:0;padding-left:18px;color:#d1cab9}.answer{min-height:94px;margin:0;padding:13px;border:1px solid #2d281e;border-radius:10px;background:#0b0a08;color:#eee7d6;white-space:pre-wrap}.run-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px;color:#918a7a;font-size:12px}.source-label{color:#efbd60;font-weight:650}.review{display:grid;grid-template-columns:180px 160px minmax(220px,1fr) auto;gap:10px;align-items:end;margin-top:18px}.review>label,.reason-field{display:grid;gap:6px;color:#aaa291;font-size:12px}.review select,.review textarea{border:1px solid #393124;border-radius:9px;background:#0b0a08;color:#f0ecd8;padding:9px}.review textarea{min-height:58px;resize:vertical}.reason-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.dictate{position:relative;display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid #ff9f89;border-radius:11px;background:#ef6a4c;color:#180b08;cursor:pointer;box-shadow:0 4px 0 #8f3423;transition:transform .16s ease,background .16s ease,box-shadow .16s ease}.dictate svg{width:19px;height:19px;stroke:currentColor}.dictate:hover{background:#ff8268;transform:translateY(-1px);box-shadow:0 5px 0 #8f3423}.dictate:focus-visible{outline:3px solid rgba(255,159,137,.35);outline-offset:3px}.dictate:active{transform:translateY(2px);box-shadow:0 2px 0 #8f3423}.dictate[aria-pressed="true"]{background:#f4c65d;border-color:#ffe09b;color:#171108;box-shadow:0 4px 0 #8c681b}.dictate:disabled{cursor:not-allowed;opacity:.42;box-shadow:none;transform:none}.empty{color:#827b6e}.telemetry{margin-top:42px;padding-top:26px;border-top:1px solid #302a1e}.telemetry h2{margin:0 0 8px;font:650 28px "Bricolage Grotesque",sans-serif}.telemetry p{max-width:800px;color:#bdb6a4}.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.field{padding:12px;border:1px solid #302a1e;border-radius:10px;background:#11100d}.field code{color:#efbd60}.field span{display:block;margin-top:4px;color:#8f8878;font-size:12px}.engine{position:absolute;width:1px;height:1px;border:0;clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden}@media(max-width:820px){.top{grid-template-columns:1fr}.controls{justify-content:flex-start}.metrics{grid-template-columns:repeat(2,1fr)}.toolbar,.grid,.review,.fields{grid-template-columns:1fr}.eval summary{grid-template-columns:38px minmax(0,1fr)}.meta{grid-column:2}}
     .review{grid-template-columns:180px 160px minmax(220px,1fr) auto auto}
-    .comparison{margin-top:18px;padding-top:18px;border-top:1px solid #302a1e}.comparison-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}.comparison-head h3{margin:0;font:650 19px "Bricolage Grotesque",sans-serif}.comparison-head span{color:#918a7a;font-size:12px}.comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.model-answer{padding:14px;border:1px solid #393124;border-radius:11px;background:#0b0a08}.model-answer h4{margin:0 0 8px;color:#efbd60}.model-answer p{min-height:72px;margin:0;white-space:pre-wrap}.model-answer .run-meta{margin-top:10px}
-    @media(max-width:820px){.comparison-grid{grid-template-columns:1fr}}
+    .comparison{margin-top:18px;padding-top:18px;border-top:1px solid #302a1e}.comparison-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}.comparison-head h3{margin:0;font:650 19px "Bricolage Grotesque",sans-serif}.comparison-head span{color:#918a7a;font-size:12px}.comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.comparison-insight{margin:10px 0 0;color:#cfc5ad;font-size:13px}.model-answer{padding:14px;border:1px solid #393124;border-radius:11px;background:#0b0a08}.model-answer h4{margin:0 0 8px;color:#efbd60}.model-answer p{min-height:72px;margin:0;white-space:pre-wrap}.model-answer .run-meta{margin-top:10px}
+    @media(max-width:820px){.comparison-grid,.review{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -41,6 +41,7 @@
       <input id="search" type="search" placeholder="Filter by question, category, or expected fact" aria-label="Filter evaluations">
       <select id="category" aria-label="Filter by category"><option value="">All categories</option></select>
       <select id="verdict" aria-label="Filter by verdict"><option value="">All verdicts</option><option value="incorrect">Incorrect only</option><option value="correct">Correct only</option><option value="unreviewed">Not reviewed only</option></select>
+      <select id="answerSource" aria-label="Filter by answer source"><option value="">All answer sources</option><option value="policy">Policy answers</option><option value="llm">LLM-generated answers</option><option value="fallback">Fallback answers</option><option value="guardrail">Guardrail answers</option><option value="error">Errors</option><option value="not_run">Not run yet</option></select>
     </div>
     <section class="eval-list" id="evalList" aria-label="Evaluation cases"></section>
 
@@ -49,6 +50,7 @@
       <p>The portfolio sends one anonymous <code>portfolio_assistant_response</code> event per completed request. Email addresses and phone numbers are redacted from questions before capture. Use the request ID to join helpfulness and downstream conversion events.</p>
       <div class="fields">
         <div class="field"><code>total_latency_ms</code><span>Use for P50 and P95 latency.</span></div>
+        <div class="field"><code>generation_latency_ms</code><span>Time spent in the model-generation step. Policy answers show zero.</span></div>
         <div class="field"><code>input_tokens_estimate</code><span>Approximate input tokens based on characters.</span></div>
         <div class="field"><code>output_tokens_estimate</code><span>Approximate generated answer tokens.</span></div>
         <div class="field"><code>estimated_cost_usd</code><span>Zero for the browser-hosted open-source model.</span></div>
@@ -64,8 +66,8 @@
     </section>
   </main>
 
-  <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-11.6" title="Ask Prerna evaluation engine"></iframe>
-  <script src="assets/eval-dataset.js?v=2026-10-11.6"></script>
+  <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-12.1" title="Ask Prerna evaluation engine"></iframe>
+  <script src="assets/eval-dataset.js?v=2026-10-12.1"></script>
   <script>
     const STORAGE_KEY = 'ask-prerna-eval-reviews-v1';
     const CASE_TIMEOUT_MS = 90000;
@@ -90,10 +92,52 @@
       return sorted[Math.min(sorted.length - 1, Math.ceil(point * sorted.length) - 1)];
     }
     function formatMs(value) { return Number.isFinite(value) ? `${Number(value).toLocaleString()} ms` : 'No data'; }
+    function answerSource(result) {
+      if (!result) return 'not_run';
+      if (result.answerMode === 'policy') return 'policy';
+      if (result.answerMode === 'gemini' || result.answerMode === 'qwen') return 'llm';
+      if (result.answerMode === 'input_guard_fallback') return 'guardrail';
+      if (result.answerMode === 'error' || result.answerMode === 'error_fallback' || result.error && !result.answer) return 'error';
+      return 'fallback';
+    }
+    function answerSourceLabel(result) {
+      if (!result) return 'Not run';
+      const labels = {
+        policy: 'Policy answer',
+        gemini: 'LLM: Gemini',
+        qwen: 'LLM: Qwen',
+        unsupported_fallback: 'No-evidence fallback',
+        input_guard_fallback: 'Input guard',
+        error: 'Error',
+        error_fallback: 'Error fallback'
+      };
+      if (result.answerMode === 'curated_fallback') return result.generationModel ? 'LLM rejected, approved fallback used' : 'Approved fallback';
+      return labels[result.answerMode] || 'Other answer path';
+    }
+    function generationLatencyLabel(result) {
+      if (Number(result?.generationLatencyMs) > 0) return `${Number(result.generationLatencyMs).toLocaleString()} ms`;
+      if (result?.answerMode === 'gemini' || result?.answerMode === 'qwen' || result?.generationModel) return 'Not recorded';
+      return 'Not used';
+    }
+    function comparisonInsight(comparison) {
+      const gemini = comparison?.gemini;
+      const qwen = comparison?.qwen;
+      if (!gemini || !qwen) return '';
+      const geminiGenerated = Number(gemini.generationLatencyMs) > 0;
+      const qwenGenerated = Number(qwen.generationLatencyMs) > 0;
+      if (!geminiGenerated && !qwenGenerated) return 'No model was used for this case. Both runs followed the same policy or fallback route.';
+      if (gemini.answerMode === 'curated_fallback' || qwen.answerMode === 'curated_fallback') return 'At least one model ran, but its output did not pass validation. The approved fallback is shown for that run.';
+      if (!geminiGenerated || !qwenGenerated) return 'Only one model completed generation, so a direct generation-speed comparison is not available.';
+      const difference = qwen.generationLatencyMs - gemini.generationLatencyMs;
+      if (difference === 0) return 'Both models recorded the same generation time on this run.';
+      const faster = difference > 0 ? 'Gemini' : 'Qwen';
+      return `${faster} generated the answer ${Math.abs(difference).toLocaleString()} ms faster on this run.`;
+    }
 
     function updateMetrics() {
       const results = Object.values(state).map(item => item.result).filter(Boolean);
       const latencies = results.map(item => item.totalLatencyMs).filter(Number.isFinite);
+      const generationLatencies = results.map(item => item.generationLatencyMs).filter(value => Number(value) > 0);
       const reviewed = Object.values(state).filter(item => item.verdict && item.verdict !== 'unreviewed');
       const correct = reviewed.filter(item => item.verdict === 'correct').length;
       const cacheHits = results.filter(item => item.retrievalCacheHit || item.generationCacheHit).length;
@@ -103,6 +147,8 @@
         ['Completed', `${results.length} / ${dataset.length}`],
         ['P50 latency', formatMs(percentile(latencies,.5))],
         ['P95 latency', formatMs(percentile(latencies,.95))],
+        ['P50 generation', generationLatencies.length ? formatMs(percentile(generationLatencies,.5)) : 'No data'],
+        ['P95 generation', generationLatencies.length ? formatMs(percentile(generationLatencies,.95)) : 'No data'],
         ['Fallbacks', String(results.filter(item => item.fallback).length)],
         ['Cache hit rate', results.length ? `${Math.round(cacheHits/results.length*100)}%` : 'No data'],
         ['Input tokens', inputTokens.toLocaleString()],
@@ -116,10 +162,13 @@
       const query = document.getElementById('search').value.toLowerCase();
       const category = document.getElementById('category').value;
       const verdict = document.getElementById('verdict').value;
+      const source = document.getElementById('answerSource').value;
       const filtered = dataset.filter(item => {
         const savedVerdict = state[item.id]?.verdict || 'unreviewed';
+        const result = state[item.id]?.result;
         return (!category || item.category === category)
           && (!verdict || savedVerdict === verdict)
+          && (!source || answerSource(result) === source)
           && `${item.question} ${item.category} ${item.expectedFacts.join(' ')}`.toLowerCase().includes(query);
       });
       list.innerHTML = filtered.map((item,index) => {
@@ -129,13 +178,13 @@
         const badgeText = review.running ? 'Running' : review.verdict === 'correct' ? 'Correct' : review.verdict === 'incorrect' ? 'Incorrect' : 'Not reviewed';
         const sources = result?.retrievedSources?.join(', ') || 'None';
         const comparison = review.comparison;
-        const modelCard = (label, modelResult) => `<article class="model-answer"><h4>${label}</h4><p>${modelResult?.answer ? escapeHtml(modelResult.answer) : '<span class="empty">No answer returned.</span>'}</p><div class="run-meta"><span>${escapeHtml(modelResult?.answerMode || 'error')}</span><span>${Number(modelResult?.totalLatencyMs || 0).toLocaleString()} ms</span><span>Fallback: ${modelResult?.fallback ? 'yes' : 'no'}</span>${modelResult?.generationModel ? `<span>${escapeHtml(modelResult.generationModel)}</span>` : ''}${modelResult?.error ? `<span>Error: ${escapeHtml(modelResult.error)}</span>` : ''}</div></article>`;
-        const comparisonMarkup = comparison ? `<section class="comparison"><div class="comparison-head"><h3>Generator comparison</h3><span>Same question, policy route, retrieval and approved evidence</span></div><div class="comparison-grid">${modelCard('Gemini Flash-Lite', comparison.gemini)}${modelCard('Qwen 2.5 · local', comparison.qwen)}</div></section>` : '';
+        const modelCard = (label, modelResult) => `<article class="model-answer"><h4>${label}</h4><p>${modelResult?.answer ? escapeHtml(modelResult.answer) : '<span class="empty">No answer returned.</span>'}</p><div class="run-meta"><span class="source-label">${escapeHtml(answerSourceLabel(modelResult))}</span><span>Model generation: ${generationLatencyLabel(modelResult)}</span><span>Total: ${formatMs(modelResult?.totalLatencyMs)}</span><span>Fallback: ${modelResult?.fallback ? 'yes' : 'no'}</span>${modelResult?.generationModel ? `<span>Model: ${escapeHtml(modelResult.generationModel)}</span>` : ''}${modelResult?.error ? `<span>Error: ${escapeHtml(modelResult.error)}</span>` : ''}</div></article>`;
+        const comparisonMarkup = comparison ? `<section class="comparison"><div class="comparison-head"><h3>Generator comparison</h3><span>Same question, policy route, retrieval and approved evidence</span></div><div class="comparison-grid">${modelCard('Gemini Flash-Lite', comparison.gemini)}${modelCard('Qwen 2.5 local', comparison.qwen)}</div><p class="comparison-insight">${escapeHtml(comparisonInsight(comparison))}</p></section>` : '';
         return `<details class="eval" data-id="${item.id}" ${openEvals.has(item.id) ? 'open' : ''}>
           <summary><span class="number">${String(dataset.indexOf(item)+1).padStart(2,'0')}</span><span class="question">${escapeHtml(item.question)}</span><span class="meta"><span>${escapeHtml(item.category)}</span><span class="badge ${badge}">${badgeText}</span></span></summary>
           <div class="body">
             <div class="grid"><div><p class="label">Expected response type</p><p>${escapeHtml(item.expectedType)}</p><p class="label">Expected facts</p><ul class="facts">${item.expectedFacts.map(fact => `<li>${escapeHtml(fact)}</li>`).join('')}</ul>${item.expectedSignals?.length ? `<p class="label">Expected guardrail signals</p><ul class="facts">${item.expectedSignals.map(signal => `<li>${escapeHtml(signal)}</li>`).join('')}</ul>` : ''}<p class="label">Expected sources</p><p>${escapeHtml(item.expectedSources.join(', ') || 'Policy or profile answer bank')}</p></div>
-            <div><p class="label">Actual answer</p><p class="answer">${result ? escapeHtml(result.answer) : '<span class="empty">Not run yet.</span>'}</p>${result ? `<div class="run-meta"><span>${escapeHtml(result.answerMode)}</span><span>${result.totalLatencyMs} ms</span><span>${result.inputTokens} in / ${result.outputTokens} out</span><span>Sources: ${escapeHtml(sources)}</span><span>Fallback: ${result.fallback ? 'yes' : 'no'}</span><span>Security: ${escapeHtml(result.securityMode || 'not recorded')} ${Number.isFinite(result.securityScore) ? `(${result.securityScore})` : ''}</span>${result.action ? `<span>Action: ${escapeHtml(result.action.label)} → ${escapeHtml(result.action.href)}</span>` : ''}${result.error ? `<span>Error: ${escapeHtml(result.error)}</span>` : ''}</div>` : ''}</div></div>
+            <div><p class="label">Actual answer</p><p class="answer">${result ? escapeHtml(result.answer) : '<span class="empty">Not run yet.</span>'}</p>${result ? `<div class="run-meta"><span class="source-label">${escapeHtml(answerSourceLabel(result))}</span><span>Model generation: ${generationLatencyLabel(result)}</span><span>Total: ${formatMs(result.totalLatencyMs)}</span><span>${result.inputTokens} in / ${result.outputTokens} out</span><span>Sources: ${escapeHtml(sources)}</span><span>Fallback: ${result.fallback ? 'yes' : 'no'}</span><span>Security: ${escapeHtml(result.securityMode || 'not recorded')} ${Number.isFinite(result.securityScore) ? `(${result.securityScore})` : ''}</span>${result.action ? `<span>Action: ${escapeHtml(result.action.label)} → ${escapeHtml(result.action.href)}</span>` : ''}${result.error ? `<span>Error: ${escapeHtml(result.error)}</span>` : ''}</div>` : ''}</div></div>
             ${comparisonMarkup}
             <div class="review"><label>Verdict<select data-field="verdict"><option value="unreviewed">Not reviewed</option><option value="correct" ${review.verdict==='correct'?'selected':''}>Correct</option><option value="incorrect" ${review.verdict==='incorrect'?'selected':''}>Incorrect</option></select></label><label>Helpfulness<select data-field="helpfulness"><option value="">Not rated</option>${[1,2,3,4,5].map(n => `<option value="${n}" ${String(review.helpfulness)===String(n)?'selected':''}>${n} / 5</option>`).join('')}</select></label><div class="reason-field"><div class="reason-head"><label for="reason-${escapeHtml(item.id)}">Reason</label><button class="dictate" type="button" data-dictate aria-label="${SpeechRecognitionAPI ? 'Start voice dictation' : 'Voice dictation unavailable'}" title="${SpeechRecognitionAPI ? 'Speak your feedback' : 'Voice dictation unavailable in this browser'}" aria-pressed="false" ${SpeechRecognitionAPI ? '' : 'disabled'}>${microphoneIcon}</button></div><textarea id="reason-${escapeHtml(item.id)}" data-field="reason" placeholder="Why is it correct or incorrect?">${escapeHtml(review.reason || '')}</textarea></div><button class="button run-one" type="button" ${(batchRunning || review.running)?'disabled':''}>${result?'Run again':'Run case'}</button><button class="button targeted compare-one" type="button" ${(batchRunning || review.running)?'disabled':''}>Compare models</button></div>
           </div></details>`;
@@ -173,7 +222,7 @@
         ]);
         state[id] = { ...state[id], running:false, result };
       } catch (error) {
-        state[id] = { ...state[id], running:false, result:{ answer:'', error:error.message, fallback:true, totalLatencyMs:0, inputTokens:0, outputTokens:0, retrievedSources:[] } };
+        state[id] = { ...state[id], running:false, result:{ answer:'', error:error.message, fallback:true, totalLatencyMs:0, generationLatencyMs:0, inputTokens:0, outputTokens:0, retrievedSources:[], answerMode:'error' } };
       }
       save();
       render();
@@ -185,7 +234,7 @@
       if (!item || state[id]?.running) return;
       state[id] = { ...state[id], running:true };
       render();
-      const failureResult = error => ({ answer:'', error:error.message, fallback:true, totalLatencyMs:0, inputTokens:0, outputTokens:0, retrievedSources:[], answerMode:'error' });
+      const failureResult = error => ({ answer:'', error:error.message, fallback:true, totalLatencyMs:0, generationLatencyMs:0, inputTokens:0, outputTokens:0, retrievedSources:[], answerMode:'error' });
       try {
         const ask = await waitForEngine();
         const runProvider = async provider => {
@@ -327,7 +376,7 @@
       }
     });
     document.getElementById('exportRun').addEventListener('click', () => {
-      const payload = { exportedAt:new Date().toISOString(), datasetVersion:'2026-10-11.6', reviews:dataset.map(item => ({ ...item, ...(state[item.id] || {}) })) };
+      const payload = { exportedAt:new Date().toISOString(), datasetVersion:'2026-10-12.1', reviews:dataset.map(item => ({ ...item, ...(state[item.id] || {}) })) };
       const url = URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
       const link = document.createElement('a'); link.href=url; link.download=`ask-prerna-evals-${new Date().toISOString().slice(0,10)}.json`; link.click(); URL.revokeObjectURL(url);
     });
@@ -335,6 +384,7 @@
     document.getElementById('search').addEventListener('input', render);
     document.getElementById('category').addEventListener('change', render);
     document.getElementById('verdict').addEventListener('change', render);
+    document.getElementById('answerSource').addEventListener('change', render);
     list.addEventListener('click', event => {
       const dictateButton = event.target.closest('[data-dictate]');
       if (dictateButton) { startDictation(dictateButton); return; }

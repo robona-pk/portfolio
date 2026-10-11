@@ -163,9 +163,9 @@ Each golden case contains:
 - The source it should retrieve
 - The guardrail behaviour expected for safety cases
 
-The [**eval console**](eval.html) runs these cases through the real chatbot and brings the expected and actual results together for review.
+The [**eval console**](eval.html) runs these cases through the real chatbot and brings the expected and actual results together for review. It can filter results by answer source, including policy, LLM, fallback, guardrail, and error paths. Each result separates total request latency from the time spent in model generation, so slow retrieval or safety checks are not confused with a slow model.
 
-For an open-ended case, **Compare models** runs the same question, retrieval, approved evidence, validation rules, and length limit through Gemini Flash-Lite and browser-hosted Qwen 2.5. The side-by-side output isolates generator quality from retrieval or routing quality and shows each model's latency, answer mode, and fallback status. Qwen is evaluation-only; it is not used by the visitor-facing bot.
+For an open-ended case, **Compare models** runs the same question, retrieval, approved evidence, validation rules, and length limit through Gemini Flash-Lite and browser-hosted Qwen 2.5. The side-by-side output isolates generator quality from retrieval or routing quality and shows total latency, model-generation latency, answer source, and fallback status. If a policy answer bypasses both models, the console says so instead of presenting identical answers as a meaningful model comparison. Qwen is evaluation-only; it is not used by the visitor-facing bot.
 
 ```mermaid
 flowchart LR

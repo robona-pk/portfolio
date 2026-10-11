@@ -2252,6 +2252,7 @@ const personalQuestion = /\b(age|birthday|married|single|dating|boyfriend|girlfr
 const personalAnswer = 'Prerna keeps her family and personal life private. This assistant is limited to her professional experience, product work, skills, and the interests she has chosen to share publicly.';
 const personalStatusQuestion = /\b(dead|died|death|alive|ill|sick|hospital|health condition|pregnant|diagnosis)\b/i;
 const personalStatusAnswer = 'I can’t verify or speculate about personal-status claims. I’m here to share Prerna’s professional work, experience, and projects.';
+const currentMoodQuestion = /\b(?:how|what)\b.{0,12}\b(?:prerna(?:'s)?|she|her)\b.{0,16}\b(?:mood|feeling|emotional state)\b|\b(?:is|does)\b.{0,8}\b(?:prerna|she)\b.{0,8}\b(?:happy|sad|angry|upset|feeling)\b.{0,8}\b(?:today|now|right now)\b/i;
 const approvedKnowledge = window.ASK_PRERNA_KNOWLEDGE?.approvedAnswers || {};
 const educationQuestion = /\b(education|degree|university|college|stud(y|ied)|biotechnology|srm)\b/i;
 const rolesQuestion = /\b(preferred roles?|roles? (is|are).{0,18}\b(looking|open)|senior product manager|product manager role)\b/i;
@@ -2559,6 +2560,11 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   if (personalStatusQuestion.test(question)) return {
     answer: personalStatusAnswer,
     citations: []
+  };
+  if (currentMoodQuestion.test(question)) return {
+    answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
+    citations: [],
+    policyOnly: true
   };
   if (personalQuestion.test(question) || privateLifestyleQuestion.test(question)) return {
     answer: personalAnswer,

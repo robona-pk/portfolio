@@ -1692,7 +1692,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-10.8"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-11.3"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2189,7 +2189,7 @@ const portfolioKnowledge = [
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-11.1',
+  rulesVersion: '2026-10-11.3',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   directAnswerThreshold: 0.38,
@@ -2250,15 +2250,19 @@ const personalStatusAnswer = 'I can’t verify or speculate about personal-statu
 const approvedKnowledge = window.ASK_PRERNA_KNOWLEDGE?.approvedAnswers || {};
 const educationQuestion = /\b(education|degree|university|college|stud(y|ied)|biotechnology|srm)\b/i;
 const rolesQuestion = /\b(preferred roles?|roles? (is|are).{0,18}\b(looking|open)|senior product manager|product manager role)\b/i;
-const hobbiesQuestion = /\b(hobb(y|ies)|outside (of )?work|free time|spare time|leisure|after work|when (she|prerna) is not working|drums?|lifting|fitness|weight loss|nutritional label|dopamine detox|solo travel)\b/i;
+const dopamineDetoxQuestion = /\b(dopamine detox|dopamine fast(?:ing)?|detox(?:ing)? from dopamine)\b/i;
+const hobbiesQuestion = /\b(hobb(y|ies)|outside (of )?work|free time|spare time|leisure|after work|when (she|prerna) is not working|drums?|lifting|fitness|weight loss|nutritional label|solo travel)\b/i;
 const interestQuestion = /\b(interests?|what topics?.{0,20}\b(enjoy|like|love|talk)|what does.{0,18}\benjoy|what does.{0,18}\blove)\b/i;
 const lifePhilosophyQuestion = /\b(life philosophy|philosophy (in|on|about) life|personal philosophy|personal motto|life motto|mantra|outlook on life|what does.{0,18}\bbelieve in)\b/i;
 const promptInjection = /\b(ignore|disregard|forget|override|bypass)\b.{0,48}\b(instructions?|rules?|prompt|policy|previous|prior|above|safety)|\b(system|hidden|developer)\s*(prompt|message|instructions?)\b|\b(jailbreak|unrestricted mode|reveal|repeat|print|expose|show)\b.{0,48}\b(instructions?|rules?|prompt|policy|developer message|system message)|\b(pretend (to be|you are)|change your role|higher priority instructions?)\b|\bact as\b.{0,32}\b(unrestricted|system|developer|assistant|model|jailbroken|different role)\b/i;
 const externalKnowledgeQuestion = /\b(president|prime minister|capital of|weather|news|stock price|share price|crypto|bitcoin|election|sports score|recipe|joke|translate|current time)\b/i;
 const outOfScopeAnswer = 'I’m designed as a guide to Prerna’s work—not as a general web search. If you are assessing fit, ask about her product approach, growth outcomes, skills, career interests, or the projects she has built.';
 const answerScopeQuestion = /\b(what (questions?|things?|topics?) can (you|this bot|the bot).{0,20}\b(answer|help with|talk about)|what can (i|we).{0,20}\b(ask|ask you)|how can (you|this bot|the bot).{0,20}\bhelp|what do (you|this bot|the bot) know about (prerna|her))\b/i;
+const botArchitectureQuestion = /\b(how|what).{0,18}\b(this bot|the bot|chatbot|portfolio assistant)\b.{0,24}\b(made|built|work|implemented|architecture|tech stack)|\b(how (?:was|is).{0,12}\b(this bot|the bot|chatbot)\b.{0,12}\b(made|built))\b/i;
 const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
 const assistantAnswer = 'I’m Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work.';
+const botArchitectureAnswer = approvedKnowledge.botArchitecture || 'This bot combines an approved answer bank, MiniLM semantic retrieval, and browser-based Qwen 2.5 generation, with privacy, injection, grounding, and fallback checks. The GitHub README explains the complete architecture and evaluation setup.';
+const botReadmeUrl = 'https://github.com/robona-pk/portfolio#ask-prerna--portfolio-chatbot';
 const strengthsQuestion = /\b(strengths?|strongest|strong suit|best at|superpower)\b/i;
 const strengthsAnswer = 'Prerna’s strengths are her energy and persistence. She is comfortable navigating ambiguity, stays curious, and uses behavioural evidence to test ideas instead of assuming she has the answer.';
 const weaknessesQuestion = /\b(weakness|weaknesses|area(s)? (to|of) improve|shortcoming|development area)\b/i;
@@ -2597,6 +2601,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   };
   if (educationQuestion.test(question)) return { answer: approvedKnowledge.education, citations: [] };
   if (rolesQuestion.test(question)) return { answer: approvedKnowledge.roles, citations: [] };
+  if (dopamineDetoxQuestion.test(question)) return { answer: approvedKnowledge.dopamineDetox, citations: [] };
   if (hobbiesQuestion.test(question)) return { answer: approvedKnowledge.hobbies, citations: [] };
   if (interestQuestion.test(question)) return { answer: approvedKnowledge.interests, citations: [] };
   if (lifePhilosophyQuestion.test(question)) return { answer: approvedKnowledge.lifePhilosophy, citations: [] };
@@ -2674,6 +2679,11 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     answer: contactAnswer,
     citations: []
   };
+  if (botArchitectureQuestion.test(question)) return {
+    answer: botArchitectureAnswer,
+    citations: [],
+    action: { label: 'See how the bot is built ↗', href: botReadmeUrl }
+  };
   if (assistantQuestion.test(question)) return {
     answer: assistantAnswer,
     citations: []
@@ -2733,6 +2743,7 @@ const policyControlledAnswers = new Set([
   personalStatusAnswer,
   outOfScopeAnswer,
   assistantAnswer,
+  botArchitectureAnswer,
   behaviouralBoundaryAnswer,
   contactAnswer,
   capabilityAnswer,
@@ -2767,7 +2778,7 @@ const qwenRequests = new Map();
 function getQwenWorker(runtimeOptions = {}) {
   if (runtimeOptions.disableWebGPU || !('gpu' in navigator) || !window.Worker) return null;
   if (qwenWorker) return qwenWorker;
-  qwenWorker = new Worker('assets/qwen-worker.js?v=2026-10-11.1', { type: 'module' });
+  qwenWorker = new Worker('assets/qwen-worker.js?v=2026-10-11.3', { type: 'module' });
   qwenWorker.addEventListener('message', event => {
     if (event.data?.type === 'progress') return;
     const request = qwenRequests.get(event.data?.id);
@@ -3090,6 +3101,10 @@ function appendRagMessage(kind, text, citations = [], action = null, requestId =
     link.className = 'rag-action';
     link.href = action.href;
     link.textContent = action.label;
+    if (/^https?:\/\//i.test(action.href)) {
+      link.target = '_blank';
+      link.rel = 'noopener';
+    }
     link.addEventListener('click', handleRagActionNavigation);
     message.appendChild(link);
   }

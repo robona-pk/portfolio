@@ -114,7 +114,7 @@ flowchart TD
 - ⚙️ **AI runtime:** Transformers.js + WebGPU run MiniLM and Qwen inside the browser.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
 - ⚡ **Latency controls:** deterministic questions avoid model loading; repeated clicks are blocked; semantic safety has an 8-second ceiling and Qwen has a 12-second ceiling before an approved fallback is shown.
-- 🧪 **Golden evaluation dataset:** 106 fixed test cases define the expected facts, sources, response type, and safety behaviour.
+- 🧪 **Golden evaluation dataset:** 108 fixed test cases define the expected facts, sources, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
 - 🚀 **Hosting:** GitHub + Vercel. No database or paid model API is required.
 
@@ -150,7 +150,7 @@ These controls reduce risk but are not foolproof. The client-side knowledge base
 
 ## Golden evaluation dataset and eval console
 
-The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 106 cases are the benchmark used to test the **whole RAG system**—routing, retrieval, policy responses, Qwen output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
+The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 108 cases are the benchmark used to test the **whole RAG system**—routing, retrieval, policy responses, Qwen output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
 
 Each golden case contains:
 
@@ -164,7 +164,7 @@ The [**eval console**](eval.html) runs these cases through the real chatbot and 
 
 ```mermaid
 flowchart LR
-    A["🏆 Golden dataset<br/>106 test cases"] --> B["▶️ Run through the live bot"]
+    A["🏆 Golden dataset<br/>108 test cases"] --> B["▶️ Run through the live bot"]
     B --> C["📋 Compare with<br/>expected facts and sources"]
     C --> D["👤 Human-as-judge review"]
     D --> E{"Correct and helpful?"}

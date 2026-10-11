@@ -1,12 +1,12 @@
 # Ask Prerna evaluation and telemetry guide
 
-This document explains what the chatbot records, how to review the 106-question evaluation set, and how to build the PostHog views needed to improve the product and detect likely abuse.
+This document explains what the chatbot records, how to review the 108-question evaluation set, and how to build the PostHog views needed to improve the product and detect likely abuse.
 
 ## Evaluation workflow
 
 Open `/eval.html` on the preproduction deployment.
 
-1. Run one question while debugging a specific route, or select **Run all 106** for a complete pass.
+1. Run one question while debugging a specific route, or select **Run all 108** for a complete pass.
 2. Open each result and compare the answer with the expected facts, response type, and sources.
 3. Mark the result **Correct** or **Incorrect**.
 4. Give it a helpfulness score from 1 to 5.

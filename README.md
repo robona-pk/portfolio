@@ -113,8 +113,25 @@ flowchart TD
 - 🤖 **Generation:** Qwen2.5-0.5B-Instruct writes short responses for supported, open-ended questions.
 - ⚙️ **AI runtime:** Transformers.js + WebGPU run MiniLM and Qwen inside the browser.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
+- 🧪 **Golden evaluation dataset:** 106 fixed test cases define the expected facts, sources, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
 - 🚀 **Hosting:** GitHub + Vercel. No database or paid model API is required.
+
+## Terminology used in this project
+
+| Term | What it means here |
+| --- | --- |
+| **Knowledge base** | The approved facts and portfolio passages the bot is allowed to use. |
+| **Policy layer** | Rules for privacy, confidentiality, abuse, irrelevant questions, and prompt injection. |
+| **Deterministic routing** | Code that sends known question types to a fixed approved response instead of asking Qwen. |
+| **Semantic retrieval** | MiniLM matches a question to passages with a similar meaning, not only identical keywords. |
+| **Generator** | Qwen writes a concise answer using only the retrieved evidence. |
+| **Grounding checks** | Output checks verify that Qwen's claims are supported by the retrieved sources. |
+| **Fail-closed fallback** | If the system is uncertain or a component fails, it returns an approved safe answer. |
+| **Golden evaluation dataset** | A fixed benchmark of questions with human-defined expected facts, sources, response types, and guardrail behaviour. |
+| **Regression test** | A golden case that is rerun after changes to ensure a previously working behaviour has not broken. |
+| **Human-as-judge** | A person reviews the actual answer for correctness, relevance, tone, and helpfulness. |
+| **Telemetry** | Anonymous product data used to monitor latency, fallbacks, errors, helpfulness, and conversions. |
 
 <details>
 <summary><strong>🛡️ Safety controls</strong></summary>
@@ -130,13 +147,23 @@ These controls reduce risk but are not foolproof. The client-side knowledge base
 
 </details>
 
-## How I evaluate the AI
+## Golden evaluation dataset and eval console
 
-The evaluation console at `eval.html` is the quality-control system for the chatbot. It tests the **whole RAG experience**—routing, retrieval, policy responses, Qwen output, fallbacks, safety, and response time.
+The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 106 cases are the benchmark used to test the **whole RAG system**—routing, retrieval, policy responses, Qwen output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
+
+Each golden case contains:
+
+- The test question and category
+- The expected response type
+- The facts the answer must contain
+- The source it should retrieve
+- The guardrail behaviour expected for safety cases
+
+The [**eval console**](eval.html) runs these cases through the real chatbot and brings the expected and actual results together for review.
 
 ```mermaid
 flowchart LR
-    A["🧪 106 test questions"] --> B["▶️ Run through the live bot"]
+    A["🏆 Golden dataset<br/>106 test cases"] --> B["▶️ Run through the live bot"]
     B --> C["📋 Compare with<br/>expected facts and sources"]
     C --> D["👤 Human-as-judge review"]
     D --> E{"Correct and helpful?"}
@@ -156,7 +183,7 @@ flowchart LR
     class G,H pass;
 ```
 
-### What the 106 cases cover
+### What the golden dataset covers
 
 - ✅ Profile facts, skills, experience, work and measurable outcomes
 - ✍️ Paraphrases, misspellings and fuzzy matching
@@ -183,7 +210,7 @@ flowchart LR
 | Retrieved sources | Input/output tokens | Contact clicks |
 | Safety decisions | Estimated cost | Questions visitors ask |
 
-This is **human-as-judge evaluation**, not automatic model training. Feedback is used to improve the answer bank, retrieval, guardrails, and regression tests; Qwen is not silently retrained.
+The golden dataset is a **testing benchmark**, not the chatbot's knowledge base and not training data. This is **human-as-judge evaluation**, not automatic model training. Feedback is used to improve the answer bank, retrieval, guardrails, and regression suite; Qwen is not silently retrained.
 
 See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluations/PREPROD-SECURITY-AUDIT-2026-10-10.md).
 
@@ -201,7 +228,7 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 | Approved facts and policy responses | `assets/chatbot-knowledge.js` |
 | Retrieval passages and routing | `index.html` |
 | Qwen generation settings | `assets/qwen-worker.js` |
-| Evaluation questions | `assets/eval-dataset.js` |
+| Golden evaluation dataset | `assets/eval-dataset.js` |
 | Evaluation interface | `eval.html` |
 | Analytics definitions | `TELEMETRY.md` |
 

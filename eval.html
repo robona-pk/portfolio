@@ -74,7 +74,7 @@
     const dataset = window.ASK_PRERNA_EVALS || [];
     const state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     Object.keys(state).forEach(id => {
-      if (state[id]?.running) state[id] = { ...state[id], running:false };
+      if (state[id]?.running || state[id]?.comparisonRunning) state[id] = { ...state[id], running:false, comparisonRunning:false };
     });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     const list = document.getElementById('evalList');
@@ -190,7 +190,7 @@
             <div class="grid"><div><p class="label">Expected response type</p><p>${escapeHtml(item.expectedType)}</p>${item.expectedIntent ? `<p class="label">Expected intent</p><p>${escapeHtml(item.expectedIntent)}</p>` : ''}<p class="label">Expected facts</p><ul class="facts">${item.expectedFacts.map(fact => `<li>${escapeHtml(fact)}</li>`).join('')}</ul>${item.expectedSignals?.length ? `<p class="label">Expected guardrail signals</p><ul class="facts">${item.expectedSignals.map(signal => `<li>${escapeHtml(signal)}</li>`).join('')}</ul>` : ''}<p class="label">Expected sources</p><p>${escapeHtml(item.expectedSources.join(', ') || 'Policy or profile answer bank')}</p></div>
             <div><p class="label">Actual answer</p><p class="answer">${result ? escapeHtml(result.answer) : '<span class="empty">Not run yet.</span>'}</p>${result ? `<div class="run-meta"><span class="source-label">${escapeHtml(answerSourceLabel(result))}</span><span>Model generation: ${generationLatencyLabel(result)}</span><span>Total: ${formatMs(result.totalLatencyMs)}</span>${result.intent ? `<span>Intent: ${escapeHtml(result.intent)} (${escapeHtml(result.intentMode || 'unknown')}, ${Number(result.intentConfidence || 0).toFixed(2)})</span>` : ''}<span>${result.inputTokens} in / ${result.outputTokens} out</span><span>Sources: ${escapeHtml(sources)}</span><span>Fallback: ${result.fallback ? 'yes' : 'no'}</span><span>Security: ${escapeHtml(result.securityMode || 'not recorded')} ${Number.isFinite(result.securityScore) ? `(${result.securityScore})` : ''}</span>${result.action ? `<span>Action: ${escapeHtml(result.action.label)} → ${escapeHtml(result.action.href)}</span>` : ''}${result.error ? `<span>Error: ${escapeHtml(result.error)}</span>` : ''}</div>` : ''}</div></div>
             ${comparisonMarkup}
-            <div class="review"><label>Verdict<select data-field="verdict"><option value="unreviewed">Not reviewed</option><option value="correct" ${review.verdict==='correct'?'selected':''}>Correct</option><option value="incorrect" ${review.verdict==='incorrect'?'selected':''}>Incorrect</option></select></label><label>Helpfulness<select data-field="helpfulness"><option value="">Not rated</option>${[1,2,3,4,5].map(n => `<option value="${n}" ${String(review.helpfulness)===String(n)?'selected':''}>${n} / 5</option>`).join('')}</select></label><div class="reason-field"><div class="reason-head"><label for="reason-${escapeHtml(item.id)}">Reason</label><button class="dictate" type="button" data-dictate aria-label="${SpeechRecognitionAPI ? 'Start voice dictation' : 'Voice dictation unavailable'}" title="${SpeechRecognitionAPI ? 'Speak your feedback' : 'Voice dictation unavailable in this browser'}" aria-pressed="false" ${SpeechRecognitionAPI ? '' : 'disabled'}>${microphoneIcon}</button></div><textarea id="reason-${escapeHtml(item.id)}" data-field="reason" placeholder="Why is it correct or incorrect?">${escapeHtml(review.reason || '')}</textarea></div><button class="button run-one" type="button" ${(batchRunning || review.running)?'disabled':''}>${result?'Run again':'Run case'}</button><button class="button targeted compare-one" type="button" title="Runs this case once with Gemini and once with local Qwen" ${(batchRunning || review.running)?'disabled':''}>Compare models</button></div>
+            <div class="review"><label>Verdict<select data-field="verdict"><option value="unreviewed">Not reviewed</option><option value="correct" ${review.verdict==='correct'?'selected':''}>Correct</option><option value="incorrect" ${review.verdict==='incorrect'?'selected':''}>Incorrect</option></select></label><label>Helpfulness<select data-field="helpfulness"><option value="">Not rated</option>${[1,2,3,4,5].map(n => `<option value="${n}" ${String(review.helpfulness)===String(n)?'selected':''}>${n} / 5</option>`).join('')}</select></label><div class="reason-field"><div class="reason-head"><label for="reason-${escapeHtml(item.id)}">Reason</label><button class="dictate" type="button" data-dictate aria-label="${SpeechRecognitionAPI ? 'Start voice dictation' : 'Voice dictation unavailable'}" title="${SpeechRecognitionAPI ? 'Speak your feedback' : 'Voice dictation unavailable in this browser'}" aria-pressed="false" ${SpeechRecognitionAPI ? '' : 'disabled'}>${microphoneIcon}</button></div><textarea id="reason-${escapeHtml(item.id)}" data-field="reason" placeholder="Why is it correct or incorrect?">${escapeHtml(review.reason || '')}</textarea></div><button class="button run-one" type="button" ${(batchRunning || review.running)?'disabled':''}>${review.running && !review.comparisonRunning ? 'Running...' : result ? 'Run again' : 'Run case'}</button><button class="button targeted compare-one" type="button" title="Runs this case once with Gemini and once with local Qwen" ${(batchRunning || review.running)?'disabled':''}>${review.comparisonRunning ? 'Comparing...' : 'Compare models'}</button></div>
           </div></details>`;
       }).join('');
       updateMetrics();
@@ -215,7 +215,7 @@
     async function runCase(id) {
       const item = dataset.find(entry => entry.id === id);
       if (!item) return;
-      state[id] = { ...state[id], running:true };
+      state[id] = { ...state[id], running:true, comparisonRunning:false };
       render();
       status.textContent = `Running ${item.id}: ${item.question}`;
       try {
@@ -224,9 +224,9 @@
           ask(item.question, item.runtimeOptions || {}),
           new Promise((_, reject) => setTimeout(() => reject(new Error('Case timed out after 90 seconds. The batch continued.')), CASE_TIMEOUT_MS))
         ]);
-        state[id] = { ...state[id], running:false, result };
+        state[id] = { ...state[id], running:false, comparisonRunning:false, result };
       } catch (error) {
-        state[id] = { ...state[id], running:false, result:{ answer:'', error:error.message, fallback:true, totalLatencyMs:0, generationLatencyMs:0, inputTokens:0, outputTokens:0, retrievedSources:[], answerMode:'error' } };
+        state[id] = { ...state[id], running:false, comparisonRunning:false, result:{ answer:'', error:error.message, fallback:true, totalLatencyMs:0, generationLatencyMs:0, inputTokens:0, outputTokens:0, retrievedSources:[], answerMode:'error' } };
       }
       save();
       render();
@@ -236,7 +236,7 @@
     async function runComparison(id) {
       const item = dataset.find(entry => entry.id === id);
       if (!item || state[id]?.running) return;
-      state[id] = { ...state[id], running:true };
+      state[id] = { ...state[id], running:true, comparisonRunning:true };
       render();
       const failureResult = error => ({ answer:'', error:error.message, fallback:true, totalLatencyMs:0, generationLatencyMs:0, inputTokens:0, outputTokens:0, retrievedSources:[], answerMode:'error' });
       try {
@@ -256,10 +256,10 @@
         };
         const gemini = await runProvider('gemini');
         const qwen = await runProvider('qwen');
-        state[id] = { ...state[id], running:false, comparison:{ gemini, qwen, comparedAt:new Date().toISOString() } };
+        state[id] = { ...state[id], running:false, comparisonRunning:false, comparison:{ gemini, qwen, comparedAt:new Date().toISOString() } };
         status.textContent = `Compared Gemini and Qwen for ${item.id}. Review the answers side by side.`;
       } catch (error) {
-        state[id] = { ...state[id], running:false, comparison:{ gemini:failureResult(error), qwen:failureResult(error), comparedAt:new Date().toISOString() } };
+        state[id] = { ...state[id], running:false, comparisonRunning:false, comparison:{ gemini:failureResult(error), qwen:failureResult(error), comparedAt:new Date().toISOString() } };
         status.textContent = `Comparison failed: ${error.message}`;
       }
       save();

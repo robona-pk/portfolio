@@ -56,6 +56,7 @@ img,video{max-width:100%}
   --fb:"Inter",sans-serif;
 }
 html{scroll-behavior:smooth}
+html.fluid-scroll-active{scroll-behavior:auto}
 body{background:var(--bg);color:var(--t1);font-family:var(--fb);font-size:16px;line-height:1.6;overflow-x:hidden;
   background-image:radial-gradient(circle,rgba(240,160,32,.04) 1px,transparent 1px);background-size:32px 32px}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
@@ -2157,6 +2158,81 @@ function onScroll() {
   }
 }
 window.addEventListener('scroll', onScroll, { passive: true });
+
+/* ═══════════════════════════════════════════════════════
+   FLUID PAGE SCROLL
+   A restrained inertial layer for desktop wheel/trackpad input.
+   Touch, keyboard, nested panels, and reduced-motion users keep native scrolling.
+═══════════════════════════════════════════════════════ */
+function initFluidPageScroll() {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const finePointer = window.matchMedia('(pointer: fine)');
+  if (reduceMotion.matches || !finePointer.matches) return;
+  document.documentElement.classList.add('fluid-scroll-active');
+
+  let current = window.scrollY;
+  let target = current;
+  let frame = 0;
+
+  const maximumScroll = () => Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  const clampTarget = value => Math.max(0, Math.min(maximumScroll(), value));
+
+  function nestedScrollerCanMove(node, delta) {
+    for (let element = node instanceof Element ? node : null; element && element !== document.body; element = element.parentElement) {
+      const style = window.getComputedStyle(element);
+      if (!/(auto|scroll)/.test(style.overflowY) || element.scrollHeight <= element.clientHeight + 1) continue;
+      if (delta < 0 && element.scrollTop > 0) return true;
+      if (delta > 0 && element.scrollTop + element.clientHeight < element.scrollHeight - 1) return true;
+    }
+    return false;
+  }
+
+  function settle() {
+    current += (target - current) * 0.14;
+    if (Math.abs(target - current) < 0.45) {
+      current = target;
+      window.scrollTo(0, current);
+      frame = 0;
+      return;
+    }
+    window.scrollTo(0, current);
+    frame = window.requestAnimationFrame(settle);
+  }
+
+  function stopFluidScroll() {
+    if (frame) window.cancelAnimationFrame(frame);
+    frame = 0;
+    current = target = window.scrollY;
+  }
+
+  window.addEventListener('wheel', event => {
+    if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.shiftKey || nestedScrollerCanMove(event.target, event.deltaY)) return;
+    const scale = event.deltaMode === WheelEvent.DOM_DELTA_LINE ? 18 : event.deltaMode === WheelEvent.DOM_DELTA_PAGE ? window.innerHeight : 1;
+    const delta = Math.max(-180, Math.min(180, event.deltaY * scale));
+    const nextTarget = clampTarget(target + delta);
+    if (nextTarget === target && ((delta < 0 && target === 0) || (delta > 0 && target === maximumScroll()))) return;
+    event.preventDefault();
+    target = nextTarget;
+    if (!frame) {
+      current = window.scrollY;
+      frame = window.requestAnimationFrame(settle);
+    }
+  }, { passive: false });
+
+  window.addEventListener('scroll', () => {
+    if (!frame) current = target = window.scrollY;
+  }, { passive: true });
+  window.addEventListener('resize', () => { target = clampTarget(target); }, { passive: true });
+  window.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'mouse' && event.button === 0) stopFluidScroll();
+  }, { passive: true });
+  window.addEventListener('keydown', event => {
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) stopFluidScroll();
+  }, { passive: true });
+  reduceMotion.addEventListener?.('change', event => { if (event.matches) stopFluidScroll(); });
+}
+
+initFluidPageScroll();
 
 /* ═══════════════════════════════════════════════════════
    HAMBURGER NAV

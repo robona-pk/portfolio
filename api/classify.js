@@ -63,7 +63,7 @@ export default async function handler(req, res) {
     'education: degree, university, or studies',
     'origin: where Prerna is from or grew up',
     'location: where Prerna is currently based',
-    'availability: contacting, interviewing, or speaking with Prerna',
+    'availability: contact details, scheduling, timing, or whether Prerna is available to meet or interview',
     'resume: finding, viewing, opening, downloading, or sharing Prerna’s resume or CV',
     'career_interest: roles or opportunities Prerna wants',
     'hobbies: free time, fitness, drums, travel, or interests',
@@ -78,7 +78,7 @@ export default async function handler(req, res) {
     'lenskart_impact: Prerna’s published work or outcomes at Lenskart',
     'bajaj_impact: Prerna’s published work or outcomes at Bajaj Finserv Health',
     'bot_architecture: how this chatbot was built',
-    'hiring_fit: why someone should hire or assess Prerna',
+    'hiring_fit: whether Prerna is worth hiring, interviewing, shortlisting, or assessing as a candidate',
     'off_topic: general knowledge unrelated to Prerna or this portfolio',
     'unknown: no supported intent can be determined'
   ].join('\n');

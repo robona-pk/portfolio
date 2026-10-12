@@ -2194,15 +2194,15 @@ const portfolioKnowledge = [
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-12.3',
+  rulesVersion: '2026-10-12.4',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   relevanceSemanticThreshold: 0.24,
   relevanceLexicalCoverageThreshold: 0.5,
   relevanceLexicalMinimumMatches: 1,
-  intentSemanticThreshold: 0.38,
-  intentSemanticMargin: 0.05,
+  intentSemanticThreshold: 0.3,
+  intentSemanticMargin: 0.005,
   intentHostedConfidenceThreshold: 0.72,
   maximumQuestionCharacters: 500,
   maximumGeneratedAnswerCharacters: 300,
@@ -2214,6 +2214,20 @@ const RAG_CONFIG = Object.freeze({
   estimatedOutputCostPerMillionTokensUsd: 1.5
 });
 window.ASK_PRERNA_RAG_CONFIG = RAG_CONFIG;
+let resolvePortfolioEmbedderReady;
+const portfolioEmbedderReady = new Promise(resolve => { resolvePortfolioEmbedderReady = resolve; });
+window.markPortfolioEmbedderReady = () => resolvePortfolioEmbedderReady?.(true);
+
+async function waitForPortfolioEmbedder(waitMs = 3000) {
+  if (window.createPortfolioEmbedder) return true;
+  let timeout;
+  const ready = await Promise.race([
+    portfolioEmbedderReady,
+    new Promise(resolve => { timeout = window.setTimeout(() => resolve(false), waitMs); })
+  ]);
+  window.clearTimeout(timeout);
+  return Boolean(ready && window.createPortfolioEmbedder);
+}
 
 const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b/i;
 const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|she|her|you|this bot|the bot|assistant)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b|\b(?:prerna|she|her|you|this bot|the bot|assistant)\s+(?:is|are|was|were)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b/i;
@@ -2287,7 +2301,7 @@ const resumeAnswer = 'You can view or download Prerna’s resume here.';
 const resumeUrl = 'https://drive.google.com/file/d/1To5xUIDQBddvdafDoVcgCVNxidGA1Cfo/view?usp=sharing';
 const resumeQuestion = /\b(resume|curriculum vitae|cv)\b/i;
 const strengthsQuestion = /\b(strengths?|strongest|strong suit|best at|superpower)\b/i;
-const strengthsAnswer = 'Prerna’s strengths are her energy and persistence. She is comfortable navigating ambiguity, stays curious, and uses behavioural evidence to test ideas instead of assuming she has the answer.';
+const strengthsAnswer = 'Prerna tends to bring energy and persistence to ambiguous problems. She stays curious, looks for evidence, and tests ideas before committing to an answer.';
 const weaknessesQuestion = /\b(weakness|weaknesses|area(s)? (to|of) improve|shortcoming|development area)\b/i;
 const behaviouralBoundaryAnswer = 'I don’t have portfolio evidence to make a personal assessment of that, and I wouldn’t speculate. I can share Prerna’s documented approach to product work, collaboration, and measurable outcomes.';
 const leadershipQuestion = /\b(leadership style|lead|leader|manage people|manage teams?|collaborat|cross[- ]functional|stakeholders?|align stakeholders?)\b/i;
@@ -2335,7 +2349,8 @@ const SPELLING_CORE_TERMS = `
 `.match(/[a-z]+/g);
 const SPELLING_ABBREVIATIONS = new Map([
   ['yrs', 'years'], ['yr', 'year'], ['exp', 'experience'], ['wrk', 'work'],
-  ['whr', 'where'], ['wud', 'would'], ['hav', 'have'], ['pm', 'pm'], ['gtm', 'gtm'],
+  ['whr', 'where'], ['wht', 'what'], ['wud', 'would'], ['hav', 'have'], ['cn', 'can'],
+  ['u', 'you'], ['pm', 'pm'], ['gtm', 'gtm'],
   ['prna', 'prerna'], ['prena', 'prerna'], ['perna', 'prerna']
 ]);
 const spellingFrequencies = new Map();
@@ -2365,8 +2380,8 @@ function normalizeQuestion(value) {
 }
 
 function correctDomainToken(token) {
-  if (!token || token.length < 3 || /\d/.test(token) || spellingFrequencies.has(token)) return token;
   if (SPELLING_ABBREVIATIONS.has(token)) return SPELLING_ABBREVIATIONS.get(token);
+  if (!token || token.length < 3 || /\d/.test(token) || spellingFrequencies.has(token)) return token;
   const maximumDistance = token.length <= 5 ? 1 : token.length <= 9 ? 2 : 3;
   let bestCandidate = token;
   let bestDistance = Infinity;
@@ -2482,29 +2497,29 @@ const benignSecurityExamples = [
 ];
 
 const portfolioIntentDefinitions = Object.freeze([
-  { intent: 'answer_scope', description: 'Asking what this assistant knows, can answer, or can help with.', examples: ['What do you know?', 'What can I ask you?', 'What are you able to tell me?'] },
-  { intent: 'identity', description: 'Asking for an introduction or overview of Prerna.', examples: ['Tell me about her.', 'Give me the quick overview.', 'Who is Prerna Kapoor?'] },
+  { intent: 'answer_scope', description: 'Asking what this assistant knows, can answer, or can help with.', examples: ['What do you know?', 'What can I ask you?', 'What are you able to tell me?', 'What can you tell me?', 'Which topics can you answer?'] },
+  { intent: 'identity', description: 'Asking for an introduction, summary, rundown, or professional overview of Prerna.', examples: ['Tell me about her.', 'Give me the quick overview.', 'Give me the quick rundown on her.', 'Summarise her professional background.', 'Who is Prerna Kapoor?'] },
   { intent: 'role', description: 'Asking specifically for Prerna’s job title, occupation, or professional role rather than how she works.', examples: ['What is her job title?', 'What is her profession?', 'Which role does she hold?'] },
   { intent: 'experience', description: 'Asking how much experience Prerna has or which industries she has worked in.', examples: ['How experienced is she?', 'How many years has she worked?', 'Which industries has she worked across?'] },
   { intent: 'education', description: 'Asking about Prerna’s degree, university, education, or studies.', examples: ['Where did she study?', 'What is her degree?', 'Tell me about her education.'] },
   { intent: 'origin', description: 'Asking where Prerna is from, grew up, or considers her hometown.', examples: ['Where is she originally from?', 'Where did she grow up?', 'What is her hometown?'] },
   { intent: 'location', description: 'Asking where Prerna currently lives, works, or is based.', examples: ['Where is she now?', 'Which city is she based in?', 'Where does she currently live?'] },
-  { intent: 'availability', description: 'Asking how or when to contact, interview, meet, or speak with Prerna.', examples: ['Can I speak with her?', 'How do I reach Prerna?', 'Is she available for an interview?'] },
+  { intent: 'availability', description: 'Asking about contact details, scheduling, timing, or whether Prerna is available to meet or interview; not asking whether she is a good candidate.', examples: ['Can I speak with her?', 'How do I reach Prerna?', 'When can she interview?', 'Is she available next week?'] },
   { intent: 'resume', description: 'Asking to find, view, open, download, or share Prerna’s resume or CV.', examples: ['Where is her resume?', 'Can I view Prerna’s CV?', 'How do I download her resume?'] },
   { intent: 'career_interest', description: 'Asking what roles, opportunities, or next career challenge Prerna wants.', examples: ['What role is she looking for?', 'What is she seeking next?', 'Is she open to opportunities?'] },
-  { intent: 'hobbies', description: 'Asking what Prerna enjoys, does in her free time, or pursues outside work.', examples: ['What does she enjoy outside work?', 'How does she spend her free time?', 'What are her hobbies?'] },
+  { intent: 'hobbies', description: 'Asking what Prerna enjoys, does in her free time, or pursues when she is not working.', examples: ['What does she enjoy outside work?', 'How does she spend her free time?', 'What does she do when she logs off?', 'What does she get up to after work?', 'What are her hobbies?'] },
   { intent: 'dopamine_detox', description: 'Asking about dopamine detox, attention reset, or Prerna’s interest in it.', examples: ['Why does she talk about dopamine detox?', 'What does dopamine detox mean to her?', 'Tell me about her attention reset practice.'] },
   { intent: 'life_philosophy', description: 'Asking about Prerna’s beliefs, motto, worldview, or philosophy of life.', examples: ['What does she believe in?', 'What is her outlook on life?', 'Does she have a personal motto?'] },
   { intent: 'personality', description: 'Asking what Prerna is like as a person without requesting private facts.', examples: ['How would you describe her personality?', 'What is she like to be around?', 'Tell me who she is as a person.'] },
-  { intent: 'work_style', description: 'Asking how Prerna operates at work, works as a PM, collaborates, or approaches product management.', examples: ['How does she work?', 'What sort of operator is she at work?', 'What is she like as a PM?', 'How does she collaborate with a team?'] },
-  { intent: 'skills', description: 'Asking about Prerna’s product-management skills and capabilities.', examples: ['What is she skilled at?', 'Which PM capabilities does she bring?', 'What is in her product toolkit?'] },
+  { intent: 'work_style', description: 'Asking how Prerna behaves or operates at work, works as a PM, collaborates, or approaches product management.', examples: ['How does she work?', 'What is her work style?', 'How does she act as a product manager?', 'What sort of operator is she at work?', 'What is she like as a PM?', 'How does she collaborate with a team?'] },
+  { intent: 'skills', description: 'Asking about Prerna’s product-management skills, capabilities, toolkit, or professional arsenal.', examples: ['What is she skilled at?', 'Which PM capabilities does she bring?', 'What is in her PM arsenal?', 'What can she do as a product manager?', 'What is in her product toolkit?'] },
   { intent: 'tools', description: 'Asking which analytics, design, engineering, or AI tools Prerna uses.', examples: ['What software does she use?', 'Which analytics tools does she know?', 'What is her technical toolset?'] },
   { intent: 'strengths', description: 'Asking about Prerna’s strengths, competence, or what she does especially well.', examples: ['What are her strongest qualities?', 'Is she competent?', 'Where does she perform best?'] },
   { intent: 'problem_solving', description: 'Asking how Prerna solves ambiguous product problems, makes decisions, or runs experiments.', examples: ['How does she tackle a difficult product problem?', 'How does she make product decisions?', 'How does she turn an insight into an experiment?'] },
   { intent: 'lenskart_impact', description: 'Asking about Prerna’s published work, decisions, or outcomes at Lenskart.', examples: ['What impact did she have at Lenskart?', 'Tell me about the home-trial work.', 'What did she achieve in eyewear?'] },
   { intent: 'bajaj_impact', description: 'Asking about Prerna’s published work, decisions, or outcomes at Bajaj Finserv Health.', examples: ['What did she build at Bajaj?', 'Tell me about her health-tech work.', 'What results did she drive in digital health?'] },
-  { intent: 'bot_architecture', description: 'Asking how this portfolio chatbot, its RAG system, or its evaluation setup was built.', examples: ['How is this assistant made?', 'What powers this chatbot?', 'Explain the bot architecture.'] },
-  { intent: 'hiring_fit', description: 'Asking why a recruiter should hire, interview, or consider Prerna.', examples: ['Why should we hire her?', 'Would she be a good fit?', 'Why should a recruiter consider Prerna?'] },
+  { intent: 'bot_architecture', description: 'Asking what powers this assistant or how its chatbot, RAG system, or evaluation setup was built.', examples: ['How is this assistant made?', 'What powers you?', 'What powers this chatbot?', 'How do you generate answers?', 'Explain the bot architecture.'] },
+  { intent: 'hiring_fit', description: 'Evaluating whether Prerna is worth hiring, interviewing, shortlisting, or considering as a candidate.', examples: ['Why should we hire her?', 'Would she be worth interviewing?', 'Is she worth shortlisting?', 'Would she be a good fit?', 'Why should a recruiter consider Prerna?'] },
   { intent: 'off_topic', description: 'Asking unrelated general knowledge with no connection to Prerna or her portfolio.', examples: ['Who is the president?', 'What is the capital of India?', 'Give me today’s weather.'] }
 ]);
 
@@ -2724,7 +2739,8 @@ function portfolioIntentResponse(classification) {
 
 async function localRagAnswer(question, originalQuestion = question, runtimeOptions = {}) {
   const rawQuestion = String(originalQuestion || '').toLowerCase();
-  if (directedInsult.test(rawQuestion) || (unconstructiveLanguage.test(rawQuestion) && /\b(prerna|she|her|bot|assistant|you)\b/i.test(rawQuestion))) return {
+  const normalizedPolicyQuestion = normalizeQuestion(rawQuestion);
+  if (directedInsult.test(rawQuestion) || directedInsult.test(normalizedPolicyQuestion) || ((unconstructiveLanguage.test(rawQuestion) || unconstructiveLanguage.test(normalizedPolicyQuestion)) && /\b(prerna|she|her|bot|assistant|you)\b/i.test(normalizedPolicyQuestion))) return {
     answer: insultAnswer,
     citations: []
   };
@@ -3239,6 +3255,7 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
         securityScore: 0
       };
     }
+    if (!runtimeOptions.disableSemanticRetrieval) await waitForPortfolioEmbedder();
     const rawQuestion = visitorQuestion.toLowerCase();
     const rawConfidentialCompanyQuestion = /\b(lenskart|lenksart|lenscart|bajaj)\b/.test(rawQuestion)
       && /\b(profit|profitable|profitability|margin|making money|revenue breakdown|internal revenue|ebitda|valuation|unit economics)\b/.test(rawQuestion);
@@ -3615,6 +3632,7 @@ document.addEventListener('click', event => {
 <script type="module">
   import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0';
   window.createPortfolioEmbedder = () => pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', { dtype: 'q8' });
+  window.markPortfolioEmbedderReady?.();
 </script>
 <script>
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };

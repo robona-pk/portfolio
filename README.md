@@ -53,14 +53,16 @@ The diagram is designed to be read from top to bottom. Each colour represents a 
 ```mermaid
 flowchart TD
     A["👤 Visitor asks a question"] --> B["🧹 Clean spelling and hidden characters"]
-    B --> C{"🧭 Approved intent<br/>or policy case?"}
+    B --> C{"🛡️ Hard policy boundary?"}
 
-    C -- "Known fact or<br/>recruiter question" --> G["✅ Approved answer bank<br/>Instant fast path"]
-    C -- "Private, insulting,<br/>confidential or unrelated" --> F["📜 Policy answer bank<br/>Respectful boundary"]
-    C -- "Not matched" --> E{"🛡️ Semantic injection check"}
+    C -- "Private, insulting,<br/>confidential or unsafe" --> F["📜 Policy answer bank<br/>Respectful boundary"]
+    C -- "No" --> E{"🛡️ Semantic injection check"}
 
     E -- "Attack or uncertain" --> D["📜 Policy response<br/>Decline safely"]
-    E -- "Safe and about Prerna" --> H["🔎 Hybrid retrieval<br/>Meaning + topic evidence"]
+    E -- "Safe" --> R["🧭 Semantic intent router<br/>MiniLM first, Gemini if uncertain"]
+    R -- "Known supported intent" --> G["✅ Approved answer bank<br/>Intent-specific answer"]
+    R -- "Open-ended evidence question" --> H["🔎 Hybrid retrieval<br/>Meaning + topic evidence"]
+    R -- "Unknown or unsupported" --> I["🤷 Safe fallback + contact CTA<br/>Ask Prerna directly"]
     H --> P{"🎯 Relevant enough?<br/>Similarity + word coverage"}
     P -- "No" --> I["🤷 Safe fallback + contact CTA<br/>Ask Prerna directly"]
     P -- "Yes" --> J["📚 Selected portfolio evidence"]
@@ -85,7 +87,7 @@ flowchart TD
     classDef output fill:#edf6dd,stroke:#5d7f25,color:#263611;
 
     class A,B visitor;
-    class C,E,P,L decision;
+    class C,E,R,P,L decision;
     class D,F,I policy;
     class H,J retrieval;
     class K,M ai;
@@ -110,12 +112,13 @@ flowchart TD
 
 - 🖥️ **Interface:** HTML, CSS, and JavaScript create the floating chat window.
 - 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js` and the curated portfolio passages in `index.html`.
-- 🔎 **Retrieval:** MiniLM finds passages with similar meaning, then a strict relevance gate also requires meaningful topic-word coverage. A passage is rejected if it is merely the closest bad match.
+- 🧭 **Intent routing:** MiniLM first classifies the meaning of unfamiliar wording into a supported intent. If confidence is low, a constrained Gemini classifier chooses from the same fixed intent list. It cannot create facts or answers.
+- 🔎 **Retrieval:** open-ended evidence questions use MiniLM to find passages with similar meaning, then a strict relevance gate also requires meaningful topic-word coverage. A passage is rejected if it is merely the closest bad match.
 - 🤖 **Generation:** Gemini Flash-Lite writes short responses for supported, open-ended questions through `/api/generate`.
 - ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
 - ⚡ **Latency controls:** deterministic questions avoid AI generation; repeated clicks are blocked; semantic safety has an 8-second ceiling and Gemini has a 10-second ceiling before an approved fallback is shown.
-- 🧪 **Golden evaluation dataset:** 113 fixed test cases define the expected facts, sources, response type, and safety behaviour.
+- 🧪 **Golden evaluation dataset:** 124 fixed test cases define the expected facts, sources, intent, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
 - 🚀 **Hosting:** GitHub + Vercel. The Gemini key is stored as a server-side Vercel environment variable.
 
@@ -126,6 +129,8 @@ flowchart TD
 | **Knowledge base** | The approved facts and portfolio passages the bot is allowed to use. |
 | **Policy layer** | Rules for privacy, confidentiality, abuse, irrelevant questions, and prompt injection. |
 | **Deterministic routing** | Code that sends known question types to a fixed approved response instead of asking Gemini. |
+| **Semantic intent routing** | Meaning-based classification that maps different phrasings to a fixed supported category such as work style, hobbies, or bot capability. |
+| **Hosted intent fallback** | A constrained Gemini classifier used only when the local semantic router is uncertain. It returns an intent label, not an answer. |
 | **Hybrid retrieval** | MiniLM measures semantic similarity, while lexical coverage checks that meaningful question topics actually appear in the evidence. Both must pass. |
 | **Relevance gate** | The acceptance rule that rejects the nearest passage when it does not genuinely answer the question. Rejected questions receive the safe fallback and contact CTA. |
 | **Generator** | Gemini writes a concise answer using only the approved answer and retrieved evidence. |
@@ -153,12 +158,13 @@ These controls reduce risk but are not foolproof. The client-side knowledge base
 
 ## Golden evaluation dataset and eval console
 
-The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 113 cases are the benchmark used to test the **whole RAG system**—routing, retrieval, policy responses, Gemini output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
+The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 124 cases are the benchmark used to test the **whole RAG system**: intent routing, retrieval, policy responses, Gemini output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
 
 Each golden case contains:
 
 - The test question and category
 - The expected response type
+- The expected semantic intent when the case tests meaning-based routing
 - The facts the answer must contain
 - The source it should retrieve
 - The guardrail behaviour expected for safety cases
@@ -169,7 +175,7 @@ For an open-ended case, **Compare models** runs the same question, retrieval, ap
 
 ```mermaid
 flowchart LR
-    A["🏆 Golden dataset<br/>113 test cases"] --> B["▶️ Run through the live bot"]
+    A["🏆 Golden dataset<br/>124 test cases"] --> B["▶️ Run through the live bot"]
     B --> C["📋 Compare with<br/>expected facts and sources"]
     C --> D["👤 Human-as-judge review"]
     D --> E{"Correct and helpful?"}
@@ -193,6 +199,7 @@ flowchart LR
 
 - ✅ Profile facts, skills, experience, work and measurable outcomes
 - ✍️ Paraphrases, misspellings and fuzzy matching
+- 🧭 Vague wording that should converge on the same semantic intent
 - 🔒 Private, confidential, insulting and unrelated questions
 - 🧨 Direct, disguised, multilingual and Unicode prompt injections
 - 🚫 Invented metrics, fake employers, prompt leakage and unsupported claims
@@ -263,13 +270,15 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 | **8. Product analytics** | Technical latency and answer logs | Bot quality alone did not show whether the portfolio created recruiter interest | Added PostHog portfolio funnels, structured feedback and resume, case-study and contact conversions |
 | **9. Latency fast path** | Every question waited for the semantic security model; opening chat preloaded the embedding index | Even fixed answers could take seconds, and the Skills nudge appeared unresponsive | Routed approved intents before model loading, made MiniLM lazy, blocked duplicate requests, added visible progress, and capped the Qwen wait at 12 seconds |
 | **10. Hosted generation** | Qwen generated answers inside each visitor's browser | The first generative answer depended on a large model download, WebGPU support, and device performance | Replaced Qwen generation with Gemini Flash-Lite behind a protected Vercel endpoint; MiniLM retrieval, approved facts, output validation, and fail-closed fallbacks remain unchanged |
-| **11. Evidence-gated retrieval and model comparison** | Semantic similarity alone could accept the closest irrelevant passage, while generator comparisons were subjective | Added meaningful-topic coverage as a second retrieval gate and a Qwen-versus-Gemini comparison inside the eval console |
+| **11. Evidence-gated retrieval and model comparison** | Semantic retrieval chose the nearest passage, and generator comparisons were subjective | The nearest passage could still be irrelevant, while total latency hid model speed | Added meaningful-topic coverage, source filtering, generation latency, and Qwen-versus-Gemini comparison in the eval console |
+| **12. Semantic intent routing** | Supported questions depended heavily on exact route patterns | Short, vague, or unfamiliar wording could miss the correct answer even when the knowledge existed | Added a MiniLM intent router, constrained Gemini fallback classifier, intent confidence telemetry, and intent-level eval cases |
 
 ## Cost and trade-offs
 
 - **Model cost:** expected to remain ₹0 while the project stays within Gemini's free-tier quota; telemetry also records a paid-rate estimate for visibility.
 - **Fast path:** approved and policy answers return without calling Gemini.
 - **Trade-off:** open-ended generation now depends on a network service and its quota instead of the visitor's device.
+- **Intent trade-off:** ambiguous wording may use one small hosted classification call before answering; high-confidence local intents and fixed policy routes avoid it.
 - **Compatibility:** generation no longer requires WebGPU; if Gemini fails or times out, the bot returns the approved answer.
 - **Privacy:** only public portfolio questions and allowlisted evidence should reach Gemini. Email addresses and phone numbers are redacted server-side.
 - **Free-tier caveat:** Google's free tier is quota-based, not guaranteed as a one-month trial, and its data-use terms differ from the paid tier. Recheck current terms before production use.

@@ -6,7 +6,7 @@ This document explains what the chatbot records, how to review the 113-question 
 
 Open `/eval.html` on the preproduction deployment.
 
-1. Run one question while debugging a specific route, or select **Run all 113** for a complete pass.
+1. Run one question while debugging a specific route, or select **Run all 124** for a complete pass.
 2. Open each result and compare the answer with the expected facts, response type, and sources.
 3. Mark the result **Correct** or **Incorrect**.
 4. Give it a helpfulness score from 1 to 5.
@@ -31,6 +31,8 @@ The assistant may answer only from:
 
 Known recruiter questions, published metrics, confidentiality rules, and safety boundaries return approved answers without generation. Gemini is reserved for open-ended synthesis through a protected Vercel endpoint. It is instructed to paraphrase supplied facts rather than introduce claims and must not infer people management, seniority, private details, dates, employers, metrics, ownership, or personality traits.
 
+For wording that does not match a known fast path, MiniLM compares the question with a fixed intent taxonomy. A confident match routes to the relevant approved answer category. When MiniLM is uncertain, `/api/classify` asks Gemini for one allowlisted intent label. The classifier cannot supply facts or visitor-facing copy. If neither classifier is confident, the request continues to evidence retrieval or fails closed.
+
 The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 
 | Setting | Value | Purpose |
@@ -38,6 +40,9 @@ The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 | Semantic relevance threshold | `0.24` | Minimum cosine score after hybrid reranking |
 | Meaningful-term coverage | `0.50` | At least half of the non-generic question topics must appear in the evidence |
 | Minimum topic matches | `1` | Rejects passages that are only close because of generic words such as “Prerna”, “work”, or “product” |
+| Intent similarity threshold | `0.38` | Minimum MiniLM score for accepting a local intent |
+| Intent separation margin | `0.05` | Requires the best local intent to beat the runner-up |
+| Hosted intent confidence | `0.72` | Minimum confidence for accepting Gemini’s allowlisted intent label |
 | Unsupported fallback | `I don’t have that information right now. You can reach out to Prerna to ask her directly.` | Returned with a contact CTA when approved context is insufficient |
 
 Gemini is limited to 120 output tokens and a 10-second browser response budget. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected or slow response falls back to the approved answer.
@@ -66,6 +71,10 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `retrieval_model` | Embedding model used for retrieval |
 | `generation_model` | Generation model when Gemini produced the final answer |
 | `generation_latency_ms` | Time spent in the generation step; zero when no model was used |
+| `intent` | Supported semantic intent selected for the question, when applicable |
+| `intent_confidence` | Confidence score for the selected semantic intent |
+| `intent_mode` | `semantic_intent`, `hosted_intent`, `deterministic_rule`, `retrieval`, or a guardrail/error mode |
+| `intent_model` | MiniLM or hosted model used for intent classification |
 | `total_latency_ms` | Total time from submitted question to final answer |
 | `input_tokens_estimate` | Approximate input tokens using a four-characters-per-token estimate |
 | `output_tokens_estimate` | Approximate output tokens using the same estimate |

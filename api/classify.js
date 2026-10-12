@@ -1,6 +1,6 @@
 const INTENTS = Object.freeze([
   'answer_scope', 'identity', 'role', 'experience', 'education', 'origin', 'location',
-  'availability', 'career_interest', 'hobbies', 'dopamine_detox', 'life_philosophy',
+  'availability', 'resume', 'career_interest', 'hobbies', 'dopamine_detox', 'life_philosophy',
   'personality', 'work_style', 'skills', 'tools', 'strengths', 'problem_solving',
   'lenskart_impact', 'bajaj_impact', 'bot_architecture', 'hiring_fit', 'off_topic', 'unknown'
 ]);
@@ -64,6 +64,7 @@ export default async function handler(req, res) {
     'origin: where Prerna is from or grew up',
     'location: where Prerna is currently based',
     'availability: contacting, interviewing, or speaking with Prerna',
+    'resume: finding, viewing, opening, downloading, or sharing Prerna’s resume or CV',
     'career_interest: roles or opportunities Prerna wants',
     'hobbies: free time, fitness, drums, travel, or interests',
     'dopamine_detox: dopamine detox or attention reset',

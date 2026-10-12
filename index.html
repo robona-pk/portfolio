@@ -2194,7 +2194,7 @@ const portfolioKnowledge = [
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-12.2',
+  rulesVersion: '2026-10-12.3',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2283,6 +2283,9 @@ const assistantQuestion = /\b(are you|what are you|who are you|how do you work|r
 const assistantAnswer = 'I’m Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work.';
 const botArchitectureAnswer = approvedKnowledge.botArchitecture || 'This bot combines an approved answer bank, MiniLM semantic retrieval, and Gemini Flash generation through a secure Vercel endpoint, with privacy, injection, grounding, and fallback checks. The GitHub README explains the complete architecture and evaluation setup.';
 const botReadmeUrl = 'https://github.com/robona-pk/portfolio#ask-prerna--portfolio-chatbot';
+const resumeAnswer = 'You can view or download Prerna’s resume here.';
+const resumeUrl = 'https://drive.google.com/file/d/1To5xUIDQBddvdafDoVcgCVNxidGA1Cfo/view?usp=sharing';
+const resumeQuestion = /\b(resume|curriculum vitae|cv)\b/i;
 const strengthsQuestion = /\b(strengths?|strongest|strong suit|best at|superpower)\b/i;
 const strengthsAnswer = 'Prerna’s strengths are her energy and persistence. She is comfortable navigating ambiguity, stays curious, and uses behavioural evidence to test ideas instead of assuming she has the answer.';
 const weaknessesQuestion = /\b(weakness|weaknesses|area(s)? (to|of) improve|shortcoming|development area)\b/i;
@@ -2328,6 +2331,7 @@ const SPELLING_CORE_TERMS = `
   experimentation analytics ambiguous stakeholders motivated insurance algorithm family annoying
   prompt injection president capital contact conversion retention activation discovery research
   lifecycle technical tools smart health reports diabetes wellness doctor listing pre authorisation
+  resume download
 `.match(/[a-z]+/g);
 const SPELLING_ABBREVIATIONS = new Map([
   ['yrs', 'years'], ['yr', 'year'], ['exp', 'experience'], ['wrk', 'work'],
@@ -2486,6 +2490,7 @@ const portfolioIntentDefinitions = Object.freeze([
   { intent: 'origin', description: 'Asking where Prerna is from, grew up, or considers her hometown.', examples: ['Where is she originally from?', 'Where did she grow up?', 'What is her hometown?'] },
   { intent: 'location', description: 'Asking where Prerna currently lives, works, or is based.', examples: ['Where is she now?', 'Which city is she based in?', 'Where does she currently live?'] },
   { intent: 'availability', description: 'Asking how or when to contact, interview, meet, or speak with Prerna.', examples: ['Can I speak with her?', 'How do I reach Prerna?', 'Is she available for an interview?'] },
+  { intent: 'resume', description: 'Asking to find, view, open, download, or share Prerna’s resume or CV.', examples: ['Where is her resume?', 'Can I view Prerna’s CV?', 'How do I download her resume?'] },
   { intent: 'career_interest', description: 'Asking what roles, opportunities, or next career challenge Prerna wants.', examples: ['What role is she looking for?', 'What is she seeking next?', 'Is she open to opportunities?'] },
   { intent: 'hobbies', description: 'Asking what Prerna enjoys, does in her free time, or pursues outside work.', examples: ['What does she enjoy outside work?', 'How does she spend her free time?', 'What are her hobbies?'] },
   { intent: 'dopamine_detox', description: 'Asking about dopamine detox, attention reset, or Prerna’s interest in it.', examples: ['Why does she talk about dopamine detox?', 'What does dopamine detox mean to her?', 'Tell me about her attention reset practice.'] },
@@ -2689,6 +2694,7 @@ function portfolioIntentResponse(classification) {
     origin: { answer: approvedKnowledge.hometown || hometownAnswer, citations: [] },
     location: { answer: approvedKnowledge.based || locationAnswer, citations: ['Portfolio overview'] },
     availability: { answer: approvedKnowledge.availability || availabilityAnswer, citations: [], action: { label: 'Talk to Prerna', href: '#contact' } },
+    resume: { answer: resumeAnswer, citations: [], action: { label: 'View resume ↗', href: resumeUrl } },
     career_interest: { answer: approvedKnowledge.roles || approvedKnowledge.career || careerMoveAnswer, citations: ['Portfolio overview'], action: { label: 'Let’s Talk', href: '#contact' } },
     hobbies: { answer: approvedKnowledge.hobbies, citations: [] },
     dopamine_detox: { answer: approvedKnowledge.dopamineDetox, citations: [] },
@@ -2729,6 +2735,15 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   };
   if (greetingQuestion.test(question)) return { answer: approvedKnowledge.greeting, citations: [] };
   if (thanksQuestion.test(question)) return { answer: approvedKnowledge.thanks, citations: [] };
+  if (resumeQuestion.test(question)) return {
+    answer: resumeAnswer,
+    citations: [],
+    action: { label: 'View resume ↗', href: resumeUrl },
+    intent: 'resume',
+    intentConfidence: 1,
+    intentMode: 'deterministic_rule',
+    intentModel: 'policy_rule'
+  };
   if (answerScopeQuestion.test(question)) return { answer: approvedKnowledge.answerScope, citations: [] };
   if (identityQuestion.test(question)) return {
     answer: identityAnswer,

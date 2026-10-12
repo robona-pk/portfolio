@@ -118,7 +118,7 @@ flowchart TD
 - ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
 - ⚡ **Latency controls:** deterministic questions avoid AI generation; repeated clicks are blocked; semantic safety has an 8-second ceiling and Gemini has a 10-second ceiling before an approved fallback is shown.
-- 🧪 **Golden evaluation dataset:** 124 fixed test cases define the expected facts, sources, intent, response type, and safety behaviour.
+- 🧪 **Golden evaluation dataset:** 127 fixed test cases define the expected facts, sources, intent, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
 - 🚀 **Hosting:** GitHub + Vercel. The Gemini key is stored as a server-side Vercel environment variable.
 
@@ -158,7 +158,7 @@ These controls reduce risk but are not foolproof. The client-side knowledge base
 
 ## Golden evaluation dataset and eval console
 
-The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 124 cases are the benchmark used to test the **whole RAG system**: intent routing, retrieval, policy responses, Gemini output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
+The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 127 cases are the benchmark used to test the **whole RAG system**: intent routing, retrieval, policy responses, Gemini output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
 
 Each golden case contains:
 
@@ -175,7 +175,7 @@ For an open-ended case, **Compare models** runs the same question, retrieval, ap
 
 ```mermaid
 flowchart LR
-    A["🏆 Golden dataset<br/>124 test cases"] --> B["▶️ Run through the live bot"]
+    A["🏆 Golden dataset<br/>127 test cases"] --> B["▶️ Run through the live bot"]
     B --> C["📋 Compare with<br/>expected facts and sources"]
     C --> D["👤 Human-as-judge review"]
     D --> E{"Correct and helpful?"}

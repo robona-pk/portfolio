@@ -163,7 +163,17 @@ export default async function handler(req, res) {
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
       console.error('Gemini generation failed', response.status, payload?.error?.status || 'unknown');
-      return res.status(502).json({ error: 'The answer service is temporarily unavailable.' });
+      return res.status(502).json({
+        error: 'The answer service is temporarily unavailable.',
+        ...(process.env.VERCEL_ENV === 'preview' ? {
+          diagnostic: {
+            status: response.status,
+            code: payload?.error?.status || '',
+            message: String(payload?.error?.message || '').slice(0, 180),
+            model
+          }
+        } : {})
+      });
     }
     const answer = payload.candidates?.[0]?.content?.parts?.map(part => part.text || '').join('').trim();
     if (!answer) return res.status(502).json({ error: 'Gemini returned no usable answer.' });

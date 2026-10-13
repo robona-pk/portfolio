@@ -137,7 +137,17 @@ ${intentGuide}` }]
       })
     });
     const payload = await response.json().catch(() => ({}));
-    if (!response.ok) return res.status(502).json({ error: 'Intent classification is temporarily unavailable.' });
+    if (!response.ok) return res.status(502).json({
+      error: 'Intent classification is temporarily unavailable.',
+      ...(process.env.VERCEL_ENV === 'preview' ? {
+        diagnostic: {
+          status: response.status,
+          code: payload?.error?.status || '',
+          message: String(payload?.error?.message || '').slice(0, 180),
+          model
+        }
+      } : {})
+    });
     const raw = payload.candidates?.[0]?.content?.parts?.map(part => part.text || '').join('');
     const classification = parseClassification(raw);
     if (!classification) return res.status(502).json({ error: 'Intent classification returned no usable result.' });

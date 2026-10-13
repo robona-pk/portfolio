@@ -65,7 +65,7 @@ export default async function handler(req, res) {
   if (!question) return res.status(400).json({ error: 'A question is required.' });
   if (!process.env.GEMINI_API_KEY) return res.status(503).json({ error: 'Intent classification is not configured.' });
 
-  const model = process.env.GEMINI_CLASSIFIER_MODEL || 'gemini-2.5-flash-lite';
+  const model = process.env.GEMINI_CLASSIFIER_MODEL || 'gemini-3.5-flash-lite';
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
   const intentGuide = [

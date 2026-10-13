@@ -67,7 +67,7 @@ export default async function handler(req, res) {
 
   const model = process.env.GEMINI_CLASSIFIER_MODEL || 'gemini-3.5-flash-lite';
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000);
+  const timeout = setTimeout(() => controller.abort(), 20000);
   const intentGuide = [
     'answer_scope: what the assistant knows or what someone can ask',
     'identity: overview or introduction to Prerna',

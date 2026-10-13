@@ -2764,7 +2764,7 @@ async function classifyPortfolioIntentHosted(question, runtimeOptions = {}) {
   if (runtimeOptions.disableHostedGeneration || runtimeOptions.forceGenerationFailure) return null;
   const controller = new AbortController();
   const startedAt = performance.now();
-  const timeout = window.setTimeout(() => controller.abort(), 5500);
+  const timeout = window.setTimeout(() => controller.abort(), 10500);
   try {
     const response = await fetch('/api/classify', {
       method: 'POST',

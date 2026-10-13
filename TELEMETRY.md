@@ -1,4 +1,4 @@
-# Ask Prerna evaluation and telemetry guide
+# Mira evaluation and telemetry guide
 
 This document explains what the chatbot records, how to review the 127-question evaluation set, and how to build the PostHog views needed to improve the product and detect likely abuse.
 
@@ -116,7 +116,7 @@ The existing detailed events such as `resume_opened`, `case_study_opened`, and c
 
 ## Recommended PostHog dashboard
 
-Create a dashboard named **Ask Prerna health** and add these insights:
+Create a dashboard named **Mira health** and add these insights:
 
 1. **Question volume**: count `portfolio_assistant_response` by day.
 2. **Question themes**: table of `user_question`, `answer_mode`, `retrieved_sources`, and `fallback_reason`.

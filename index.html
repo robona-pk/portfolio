@@ -1640,22 +1640,22 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 
 <!-- PORTFOLIO RAG ASSISTANT -->
 <div class="rag-launcher">
-  <span class="rag-nudge">Ask me anything</span>
-  <button class="rag-launch" id="ragLaunch" type="button" aria-label="Ask Prerna about her work" aria-haspopup="dialog" aria-controls="ragModal">
+  <span class="rag-nudge">Ask Mira</span>
+  <button class="rag-launch" id="ragLaunch" type="button" aria-label="Ask Mira about Prerna's work" aria-haspopup="dialog" aria-controls="ragModal">
     <img src="assets/prerna-portfolio-bot.png" alt="A small ivory and amber portfolio assistant robot">
   </button>
 </div>
 <div class="rag-modal" id="ragModal" role="dialog" aria-modal="false" aria-labelledby="ragTitle" aria-hidden="true">
-  <div class="rag-chat" aria-label="Ask Prerna's portfolio assistant">
+  <div class="rag-chat" aria-label="Ask Mira, Prerna's portfolio assistant">
         <div class="rag-chat-head">
-          <div class="rag-chat-label" id="ragTitle"><span class="rag-live-dot" aria-hidden="true"></span>Ask Prerna</div>
+          <div class="rag-chat-label" id="ragTitle"><span class="rag-live-dot" aria-hidden="true"></span>Ask Mira</div>
           <div style="display:flex;align-items:center;gap:.6rem"><span class="rag-mode" id="ragMode">RAG demo</span><button class="rag-close" id="ragClose" type="button" aria-label="Close assistant">×</button></div>
         </div>
         <div class="rag-messages" id="ragMessages" aria-live="polite">
           <div class="rag-message bot">Hi, I can answer questions about Prerna's experience, growth work, case studies, and builder projects.</div>
           <div class="rag-build-note" id="ragBuildNote">
             <span class="rag-build-icon" aria-hidden="true">i</span>
-            <span class="rag-build-copy">Built with an approved knowledge base, semantic retrieval, and Gemini Flash. <a class="rag-build-link" id="ragBuildLink" href="https://github.com/robona-pk/portfolio#ask-prerna--portfolio-chatbot" target="_blank" rel="noopener">How it works ↗</a></span>
+            <span class="rag-build-copy">Built with an approved knowledge base, semantic retrieval, and Gemini Flash. <a class="rag-build-link" id="ragBuildLink" href="https://github.com/robona-pk/portfolio#mira--portfolio-chatbot" target="_blank" rel="noopener">How it works ↗</a></span>
           </div>
         </div>
         <div class="rag-prompts" aria-label="Suggested questions">
@@ -1698,7 +1698,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-11.6"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-12.7"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2270,15 +2270,15 @@ const portfolioKnowledge = [
 ];
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-12.4',
+  rulesVersion: '2026-10-12.5',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   relevanceSemanticThreshold: 0.24,
   relevanceLexicalCoverageThreshold: 0.5,
   relevanceLexicalMinimumMatches: 1,
-  intentSemanticThreshold: 0.3,
-  intentSemanticMargin: 0.005,
+  intentSemanticThreshold: 0.38,
+  intentSemanticMargin: 0.03,
   intentHostedConfidenceThreshold: 0.72,
   maximumQuestionCharacters: 500,
   maximumGeneratedAnswerCharacters: 300,
@@ -2349,7 +2349,7 @@ const personalStatusQuestion = /\b(dead|died|death|alive|ill|sick|hospital|healt
 const personalStatusAnswer = 'I can’t verify or speculate about personal-status claims. I’m here to share Prerna’s professional work, experience, and projects.';
 const transientPersonalStateQuestion = /\b(mood|feeling|feel today|happy today|sad today|angry today|upset today|current state of mind)\b/i;
 const approvedKnowledge = window.ASK_PRERNA_KNOWLEDGE?.approvedAnswers || {};
-const unsupportedContactAction = Object.freeze({ label: 'Ask Prerna directly', href: '#contact' });
+const unsupportedContactAction = Object.freeze({ label: 'Contact Prerna directly', href: '#contact' });
 function unsupportedPortfolioResponse() {
   return {
     answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
@@ -2361,7 +2361,8 @@ function unsupportedPortfolioResponse() {
 const educationQuestion = /\b(education|degree|university|college|stud(y|ied)|biotechnology|srm)\b/i;
 const rolesQuestion = /\b(preferred roles?|roles? (is|are).{0,18}\b(looking|open)|senior product manager|product manager role)\b/i;
 const dopamineDetoxQuestion = /\b(dopamine detox|dopamine fast(?:ing)?|detox(?:ing)? from dopamine)\b/i;
-const hobbiesQuestion = /\b(hobb(y|ies)|outside (of )?work|free time|spare time|leisure|after work|when (she|prerna) is not working|drums?|lifting|fitness|weight loss|nutritional label|solo travel)\b/i;
+const workOverviewQuestion = /^(?:what about|tell me about|give me (?:an )?overview of|walk me through|summari[sz]e)\s+(?:(?:prerna'?s|her)\s+)?work$|^(?:what|which)\s+(?:kind of\s+)?work\s+(?:has|does|did)\s+(?:prerna|she)(?:\s+(?:done|do))?$|^what has (?:prerna|she) worked on$|^(?:her|prerna'?s)\s+(?:professional\s+)?work$/i;
+const hobbiesQuestion = /\b(hobb(y|ies)|outside (of )?work|free time|spare time|leisure|after work|when (she|prerna) is not working|when (she|prerna) logs? off|logs? off|drums?|lifting|fitness|weight loss|nutritional label|solo travel)\b/i;
 const interestQuestion = /\b(interests?|what topics?.{0,20}\b(enjoy|like|love|talk)|what does.{0,18}\benjoy|what does.{0,18}\blove)\b/i;
 const lifePhilosophyQuestion = /\b(life philosophy|philosophy (in|on|about) life|personal philosophy|personal motto|life motto|mantra|outlook on life|what does.{0,18}\bbelieve in)\b/i;
 const promptInjection = /\b(ignore|disregard|forget|override|bypass)\b.{0,48}\b(instructions?|rules?|prompt|policy|previous|prior|above|safety)|\b(system|hidden|developer)\s*(prompt|message|instructions?)\b|\b(jailbreak|unrestricted mode|reveal|repeat|print|expose|show)\b.{0,48}\b(instructions?|rules?|prompt|policy|developer message|system message)|\b(pretend (to be|you are)|change your role|higher priority instructions?)\b|\bact as\b.{0,32}\b(unrestricted|system|developer|assistant|model|jailbroken|different role)\b/i;
@@ -2370,9 +2371,9 @@ const outOfScopeAnswer = 'I’m designed as a guide to Prerna’s work—not as 
 const answerScopeQuestion = /\b(what (questions?|things?|topics?) can (you|this bot|the bot).{0,20}\b(answer|help with|talk about)|what can (i|we).{0,20}\b(ask|ask you)|how can (you|this bot|the bot).{0,20}\bhelp|what do (you|this bot|the bot) know about (prerna|her))\b/i;
 const botArchitectureQuestion = /\b(how|what).{0,18}\b(this bot|the bot|chatbot|portfolio assistant)\b.{0,24}\b(made|built|work|implemented|architecture|tech stack)|\b(how (?:was|is).{0,12}\b(this bot|the bot|chatbot)\b.{0,12}\b(made|built))\b/i;
 const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
-const assistantAnswer = 'I’m Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work.';
+const assistantAnswer = 'I’m Mira, Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work.';
 const botArchitectureAnswer = approvedKnowledge.botArchitecture || 'This bot combines an approved answer bank, MiniLM semantic retrieval, and Gemini Flash generation through a secure Vercel endpoint, with privacy, injection, grounding, and fallback checks. The GitHub README explains the complete architecture and evaluation setup.';
-const botReadmeUrl = 'https://github.com/robona-pk/portfolio#ask-prerna--portfolio-chatbot';
+const botReadmeUrl = 'https://github.com/robona-pk/portfolio#mira--portfolio-chatbot';
 const resumeAnswer = 'You can view or download Prerna’s resume here.';
 const resumeUrl = 'https://drive.google.com/file/d/1To5xUIDQBddvdafDoVcgCVNxidGA1Cfo/view?usp=sharing';
 const resumeQuestion = /\b(resume|curriculum vitae|cv)\b/i;
@@ -2587,6 +2588,7 @@ const portfolioIntentDefinitions = Object.freeze([
   { intent: 'dopamine_detox', description: 'Asking about dopamine detox, attention reset, or Prerna’s interest in it.', examples: ['Why does she talk about dopamine detox?', 'What does dopamine detox mean to her?', 'Tell me about her attention reset practice.'] },
   { intent: 'life_philosophy', description: 'Asking about Prerna’s beliefs, motto, worldview, or philosophy of life.', examples: ['What does she believe in?', 'What is her outlook on life?', 'Does she have a personal motto?'] },
   { intent: 'personality', description: 'Asking what Prerna is like as a person without requesting private facts.', examples: ['How would you describe her personality?', 'What is she like to be around?', 'Tell me who she is as a person.'] },
+  { intent: 'work_overview', description: 'Asking broadly about Prerna’s professional work, career projects, or work history rather than how she behaves at work.', examples: ['What about her work?', 'Tell me about Prerna’s work.', 'What work has she done?', 'Give me an overview of her professional work.', 'What has she worked on?'] },
   { intent: 'work_style', description: 'Asking how Prerna behaves or operates at work, works as a PM, collaborates, or approaches product management.', examples: ['How does she work?', 'What is her work style?', 'How does she act as a product manager?', 'What sort of operator is she at work?', 'What is she like as a PM?', 'How does she collaborate with a team?'] },
   { intent: 'skills', description: 'Asking about Prerna’s product-management skills, capabilities, toolkit, or professional arsenal.', examples: ['What is she skilled at?', 'Which PM capabilities does she bring?', 'What is in her PM arsenal?', 'What can she do as a product manager?', 'What is in her product toolkit?'] },
   { intent: 'tools', description: 'Asking which analytics, design, engineering, or AI tools Prerna uses.', examples: ['What software does she use?', 'Which analytics tools does she know?', 'What is her technical toolset?'] },
@@ -2774,8 +2776,9 @@ async function classifyPortfolioIntent(question, runtimeOptions = {}) {
   return hosted || semantic;
 }
 
-function portfolioIntentResponse(classification) {
+function portfolioIntentResponse(classification, question = '') {
   if (!classification?.intent) return null;
+  if (classification.intent === 'hobbies' && !hobbiesQuestion.test(normalizeQuestion(question))) return null;
   const routes = {
     answer_scope: { answer: approvedKnowledge.answerScope, citations: [] },
     identity: { answer: identityAnswer, citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'], requiredFacts: identityRequiredFacts },
@@ -2791,6 +2794,7 @@ function portfolioIntentResponse(classification) {
     dopamine_detox: { answer: approvedKnowledge.dopamineDetox, citations: [] },
     life_philosophy: { answer: approvedKnowledge.lifePhilosophy, citations: [] },
     personality: { answer: approvedKnowledge.personalProfile || personalProfileAnswer, citations: [] },
+    work_overview: { answer: approvedKnowledge.workOverview, citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'] },
     work_style: { answer: approvedKnowledge.productManagerStyle, citations: ['Product approach', 'Portfolio overview'] },
     skills: { answer: approvedKnowledge.skillset, citations: ['Product approach', 'Skills and tools'] },
     tools: { answer: approvedKnowledge.tools || approvedKnowledge.skillset, citations: ['Skills and tools'] },
@@ -2874,7 +2878,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   if (failureQuestion.test(question)) return {
     answer: failureAnswer,
     citations: [],
-    action: { label: 'Ask Prerna directly', href: '#contact' }
+    action: { label: 'Contact Prerna directly', href: '#contact' }
   };
   if (weaknessesQuestion.test(question) || undocumentedBehaviourQuestion.test(question)) return {
     answer: behaviouralBoundaryAnswer,
@@ -2901,6 +2905,14 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   if (educationQuestion.test(question)) return { answer: approvedKnowledge.education, citations: [] };
   if (rolesQuestion.test(question)) return { answer: approvedKnowledge.roles, citations: [] };
   if (dopamineDetoxQuestion.test(question)) return { answer: approvedKnowledge.dopamineDetox, citations: [] };
+  if (workOverviewQuestion.test(question)) return {
+    answer: approvedKnowledge.workOverview,
+    citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'],
+    intent: 'work_overview',
+    intentConfidence: 1,
+    intentMode: 'deterministic_rule',
+    intentModel: 'policy_rule'
+  };
   if (hobbiesQuestion.test(question)) return { answer: approvedKnowledge.hobbies, citations: [] };
   if (interestQuestion.test(question)) return { answer: approvedKnowledge.interests, citations: [] };
   if (lifePhilosophyQuestion.test(question)) return { answer: approvedKnowledge.lifePhilosophy, citations: [] };
@@ -2937,7 +2949,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     citations: []
   };
   if (runtimeOptions.deterministicOnly) return null;
-  const intentRoute = portfolioIntentResponse(await classifyPortfolioIntent(originalQuestion, runtimeOptions));
+  const intentRoute = portfolioIntentResponse(await classifyPortfolioIntent(originalQuestion, runtimeOptions), originalQuestion);
   if (intentRoute) return intentRoute;
   if (personalityTraitQuestion.test(question)) return {
     answer: approvedKnowledge.personalProfile || personalProfileAnswer,

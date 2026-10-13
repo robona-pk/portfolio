@@ -1,7 +1,7 @@
 const INTENTS = Object.freeze([
   'answer_scope', 'identity', 'role', 'experience', 'education', 'origin', 'location',
   'availability', 'resume', 'career_interest', 'hobbies', 'dopamine_detox', 'life_philosophy',
-  'personality', 'work_style', 'skills', 'tools', 'strengths', 'problem_solving',
+  'personality', 'work_overview', 'work_style', 'skills', 'tools', 'strengths', 'problem_solving',
   'lenskart_impact', 'bajaj_impact', 'bot_architecture', 'hiring_fit', 'off_topic', 'unknown'
 ]);
 
@@ -66,10 +66,11 @@ export default async function handler(req, res) {
     'availability: contact details, scheduling, timing, or whether Prerna is available to meet or interview',
     'resume: finding, viewing, opening, downloading, or sharing Prerna’s resume or CV',
     'career_interest: roles or opportunities Prerna wants',
-    'hobbies: free time, fitness, drums, travel, or interests',
+    'hobbies: explicitly asking about free time, fitness, drums, travel, or interests outside work; never use this for a general question about professional work',
     'dopamine_detox: dopamine detox or attention reset',
     'life_philosophy: beliefs, motto, or outlook on life',
     'personality: what Prerna is like as a person',
+    'work_overview: a broad overview of Prerna’s professional work, career projects, or work history without asking how she works',
     'work_style: how Prerna works as a product manager or collaborator',
     'skills: product-management capabilities',
     'tools: software, analytics, technical, or AI tools',

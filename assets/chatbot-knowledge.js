@@ -1,5 +1,5 @@
 /*
-  Ask Prerna knowledge base
+  Mira knowledge base
   Edit this file to update approved facts and response copy.
   Do not add private, unverified, or interview-sensitive information.
 */
@@ -17,6 +17,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     lifePhilosophy: 'Prerna’s life philosophy is simple: devotion to her future self must exceed attachment to her past. For her, that means choosing discipline, growth, and new perspectives over staying comfortable.',
     personalProfile: 'People may experience Prerna as energetic and persistent. She cares about meaningful problems, learns from people and new perspectives, and prefers steady progress to quick wins. Those are the values she tries to bring to work and life.',
     answerScope: 'Ask about Prerna’s experience, product style, skills, strengths, education, career interests, location, hobbies, life philosophy, or documented work at Lenskart and Bajaj Finserv Health. Good starting points are her product approach, measurable impact, or interests outside work.',
+    workOverview: 'Prerna has 5+ years in product across e-commerce, health-tech, and insurance. Her work includes ₹6Cr+ in annualised impact at Lenskart and a ₹28L 0→1 wellness business at Bajaj Finserv Health. Ask about either company or how she approaches product problems.',
     productManagerStyle: 'Prerna starts with data and customer conversations to understand where a journey is breaking. She turns the insight into a hypothesis, validates it through the smallest useful experiment, and then iterates using customer and business outcomes.',
     skillset: 'Prerna’s PM toolkit covers discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, and cross-functional execution. She uses data and AI-assisted prototyping to move from insight to measurable impact.',
     tools: 'Prerna uses SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, and Python. For design and building, she works with Figma, Notion, Jira, Codex, Claude Code, GitHub, Vercel, Google Apps Script, Gemini, MiniLM, and Transformers.js.',
@@ -27,7 +28,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     undocumented: 'I don’t have that information right now. You can reach out to Prerna to ask her directly.',
     careerLogistics: 'Prerna has not published those logistics here. The best way to discuss notice period, compensation, relocation, remote preferences, or interview availability is to contact her directly.',
     comparison: 'I wouldn’t make an unsupported comparison. The fairest way to assess Prerna is through her documented product decisions, measurable outcomes, and the scope she has owned.',
-    employmentSeparation: 'I don’t have verified information about the circumstances of Prerna leaving an employer, so I won’t speculate. Please ask Prerna directly.',
+    employmentSeparation: 'I don’t have verified information about the circumstances of Prerna leaving an employer, so I won’t speculate. Please contact Prerna directly.',
     promptInjection: 'I can’t reveal internal instructions or switch outside my approved scope. I can help with Prerna’s documented work, experience, skills, product approach, and outcomes.',
     rateLimit: 'That’s a lot of questions at once. Please pause for a moment, then try again.',
     greeting: 'Hi! I can help you get to know Prerna—her product work, measurable outcomes, skills, career interests, and the person behind the portfolio. What would you like to explore?',

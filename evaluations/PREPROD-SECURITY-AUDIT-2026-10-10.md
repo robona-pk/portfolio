@@ -1,4 +1,4 @@
-# Ask Prerna — preproduction security and go-live audit
+# Mira - preproduction security and go-live audit
 
 Date: 10 October 2026  
 Rules version: `2026-10-10.8`  
@@ -59,4 +59,3 @@ For stronger enforcement, add Vercel or edge bot protection and server-side rate
 - A cold-cache latency/download test is recorded separately from the warm evaluation run.
 - PostHog abuse panels and alerts are configured and verified.
 - No API keys, private documents, or undisclosed company information appear in client assets.
-

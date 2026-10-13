@@ -1655,7 +1655,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
           <div class="rag-message bot">Hi, I can answer questions about Prerna's experience, growth work, case studies, and builder projects.</div>
           <div class="rag-build-note" id="ragBuildNote">
             <span class="rag-build-icon" aria-hidden="true">i</span>
-            <span class="rag-build-copy">Built with an approved knowledge base, semantic retrieval, and Gemini Flash. <a class="rag-build-link" id="ragBuildLink" href="https://github.com/robona-pk/portfolio#mira--portfolio-chatbot" target="_blank" rel="noopener">How it works ↗</a></span>
+            <span class="rag-build-copy">Built with an approved knowledge base, semantic retrieval, and Gemma. <a class="rag-build-link" id="ragBuildLink" href="https://github.com/robona-pk/portfolio#mira--portfolio-chatbot" target="_blank" rel="noopener">How it works ↗</a></span>
           </div>
         </div>
         <div class="rag-prompts" aria-label="Suggested questions">
@@ -2259,7 +2259,7 @@ function send() {
 /* ═══════════════════════════════════════════════════════
    PORTFOLIO RAG DEMO
    Policy routing, MiniLM retrieval, and validation run in the browser.
-   Supported open-ended answers use Gemini through a Vercel endpoint.
+   Supported open-ended answers use Gemma through a protected Vercel endpoint.
 ═══════════════════════════════════════════════════════ */
 const portfolioKnowledge = [
   { source: 'Lenskart@Home case study', answer: 'At Lenskart, Prerna helped reposition home trials from an eye-test-led journey into a fashion-forward way to try frames at home. Her initiatives contributed ₹6Cr+ in annualised revenue, including ₹1.8Cr from personalisation; a pan-India pilot lifted bookings 7%.', text: 'At Lenskart, Prerna helped reposition Lenskart@Home from an eye-test-led feature into a more fashion-forward way to try frames at home. She owned growth initiatives across this O2O experience, including home trials, store ownership, and post-purchase journeys. Her initiatives contributed more than ₹6Cr in incremental annualised revenue. A personalised home-trial experience generated ₹1.8Cr annualised incremental revenue across five cities. A three-week pan-India pilot improved completed home-trial bookings by 7 percent versus the weekly baseline. Territory ownership and 48-hour check-ins improved NPS for the called cohort from 41 to 60 in one month.', tags: 'lenskart home trial fashion eyewear o2o revenue booking nps customer experience growth' },
@@ -2283,7 +2283,7 @@ approvedFactCards.forEach(card => portfolioKnowledge.push({
 const RAG_CONFIG = Object.freeze({
   rulesVersion: '2026-10-13.3',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
-  generationModel: 'gemini-3.5-flash-lite',
+  generationModel: 'gemma-3-4b-it',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   relevanceSemanticThreshold: 0.24,
   relevanceLexicalCoverageThreshold: 0.5,
@@ -2384,7 +2384,7 @@ const answerScopeQuestion = /\b(what (questions?|things?|topics?) can (you|this 
 const botArchitectureQuestion = /\b(how|what).{0,18}\b(this bot|the bot|chatbot|portfolio assistant)\b.{0,24}\b(made|built|work|implemented|architecture|tech stack)|\b(how (?:was|is).{0,12}\b(this bot|the bot|chatbot)\b.{0,12}\b(made|built))\b/i;
 const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
 const assistantAnswer = 'I’m Mira, Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work.';
-const botArchitectureAnswer = approvedKnowledge.botArchitecture || 'This bot combines an approved answer bank, MiniLM semantic retrieval, and Gemini Flash generation through a secure Vercel endpoint, with privacy, injection, grounding, and fallback checks. The GitHub README explains the complete architecture and evaluation setup.';
+const botArchitectureAnswer = approvedKnowledge.botArchitecture || 'This bot combines Gemma intent understanding, an approved fact-card knowledge base, MiniLM semantic retrieval, and grounded Gemma generation through a protected Vercel endpoint, with privacy, injection, grounding, and fallback checks. The GitHub README explains the complete architecture and evaluation setup.';
 const botReadmeUrl = 'https://github.com/robona-pk/portfolio#mira--portfolio-chatbot';
 const resumeAnswer = 'You can view or download Prerna’s resume here.';
 const resumeUrl = 'https://drive.google.com/file/d/1To5xUIDQBddvdafDoVcgCVNxidGA1Cfo/view?usp=sharing';
@@ -2764,7 +2764,7 @@ async function classifyPortfolioIntentHosted(question, runtimeOptions = {}) {
   if (runtimeOptions.disableHostedGeneration || runtimeOptions.forceGenerationFailure) return null;
   const controller = new AbortController();
   const startedAt = performance.now();
-  const timeout = window.setTimeout(() => controller.abort(), 20500);
+  const timeout = window.setTimeout(() => controller.abort(), 10500);
   try {
     const response = await fetch('/api/classify', {
       method: 'POST',
@@ -3190,7 +3190,7 @@ const policyControlledAnswers = new Set([
   bajajWorkAnswer
 ].filter(Boolean));
 
-async function generateWithGemini(payload, runtimeOptions = {}) {
+async function generateWithGemma(payload, runtimeOptions = {}) {
   if (runtimeOptions.mockGeneratedAnswer) return {
     answer: runtimeOptions.mockGeneratedAnswer,
     model: RAG_CONFIG.generationModel,
@@ -3210,7 +3210,7 @@ async function generateWithGemini(payload, runtimeOptions = {}) {
       body: JSON.stringify(payload)
     });
     const result = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(result.error || 'Gemini generation failed.');
+    if (!response.ok) throw new Error(result.error || 'Gemma generation failed.');
     return result;
   } finally {
     window.clearTimeout(timeout);
@@ -3361,7 +3361,7 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
   const retrievedContext = relevant.map(item => `${item.source}: ${item.text}`).join('\n');
   const groundingText = `${result.answer}\n${retrievedContext}`;
   const generationAnchor = relevant[0]?.answer || result.answer;
-  const generationProvider = runtimeOptions.generationProvider === 'qwen' ? 'qwen' : 'gemini';
+  const generationProvider = runtimeOptions.generationProvider === 'qwen' ? 'qwen' : 'gemma';
   const generationStartedAt = performance.now();
   try {
     const sources = [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])];
@@ -3372,7 +3372,7 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
         retrievedContext,
         requiredFacts: result.requiredFacts || []
       }, runtimeOptions)
-      : await generateWithGemini({
+      : await generateWithGemma({
         question: normalizeQuestion(question),
         approvedAnswer: generationAnchor,
         sources

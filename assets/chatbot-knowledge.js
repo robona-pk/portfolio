@@ -26,7 +26,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     confidentialData: 'That concerns confidential company financials or operating data, which Prerna cannot share. I can, however, discuss the public outcomes of her work at Lenskart@Home and Bajaj Finserv Health.',
     companyContext: 'I can speak to Prerna’s work and published outcomes at that company, but not company strategy, internal performance, or non-public financials.',
     outOfScope: 'That sits outside what this portfolio assistant is designed to answer. If you are assessing Prerna, try asking about her product approach, growth outcomes, skills, career interests, or the projects she has built.',
-    botArchitecture: 'This bot combines an approved answer bank, browser-based MiniLM semantic retrieval, and Gemini Flash generation through a protected Vercel endpoint, with privacy, injection, grounding, and fallback checks. The GitHub README explains the complete architecture and evaluation setup.',
+    botArchitecture: 'This bot combines Gemma intent understanding, an approved fact-card knowledge base, browser-based MiniLM semantic retrieval, and grounded Gemma generation through a protected Vercel endpoint, with privacy, injection, grounding, and fallback checks. The GitHub README explains the complete architecture and evaluation setup.',
     undocumented: 'I don’t have that information right now. You can reach out to Prerna to ask her directly.',
     careerLogistics: 'Prerna has not published those logistics here. The best way to discuss notice period, compensation, relocation, remote preferences, or interview availability is to contact her directly.',
     comparison: 'I wouldn’t make an unsupported comparison. The fairest way to assess Prerna is through her documented product decisions, measurable outcomes, and the scope she has owned.',
@@ -115,8 +115,8 @@ window.ASK_PRERNA_KNOWLEDGE = {
     },
     {
       id: 'bot-architecture', source: 'Project · Mira architecture', topics: ['bot_architecture'],
-      answer: 'Mira uses Gemini for intent understanding, an approved fact-card knowledge base, MiniLM semantic retrieval, Gemini grounded generation, and output checks. A Golden Dataset and PostHog support evaluation and product analytics.',
-      facts: 'Mira normalises the question, applies safety and privacy checks, uses Gemini for structured intent understanding and query rewriting, retrieves approved fact cards with MiniLM, reranks evidence, generates with Gemini, and validates the output. A Golden Dataset supports human evaluation; PostHog tracks usage and feedback.'
+      answer: 'Mira uses Gemma for intent understanding, an approved fact-card knowledge base, MiniLM semantic retrieval, grounded Gemma generation, and output checks. A Golden Dataset and PostHog support evaluation and product analytics.',
+      facts: 'Mira normalises the question, applies safety and privacy checks, uses Gemma for structured intent understanding and query rewriting, retrieves approved fact cards with MiniLM, reranks evidence, generates with Gemma, and validates the output. A Golden Dataset supports human evaluation; PostHog tracks usage and feedback.'
     }
   ],
   declinedTopics: [

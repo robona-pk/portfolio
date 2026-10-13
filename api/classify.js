@@ -71,15 +71,15 @@ export default async function handler(req, res) {
     'life_philosophy: beliefs, motto, or outlook on life',
     'personality: what Prerna is like as a person',
     'work_overview: a broad overview of Prerna’s professional work, career projects, or work history without asking how she works',
-    'work_style: how Prerna works as a product manager or collaborator',
-    'skills: product-management capabilities',
+    'work_style: how Prerna behaves, performs, or operates at work, including how she is at her job or as a product manager',
+    'skills: whether Prerna can perform a professional product task, including analytics, metrics, KPIs, funnels, experimentation, or other PM capabilities',
     'tools: software, analytics, technical, or AI tools',
     'strengths: professional strengths or competence',
     'problem_solving: how Prerna tackles product problems or decisions',
     'lenskart_impact: Prerna’s published work or outcomes at Lenskart',
     'bajaj_impact: Prerna’s published work or outcomes at Bajaj Finserv Health',
     'bot_architecture: how this chatbot was built',
-    'hiring_fit: whether Prerna is worth hiring, interviewing, shortlisting, or assessing as a candidate',
+    'hiring_fit: Prerna’s candidate value or likely fit for a role, team, fast-paced or startup environment, company culture, or level of ambiguity',
     'off_topic: general knowledge unrelated to Prerna or this portfolio',
     'unknown: no supported intent can be determined'
   ].join('\n');

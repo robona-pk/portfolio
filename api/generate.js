@@ -132,7 +132,7 @@ export default async function handler(req, res) {
   }
   if (!process.env.GEMINI_API_KEY) return res.status(503).json({ error: 'Gemma generation is not configured.' });
 
-  const model = 'gemma-4-26b-a4b-it';
+  const model = 'gemma-4-31b-it';
   const context = sourceNames.map(source => `${source}: ${SOURCE_LIBRARY[source].text}`).join('\n\n');
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 9000);

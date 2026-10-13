@@ -152,8 +152,9 @@ export default async function handler(req, res) {
         generationConfig: {
           temperature: 0.1,
           topP: 0.8,
-          maxOutputTokens: 120,
-          candidateCount: 1
+          maxOutputTokens: 320,
+          candidateCount: 1,
+          thinkingConfig: { thinkingLevel: 'minimal' }
         }
       })
     });

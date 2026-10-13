@@ -128,9 +128,9 @@ ${intentGuide}`;
         contents: [{ role: 'user', parts: [{ text: `${classifierInstruction}\n\nVisitor question:\n${question}` }] }],
         generationConfig: {
           temperature: 0,
-          maxOutputTokens: 160,
+          maxOutputTokens: 320,
           candidateCount: 1,
-          responseMimeType: 'application/json'
+          thinkingConfig: { thinkingLevel: 'minimal' }
         }
       })
     });

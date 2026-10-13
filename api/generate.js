@@ -18,6 +18,70 @@ const SOURCE_LIBRARY = Object.freeze({
   'Portfolio overview': {
     answer: 'Prerna is a Growth and Adoption Product Manager with 5+ years across e-commerce, health-tech, and insurance. Alongside measurable commercial work, she builds AI-enabled product experiments.',
     text: 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years improving activation, conversion, retention, and revenue across e-commerce, health-tech, and insurance. She partners with design, engineering, operations, and commercial teams from discovery through iteration. Alongside her core roles, she builds AI-enabled product experiments.'
+  },
+  'Profile · Overview': {
+    answer: 'Prerna is a Growth and Adoption Product Manager with 5+ years across e-commerce, health-tech, and insurance. Her work includes ₹6Cr+ in annualised impact at Lenskart and a ₹28L 0→1 wellness business at Bajaj Finserv Health.',
+    text: 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years of product experience across e-commerce, health-tech, and insurance. Her documented work includes ₹6Cr+ incremental annualised impact at Lenskart and a ₹28L zero-to-one wellness business at Bajaj Finserv Health.'
+  },
+  'Profile · Work style': {
+    answer: 'Prerna starts with data and customer conversations to understand where a journey is breaking. She turns the insight into a hypothesis, validates it through the smallest useful experiment, and iterates using customer and business outcomes.',
+    text: 'Prerna studies product data and speaks with customers to locate the real break in a journey. She turns the insight into a measurable hypothesis, tests the smallest useful intervention, and iterates using both customer and business outcomes.'
+  },
+  'Profile · Pace and ambiguity': {
+    answer: 'Her work suggests she is comfortable with pace and ambiguity: she finds the real problem through data and customer conversations, tests a focused intervention, and stays close through iteration. Culture fit is mutual, so the team’s working style still matters.',
+    text: 'Evidence from Prerna’s work shows an iterative operating style: she uses data and customer conversations to clarify ambiguous problems, runs focused experiments, and stays involved through iteration. This supports comfort with pace and ambiguity; culture fit remains mutual.'
+  },
+  'Profile · Product skills': {
+    answer: 'Prerna’s PM toolkit covers discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, and cross-functional execution. She uses data and AI-assisted prototyping to move from insight to measurable impact.',
+    text: 'Approved product capabilities: discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, cross-functional execution, and AI-assisted prototyping.'
+  },
+  'Profile · Analytics and metrics': {
+    answer: 'Prerna defines product and business metrics, tracks funnels and cohorts, and evaluates experiments across activation, conversion, retention, CTR, NPS, revenue, and operational outcomes.',
+    text: 'Prerna defines product and business metrics, tracks funnels and cohorts, and evaluates experiments using activation, conversion, retention, click-through rate, NPS, revenue, and operational outcomes.'
+  },
+  'Profile · Tools': {
+    answer: 'Prerna uses SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, and Python. Her builder toolkit includes Figma, Codex, Claude Code, GitHub, Vercel, Gemini, MiniLM, and Transformers.js.',
+    text: 'Analytics tools: SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, and Python. Builder tools: Figma, Notion, Jira, Codex, Claude Code, GitHub, Vercel, Google Apps Script, Gemini, MiniLM, and Transformers.js.'
+  },
+  'Profile · Personality': {
+    answer: 'People may experience Prerna as energetic and persistent. She cares about meaningful problems, learns from people and new perspectives, and prefers steady progress to quick wins.',
+    text: 'Approved personal qualities: energetic, persistent, interested in meaningful problems, open to learning from people and new perspectives, and oriented toward steady progress.'
+  },
+  'Profile · Education': {
+    answer: 'Prerna studied Biotechnology Engineering at SRM Institute of Science and Technology in Kattankulathur, Tamil Nadu.',
+    text: 'Prerna studied Biotechnology Engineering at SRM Institute of Science and Technology in Kattankulathur, Tamil Nadu.'
+  },
+  'Profile · Location': {
+    answer: 'Prerna grew up in Delhi, has lived in Chennai, Pune, and Hyderabad, and is now based in Bengaluru, India.',
+    text: 'Prerna grew up in Delhi. She has lived in Chennai, Pune, and Hyderabad. She is currently based in Bengaluru, India.'
+  },
+  'Profile · Hobbies': {
+    answer: 'Outside work, Prerna lifts weights and plays the drums. She also enjoys travelling solo to meet new people and gain fresh perspectives.',
+    text: 'Outside work, Prerna lifts weights, plays the drums, and sometimes travels solo to meet new people and gain different cultural perspectives.'
+  },
+  'Profile · Dopamine detox': {
+    answer: 'Dopamine detox is Prerna’s shorthand for stepping back from high-stimulation habits so she can reset her attention and act more intentionally. She enjoys discussing how it changed her relationship with focus and discipline.',
+    text: 'Prerna uses dopamine detox to mean deliberately stepping back from high-stimulation habits, resetting attention, and acting more intentionally. She says it changed her relationship with focus and discipline.'
+  },
+  'Profile · Life philosophy': {
+    answer: 'Prerna’s philosophy is simple: devotion to her future self must exceed attachment to her past. For her, that means choosing discipline, growth, and new perspectives over staying comfortable.',
+    text: 'Prerna’s stated philosophy is that devotion to her future self must exceed attachment to her past. She connects that idea with discipline, growth, new perspectives, and moving beyond comfort.'
+  },
+  'Profile · Career interests': {
+    answer: 'Prerna is interested in Product Manager and Senior Product Manager roles where she can own meaningful customer journeys end to end and turn adoption problems into measurable outcomes.',
+    text: 'Prerna is interested in Product Manager and Senior Product Manager roles. She values end-to-end ownership and work that turns adoption problems into measurable customer and business outcomes, especially in B2C and AI-enabled products.'
+  },
+  'Work · Lenskart impact': {
+    answer: 'At Lenskart, Prerna’s initiatives contributed ₹6Cr+ in incremental annualised revenue, including ₹1.8Cr from personalisation; a pan-India pilot lifted completed home-trial bookings by 7%.',
+    text: 'At Lenskart, Prerna owned growth initiatives across Lenskart@Home. Her initiatives contributed more than ₹6Cr in incremental annualised revenue. Personalisation generated ₹1.8Cr annualised incremental revenue, and a pan-India pilot improved completed home-trial bookings by 7 percent.'
+  },
+  'Work · Bajaj Finserv Health impact': {
+    answer: 'At Bajaj Finserv Health, outcomes from Prerna’s work included ₹28L from a new wellness business, 8x Health Files adoption, an 18% doctor-listing CTR lift, and 26% higher pre-authorisation throughput.',
+    text: 'At Bajaj Finserv Health, Prerna built a diabetes wellness business that generated ₹28L in five months, helped increase active Health Files users 8x, improved doctor-listing CTR by 18 percent, and improved insurance pre-authorisation throughput by 26 percent.'
+  },
+  'Project · Mira architecture': {
+    answer: 'Mira uses Gemini for intent understanding, an approved fact-card knowledge base, MiniLM semantic retrieval, Gemini grounded generation, and output checks. A Golden Dataset and PostHog support evaluation and product analytics.',
+    text: 'Mira normalises the question, applies safety and privacy checks, uses Gemini for structured intent understanding and query rewriting, retrieves approved fact cards with MiniLM, reranks evidence, generates with Gemini, and validates the output. A Golden Dataset supports human evaluation; PostHog tracks usage and feedback.'
   }
 });
 

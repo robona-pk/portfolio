@@ -1698,7 +1698,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-13.2"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-13.3"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2268,9 +2268,20 @@ const portfolioKnowledge = [
   { source: 'Skills and tools', answer: 'Prerna combines growth and adoption strategy with SQL, BigQuery, GA4, Firebase, A/B testing, PostHog, Python automation, and AI-assisted prototyping. Her builder toolset includes Codex, Claude Code, Gemini, MiniLM, GitHub, and Vercel.', text: 'Prerna brings growth and adoption strategy, funnel optimisation, lifecycle and retention strategy, SQL and BigQuery, GA4 and Firebase, A/B testing, cohort and behavioural segmentation, Python automation, and AI-assisted prototyping. Tools include Notion, Jira, Figma, Miro, CleverTap, Tableau, Power BI, PostHog, Codex, Claude Code, Gemini, MiniLM, GitHub, Vercel, and Google Apps Script.', tags: 'skills tools technical python sql bigquery analytics ai gemini minilm codex claude code posthog github vercel figma product manager' },
   { source: 'Portfolio overview', answer: 'Prerna is a Growth and Adoption Product Manager with 5+ years across e-commerce, health-tech, and insurance. Alongside measurable commercial work, she builds AI-enabled product experiments.', text: 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years improving activation, conversion, retention, and revenue across e-commerce, health-tech, and insurance. She partners with design, engineering, operations, and commercial teams from discovery through iteration. Alongside her core roles, she builds AI-enabled product experiments.', tags: 'about experience role background industries ecommerce health tech insurance collaboration ai builder' }
 ];
+const approvedFactCards = Array.isArray(window.ASK_PRERNA_KNOWLEDGE?.factCards)
+  ? window.ASK_PRERNA_KNOWLEDGE.factCards
+  : [];
+approvedFactCards.forEach(card => portfolioKnowledge.push({
+  source: card.source,
+  answer: card.answer,
+  text: card.facts,
+  tags: [...(card.topics || []), card.id].join(' '),
+  topics: card.topics || [],
+  factCardId: card.id
+}));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-12.5',
+  rulesVersion: '2026-10-13.3',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2279,7 +2290,7 @@ const RAG_CONFIG = Object.freeze({
   relevanceLexicalMinimumMatches: 1,
   intentSemanticThreshold: 0.38,
   intentSemanticMargin: 0.03,
-  intentHostedConfidenceThreshold: 0.72,
+  intentHostedConfidenceThreshold: 0.62,
   maximumQuestionCharacters: 500,
   maximumGeneratedAnswerCharacters: 300,
   maximumSecurityWaitMs: 8000,
@@ -2389,7 +2400,7 @@ const problemSolvingAnswer = 'Prerna starts by finding where customer intent bre
 const motivationQuestion = /\bmotivat\w*\b|\bwhat drives (prerna|her)\b|\bwhy (product|pm)\b|\bwhy (does|did).{0,24}\b(product|pm)\b/i;
 const motivationAnswer = 'What motivates Prerna most is the feeling that she is still evolving. She loves hearing that a customer used something she built; praise is energising, criticism is useful, and both sharpen the next version of the product—and of her as a PM.';
 const hiringQuestion = /\b(why (should|would).{0,24}\b(hire|choose|consider|interview|shortlist)|why hire|fit for|good fit|bring(?:s)? to (?:the )?table|what (?:value|strengths?|qualities|capabilities) (?:does|would|can) (?:prerna|she) (?:bring|add|offer)|what (?:does|would|can) (?:prerna|she) (?:bring|add|offer))\b/i;
-const cultureFitQuestion = /\b(?:will|would|can|could|does|is) (?:prerna|she).{0,18}\bfit\b.{0,24}\b(?:culture|team|environment|company|organisation|organization)\b|\b(?:fast[- ]paced|high[- ]growth|startup|ambiguous|demanding|dynamic) (?:culture|team|environment|company|organisation|organization)\b/i;
+const cultureFitQuestion = /\b(?:will|would|can|could|does|is) (?:prerna|she).{0,18}\bfit\b.{0,24}\b(?:culture|team|environment|company|organisation|organization)\b|\b(?:fast[- ]paced|fast moving|high[- ]growth|startup|ambiguous|demanding|dynamic) (?:culture|team|environment|company|organisation|organization)\b|\b(?:is|does|can|could|would) (?:prerna|she).{0,16}\b(?:fast[- ]paced|fast moving|adaptable|agile|comfortable with (?:pace|ambiguity)|move quickly|work quickly|handle (?:pace|ambiguity))\b|\b(?:describe|see|consider) (?:prerna|her) as.{0,12}\b(?:fast[- ]paced|fast moving|adaptable|agile)\b/i;
 const hiringAnswer = 'Prerna brings 5+ years across e-commerce, health-tech, and insurance, with ₹6Cr+ impact at Lenskart and a ₹28L 0→1 business at Bajaj. What differentiates her is commercial ownership, curiosity, and hands-on AI experiments beyond her core role.';
 const undocumentedBehaviourQuestion = /\b(conflict|disagreement|failure|failed|mistake|feedback|pressure|stress|difficult (situation|conversation)|challenge)\b/i;
 const failureQuestion = /\b(biggest|major|professional)?\s*(failure|failed|mistake|setback)\b/i;
@@ -2599,7 +2610,8 @@ const portfolioIntentDefinitions = Object.freeze([
   { intent: 'lenskart_impact', description: 'Asking about Prerna’s published work, decisions, or outcomes at Lenskart.', examples: ['What impact did she have at Lenskart?', 'Tell me about the home-trial work.', 'What did she achieve in eyewear?'] },
   { intent: 'bajaj_impact', description: 'Asking about Prerna’s published work, decisions, or outcomes at Bajaj Finserv Health.', examples: ['What did she build at Bajaj?', 'Tell me about her health-tech work.', 'What results did she drive in digital health?'] },
   { intent: 'bot_architecture', description: 'Asking what powers this assistant or how its chatbot, RAG system, or evaluation setup was built.', examples: ['How is this assistant made?', 'What powers you?', 'What powers this chatbot?', 'How do you generate answers?', 'Explain the bot architecture.'] },
-  { intent: 'hiring_fit', description: 'Evaluating Prerna’s candidate value or likely fit for a role, team, working environment, company culture, pace, or level of ambiguity.', examples: ['Why should we hire her?', 'What does she bring to the table?', 'What value would she add?', 'Will she fit in a fast-paced culture?', 'Could she work in a startup environment?', 'Would she be worth interviewing?', 'Why should a recruiter consider Prerna?'] },
+  { intent: 'hiring_fit', description: 'Evaluating Prerna’s overall candidate value, reasons to hire or interview her, or what she brings to a product team.', examples: ['Why should we hire her?', 'What does she bring to the table?', 'What value would she add?', 'Would she be worth interviewing?'] },
+  { intent: 'culture_fit', description: 'Evaluating Prerna’s professional pace, adaptability, ambiguity tolerance, startup fit, or fit for a fast-paced team or company culture.', examples: ['Is she fast-paced?', 'Does she move quickly?', 'Is Prerna adaptable?', 'Can she handle ambiguity?', 'Will she fit in a fast-paced culture?', 'Could she work in a startup environment?'] },
   { intent: 'off_topic', description: 'Asking unrelated general knowledge with no connection to Prerna or her portfolio.', examples: ['Who is the president?', 'What is the capital of India?', 'Give me today’s weather.'] }
 ]);
 
@@ -2674,25 +2686,30 @@ async function classifyPromptInjection(question, runtimeOptions = {}) {
 
 async function retrievePortfolioContextSemantically(question, runtimeOptions = {}) {
   const normalizedQuestion = normalizeQuestion(question);
-  if (runtimeOptions.disableSemanticRetrieval || !window.createPortfolioEmbedder) return retrievePortfolioContext(normalizedQuestion);
+  const rewrittenQuestion = normalizeQuestion(runtimeOptions.rewrittenQuestion || '');
+  const evidenceTopics = Array.isArray(runtimeOptions.evidenceTopics) ? runtimeOptions.evidenceTopics : [];
+  const retrievalQuestion = [normalizedQuestion, rewrittenQuestion, evidenceTopics.join(' ')].filter(Boolean).join(' ');
+  if (runtimeOptions.disableSemanticRetrieval || !window.createPortfolioEmbedder) return retrievePortfolioContext(retrievalQuestion);
   try {
     portfolioEmbedderPromise ||= window.createPortfolioEmbedder();
     const embedder = await portfolioEmbedderPromise;
     portfolioVectorsPromise ||= embedder(portfolioKnowledge.map(item => `${item.source}. ${item.text}`), { pooling: 'mean', normalize: true });
-    const queryVariants = [...new Set([String(question || '').trim(), normalizedQuestion].filter(Boolean))];
+    const queryVariants = [...new Set([String(question || '').trim(), normalizedQuestion, rewrittenQuestion, retrievalQuestion].filter(Boolean))];
     const [questionVectors, documentVectors] = await Promise.all([
       embedder(queryVariants, { pooling: 'mean', normalize: true }),
       portfolioVectorsPromise
     ]);
     const queries = questionVectors.tolist();
     return portfolioKnowledge.map((item, index) => {
-      const lexical = getLexicalRelevance(normalizedQuestion, item);
+      const lexical = getLexicalRelevance(retrievalQuestion, item);
       const score = Math.max(...queries.map(query => query.reduce((sum, value, position) => sum + value * documentVectors.tolist()[index][position], 0)));
+      const topicMatches = evidenceTopics.filter(topic => item.topics?.includes(topic)).length;
       return {
         ...item,
         score,
         ...lexical,
-        hybridScore: score + Math.min(lexical.lexicalScore, 3) * 0.08,
+        topicMatches,
+        hybridScore: score + Math.min(lexical.lexicalScore, 3) * 0.08 + Math.min(topicMatches, 2) * 0.12,
         semantic: true
       };
     }).sort((a, b) => b.hybridScore - a.hybridScore).slice(0, 2);
@@ -2746,7 +2763,8 @@ async function classifyPortfolioIntentSemantically(question, runtimeOptions = {}
 async function classifyPortfolioIntentHosted(question, runtimeOptions = {}) {
   if (runtimeOptions.disableHostedGeneration || runtimeOptions.forceGenerationFailure) return null;
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), 4500);
+  const startedAt = performance.now();
+  const timeout = window.setTimeout(() => controller.abort(), 5500);
   try {
     const response = await fetch('/api/classify', {
       method: 'POST',
@@ -2761,7 +2779,12 @@ async function classifyPortfolioIntentHosted(question, runtimeOptions = {}) {
       confidence: Number(Number(result.confidence).toFixed(4)),
       margin: 0,
       mode: 'hosted_intent',
-      model: result.model || ''
+      model: result.model || '',
+      rewrittenQuestion: result.rewrittenQuestion || normalizeQuestion(question),
+      evidenceTopics: Array.isArray(result.evidenceTopics) ? result.evidenceTopics : [],
+      isPortfolioRelated: result.isPortfolioRelated !== false,
+      safetyCategory: result.safetyCategory || 'safe',
+      classificationLatencyMs: Math.round(performance.now() - startedAt)
     };
   } catch (error) {
     return null;
@@ -2772,15 +2795,38 @@ async function classifyPortfolioIntentHosted(question, runtimeOptions = {}) {
 
 async function classifyPortfolioIntent(question, runtimeOptions = {}) {
   if (runtimeOptions.bypassIntentRouting) return null;
-  const semantic = await classifyPortfolioIntentSemantically(question, runtimeOptions);
-  if (semantic?.intent) return semantic;
   const hosted = await classifyPortfolioIntentHosted(question, runtimeOptions);
-  return hosted || semantic;
+  if (hosted?.intent) return hosted;
+  const semantic = await classifyPortfolioIntentSemantically(question, runtimeOptions);
+  return semantic ? {
+    ...semantic,
+    rewrittenQuestion: normalizeQuestion(question),
+    evidenceTopics: [],
+    isPortfolioRelated: !['off_topic', 'unknown'].includes(semantic.intent),
+    classificationLatencyMs: 0
+  } : null;
 }
 
 function portfolioIntentResponse(classification, question = '') {
   if (!classification?.intent) return null;
-  if (classification.intent === 'hobbies' && !hobbiesQuestion.test(normalizeQuestion(question))) return null;
+  const safetyRoutes = {
+    injection: approvedKnowledge.promptInjection || outOfScopeAnswer,
+    private: personalAnswer,
+    abusive: insultAnswer,
+    confidential: approvedKnowledge.confidentialData
+  };
+  if (classification.safetyCategory && classification.safetyCategory !== 'safe') return {
+    answer: safetyRoutes[classification.safetyCategory] || approvedKnowledge.undocumented,
+    citations: [],
+    policyOnly: true,
+    intent: classification.intent,
+    intentConfidence: classification.confidence,
+    intentMode: `${classification.mode}_safety`,
+    intentModel: classification.model || '',
+    rewrittenQuestion: classification.rewrittenQuestion || normalizeQuestion(question),
+    evidenceTopics: [],
+    classificationLatencyMs: Number(classification.classificationLatencyMs || 0)
+  };
   const routes = {
     answer_scope: { answer: approvedKnowledge.answerScope, citations: [] },
     identity: { answer: identityAnswer, citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'], requiredFacts: identityRequiredFacts },
@@ -2806,16 +2852,41 @@ function portfolioIntentResponse(classification, question = '') {
     bajaj_impact: { answer: bajajWorkAnswer, citations: ['Bajaj Finserv Health case study'], action: { label: 'Read the doctor-listing case study', href: '#case-4' } },
     bot_architecture: { answer: botArchitectureAnswer, citations: [], action: { label: 'See how the bot is built ↗', href: botReadmeUrl } },
     hiring_fit: { answer: hiringAnswer, citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'] },
+    culture_fit: { answer: approvedKnowledge.cultureFit, citations: ['Product approach', 'Portfolio overview'] },
     off_topic: { answer: approvedKnowledge.outOfScope || outOfScopeAnswer, citations: [] }
   };
+  const defaultEvidenceTopics = {
+    identity: ['profile', 'experience'], role: ['profile'], experience: ['experience', 'profile'],
+    education: ['education'], origin: ['location'], location: ['location'], career_interest: ['career'],
+    hobbies: ['hobbies'], dopamine_detox: ['dopamine_detox'], life_philosophy: ['life_philosophy'],
+    personality: ['personality'], work_overview: ['experience', 'lenskart', 'bajaj'],
+    work_style: ['work_style', 'product_skills'], skills: ['product_skills', 'analytics'],
+    tools: ['tools', 'analytics'], strengths: ['product_skills', 'work_style'],
+    problem_solving: ['work_style', 'product_skills'], lenskart_impact: ['lenskart'],
+    bajaj_impact: ['bajaj'], bot_architecture: ['bot_architecture'],
+    hiring_fit: ['profile', 'experience', 'career'], culture_fit: ['work_style', 'career', 'product_skills']
+  };
   const route = routes[classification.intent];
+  const generativeIntents = new Set([
+    'identity', 'role', 'experience', 'education', 'origin', 'location', 'career_interest',
+    'hobbies', 'dopamine_detox', 'life_philosophy', 'personality', 'work_overview', 'work_style',
+    'skills', 'tools', 'strengths', 'problem_solving', 'lenskart_impact', 'bajaj_impact',
+    'bot_architecture', 'hiring_fit', 'culture_fit'
+  ]);
   return route ? {
     ...route,
     intent: classification.intent,
     intentConfidence: classification.confidence,
     intentMargin: classification.margin,
     intentMode: classification.mode,
-    intentModel: classification.model || RAG_CONFIG.retrievalModel
+    intentModel: classification.model || RAG_CONFIG.retrievalModel,
+    rewrittenQuestion: classification.rewrittenQuestion || normalizeQuestion(question),
+    evidenceTopics: classification.evidenceTopics?.length
+      ? classification.evidenceTopics
+      : (defaultEvidenceTopics[classification.intent] || []),
+    classificationLatencyMs: Number(classification.classificationLatencyMs || 0),
+    allowGeneration: generativeIntents.has(classification.intent),
+    policyOnly: ['answer_scope', 'off_topic'].includes(classification.intent)
   } : null;
 }
 
@@ -2827,7 +2898,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     citations: []
   };
   question = normalizeQuestion(question);
-  if ((/\b(how much|how many|total|years?|yrs?)\b/.test(rawQuestion) && /\b(experience|exp)\b/.test(rawQuestion)) || experienceQuestion.test(question)) return {
+  if (!runtimeOptions.deterministicOnly && ((/\b(how much|how many|total|years?|yrs?)\b/.test(rawQuestion) && /\b(experience|exp)\b/.test(rawQuestion)) || experienceQuestion.test(question))) return {
     answer: experienceAnswer,
     citations: ['Portfolio overview']
   };
@@ -2850,7 +2921,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     intentMode: 'deterministic_rule',
     intentModel: 'policy_rule'
   };
-  if (identityQuestion.test(question)) return {
+  if (!runtimeOptions.deterministicOnly && identityQuestion.test(question)) return {
     answer: identityAnswer,
     citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'],
     requiredFacts: identityRequiredFacts
@@ -2879,7 +2950,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     answer: personalAnswer,
     citations: []
   };
-  if (motivationQuestion.test(question)) return {
+  if (!runtimeOptions.deterministicOnly && motivationQuestion.test(question)) return {
     answer: motivationAnswer,
     citations: ['Product approach']
   };
@@ -2911,6 +2982,9 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     answer: approvedKnowledge.comparison,
     citations: ['Portfolio overview']
   };
+  if (runtimeOptions.deterministicOnly) return null;
+  const intentRoute = portfolioIntentResponse(await classifyPortfolioIntent(originalQuestion, runtimeOptions), originalQuestion);
+  if (intentRoute) return intentRoute;
   if (educationQuestion.test(question)) return { answer: approvedKnowledge.education, citations: [] };
   if (rolesQuestion.test(question)) return { answer: approvedKnowledge.roles, citations: [] };
   if (dopamineDetoxQuestion.test(question)) return { answer: approvedKnowledge.dopamineDetox, citations: [] };
@@ -2936,7 +3010,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   if (cultureFitQuestion.test(question)) return {
     answer: approvedKnowledge.cultureFit,
     citations: ['Product approach', 'Portfolio overview'],
-    intent: 'hiring_fit',
+    intent: 'culture_fit',
     intentConfidence: 1,
     intentMode: 'deterministic_rule',
     intentModel: 'policy_rule'
@@ -2981,9 +3055,6 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     answer: outOfScopeAnswer,
     citations: []
   };
-  if (runtimeOptions.deterministicOnly) return null;
-  const intentRoute = portfolioIntentResponse(await classifyPortfolioIntent(originalQuestion, runtimeOptions), originalQuestion);
-  if (intentRoute) return intentRoute;
   if (personalityTraitQuestion.test(question)) return {
     answer: approvedKnowledge.personalProfile || personalProfileAnswer,
     citations: []
@@ -3247,7 +3318,7 @@ async function validateGeneratedAnswer(answer, groundingText, requiredFacts = []
 }
 
 async function generatePortfolioAnswer(question, result, retrievalCacheHit = false, runtimeOptions = {}) {
-  if (result.policyOnly || result.action || policyControlledAnswers.has(result.answer)) return {
+  if (result.policyOnly || (!result.allowGeneration && (result.action || policyControlledAnswers.has(result.answer)))) return {
     answer: result.answer,
     retrievedSources: result.citations || [],
     retrievalScores: [],
@@ -3260,12 +3331,36 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
     generationInputTokens: 0,
     generationOutputTokens: 0,
     generationModel: '',
-    generationLatencyMs: 0
+    generationLatencyMs: 0,
+    failureStage: result.answer === (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer) ? 'retrieval' : ''
   };
-  const matches = await retrievePortfolioContextSemantically(question, runtimeOptions);
+  const retrievalOptions = {
+    ...runtimeOptions,
+    rewrittenQuestion: result.rewrittenQuestion || '',
+    evidenceTopics: result.evidenceTopics || []
+  };
+  const retrievalQuestion = [question, result.rewrittenQuestion, ...(result.evidenceTopics || [])].filter(Boolean).join(' ');
+  const matches = await retrievePortfolioContextSemantically(retrievalQuestion, retrievalOptions);
   const relevant = matches.filter(isRelevantRetrievalMatch).slice(0, 2);
+  if (result.allowGeneration && !relevant.length) return {
+    answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
+    retrievedSources: [],
+    retrievalScores: matches.slice(0, 2).map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
+    answerMode: 'unsupported_fallback',
+    fallback: true,
+    fallbackReason: 'insufficient_context',
+    error: '',
+    retrievalCacheHit,
+    generationCacheHit: false,
+    generationInputTokens: 0,
+    generationOutputTokens: 0,
+    generationModel: '',
+    generationLatencyMs: 0,
+    failureStage: 'retrieval'
+  };
   const retrievedContext = relevant.map(item => `${item.source}: ${item.text}`).join('\n');
   const groundingText = `${result.answer}\n${retrievedContext}`;
+  const generationAnchor = relevant[0]?.answer || result.answer;
   const generationProvider = runtimeOptions.generationProvider === 'qwen' ? 'qwen' : 'gemini';
   const generationStartedAt = performance.now();
   try {
@@ -3273,19 +3368,19 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
     const generation = generationProvider === 'qwen'
       ? await generateWithQwen({
         question: normalizeQuestion(question),
-        approvedAnswer: result.answer,
+        approvedAnswer: generationAnchor,
         retrievedContext,
         requiredFacts: result.requiredFacts || []
       }, runtimeOptions)
       : await generateWithGemini({
         question: normalizeQuestion(question),
-        approvedAnswer: result.answer,
+        approvedAnswer: generationAnchor,
         sources
       }, runtimeOptions);
     const generationLatencyMs = Math.round(performance.now() - generationStartedAt);
     const validated = await validateGeneratedAnswer(generation.answer, groundingText, result.requiredFacts || [], runtimeOptions);
     return {
-      answer: validated || result.answer,
+      answer: validated || generationAnchor,
       retrievedSources: [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])],
       retrievalScores: relevant.map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
       answerMode: validated ? generationProvider : 'curated_fallback',
@@ -3297,11 +3392,12 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
       generationInputTokens: Number(generation.inputTokens || estimateTokenCount(JSON.stringify({ question, result, retrievedContext }))),
       generationOutputTokens: Number(generation.outputTokens || estimateTokenCount(generation.answer)),
       generationModel: generation.model || (generationProvider === 'qwen' ? RAG_CONFIG.comparisonModel : RAG_CONFIG.generationModel),
-      generationLatencyMs
+      generationLatencyMs,
+      failureStage: validated ? '' : 'grounding'
     };
   } catch (error) {
     return {
-      answer: result.answer,
+      answer: generationAnchor,
       retrievedSources: [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])],
       retrievalScores: relevant.map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
       answerMode: 'curated_fallback',
@@ -3313,7 +3409,8 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
       generationInputTokens: 0,
       generationOutputTokens: 0,
       generationModel: generationProvider === 'qwen' ? RAG_CONFIG.comparisonModel : RAG_CONFIG.generationModel,
-      generationLatencyMs: Math.round(performance.now() - generationStartedAt)
+      generationLatencyMs: Math.round(performance.now() - generationStartedAt),
+      failureStage: 'generation'
     };
   }
 }
@@ -3403,17 +3500,12 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
     let routed;
     if (security.blocked || security.uncertain) {
       routed = { answer: approvedKnowledge.promptInjection || outOfScopeAnswer, citations: [], policyOnly: true };
-    } else if (security.available === false && !deterministicRoute) {
-      routed = unsupportedPortfolioResponse();
     } else if (rawConfidentialCompanyQuestion || (companyQuestion.test(normalizedQuestion) && confidentialMetricQuestion.test(normalizedQuestion))) {
       routed = { answer: approvedKnowledge.confidentialData, citations: [], policyOnly: true };
     } else if (deterministicRoute) {
       routed = deterministicRoute;
     } else {
       routed = await localRagAnswer(normalizedQuestion, visitorQuestion, runtimeOptions);
-    }
-    if (security.available === false && !routed.policyOnly && !routed.action && !policyControlledAnswers.has(routed.answer)) {
-      routed = unsupportedPortfolioResponse();
     }
     const resolved = await generatePortfolioAnswer(visitorQuestion, routed, retrievalCacheHit, runtimeOptions);
     const totalLatencyMs = Math.round(performance.now() - startedAt);
@@ -3436,6 +3528,11 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
       intentConfidence: Number(routed.intentConfidence || 0),
       intentMode: routed.intentMode || (deterministicRoute ? 'deterministic_rule' : 'retrieval'),
       intentModel: routed.intentModel || '',
+      normalizedQuestion,
+      rewrittenQuestion: routed.rewrittenQuestion || normalizedQuestion,
+      evidenceTopics: routed.evidenceTopics || [],
+      classificationLatencyMs: Number(routed.classificationLatencyMs || 0),
+      failureStage: resolved.failureStage || '',
       inputTokens,
       outputTokens,
       estimatedCostUsd,
@@ -3466,6 +3563,11 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
       intentConfidence: 0,
       intentMode: 'request_error',
       intentModel: '',
+      normalizedQuestion: normalizeQuestion(question),
+      rewrittenQuestion: '',
+      evidenceTopics: [],
+      classificationLatencyMs: 0,
+      failureStage: 'request',
       inputTokens: estimateTokenCount(question),
       outputTokens: estimateTokenCount(RAG_CONFIG.fallbackAnswer),
       estimatedCostUsd: 0,

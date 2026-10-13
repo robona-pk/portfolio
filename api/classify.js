@@ -65,7 +65,7 @@ export default async function handler(req, res) {
   if (!question) return res.status(400).json({ error: 'A question is required.' });
   if (!process.env.GEMINI_API_KEY) return res.status(503).json({ error: 'Intent classification is not configured.' });
 
-  const model = process.env.GEMMA_CLASSIFIER_MODEL || 'gemma-3-4b-it';
+  const model = process.env.GEMMA_CLASSIFIER_MODEL || 'gemma-4-26b-a4b-it';
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
   const intentGuide = [
@@ -87,7 +87,7 @@ export default async function handler(req, res) {
     'work_style: how Prerna behaves, performs, or operates at work, including how she is at her job or as a product manager',
     'skills: whether Prerna can perform a professional product task, including analytics, metrics, KPIs, funnels, experimentation, or other PM capabilities',
     'tools: software, analytics, technical, or AI tools',
-    'strengths: professional strengths or competence',
+    'strengths: professional strengths, competence, ownership, initiative, resourcefulness, or high agency',
     'problem_solving: how Prerna tackles product problems or decisions',
     'lenskart_impact: Prerna’s published work or outcomes at Lenskart',
     'bajaj_impact: Prerna’s published work or outcomes at Bajaj Finserv Health',

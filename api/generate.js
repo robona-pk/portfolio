@@ -28,8 +28,8 @@ const SOURCE_LIBRARY = Object.freeze({
     text: 'Prerna studies product data and speaks with customers to locate the real break in a journey. She turns the insight into a measurable hypothesis, tests the smallest useful intervention, and iterates using both customer and business outcomes.'
   },
   'Profile · Pace and ambiguity': {
-    answer: 'Her work suggests she is comfortable with pace and ambiguity: she finds the real problem through data and customer conversations, tests a focused intervention, and stays close through iteration. Culture fit is mutual, so the team’s working style still matters.',
-    text: 'Evidence from Prerna’s work shows an iterative operating style: she uses data and customer conversations to clarify ambiguous problems, runs focused experiments, and stays involved through iteration. This supports comfort with pace and ambiguity; culture fit remains mutual.'
+    answer: 'Her work shows signs of high agency: she finds ambiguous problems through data and customer conversations, turns them into focused experiments, and stays involved through iteration. That suggests comfort with ownership and pace, though culture fit is always mutual.',
+    text: 'Evidence from Prerna’s work shows ownership and an iterative operating style: she uses data and customer conversations to clarify ambiguous problems, turns insights into focused experiments, and stays involved through iteration. This supports high agency and comfort with pace and ambiguity; culture fit remains mutual.'
   },
   'Profile · Product skills': {
     answer: 'Prerna’s PM toolkit covers discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, and cross-functional execution. She uses data and AI-assisted prototyping to move from insight to measurable impact.',
@@ -132,7 +132,7 @@ export default async function handler(req, res) {
   }
   if (!process.env.GEMINI_API_KEY) return res.status(503).json({ error: 'Gemma generation is not configured.' });
 
-  const model = process.env.GEMMA_GENERATION_MODEL || 'gemma-3-4b-it';
+  const model = process.env.GEMMA_GENERATION_MODEL || 'gemma-4-26b-a4b-it';
   const context = sourceNames.map(source => `${source}: ${SOURCE_LIBRARY[source].text}`).join('\n\n');
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 9000);

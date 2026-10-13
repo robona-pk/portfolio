@@ -50,8 +50,8 @@ window.ASK_PRERNA_KNOWLEDGE = {
     },
     {
       id: 'pace-and-ambiguity', source: 'Profile · Pace and ambiguity', topics: ['work_style', 'career', 'product_skills'],
-      answer: 'Her work suggests she is comfortable with pace and ambiguity: she finds the real problem through data and customer conversations, tests a focused intervention, and stays close through iteration. Culture fit is mutual, so the team’s working style still matters.',
-      facts: 'Evidence from Prerna’s work shows an iterative operating style: she uses data and customer conversations to clarify ambiguous problems, runs focused experiments, and stays involved through iteration. This supports comfort with pace and ambiguity; culture fit remains mutual.'
+      answer: 'Her work shows signs of high agency: she finds ambiguous problems through data and customer conversations, turns them into focused experiments, and stays involved through iteration. That suggests comfort with ownership and pace, though culture fit is always mutual.',
+      facts: 'Evidence from Prerna’s work shows ownership and an iterative operating style: she uses data and customer conversations to clarify ambiguous problems, turns insights into focused experiments, and stays involved through iteration. This supports high agency and comfort with pace and ambiguity; culture fit remains mutual.'
     },
     {
       id: 'product-skills', source: 'Profile · Product skills', topics: ['product_skills', 'work_style'],

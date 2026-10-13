@@ -2283,7 +2283,7 @@ approvedFactCards.forEach(card => portfolioKnowledge.push({
 const RAG_CONFIG = Object.freeze({
   rulesVersion: '2026-10-13.3',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
-  generationModel: 'gemma-3-4b-it',
+  generationModel: 'gemma-4-26b-a4b-it',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   relevanceSemanticThreshold: 0.24,
   relevanceLexicalCoverageThreshold: 0.5,
@@ -2390,7 +2390,7 @@ const resumeAnswer = 'You can view or download Prerna’s resume here.';
 const resumeUrl = 'https://drive.google.com/file/d/1To5xUIDQBddvdafDoVcgCVNxidGA1Cfo/view?usp=sharing';
 const resumeQuestion = /\b(resume|curriculum vitae|cv)\b/i;
 const strengthsQuestion = /\b(strengths?|strongest|strong suit|best at|superpower)\b/i;
-const strengthsAnswer = 'Prerna tends to bring energy and persistence to ambiguous problems. She stays curious, looks for evidence, and tests ideas before committing to an answer.';
+const strengthsAnswer = 'Her work shows signs of high agency: Prerna brings energy and persistence to ambiguous problems, looks for evidence, turns insights into experiments, and stays involved through iteration.';
 const weaknessesQuestion = /\b(weakness|weaknesses|area(s)? (to|of) improve|shortcoming|development area)\b/i;
 const behaviouralBoundaryAnswer = 'I don’t have portfolio evidence to make a personal assessment of that, and I wouldn’t speculate. I can share Prerna’s documented approach to product work, collaboration, and measurable outcomes.';
 const leadershipQuestion = /\b(leadership style|lead|leader|manage people|manage teams?|collaborat|cross[- ]functional|stakeholders?|align stakeholders?)\b/i;
@@ -2453,7 +2453,7 @@ const spellingFrequencies = new Map();
 });
 // Fuzzy correction is deliberately limited to portfolio/domain terms. Using every
 // word in the knowledge base can "correct" valid English (for example rank → bank)
-// before intent routing sees it; MiniLM handles broader paraphrases semantically.
+// before Gemma sees it. Gemma handles broader paraphrases and professional language.
 const spellingVocabulary = [...new Set([...SPELLING_CORE_TERMS, ...SPELLING_ABBREVIATIONS.values()])];
 
 function normalizeQuestion(value) {
@@ -2605,7 +2605,7 @@ const portfolioIntentDefinitions = Object.freeze([
   { intent: 'work_style', description: 'Asking how Prerna behaves, performs, or operates at work, works as a PM, collaborates, or approaches product management.', examples: ['How does she work?', 'How is Prerna at her job?', 'How does she perform at work?', 'What is her work style?', 'What sort of operator is she at work?', 'What is she like as a PM?', 'How does she collaborate with a team?'] },
   { intent: 'skills', description: 'Asking whether Prerna can perform a professional product task, or about her PM, analytics, measurement, experimentation, or technical capabilities.', examples: ['What is she skilled at?', 'Can she track product metrics?', 'Does she know how to define KPIs?', 'Can she analyse a funnel?', 'Which PM capabilities does she bring?', 'What can she do as a product manager?', 'What is in her product toolkit?'] },
   { intent: 'tools', description: 'Asking which analytics, design, engineering, or AI tools Prerna uses.', examples: ['What software does she use?', 'Which analytics tools does she know?', 'What is her technical toolset?'] },
-  { intent: 'strengths', description: 'Asking about Prerna’s strengths, competence, or what she does especially well.', examples: ['What are her strongest qualities?', 'Is she competent?', 'Where does she perform best?'] },
+  { intent: 'strengths', description: 'Asking about Prerna’s strengths, competence, ownership, initiative, resourcefulness, high agency, or what she does especially well.', examples: ['What are her strongest qualities?', 'Is she competent?', 'Does Prerna show high agency?', 'Does she take ownership without waiting to be told?', 'Where does she perform best?'] },
   { intent: 'problem_solving', description: 'Asking how Prerna solves ambiguous product problems, makes decisions, or runs experiments.', examples: ['How does she tackle a difficult product problem?', 'How does she make product decisions?', 'How does she turn an insight into an experiment?'] },
   { intent: 'lenskart_impact', description: 'Asking about Prerna’s published work, decisions, or outcomes at Lenskart.', examples: ['What impact did she have at Lenskart?', 'Tell me about the home-trial work.', 'What did she achieve in eyewear?'] },
   { intent: 'bajaj_impact', description: 'Asking about Prerna’s published work, decisions, or outcomes at Bajaj Finserv Health.', examples: ['What did she build at Bajaj?', 'Tell me about her health-tech work.', 'What results did she drive in digital health?'] },
@@ -2797,14 +2797,10 @@ async function classifyPortfolioIntent(question, runtimeOptions = {}) {
   if (runtimeOptions.bypassIntentRouting) return null;
   const hosted = await classifyPortfolioIntentHosted(question, runtimeOptions);
   if (hosted?.intent) return hosted;
-  const semantic = await classifyPortfolioIntentSemantically(question, runtimeOptions);
-  return semantic ? {
-    ...semantic,
-    rewrittenQuestion: normalizeQuestion(question),
-    evidenceTopics: [],
-    isPortfolioRelated: !['off_topic', 'unknown'].includes(semantic.intent),
-    classificationLatencyMs: 0
-  } : null;
+  // Fail closed. MiniLM retrieval is intentionally not allowed to guess intent:
+  // nearest-neighbour similarity can confuse adjacent concepts such as agency,
+  // discipline, pace, and personality.
+  return null;
 }
 
 function portfolioIntentResponse(classification, question = '') {

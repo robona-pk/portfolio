@@ -1698,7 +1698,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-12.7"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-13.1"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2368,7 +2368,7 @@ const lifePhilosophyQuestion = /\b(life philosophy|philosophy (in|on|about) life
 const promptInjection = /\b(ignore|disregard|forget|override|bypass)\b.{0,48}\b(instructions?|rules?|prompt|policy|previous|prior|above|safety)|\b(system|hidden|developer)\s*(prompt|message|instructions?)\b|\b(jailbreak|unrestricted mode|reveal|repeat|print|expose|show)\b.{0,48}\b(instructions?|rules?|prompt|policy|developer message|system message)|\b(pretend (to be|you are)|change your role|higher priority instructions?)\b|\bact as\b.{0,32}\b(unrestricted|system|developer|assistant|model|jailbroken|different role)\b/i;
 const externalKnowledgeQuestion = /\b(president|prime minister|capital of|weather|news|stock price|share price|crypto|bitcoin|election|sports score|recipe|joke|translate|current time)\b/i;
 const outOfScopeAnswer = 'I’m designed as a guide to Prerna’s work—not as a general web search. If you are assessing fit, ask about her product approach, growth outcomes, skills, career interests, or the projects she has built.';
-const answerScopeQuestion = /\b(what (questions?|things?|topics?) can (you|this bot|the bot).{0,20}\b(answer|help with|talk about)|what can (i|we).{0,20}\b(ask|ask you)|how can (you|this bot|the bot).{0,20}\bhelp|what do (you|this bot|the bot) know about (prerna|her))\b/i;
+const answerScopeQuestion = /\b(what (questions?|things?|topics?) can (you|this bot|the bot|mira).{0,20}\b(answer|help with|talk about)|what can (i|we).{0,20}\b(ask|ask you)|how can (you|this bot|the bot|mira).{0,20}\bhelp|what do (you|this bot|the bot|mira) know(?: about (?:prerna|her))?|what can (you|this bot|the bot|mira) do|what (?:are|can) (you|this bot|the bot|mira) able to do|(?:tell|show) me what (you|this bot|the bot|mira) can do|(?:your|mira'?s|the bot'?s) capabilities)\b/i;
 const botArchitectureQuestion = /\b(how|what).{0,18}\b(this bot|the bot|chatbot|portfolio assistant)\b.{0,24}\b(made|built|work|implemented|architecture|tech stack)|\b(how (?:was|is).{0,12}\b(this bot|the bot|chatbot)\b.{0,12}\b(made|built))\b/i;
 const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
 const assistantAnswer = 'I’m Mira, Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work.';
@@ -2387,7 +2387,7 @@ const problemSolvingQuestion = /\b(problem.solv|how (does|would).{0,32}\b(approa
 const problemSolvingAnswer = 'Prerna starts by finding where customer intent breaks, then turns the evidence into a measurable hypothesis and tests the smallest useful intervention. At Lenskart, that approach shaped a personalised home-trial journey that generated ₹1.8Cr in annualised revenue.';
 const motivationQuestion = /\bmotivat\w*\b|\bwhat drives (prerna|her)\b|\bwhy (product|pm)\b|\bwhy (does|did).{0,24}\b(product|pm)\b/i;
 const motivationAnswer = 'What motivates Prerna most is the feeling that she is still evolving. She loves hearing that a customer used something she built; praise is energising, criticism is useful, and both sharpen the next version of the product—and of her as a PM.';
-const hiringQuestion = /\b(why (should|would).{0,24}\b(hire|choose)|why hire|fit for|good fit)\b/i;
+const hiringQuestion = /\b(why (should|would).{0,24}\b(hire|choose|consider|interview|shortlist)|why hire|fit for|good fit|bring(?:s)? to (?:the )?table|what (?:value|strengths?|qualities|capabilities) (?:does|would|can) (?:prerna|she) (?:bring|add|offer)|what (?:does|would|can) (?:prerna|she) (?:bring|add|offer))\b/i;
 const hiringAnswer = 'Prerna brings 5+ years across e-commerce, health-tech, and insurance, with ₹6Cr+ impact at Lenskart and a ₹28L 0→1 business at Bajaj. What differentiates her is commercial ownership, curiosity, and hands-on AI experiments beyond her core role.';
 const undocumentedBehaviourQuestion = /\b(conflict|disagreement|failure|failed|mistake|feedback|pressure|stress|difficult (situation|conversation)|challenge)\b/i;
 const failureQuestion = /\b(biggest|major|professional)?\s*(failure|failed|mistake|setback)\b/i;
@@ -2840,7 +2840,14 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     intentMode: 'deterministic_rule',
     intentModel: 'policy_rule'
   };
-  if (answerScopeQuestion.test(question)) return { answer: approvedKnowledge.answerScope, citations: [] };
+  if (answerScopeQuestion.test(question)) return {
+    answer: approvedKnowledge.answerScope,
+    citations: [],
+    intent: 'answer_scope',
+    intentConfidence: 1,
+    intentMode: 'deterministic_rule',
+    intentModel: 'policy_rule'
+  };
   if (identityQuestion.test(question)) return {
     answer: identityAnswer,
     citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'],
@@ -3025,7 +3032,11 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   };
   if (hiringQuestion.test(question)) return {
     answer: hiringAnswer,
-    citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study']
+    citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'],
+    intent: 'hiring_fit',
+    intentConfidence: 1,
+    intentMode: 'deterministic_rule',
+    intentModel: 'policy_rule'
   };
   if (!portfolioSubject.test(question) && !portfolioTopic.test(question)) return {
     answer: approvedKnowledge.outOfScope || outOfScopeAnswer,

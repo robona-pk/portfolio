@@ -3506,6 +3506,26 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
   const groundingText = `${result.answer}\n${retrievedContext}`;
   const generationAnchor = relevant[0]?.answer || result.answer;
   const sources = [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])];
+  // A file:// preview has no Vercel function behind `/api/generate`. When
+  // retrieval has deliberately narrowed a question to one approved passage,
+  // show that passage's reviewed answer instead of misreporting the fact as
+  // missing. Deployed environments still use the full RAG → Gemini path.
+  if (window.location.protocol === 'file:' && relevant.length === 1 && relevant[0].answer) return {
+    answer: relevant[0].answer,
+    retrievedSources: sources,
+    retrievalScores: relevant.map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
+    answerMode: 'local_grounded_preview',
+    fallback: false,
+    fallbackReason: '',
+    error: '',
+    retrievalCacheHit,
+    generationCacheHit: false,
+    generationInputTokens: 0,
+    generationOutputTokens: 0,
+    generationModel: '',
+    generationLatencyMs: 0,
+    failureStage: ''
+  };
   const semanticCacheHit = await findSemanticCacheHit(question, relevant, runtimeOptions);
   if (semanticCacheHit) return {
     answer: semanticCacheHit.answer,

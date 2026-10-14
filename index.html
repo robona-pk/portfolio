@@ -2552,7 +2552,7 @@ function retrievePortfolioContext(question) {
   return portfolioKnowledge.map(item => {
     const lexical = getLexicalRelevance(question, item);
     return { ...item, score: lexical.lexicalScore, ...lexical, semantic: false };
-  }).sort((a, b) => b.score - a.score).slice(0, 2);
+  }).sort((a, b) => b.score - a.score).slice(0, 8);
 }
 
 let portfolioEmbedderPromise;
@@ -2713,7 +2713,10 @@ async function retrievePortfolioContextSemantically(question, runtimeOptions = {
         hybridScore: score + Math.min(lexical.lexicalScore, 3) * 0.08 + Math.min(topicMatches, 2) * 0.12,
         semantic: true
       };
-    }).sort((a, b) => b.hybridScore - a.hybridScore).slice(0, 2);
+    // Keep a wider candidate set before the evidence gate. A concise fact card
+    // can be the right answer even when a longer but irrelevant card has a
+    // slightly higher raw embedding score.
+    }).sort((a, b) => b.hybridScore - a.hybridScore).slice(0, 8);
   } catch (error) {
     return retrievePortfolioContext(normalizedQuestion);
   }

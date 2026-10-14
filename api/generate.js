@@ -161,7 +161,7 @@ export default async function handler(req, res) {
   const model = process.env.GEMINI_GENERATION_MODEL || 'gemini-3.5-flash-lite';
   const context = sourceNames.map(source => `${source}: ${SOURCE_LIBRARY[source].text}`).join('\n\n');
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 9000);
+  const timeout = setTimeout(() => controller.abort(), 12000);
   try {
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
       method: 'POST',

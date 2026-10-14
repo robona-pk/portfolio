@@ -2311,7 +2311,7 @@ const RAG_CONFIG = Object.freeze({
   maximumQuestionCharacters: 500,
   maximumGeneratedAnswerCharacters: 300,
   maximumSecurityWaitMs: 8000,
-  maximumGenerationWaitMs: 10000,
+  maximumGenerationWaitMs: 14000,
   maximumRequestsPerMinute: 10,
   fallbackAnswer: 'I don’t have that information available.',
   estimatedInputCostPerMillionTokensUsd: 0.25,
@@ -2563,9 +2563,9 @@ const PROFESSIONAL_EVIDENCE_BACKSTOP = Object.freeze([
 
 function isShortProfessionalAssessment(question) {
   const text = normalizeQuestion(question);
-  const asksForAssessment = /\b(is|are|does|do|can|could|would|will|how|what)\b/.test(text);
-  const professionalContext = /\b(pm|product manager|at (?:her )?job|at work|professional|work style|workplace|career|role|team|product)\b/.test(text);
-  return asksForAssessment && professionalContext && getRetrievalTerms(text).length <= 6;
+  const asksForAssessment = /\b(is|are|does|would|will)\b/.test(text);
+  const operatingStyle = /\b(slow|slowly|fast|faster|quick|quickly|pace|paced|move|moving|agency|ownership|initiative|adaptable|adaptability|ambiguity|culture|startup)\b/.test(text);
+  return asksForAssessment && operatingStyle && getRetrievalTerms(text).length <= 6;
 }
 
 function selectEvidenceCandidates(matches, question = '') {
@@ -2590,10 +2590,10 @@ function selectEvidenceCandidates(matches, question = '') {
   // a fixed group of first-party work-style evidence; this only selects context.
   // Gemini and the grounding check still decide whether any claim is supportable.
   if (!backstop.length) return candidates;
-  const preferred = candidates.filter(item => !PROFESSIONAL_EVIDENCE_BACKSTOP.includes(item.source));
-  const merged = [...backstop, ...preferred, ...candidates];
-  return [...new Map(merged.map(item => [item.source, item])).values()]
-    .slice(0, RAG_CONFIG.maximumEvidenceCandidates);
+  // For this narrow evidence facet, the pace source is more useful than a
+  // broader bundle of adjacent passages. It keeps the hosted prompt short and
+  // prevents an unrelated metric or case-study result from diluting the claim.
+  return backstop;
 }
 
 function retrievePortfolioContext(question) {

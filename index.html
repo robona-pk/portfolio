@@ -3725,6 +3725,17 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
 }
 
 function captureAssistantTelemetry(result) {
+  if (new URLSearchParams(window.location.search).has('rag-debug')) {
+    console.debug('[Mira debug]', {
+      question: result.question,
+      answerMode: result.answerMode,
+      fallbackReason: result.fallbackReason,
+      retrievedSources: result.retrievedSources,
+      retrievalScores: result.retrievalScores,
+      failureStage: result.failureStage,
+      error: result.error
+    });
+  }
   if (!window.posthog || new URLSearchParams(window.location.search).has('eval')) return;
   posthog.capture('portfolio_assistant_response', {
     request_id: result.requestId,

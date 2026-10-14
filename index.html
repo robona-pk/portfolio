@@ -2596,6 +2596,28 @@ function selectEvidenceCandidates(matches, question = '') {
   return backstop;
 }
 
+function selectLocalPreviewEvidence(relevant) {
+  if (window.location.protocol !== 'file:' || !relevant.length) return null;
+  if (relevant.length === 1) return relevant[0];
+
+  // A local file cannot call the hosted generator, so choose evidence only
+  // when retrieval itself has a clear winner. Prefer a unique lexical match
+  // (for example, “pace”) and otherwise require a strong semantic lead.
+  const ranked = [...relevant].sort((left, right) =>
+    Number(right.lexicalScore || 0) - Number(left.lexicalScore || 0)
+      || Number(right.score || 0) - Number(left.score || 0));
+  const [best, runnerUp] = ranked;
+  if (Number(best.lexicalScore || 0) > Number(runnerUp?.lexicalScore || 0)) return best;
+
+  const semanticRanked = [...relevant].sort((left, right) => Number(right.score || 0) - Number(left.score || 0));
+  const semanticBest = semanticRanked[0];
+  const semanticRunnerUp = semanticRanked[1];
+  const semanticLead = Number(semanticBest.score || 0) - Number(semanticRunnerUp?.score || 0);
+  return semanticBest.semantic && Number(semanticBest.score || 0) >= 0.55 && semanticLead >= 0.1
+    ? semanticBest
+    : null;
+}
+
 function retrievePortfolioContext(question) {
   return portfolioKnowledge.map(item => {
     const lexical = getLexicalRelevance(question, item);
@@ -3506,14 +3528,15 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
   const groundingText = `${result.answer}\n${retrievedContext}`;
   const generationAnchor = relevant[0]?.answer || result.answer;
   const sources = [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])];
+  const localPreviewEvidence = selectLocalPreviewEvidence(relevant);
   // A file:// preview has no Vercel function behind `/api/generate`. When
-  // retrieval has deliberately narrowed a question to one approved passage,
+  // retrieval has identified one clearly strongest approved passage,
   // show that passage's reviewed answer instead of misreporting the fact as
   // missing. Deployed environments still use the full RAG → Gemini path.
-  if (window.location.protocol === 'file:' && relevant.length === 1 && relevant[0].answer) return {
-    answer: relevant[0].answer,
-    retrievedSources: sources,
-    retrievalScores: relevant.map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
+  if (localPreviewEvidence?.answer) return {
+    answer: localPreviewEvidence.answer,
+    retrievedSources: [...new Set([...(result.citations || []), localPreviewEvidence.source])],
+    retrievalScores: [{ source: localPreviewEvidence.source, score: Number(localPreviewEvidence.score.toFixed(4)) }],
     answerMode: 'local_grounded_preview',
     fallback: false,
     fallbackReason: '',

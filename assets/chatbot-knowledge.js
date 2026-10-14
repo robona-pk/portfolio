@@ -26,7 +26,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     confidentialData: 'That concerns confidential company financials or operating data, which Prerna cannot share. I can, however, discuss the public outcomes of her work at Lenskart@Home and Bajaj Finserv Health.',
     companyContext: 'I can speak to Prerna’s work and published outcomes at that company, but not company strategy, internal performance, or non-public financials.',
     outOfScope: 'That sits outside what this portfolio assistant is designed to answer. If you are assessing Prerna, try asking about her product approach, growth outcomes, skills, career interests, or the projects she has built.',
-    botArchitecture: 'Mira applies safety and privacy checks, retrieves from an approved fact-card knowledge base with MiniLM, and uses Gemini through a protected Vercel endpoint to phrase a grounded answer. An evidence-aware semantic cache reuses validated common answers only when the same source is retrieved again. The GitHub README explains the architecture and evaluation setup.',
+    botArchitecture: 'Mira applies safety and privacy checks, retrieves approved portfolio and resume evidence with MiniLM, and uses Gemini through a protected Vercel endpoint to write a grounded answer. An evidence-aware semantic cache reuses validated common answers only when the same source is retrieved again. The GitHub README explains the architecture and evaluation setup.',
     undocumented: 'I don’t have that information right now. You can reach out to Prerna to ask her directly.',
     careerLogistics: 'Prerna has not published those logistics here. The best way to discuss notice period, compensation, relocation, remote preferences, or interview availability is to contact her directly.',
     comparison: 'I wouldn’t make an unsupported comparison. The fairest way to assess Prerna is through her documented product decisions, measurable outcomes, and the scope she has owned.',
@@ -47,21 +47,6 @@ window.ASK_PRERNA_KNOWLEDGE = {
       id: 'work-style', source: 'Profile · Work style', topics: ['work_style', 'product_skills'], retrievalHints: ['job', 'at work', 'performance', 'operator', 'pm', 'product manager', 'works'],
       answer: 'Prerna starts with data and customer conversations to understand where a journey is breaking. She turns the insight into a hypothesis, validates it through the smallest useful experiment, and iterates using customer and business outcomes.',
       facts: 'Prerna studies product data and speaks with customers to locate the real break in a journey. She turns the insight into a measurable hypothesis, tests the smallest useful intervention, and iterates using both customer and business outcomes.'
-    },
-    {
-      id: 'resume-leadership', source: 'Resume · Leadership', topics: ['leadership', 'people_management', 'career'], retrievalHints: ['led a team', 'lead a team', 'led team', 'leadership', 'managed a team', 'manage a team', 'people management', 'apm', 'apms', 'associate product manager', 'associate product managers'],
-      answer: 'Yes. At Bajaj Finserv Health, Prerna led a four-person Associate Product Manager team while taking a diabetes wellness product from 0 to 1. It generated ₹28L in revenue within five months.',
-      facts: 'Prerna led a four-person Associate Product Manager team at Bajaj Finserv Health while taking a diabetes wellness product from concept through launch. The product generated ₹28L in revenue within five months.'
-    },
-    {
-      id: 'resume-lenskart-scope', source: 'Resume · Lenskart scope', topics: ['lenskart', 'experience', 'product_skills'], retrievalHints: ['lenskart role', 'what does she do at lenskart', 'lenskart scope', 'current role', 'current job', 'product strategy', 'lenskart home'],
-      answer: 'At Lenskart, Prerna leads strategy for Lenskart@Home and works across conversion, growth, customer journeys, pricing, and retention.',
-      facts: 'At Lenskart, Prerna leads strategy for Lenskart@Home. Her work spans growth and conversion, customer journeys, pricing, retention, and structured experimentation.'
-    },
-    {
-      id: 'resume-bajaj-scope', source: 'Resume · Bajaj scope', topics: ['bajaj', 'experience', 'product_skills'], retrievalHints: ['bajaj role', 'what did she do at bajaj', 'bajaj scope', 'doctor consultation', 'insurance automation', 'health products'],
-      answer: 'At Bajaj Finserv Health, Prerna owned consumer product work across doctor discovery, diabetes wellness, diagnostics, insurance automation, and partner-led journeys.',
-      facts: 'At Bajaj Finserv Health, Prerna worked on doctor discovery, a diabetes wellness product, diagnostic insights, insurance pre-authorisation automation, Health ID onboarding, and white-labelled multilingual partner journeys.'
     },
     {
       id: 'pace-and-ambiguity', source: 'Profile · Pace and ambiguity', topics: ['work_style', 'career', 'product_skills'], retrievalHints: ['high agency', 'fast paced', 'fast pace', 'ownership', 'initiative', 'proactive', 'autonomous', 'adaptable', 'startup', 'culture fit', 'ambiguity'],
@@ -130,8 +115,38 @@ window.ASK_PRERNA_KNOWLEDGE = {
     },
     {
       id: 'bot-architecture', source: 'Project · Mira architecture', topics: ['bot_architecture'],
-      answer: 'Mira applies safety checks, retrieves approved fact cards with MiniLM, and uses Gemini to write a grounded answer. An evidence-aware semantic cache makes validated common answers faster. A Golden Dataset and PostHog support evaluation and product analytics.',
-      facts: 'Mira normalises the question and applies safety and privacy checks. Normal portfolio questions retrieve and rerank approved fact cards with MiniLM; Gemini phrases an answer only from that evidence, then grounding checks validate it. An evidence-aware semantic cache returns a validated answer only when the same supporting fact card is retrieved. A Golden Dataset supports human evaluation; PostHog tracks usage and feedback.'
+      answer: 'Mira applies safety checks, retrieves approved portfolio and resume evidence with MiniLM, and uses Gemini to write a grounded answer. An evidence-aware semantic cache makes validated common answers faster. A Golden Dataset and PostHog support evaluation and product analytics.',
+      facts: 'Mira normalises the question and applies safety and privacy checks. Normal portfolio questions retrieve and rerank approved portfolio and resume evidence with MiniLM; Gemini answers only when that evidence supports the question, then grounding checks validate the output. An evidence-aware semantic cache returns a validated answer only when the same supporting evidence is retrieved. A Golden Dataset supports human evaluation; PostHog tracks usage and feedback.'
+    }
+  ],
+  // Resume evidence is a source document split by its natural sections—not a
+  // collection of hand-written answers for anticipated visitor phrasings.
+  resumeDocuments: [
+    {
+      id: 'resume-2026-product-manager',
+      source: 'Resume · 2026 Product Manager',
+      sections: [
+        {
+          id: 'resume-summary', source: 'Resume · Professional summary', topics: ['profile', 'experience', 'ai'],
+          answer: 'Prerna is a Product Manager with 5+ years scaling consumer products across e-commerce and health-tech, with documented commercial impact at Lenskart and Bajaj Finserv Health.',
+          text: 'Product Manager with 5+ years’ experience scaling consumer products across e-commerce and health-tech. At Lenskart, Prerna leads strategy for Lenskart@Home, an ₹84Cr+ ARR omnichannel business, driving ₹6Cr+ in annualised revenue via growth and conversion initiatives. Previously she owned a ₹13Cr ARR doctor-consultation vertical at Bajaj Finserv Health, delivering ₹1.5Cr+ in annualised revenue impact. She also built AI/ML-powered insurance pre-authorisation automation, saving ₹17L annually.'
+        },
+        {
+          id: 'resume-lenskart', source: 'Resume · Lenskart', topics: ['lenskart', 'experience', 'product_skills'],
+          answer: 'At Lenskart, Prerna leads strategy for Lenskart@Home and has delivered growth work across conversion, customer journeys, pricing, retention, store attribution, and lead routing.',
+          text: 'At Lenskart, Prerna tripled booking funnel conversion from 1.1% to 3.5% through structured experimentation. She transformed an at-home eye-test journey into an eyewear home trial and scaled it across five cities, increasing bookings 7%. She established channel-specific pricing, launched lens-only ordering, pioneered a deterministic store-attribution engine that recovered 3.7% of lost demand at zero CAC, lifted NPS from 41 to 60 with post-delivery calls, and built a customer-value lead-routing model that lifted average transaction value 10% and generated ₹50L in two months.'
+        },
+        {
+          id: 'resume-bajaj', source: 'Resume · Bajaj Finserv Health', topics: ['bajaj', 'experience', 'ai', 'leadership'],
+          answer: 'At Bajaj Finserv Health, Prerna led a four-person APM team while launching a ₹28L diabetes wellness product, and shipped an OCR + NER pre-authorisation pipeline that raised throughput 26% and saved ₹17L annually.',
+          text: 'At Bajaj Finserv Health, Prerna increased doctor-search CTR 18% and annual revenue 11.6% through a quality-ranking algorithm. She took a diabetes wellness product from 0 to 1, generating ₹28L within five months while leading a four-person APM team. She created ₹7L+ incremental MRR from personalised health insights, shipped an ML-powered OCR + NER document-extraction pipeline for insurance pre-authorisation that increased throughput 26% and saved ₹17L annually, drove 15K+ new users and 44K+ Health ID registrations through ABHA, and added 50K+ monthly traffic through multilingual B2B2C partner journeys.'
+        },
+        {
+          id: 'resume-skills', source: 'Resume · Skills', topics: ['product_skills', 'analytics', 'ai'],
+          answer: 'Prerna’s resume includes product strategy, experimentation, analytics, AI/LLM product use cases, and prompt design and evaluations.',
+          text: 'Product strategy: product roadmapping, PRDs, go-to-market planning, cross-functional stakeholder management, API integration, AI/LLM product use cases, prompt design and evaluations, and behavioural analytics. Growth: funnel optimisation, A/B testing and MVPs, user-journey mapping, experimentation frameworks, conversion-rate optimisation, cohort analysis, retention and engagement, and feature adoption. Analytics: GA4, Microsoft Clarity, Julius AI, CleverTap, SQL, Excel app scripts/VBA, Tableau, and Mixpanel.'
+        }
+      ]
     }
   ],
   declinedTopics: [

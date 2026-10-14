@@ -1698,8 +1698,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-14.3"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-14.3"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-14.6"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-14.6"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2280,18 +2280,34 @@ approvedFactCards.forEach(card => portfolioKnowledge.push({
   topics: card.topics || [],
   factCardId: card.id
 }));
+// The resume is indexed by its natural sections (summary, roles, and skills).
+// These are source-document chunks, not hand-authored rules for visitor wording.
+const approvedResumeDocuments = Array.isArray(window.ASK_PRERNA_KNOWLEDGE?.resumeDocuments)
+  ? window.ASK_PRERNA_KNOWLEDGE.resumeDocuments
+  : [];
+approvedResumeDocuments.forEach(document => (document.sections || []).forEach(section => portfolioKnowledge.push({
+  source: section.source,
+  answer: section.answer,
+  text: section.text,
+  tags: `${document.source} ${section.id} ${section.topics?.join(' ') || ''}`,
+  topics: ['resume', ...(section.topics || [])],
+  documentId: document.id,
+  sectionId: section.id
+})));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-14.3',
+  rulesVersion: '2026-10-14.6',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
-  // Relevance needs both semantic meaning and a card-specific evidence term.
-  // The latter does the safety work, allowing a lower semantic floor for short
-  // recruiter phrasing such as "track metrics" or "fast paced".
-  relevanceSemanticThreshold: 0.18,
-  relevanceLexicalCoverageThreshold: 0.25,
-  relevanceLexicalMinimumMatches: 1,
+  // Relevant resume and portfolio phrasing should survive without an exact
+  // keyword match. Strong semantic evidence can pass on its own; lexical
+  // overlap is an additional confidence signal, not a mandatory gate.
+  // Retrieval is a recall step, not the decision-maker. It surfaces a small
+  // set of plausible evidence chunks; Gemini must still establish that those
+  // chunks support the visitor's specific question before an answer is shown.
+  evidenceCandidateFloor: 0.16,
+  maximumEvidenceCandidates: 5,
   maximumQuestionCharacters: 500,
   maximumGeneratedAnswerCharacters: 300,
   maximumSecurityWaitMs: 8000,
@@ -2541,14 +2557,15 @@ function getLexicalRelevance(question, item) {
   };
 }
 
-function isRelevantRetrievalMatch(item) {
-  const lexicalMatch = item.lexicalScore >= RAG_CONFIG.relevanceLexicalMinimumMatches
-    && item.lexicalCoverage >= RAG_CONFIG.relevanceLexicalCoverageThreshold;
-  // Semantic similarity alone is not enough: every answer needs at least one
-  // meaningful match in the supporting fact card or its retrieval hints. This
-  // prevents an adjacent concept such as discipline from becoming dopamine detox.
-  if (!lexicalMatch) return false;
-  return item.semantic ? item.score >= RAG_CONFIG.relevanceSemanticThreshold : true;
+function selectEvidenceCandidates(matches) {
+  const topScore = Number(matches?.[0]?.score || 0);
+  if (!topScore || topScore < RAG_CONFIG.evidenceCandidateFloor) return [];
+  // Keep enough semantically adjacent evidence for Gemini to disambiguate a
+  // natural question, without treating every portfolio passage as context.
+  const relativeFloor = Math.max(RAG_CONFIG.evidenceCandidateFloor, topScore - 0.18);
+  return matches
+    .filter(item => item.score >= relativeFloor || item.lexicalScore >= 2)
+    .slice(0, RAG_CONFIG.maximumEvidenceCandidates);
 }
 
 function retrievePortfolioContext(question) {
@@ -2727,36 +2744,10 @@ async function retrievePortfolioContextSemantically(question, runtimeOptions = {
 
 // Evidence-aware semantic cache -------------------------------------------------
 // This is deliberately downstream of safety and retrieval. A similar question is
-// never enough on its own: the cached answer can be reused only when the fact card
-// that originally supported it is retrieved again for the new question.
+// never enough on its own: the cached answer can be reused only when the same
+// evidence source is retrieved again for the new question.
 const SEMANTIC_CACHE_KEY = `mira-semantic-cache-${RAG_CONFIG.rulesVersion}`;
 const SEMANTIC_CACHE_THRESHOLD = 0.91;
-const COMMON_MIRA_QUESTIONS = Object.freeze([
-  { question: 'Does Prerna have high agency?', source: 'Profile · Pace and ambiguity' },
-  { question: 'Is she skilled?', source: 'Profile · Product skills' },
-  { question: 'What are Prerna’s strengths?', source: 'Profile · Pace and ambiguity' },
-  { question: 'Is she a loud person?', source: 'Profile · Personality' },
-  { question: 'How is she as a person?', source: 'Profile · Personality' },
-  { question: 'How is she as a product manager?', source: 'Profile · Work style' },
-  { question: 'What is her work style?', source: 'Profile · Work style' },
-  { question: 'Has Prerna ever led a team?', source: 'Resume · Leadership' },
-  { question: 'Has she managed APMs?', source: 'Resume · Leadership' },
-  { question: 'Does she have people-leadership experience?', source: 'Resume · Leadership' },
-  { question: 'Is she fast paced?', source: 'Profile · Pace and ambiguity' },
-  { question: 'Will she fit in a fast paced culture?', source: 'Profile · Pace and ambiguity' },
-  { question: 'How is Prerna at her job?', source: 'Profile · Work style' },
-  { question: 'Can she track metrics?', source: 'Profile · Analytics and metrics' },
-  { question: 'What does she bring to the table?', source: 'Profile · Overview' },
-  { question: 'Who is Prerna?', source: 'Profile · Overview' },
-  { question: 'What does she do?', source: 'Profile · Overview' },
-  { question: 'How much experience does she have?', source: 'Portfolio overview' },
-  { question: 'Where is she based out of?', source: 'Profile · Location' },
-  { question: 'What does she do in free time?', source: 'Profile · Hobbies' },
-  { question: 'What are her hobbies?', source: 'Profile · Hobbies' },
-  { question: 'What is Prerna’s life philosophy?', source: 'Profile · Life philosophy' },
-  { question: 'What can you do?', source: 'Project · Mira architecture' },
-  { question: 'What is dopamine detox?', source: 'Profile · Dopamine detox' }
-]);
 let semanticResponseCache;
 let semanticCacheVectorsPromise;
 
@@ -2785,7 +2776,9 @@ function initialiseSemanticResponseCache() {
     .filter(item => ['grounded', 'accept_grounded_output'].includes(item.expectedType))
     .map(item => ({ question: item.question, source: getCacheSourceForEval(item) }))
     .filter(item => item.source && sourceByName.has(item.source));
-  const allSeeds = [...evalSeeds, ...COMMON_MIRA_QUESTIONS];
+  // The Golden Dataset provides cache seeds. These improve repeat latency only;
+  // they never become knowledge-base content or choose an answer route.
+  const allSeeds = evalSeeds;
   const uniqueSeeds = new Map();
   allSeeds.forEach(seed => uniqueSeeds.set(normalizeQuestion(seed.question), seed));
   let learned = [];
@@ -3256,9 +3249,9 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     citations: []
   };
   const matches = await retrievePortfolioContextSemantically(originalQuestion, runtimeOptions);
-  const direct = matches.filter(isRelevantRetrievalMatch);
-  if (!direct.length) return unsupportedPortfolioResponse();
-  return { answer: direct[0].answer, citations: [direct[0].source] };
+  const evidence = selectEvidenceCandidates(matches);
+  if (!evidence.length) return unsupportedPortfolioResponse();
+  return { answer: '', citations: evidence.map(item => item.source), allowGeneration: true, intentMode: 'direct_rag', intentModel: RAG_CONFIG.retrievalModel };
 }
 
 const policyControlledAnswers = new Set([
@@ -3395,7 +3388,8 @@ async function validateGeneratedAnswer(answer, groundingText, requiredFacts = []
   if (typeof answer !== 'string') return null;
   const clean = answer.replace(/[—–]/g, '-').replace(/\s+/g, ' ').trim();
   if (clean.length < 12 || clean.length > RAG_CONFIG.maximumGeneratedAnswerCharacters || /<[^>]+>/.test(clean)) return null;
-  if (/\b(manages?|leads?|supervises?) (a |the )?(team|teams|people|staff)\b/i.test(clean)) return null;
+  const leadershipClaim = /\b(manages?|leads?|led|supervises?) (a |the )?(team|teams|people|staff)\b/i.test(clean);
+  if (leadershipClaim && !/\b(manages?|leads?|led|supervises?) (a |the )?(team|teams|people|staff)\b/i.test(groundingText)) return null;
   if (/\b(system prompt|developer message|hidden instructions?|retrieved context|jailbreak|ignore previous|internal policy|safety rules?|language model instructions?)\b/i.test(clean)) return null;
   if (/\b(dating|boyfriend|girlfriend|husband|wife|married|children|home address|salary|sexual|nsfw)\b/i.test(clean)
     && !new RegExp(clean.match(/\b(dating|boyfriend|girlfriend|husband|wife|married|children|home address|salary|sexual|nsfw)\b/i)?.[0] || '$^', 'i').test(groundingText)) return null;
@@ -3457,7 +3451,7 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
   };
   const retrievalQuestion = [question, result.rewrittenQuestion, ...(result.evidenceTopics || [])].filter(Boolean).join(' ');
   const matches = await retrievePortfolioContextSemantically(retrievalQuestion, retrievalOptions);
-  const relevant = matches.filter(isRelevantRetrievalMatch).slice(0, 2);
+  const relevant = selectEvidenceCandidates(matches);
   if (result.allowGeneration && !relevant.length) return {
     answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
     retrievedSources: [],
@@ -3507,17 +3501,32 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
       }, runtimeOptions)
       : await generateWithGemini({
         question: normalizeQuestion(question),
-        approvedAnswer: generationAnchor,
         sources
       }, runtimeOptions);
     const generationLatencyMs = Math.round(performance.now() - generationStartedAt);
+    if (String(generation.answer || '').trim() === 'NO_EVIDENCE') return {
+      answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
+      retrievedSources: sources,
+      retrievalScores: relevant.map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
+      answerMode: 'unsupported_fallback',
+      fallback: true,
+      fallbackReason: 'model_found_no_supporting_evidence',
+      error: '',
+      retrievalCacheHit,
+      generationCacheHit: Boolean(generation.cacheHit),
+      generationInputTokens: Number(generation.inputTokens || 0),
+      generationOutputTokens: Number(generation.outputTokens || 0),
+      generationModel: generation.model || RAG_CONFIG.generationModel,
+      generationLatencyMs,
+      failureStage: 'grounding'
+    };
     const validated = await validateGeneratedAnswer(generation.answer, groundingText, result.requiredFacts || [], runtimeOptions);
     if (validated) rememberSemanticCacheAnswer(question, validated, sources);
     return {
-      answer: validated || generationAnchor,
+      answer: validated || (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer),
       retrievedSources: [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])],
       retrievalScores: relevant.map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
-      answerMode: validated ? generationProvider : 'curated_fallback',
+      answerMode: validated ? generationProvider : 'unsupported_fallback',
       fallback: !validated,
       fallbackReason: validated ? '' : 'output_validation_failed',
       error: '',
@@ -3531,10 +3540,10 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
     };
   } catch (error) {
     return {
-      answer: generationAnchor,
+      answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
       retrievedSources: [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])],
       retrievalScores: relevant.map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
-      answerMode: 'curated_fallback',
+      answerMode: 'unsupported_fallback',
       fallback: true,
       fallbackReason: 'generation_unavailable',
       error: error?.message || 'Generation failed.',

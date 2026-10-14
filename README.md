@@ -46,7 +46,7 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 - Open-ended questions can use **Gemini Flash-Lite** to phrase concise, natural answers.
 - Gemini runs behind a protected Vercel endpoint; its API key is never exposed in the browser.
 
-Mira is a **guarded RAG system**. Privacy, safety, confidential-data, and direct navigation requests use fixed approved responses. Every normal question about Prerna goes through retrieval first; Gemini is allowed to write only when the retrieved evidence clears a strict relevance gate.
+Mira is a **guarded RAG system**. Privacy, safety, confidential-data, and direct navigation requests use fixed approved responses. Every normal question about Prerna retrieves evidence first. Gemini then answers only if the shortlisted evidence directly supports that specific question; otherwise Mira uses the approved fallback.
 
 ## How one question becomes an answer
 
@@ -60,15 +60,15 @@ flowchart TD
     S -- "No" --> Q["⏳ MiniLM readiness gate"]
     Q --> I{"🛡️ Injection check"}
     I -- "Attack or uncertain" --> G
-    I -- "Safe" --> H["🔎 RAG retrieval<br/>Approved fact cards"]
-    H --> P{"🎯 Relevant enough?<br/>Meaning + evidence terms"}
-    P -- "No" --> F["🤷 Approved fallback<br/>Contact Prerna directly"]
-    P -- "Yes" --> C{"⚡ Evidence-aware<br/>semantic cache hit?"}
+    I -- "Safe" --> H["🔎 RAG retrieval<br/>Portfolio + resume evidence"]
+    H --> P{"🎯 Evidence shortlist<br/>broad semantic recall"}
+    P -- "No candidates" --> F["🤷 Approved fallback<br/>Contact Prerna directly"]
+    P -- "Candidates" --> C{"⚡ Evidence-aware<br/>semantic cache hit?"}
     C -- "Same evidence + close question" --> M["💬 Reuse validated answer"]
     C -- "No" --> K["🤖 Gemini Flash-Lite<br/>Phrases only retrieved evidence"]
-    K --> L{"🔍 Is every claim supported?"}
+    K --> L{"🔍 Directly supported<br/>and grounded?"}
     L -- "Yes" --> M
-    L -- "No / unavailable" --> N["↩️ Approved retrieved answer"]
+    L -- "No / unavailable" --> N["↩️ Approved fallback"]
     G --> O["📊 Record anonymous quality data"]
     F --> O
     M --> O
@@ -106,16 +106,16 @@ flowchart TD
 ## Tech stack—in plain English
 
 - 🖥️ **Interface:** HTML, CSS, and JavaScript create the floating chat window.
-- 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js`, including curated resume-derived fact cards, plus portfolio passages in `index.html`.
+- 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js`; the resume is indexed as source-document sections, alongside portfolio passages in `index.html`.
 - ⚡ **Direct handling:** safety boundaries and actions such as resume access bypass retrieval and generation.
 - 🛡️ **Guardrail routing:** private, unsafe, abusive, confidential, unrelated, and injection attempts receive controlled responses without reaching open-ended generation.
 - ⏳ **Readiness gate:** the system briefly waits for MiniLM to register before a semantic request runs. If it never becomes available, the bot fails closed instead of guessing.
-- 🔎 **Retrieval:** every normal portfolio question uses MiniLM to find passages with similar meaning. A strict relevance gate requires semantic similarity **and** at least one meaningful evidence term or retrieval hint. A passage is rejected if it is merely the closest bad match.
-- ⚡ **Evidence-aware semantic cache:** common Golden Dataset and real-world question variants are pre-seeded. A cached answer is reused only when the same supporting fact card is retrieved again; it never bypasses evidence checks.
-- 🤖 **Generation:** Gemini Flash-Lite writes short responses for supported, open-ended questions through `/api/generate`.
+- 🔎 **Retrieval:** every normal portfolio question uses MiniLM to retrieve a small shortlist of source passages by meaning. Retrieval optimises for recall; it does not decide whether the question is supported.
+- ⚡ **Evidence-aware semantic cache:** Golden Dataset cases can pre-seed repeat answers. A cached answer is reused only when the same supporting source is retrieved again; it never bypasses evidence checks or becomes knowledge-base content.
+- 🤖 **Generation:** Gemini Flash-Lite writes a short answer through `/api/generate` only when the shortlisted evidence directly supports the question. It returns a no-evidence signal otherwise.
 - ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
-- ⚡ **Latency controls:** direct safety/actions avoid AI generation; pre-seeded cache hits avoid Gemini; MiniLM is reused after its first load; semantic safety has an 8-second ceiling and Gemini has a 10-second ceiling before an approved fallback is shown.
+- ⚡ **Latency controls:** direct safety/actions avoid AI generation; valid cache hits avoid Gemini; MiniLM is reused after its first load; semantic safety has an 8-second ceiling and Gemini has a 10-second ceiling before an approved fallback is shown.
 - 🧪 **Golden evaluation dataset:** 131 fixed test cases define the expected facts, sources, intent, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
 - 🚀 **Hosting:** GitHub + Vercel. The Gemini key is stored as a server-side Vercel environment variable.
@@ -131,9 +131,9 @@ flowchart TD
 | **Direct RAG** | The normal path: retrieve approved evidence before Gemini may answer, with no separate intent classifier. |
 | **Evidence-aware semantic cache** | A cache of validated answers that can respond quickly only when the new question is semantically close **and** its retrieved source IDs still match the cached evidence. |
 | **Readiness gate** | A short wait that prevents an evaluation or visitor question from running before MiniLM is available. |
-| **Hybrid retrieval** | MiniLM measures semantic similarity, while lexical coverage checks that meaningful question topics—or approved recruiter-language retrieval hints—appear in the evidence. Both must pass. |
-| **Relevance gate** | The acceptance rule that rejects the nearest passage when it does not genuinely answer the question. Rejected questions receive the safe fallback and contact CTA. |
-| **Generator** | Gemini writes a concise answer using only the approved answer and retrieved evidence. |
+| **Semantic retrieval** | MiniLM finds the most similar approved portfolio and resume passages, even when a visitor uses different wording. It is a shortlist, not a final answer. |
+| **Evidence decision** | Gemini is instructed to answer only when a shortlisted passage directly supports the question; no support produces a safe fallback. |
+| **Generator** | Gemini writes a concise answer using only the retrieved evidence. |
 | **Grounding checks** | Output checks verify that Gemini's claims are supported by the retrieved sources. |
 | **Fail-closed fallback** | If the system is uncertain or a component fails, it returns an approved safe answer. |
 | **Golden evaluation dataset** | A fixed benchmark of questions with human-defined expected facts, sources, response types, and guardrail behaviour. |
@@ -287,7 +287,7 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 - **Fast path:** approved safety/actions return without Gemini; evidence-aware cache hits return without Gemini only after the retrieved source IDs match.
 - **Trade-off:** open-ended generation now depends on a network service and its quota instead of the visitor's device.
 - **Retrieval trade-off:** every normal question pays the MiniLM retrieval cost. This is intentional: it removes a separate intent guess and makes the evidence gate the single source of truth.
-- **Compatibility:** generation no longer requires WebGPU; if Gemini fails or times out, the bot returns the approved answer.
+- **Compatibility:** generation no longer requires WebGPU; if Gemini fails or times out, the bot returns the approved fallback rather than the nearest unrelated answer.
 - **Privacy:** only public portfolio questions and allowlisted evidence should reach Gemini. Email addresses and phone numbers are redacted server-side.
 - **Free-tier caveat:** Google's free tier is quota-based, not guaranteed as a one-month trial, and its data-use terms differ from the paid tier. Recheck current terms before production use.
 

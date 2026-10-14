@@ -1698,8 +1698,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-14.7"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-14.7"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-14.8"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-14.8"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2296,7 +2296,7 @@ approvedResumeDocuments.forEach(document => (document.sections || []).forEach(se
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-14.7',
+  rulesVersion: '2026-10-14.8',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2557,14 +2557,38 @@ function getLexicalRelevance(question, item) {
   };
 }
 
-function selectEvidenceCandidates(matches) {
+const PROFESSIONAL_EVIDENCE_BACKSTOP = new Set([
+  'Profile · Work style',
+  'Profile · Pace and ambiguity',
+  'Profile · Product skills',
+  'Profile · Analytics and metrics'
+]);
+
+function isShortProfessionalAssessment(question) {
+  const text = normalizeQuestion(question);
+  const asksForAssessment = /\b(is|are|does|do|can|could|would|will|how|what)\b/.test(text);
+  const professionalContext = /\b(pm|product manager|at (?:her )?job|at work|professional|work style|workplace|career|role|team|product)\b/.test(text);
+  return asksForAssessment && professionalContext && getRetrievalTerms(text).length <= 6;
+}
+
+function selectEvidenceCandidates(matches, question = '') {
   const topScore = Number(matches?.[0]?.score || 0);
   if (!topScore || topScore < RAG_CONFIG.evidenceCandidateFloor) return [];
   // Keep enough semantically adjacent evidence for Gemini to disambiguate a
   // natural question, without treating every portfolio passage as context.
   const relativeFloor = Math.max(RAG_CONFIG.evidenceCandidateFloor, topScore - 0.18);
-  return matches
+  const candidates = matches
     .filter(item => item.score >= relativeFloor || item.lexicalScore >= 2)
+    .slice(0, RAG_CONFIG.maximumEvidenceCandidates);
+  // Short professional assessments often use an adjective that is not repeated
+  // verbatim in a resume (for example, a question about pace). Widen recall to
+  // a fixed group of first-party work-style evidence; this only selects context.
+  // Gemini and the grounding check still decide whether any claim is supportable.
+  if (!isShortProfessionalAssessment(question)) return candidates;
+  const backstop = matches.filter(item => PROFESSIONAL_EVIDENCE_BACKSTOP.has(item.source));
+  const preferred = candidates.filter(item => !PROFESSIONAL_EVIDENCE_BACKSTOP.has(item.source));
+  const merged = [...backstop, ...preferred, ...candidates];
+  return [...new Map(merged.map(item => [item.source, item])).values()]
     .slice(0, RAG_CONFIG.maximumEvidenceCandidates);
 }
 
@@ -2714,7 +2738,10 @@ async function retrievePortfolioContextSemantically(question, runtimeOptions = {
   try {
     portfolioEmbedderPromise ||= window.createPortfolioEmbedder();
     const embedder = await portfolioEmbedderPromise;
-    portfolioVectorsPromise ||= embedder(portfolioKnowledge.map(item => `${item.source}. ${item.text}`), { pooling: 'mean', normalize: true });
+    // Include source labels, topic tags, and approved short summaries in the
+    // retrieval index. They are evidence metadata, not pre-written answers;
+    // this makes terse professional language map to the right source passage.
+    portfolioVectorsPromise ||= embedder(portfolioKnowledge.map(item => [item.source, item.tags, item.answer, item.text].filter(Boolean).join('. ')), { pooling: 'mean', normalize: true });
     const queryVariants = [...new Set([String(question || '').trim(), normalizedQuestion, rewrittenQuestion, retrievalQuestion].filter(Boolean))];
     const [questionVectors, documentVectors] = await Promise.all([
       embedder(queryVariants, { pooling: 'mean', normalize: true }),
@@ -3454,7 +3481,7 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
   };
   const retrievalQuestion = [question, result.rewrittenQuestion, ...(result.evidenceTopics || [])].filter(Boolean).join(' ');
   const matches = await retrievePortfolioContextSemantically(retrievalQuestion, retrievalOptions);
-  const relevant = selectEvidenceCandidates(matches);
+  const relevant = selectEvidenceCandidates(matches, question);
   if (result.allowGeneration && !relevant.length) return {
     answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
     retrievedSources: [],

@@ -1698,8 +1698,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-14.2"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-14.2"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-14.3"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-14.3"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2282,7 +2282,7 @@ approvedFactCards.forEach(card => portfolioKnowledge.push({
 }));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-14.2',
+  rulesVersion: '2026-10-14.3',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2739,6 +2739,9 @@ const COMMON_MIRA_QUESTIONS = Object.freeze([
   { question: 'How is she as a person?', source: 'Profile · Personality' },
   { question: 'How is she as a product manager?', source: 'Profile · Work style' },
   { question: 'What is her work style?', source: 'Profile · Work style' },
+  { question: 'Has Prerna ever led a team?', source: 'Resume · Leadership' },
+  { question: 'Has she managed APMs?', source: 'Resume · Leadership' },
+  { question: 'Does she have people-leadership experience?', source: 'Resume · Leadership' },
   { question: 'Is she fast paced?', source: 'Profile · Pace and ambiguity' },
   { question: 'Will she fit in a fast paced culture?', source: 'Profile · Pace and ambiguity' },
   { question: 'How is Prerna at her job?', source: 'Profile · Work style' },

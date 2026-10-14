@@ -49,6 +49,21 @@ window.ASK_PRERNA_KNOWLEDGE = {
       facts: 'Prerna studies product data and speaks with customers to locate the real break in a journey. She turns the insight into a measurable hypothesis, tests the smallest useful intervention, and iterates using both customer and business outcomes.'
     },
     {
+      id: 'resume-leadership', source: 'Resume · Leadership', topics: ['leadership', 'people_management', 'career'], retrievalHints: ['led a team', 'lead a team', 'led team', 'leadership', 'managed a team', 'manage a team', 'people management', 'apm', 'apms', 'associate product manager', 'associate product managers'],
+      answer: 'Yes. At Bajaj Finserv Health, Prerna led a four-person Associate Product Manager team while taking a diabetes wellness product from 0 to 1. It generated ₹28L in revenue within five months.',
+      facts: 'Prerna led a four-person Associate Product Manager team at Bajaj Finserv Health while taking a diabetes wellness product from concept through launch. The product generated ₹28L in revenue within five months.'
+    },
+    {
+      id: 'resume-lenskart-scope', source: 'Resume · Lenskart scope', topics: ['lenskart', 'experience', 'product_skills'], retrievalHints: ['lenskart role', 'what does she do at lenskart', 'lenskart scope', 'current role', 'current job', 'product strategy', 'lenskart home'],
+      answer: 'At Lenskart, Prerna leads strategy for Lenskart@Home and works across conversion, growth, customer journeys, pricing, and retention.',
+      facts: 'At Lenskart, Prerna leads strategy for Lenskart@Home. Her work spans growth and conversion, customer journeys, pricing, retention, and structured experimentation.'
+    },
+    {
+      id: 'resume-bajaj-scope', source: 'Resume · Bajaj scope', topics: ['bajaj', 'experience', 'product_skills'], retrievalHints: ['bajaj role', 'what did she do at bajaj', 'bajaj scope', 'doctor consultation', 'insurance automation', 'health products'],
+      answer: 'At Bajaj Finserv Health, Prerna owned consumer product work across doctor discovery, diabetes wellness, diagnostics, insurance automation, and partner-led journeys.',
+      facts: 'At Bajaj Finserv Health, Prerna worked on doctor discovery, a diabetes wellness product, diagnostic insights, insurance pre-authorisation automation, Health ID onboarding, and white-labelled multilingual partner journeys.'
+    },
+    {
       id: 'pace-and-ambiguity', source: 'Profile · Pace and ambiguity', topics: ['work_style', 'career', 'product_skills'], retrievalHints: ['high agency', 'fast paced', 'fast pace', 'ownership', 'initiative', 'proactive', 'autonomous', 'adaptable', 'startup', 'culture fit', 'ambiguity'],
       answer: 'Her work shows signs of high agency: she finds ambiguous problems through data and customer conversations, turns them into focused experiments, and stays involved through iteration. That suggests comfort with ownership and pace, though culture fit is always mutual.',
       facts: 'Evidence from Prerna’s work shows ownership and an iterative operating style: she uses data and customer conversations to clarify ambiguous problems, turns insights into focused experiments, and stays involved through iteration. This supports high agency and comfort with pace and ambiguity; culture fit remains mutual.'

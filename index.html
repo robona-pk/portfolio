@@ -2557,11 +2557,9 @@ function getLexicalRelevance(question, item) {
   };
 }
 
-const PROFESSIONAL_EVIDENCE_BACKSTOP = new Set([
+const PROFESSIONAL_EVIDENCE_BACKSTOP = Object.freeze([
   'Profile · Work style',
-  'Profile · Pace and ambiguity',
-  'Profile · Product skills',
-  'Profile · Analytics and metrics'
+  'Profile · Pace and ambiguity'
 ]);
 
 function isShortProfessionalAssessment(question) {
@@ -2585,8 +2583,9 @@ function selectEvidenceCandidates(matches, question = '') {
   // a fixed group of first-party work-style evidence; this only selects context.
   // Gemini and the grounding check still decide whether any claim is supportable.
   if (!isShortProfessionalAssessment(question)) return candidates;
-  const backstop = matches.filter(item => PROFESSIONAL_EVIDENCE_BACKSTOP.has(item.source));
-  const preferred = candidates.filter(item => !PROFESSIONAL_EVIDENCE_BACKSTOP.has(item.source));
+  const matchBySource = new Map(matches.map(item => [item.source, item]));
+  const backstop = PROFESSIONAL_EVIDENCE_BACKSTOP.map(source => matchBySource.get(source)).filter(Boolean);
+  const preferred = candidates.filter(item => !PROFESSIONAL_EVIDENCE_BACKSTOP.includes(item.source));
   const merged = [...backstop, ...preferred, ...candidates];
   return [...new Map(merged.map(item => [item.source, item])).values()]
     .slice(0, RAG_CONFIG.maximumEvidenceCandidates);

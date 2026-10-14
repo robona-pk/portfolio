@@ -2286,7 +2286,10 @@ const RAG_CONFIG = Object.freeze({
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
-  relevanceSemanticThreshold: 0.42,
+  // Relevance needs both semantic meaning and a card-specific evidence term.
+  // The latter does the safety work, allowing a lower semantic floor for short
+  // recruiter phrasing such as "track metrics" or "fast paced".
+  relevanceSemanticThreshold: 0.18,
   relevanceLexicalCoverageThreshold: 0.25,
   relevanceLexicalMinimumMatches: 1,
   maximumQuestionCharacters: 500,

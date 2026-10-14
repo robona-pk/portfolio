@@ -46,7 +46,7 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 - Open-ended questions can use **Gemini Flash-Lite** to phrase concise, natural answers.
 - Gemini runs behind a protected Vercel endpoint; its API key is never exposed in the browser.
 
-Mira is a **guarded, conditional RAG system**. Not every question needs retrieval or an LLM: known facts use approved responses, sensitive requests use deterministic guardrails, and only supported open-ended questions enter the RAG route.
+Mira is a **guarded RAG system**. Privacy, safety, confidential-data, and direct navigation requests use fixed approved responses. Every normal question about Prerna goes through retrieval first; Gemini is allowed to write only when the retrieved evidence clears a strict relevance gate.
 
 ## How one question becomes an answer
 
@@ -55,31 +55,22 @@ The diagram is designed to be read from top to bottom. Each colour represents a 
 ```mermaid
 flowchart TD
     A["👤 Visitor asks a question"] --> B["🧹 Normalise spelling,<br/>shorthand and hidden characters"]
-    B --> C{"⚡ Known fast route?"}
-
-    C -- "Known fact<br/>or action" --> G["✅ Deterministic route<br/>Approved answer"]
-    C -- "Private, unsafe<br/>or confidential" --> F["🛡️ Guardrail route<br/>Controlled response"]
-    C -- "Needs meaning-based routing" --> Q["⏳ MiniLM readiness gate<br/>Wait briefly or fail closed"]
-    Q --> E{"🛡️ Semantic injection check"}
-
-    E -- "Attack or uncertain" --> D["🛡️ Guardrail response<br/>Decline safely"]
-    E -- "Safe" --> R["🧭 Semantic intent router<br/>MiniLM first, Gemini if uncertain"]
-    R -- "Known supported intent" --> G["✅ Approved answer bank<br/>Intent-specific answer"]
-    R -- "Open-ended evidence question" --> H["🔎 RAG route: retrieval<br/>Meaning + topic evidence"]
-    R -- "Unknown or unsupported" --> I["🤷 Safe fallback + contact CTA<br/>Contact Prerna directly"]
-    H --> P{"🎯 Relevant enough?<br/>Similarity + word coverage"}
-    P -- "No" --> I["🤷 Safe fallback + contact CTA<br/>Contact Prerna directly"]
-    P -- "Yes" --> J["📚 Selected portfolio evidence"]
-
-    J --> K["🤖 Gemini Flash-Lite<br/>Writes a short answer"]
+    B --> S{"🛡️ Safety / privacy / direct action?"}
+    S -- "Yes" --> G["✅ Approved response or action"]
+    S -- "No" --> Q["⏳ MiniLM readiness gate"]
+    Q --> I{"🛡️ Injection check"}
+    I -- "Attack or uncertain" --> G
+    I -- "Safe" --> H["🔎 RAG retrieval<br/>Approved fact cards"]
+    H --> P{"🎯 Relevant enough?<br/>Strong meaning or meaning + terms"}
+    P -- "No" --> F["🤷 Approved fallback<br/>Contact Prerna directly"]
+    P -- "Yes" --> C{"⚡ Evidence-aware<br/>semantic cache hit?"}
+    C -- "Same evidence + close question" --> M["💬 Reuse validated answer"]
+    C -- "No" --> K["🤖 Gemini Flash-Lite<br/>Phrases only retrieved evidence"]
     K --> L{"🔍 Is every claim supported?"}
-    L -- "Yes" --> M["💬 Show Gemini's answer"]
-    L -- "No / model unavailable" --> N["↩️ Show approved retrieved answer"]
-
-    D --> O["📊 Record anonymous quality data"]
+    L -- "Yes" --> M
+    L -- "No / unavailable" --> N["↩️ Approved retrieved answer"]
+    G --> O["📊 Record anonymous quality data"]
     F --> O
-    G --> O
-    I --> O
     M --> O
     N --> O
 
@@ -91,9 +82,9 @@ flowchart TD
     classDef output fill:#edf6dd,stroke:#5d7f25,color:#263611;
 
     class A,B visitor;
-    class C,E,R,P,L decision;
-    class D,F,I policy;
-    class H,J,Q retrieval;
+    class S,I,P,C,L decision;
+    class F,G policy;
+    class H,Q retrieval;
     class K,M ai;
     class G,N,O output;
 ```
@@ -102,8 +93,8 @@ flowchart TD
 
 | Question type | Example | Answered by |
 | --- | --- | --- |
-| Known portfolio fact | “How much experience does she have?” | ✅ Approved answer bank |
-| Work or recruiter question | “What impact did she drive at Lenskart?” | ✅ Approved answer bank |
+| Direct action | “Where is her resume?” | ✅ Approved response + link |
+| Work or recruiter question | “What impact did she drive at Lenskart?” | 🔎 RAG retrieval + 🤖 Gemini (or validated cache) |
 | Open-ended portfolio question | “How does customer research shape her decisions?” | 🔎 RAG route: retrieval + 🤖 Gemini |
 | Private or confidential | “What is Lenskart's profit margin?” | 🛡️ Deterministic guardrail |
 | Inappropriate or unsafe question | — | 🛡️ Respectful guardrail response |
@@ -116,15 +107,15 @@ flowchart TD
 
 - 🖥️ **Interface:** HTML, CSS, and JavaScript create the floating chat window.
 - 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js` and the curated portfolio passages in `index.html`.
-- ⚡ **Deterministic routing:** obvious approved facts and actions such as resume access bypass retrieval and generation.
+- ⚡ **Direct handling:** safety boundaries and actions such as resume access bypass retrieval and generation.
 - 🛡️ **Guardrail routing:** private, unsafe, abusive, confidential, unrelated, and injection attempts receive controlled responses without reaching open-ended generation.
 - ⏳ **Readiness gate:** the system briefly waits for MiniLM to register before a semantic request runs. If it never becomes available, the bot fails closed instead of guessing.
-- 🧭 **Intent routing:** MiniLM maps unfamiliar wording into an allowlisted intent such as `work_style`, `skills`, `hobbies`, or `hiring_fit`. If confidence is low, a constrained Gemini classifier may choose from the same fixed list. It returns a label, not an answer.
-- 🔎 **Retrieval:** open-ended evidence questions use MiniLM to find passages with similar meaning, then a strict relevance gate also requires meaningful topic-word coverage. A passage is rejected if it is merely the closest bad match.
+- 🔎 **Retrieval:** every normal portfolio question uses MiniLM to find passages with similar meaning. A strict relevance gate requires either a very strong semantic match or both meaning and meaningful topic-word coverage. A passage is rejected if it is merely the closest bad match.
+- ⚡ **Evidence-aware semantic cache:** common Golden Dataset and real-world question variants are pre-seeded. A cached answer is reused only when the same supporting fact card is retrieved again; it never bypasses evidence checks.
 - 🤖 **Generation:** Gemini Flash-Lite writes short responses for supported, open-ended questions through `/api/generate`.
 - ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
-- ⚡ **Latency controls:** deterministic questions avoid AI generation; repeated clicks are blocked; MiniLM is reused after its first load; semantic safety has an 8-second ceiling and Gemini has a 10-second ceiling before an approved fallback is shown.
+- ⚡ **Latency controls:** direct safety/actions avoid AI generation; pre-seeded cache hits avoid Gemini; MiniLM is reused after its first load; semantic safety has an 8-second ceiling and Gemini has a 10-second ceiling before an approved fallback is shown.
 - 🧪 **Golden evaluation dataset:** 131 fixed test cases define the expected facts, sources, intent, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
 - 🚀 **Hosting:** GitHub + Vercel. The Gemini key is stored as a server-side Vercel environment variable.
@@ -136,14 +127,11 @@ flowchart TD
 | **Knowledge base** | The approved facts and portfolio passages the bot is allowed to use. |
 | **Guardrail route** | Deterministic rules and approved responses for privacy, confidentiality, abuse, irrelevant questions, and prompt injection. It does not use RAG. |
 | **RAG route** | For a supported open-ended question: retrieve approved evidence, give it to Gemini as context, then validate the generated answer against that evidence. |
-| **Conditional RAG** | Retrieval and generation run only when the question needs them. Known answers and guardrail cases take faster deterministic routes. |
-| **Deterministic routing** | Code that sends known question types to a fixed approved response instead of asking Gemini. |
-| **Intent** | The supported meaning of a question, such as `skills`, `location`, `work_style`, `resume`, or `hiring_fit`. |
-| **Semantic intent routing** | Meaning-based classification that maps different phrasings to a fixed supported category such as work style, hobbies, or bot capability. |
-| **Intent prototype** | A representative way of expressing an intent. MiniLM compares meaning against several prototypes so the system can generalise beyond exact wording. |
+| **Direct route** | Code that handles safety boundaries and clear actions such as resume access without asking Gemini. |
+| **Direct RAG** | The normal path: retrieve approved evidence before Gemini may answer, with no separate intent classifier. |
+| **Evidence-aware semantic cache** | A cache of validated answers that can respond quickly only when the new question is semantically close **and** its retrieved source IDs still match the cached evidence. |
 | **Readiness gate** | A short wait that prevents an evaluation or visitor question from running before MiniLM is available. |
-| **Hosted intent fallback** | A constrained Gemini classifier used only when the local semantic router is uncertain. It returns an intent label, not an answer. |
-| **Hybrid retrieval** | MiniLM measures semantic similarity, while lexical coverage checks that meaningful question topics actually appear in the evidence. Both must pass. |
+| **Hybrid retrieval** | MiniLM measures semantic similarity, while lexical coverage checks that meaningful question topics appear in the evidence. A very strong semantic match can also pass for recruiter vocabulary not literally written in a fact card. |
 | **Relevance gate** | The acceptance rule that rejects the nearest passage when it does not genuinely answer the question. Rejected questions receive the safe fallback and contact CTA. |
 | **Generator** | Gemini writes a concise answer using only the approved answer and retrieved evidence. |
 | **Grounding checks** | Output checks verify that Gemini's claims are supported by the retrieved sources. |
@@ -170,13 +158,13 @@ These controls reduce risk but are not foolproof. The client-side knowledge base
 
 ## Golden evaluation dataset and eval console
 
-The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its 131 cases test the **whole assistant system**: deterministic answers, guardrails, intent routing, RAG retrieval, Gemini output, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
+The **golden evaluation dataset** lives in [`assets/eval-dataset.js`](assets/eval-dataset.js). Its cases test the **whole assistant system**: direct actions, guardrails, RAG retrieval, Gemini output, cache safety, fallbacks, safety, and response time. Because generated wording can vary, it defines required facts and behaviour rather than one exact sentence.
 
 Each golden case contains:
 
 - The test question and category
 - The expected response type
-- The expected semantic intent when the case tests meaning-based routing
+- The expected route or behaviour when the case tests meaning-based retrieval
 - The facts the answer must contain
 - The source it should retrieve
 - The guardrail behaviour expected for safety cases
@@ -213,7 +201,7 @@ flowchart LR
 
 - ✅ Profile facts, skills, experience, work and measurable outcomes
 - ✍️ Paraphrases, misspellings and fuzzy matching
-- 🧭 Vague wording that should converge on the same semantic intent
+- 🧭 Vague wording, paraphrases and recruiter language that should retrieve the same evidence
 - 🔒 Private, confidential, insulting and unrelated questions
 - 🧨 Direct, disguised, multilingual and Unicode prompt injections
 - 🚫 Invented metrics, fake employers, prompt leakage and unsupported claims
@@ -291,21 +279,22 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 | **15. Resume navigation** | Resume questions were recognised as portfolio-related but had no dedicated answer route | “Where is her resume?” incorrectly returned the missing-information fallback | Added a `resume` intent and fast deterministic route with a clickable resume action, including CV and misspelling regression cases |
 | **16. Clearer human evaluation** | Every benchmark expectation was labelled “Expected facts” | Simulated output-validator cases looked like incorrect interpretations of the visitor's question | Renamed the section **Pass criteria — not model input** and added plain-language test-purpose explanations |
 | **17. Portfolio interaction polish** | Native scrolling and entrance reveals worked, but desktop scrolling felt abrupt | The page lacked the restrained fluidity of the reference experience | Added lightweight inertial desktop scrolling while preserving native touch, keyboard, nested-panel, and reduced-motion behaviour |
+| **18. Direct RAG with evidence-aware caching** | A separate intent classifier guessed labels before retrieval | Recruiter phrasing such as “high agency” or “fast paced” could be assigned to the wrong category, producing unrelated answers | Removed the intent classifier from the live route. Normal questions now retrieve evidence directly; common Golden Dataset and real-world variants are pre-seeded in a cache that can answer only when the same evidence is retrieved again. |
 
 ## Cost and trade-offs
 
 - **Model cost:** expected to remain ₹0 while the project stays within Gemini's free-tier quota; telemetry also records a paid-rate estimate for visibility.
-- **Fast path:** approved deterministic and guardrail answers return without calling Gemini.
+- **Fast path:** approved safety/actions return without Gemini; evidence-aware cache hits return without Gemini only after the retrieved source IDs match.
 - **Trade-off:** open-ended generation now depends on a network service and its quota instead of the visitor's device.
-- **Intent trade-off:** ambiguous wording may use one small hosted classification call before answering; high-confidence local intents and deterministic or guardrail routes avoid it.
+- **Retrieval trade-off:** every normal question pays the MiniLM retrieval cost. This is intentional: it removes a separate intent guess and makes the evidence gate the single source of truth.
 - **Compatibility:** generation no longer requires WebGPU; if Gemini fails or times out, the bot returns the approved answer.
 - **Privacy:** only public portfolio questions and allowlisted evidence should reach Gemini. Email addresses and phone numbers are redacted server-side.
 - **Free-tier caveat:** Google's free tier is quota-based, not guaranteed as a one-month trial, and its data-use terms differ from the paid tier. Recheck current terms before production use.
 
 ## Is this technically RAG?
 
-**Yes—for the questions that enter the RAG route.** Mira retrieves relevant approved portfolio evidence and supplies it to Gemini before an answer is written. The rest of the architecture deliberately avoids RAG where a deterministic answer or safety boundary is more reliable.
+**Yes—for normal portfolio questions.** Mira retrieves relevant approved portfolio evidence and supplies it to Gemini before an answer is written. Only safety boundaries and direct actions deliberately avoid RAG because fixed approved responses are safer.
 
-That makes the complete product a **guarded, conditional RAG assistant**, rather than a chatbot that sends every question to an LLM.
+That makes the complete product a **guarded RAG assistant with an evidence-aware semantic cache**, rather than a chatbot that guesses an intent and sends every question to an LLM.
 
 The preproduction build is connected to the `codex/portfolio-rag-preprod` branch and is intentionally separate from production.

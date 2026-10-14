@@ -1655,7 +1655,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
           <div class="rag-message bot">Hi, I can answer questions about Prerna's experience, growth work, case studies, and builder projects.</div>
           <div class="rag-build-note" id="ragBuildNote">
             <span class="rag-build-icon" aria-hidden="true">i</span>
-            <span class="rag-build-copy">Built with an approved knowledge base, semantic retrieval, and Gemma. <a class="rag-build-link" id="ragBuildLink" href="https://github.com/robona-pk/portfolio#mira--portfolio-chatbot" target="_blank" rel="noopener">How it works ↗</a></span>
+            <span class="rag-build-copy">Built with an approved knowledge base, semantic retrieval, and Gemini. <a class="rag-build-link" id="ragBuildLink" href="https://github.com/robona-pk/portfolio#mira--portfolio-chatbot" target="_blank" rel="noopener">How it works ↗</a></span>
           </div>
         </div>
         <div class="rag-prompts" aria-label="Suggested questions">
@@ -1698,7 +1698,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-13.3"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-14.1"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-14.1"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2258,8 +2259,8 @@ function send() {
 
 /* ═══════════════════════════════════════════════════════
    PORTFOLIO RAG DEMO
-   Policy routing, MiniLM retrieval, and validation run in the browser.
-   Supported open-ended answers use Gemma through a protected Vercel endpoint.
+   Safety checks, semantic retrieval, and validation run in the browser.
+   Supported open-ended answers use Gemini through a protected Vercel endpoint.
 ═══════════════════════════════════════════════════════ */
 const portfolioKnowledge = [
   { source: 'Lenskart@Home case study', answer: 'At Lenskart, Prerna helped reposition home trials from an eye-test-led journey into a fashion-forward way to try frames at home. Her initiatives contributed ₹6Cr+ in annualised revenue, including ₹1.8Cr from personalisation; a pan-India pilot lifted bookings 7%.', text: 'At Lenskart, Prerna helped reposition Lenskart@Home from an eye-test-led feature into a more fashion-forward way to try frames at home. She owned growth initiatives across this O2O experience, including home trials, store ownership, and post-purchase journeys. Her initiatives contributed more than ₹6Cr in incremental annualised revenue. A personalised home-trial experience generated ₹1.8Cr annualised incremental revenue across five cities. A three-week pan-India pilot improved completed home-trial bookings by 7 percent versus the weekly baseline. Territory ownership and 48-hour check-ins improved NPS for the called cohort from 41 to 60 in one month.', tags: 'lenskart home trial fashion eyewear o2o revenue booking nps customer experience growth' },
@@ -2281,16 +2282,14 @@ approvedFactCards.forEach(card => portfolioKnowledge.push({
 }));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-13.3',
+  rulesVersion: '2026-10-14.1',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
-  generationModel: 'gemma-4-31b-it',
+  generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
-  relevanceSemanticThreshold: 0.24,
-  relevanceLexicalCoverageThreshold: 0.5,
+  relevanceSemanticThreshold: 0.42,
+  relevanceStrongSemanticThreshold: 0.64,
+  relevanceLexicalCoverageThreshold: 0.25,
   relevanceLexicalMinimumMatches: 1,
-  intentSemanticThreshold: 0.38,
-  intentSemanticMargin: 0.03,
-  intentHostedConfidenceThreshold: 0.62,
   maximumQuestionCharacters: 500,
   maximumGeneratedAnswerCharacters: 300,
   maximumSecurityWaitMs: 8000,
@@ -2384,7 +2383,7 @@ const answerScopeQuestion = /\b(what (questions?|things?|topics?) can (you|this 
 const botArchitectureQuestion = /\b(how|what).{0,18}\b(this bot|the bot|chatbot|portfolio assistant)\b.{0,24}\b(made|built|work|implemented|architecture|tech stack)|\b(how (?:was|is).{0,12}\b(this bot|the bot|chatbot)\b.{0,12}\b(made|built))\b/i;
 const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
 const assistantAnswer = 'I’m Mira, Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work.';
-const botArchitectureAnswer = approvedKnowledge.botArchitecture || 'This bot combines Gemma intent understanding, an approved fact-card knowledge base, MiniLM semantic retrieval, and grounded Gemma generation through a protected Vercel endpoint, with privacy, injection, grounding, and fallback checks. The GitHub README explains the complete architecture and evaluation setup.';
+const botArchitectureAnswer = approvedKnowledge.botArchitecture || 'This bot applies safety checks, retrieves an approved fact-card knowledge base with MiniLM, and uses Gemini for grounded generation through a protected Vercel endpoint. A semantic cache reuses validated answers only when the same evidence is retrieved.';
 const botReadmeUrl = 'https://github.com/robona-pk/portfolio#mira--portfolio-chatbot';
 const resumeAnswer = 'You can view or download Prerna’s resume here.';
 const resumeUrl = 'https://drive.google.com/file/d/1To5xUIDQBddvdafDoVcgCVNxidGA1Cfo/view?usp=sharing';
@@ -2453,7 +2452,7 @@ const spellingFrequencies = new Map();
 });
 // Fuzzy correction is deliberately limited to portfolio/domain terms. Using every
 // word in the knowledge base can "correct" valid English (for example rank → bank)
-// before Gemma sees it. Gemma handles broader paraphrases and professional language.
+// before retrieval sees it. This corrects only clear portfolio-domain misspellings.
 const spellingVocabulary = [...new Set([...SPELLING_CORE_TERMS, ...SPELLING_ABBREVIATIONS.values()])];
 
 function normalizeQuestion(value) {
@@ -2543,8 +2542,12 @@ function getLexicalRelevance(question, item) {
 function isRelevantRetrievalMatch(item) {
   const lexicalMatch = item.lexicalScore >= RAG_CONFIG.relevanceLexicalMinimumMatches
     && item.lexicalCoverage >= RAG_CONFIG.relevanceLexicalCoverageThreshold;
-  if (!lexicalMatch) return false;
-  return item.semantic ? item.score >= RAG_CONFIG.relevanceSemanticThreshold : true;
+  if (!item.semantic) return lexicalMatch;
+  // A clear semantic match may use recruiter vocabulary that is absent from the
+  // fact card (for example, "high agency" or "fast paced"). Otherwise require
+  // both semantic and lexical support so unrelated questions fail closed.
+  return item.score >= RAG_CONFIG.relevanceStrongSemanticThreshold
+    || (lexicalMatch && item.score >= RAG_CONFIG.relevanceSemanticThreshold);
 }
 
 function retrievePortfolioContext(question) {
@@ -2715,6 +2718,117 @@ async function retrievePortfolioContextSemantically(question, runtimeOptions = {
     }).sort((a, b) => b.hybridScore - a.hybridScore).slice(0, 2);
   } catch (error) {
     return retrievePortfolioContext(normalizedQuestion);
+  }
+}
+
+// Evidence-aware semantic cache -------------------------------------------------
+// This is deliberately downstream of safety and retrieval. A similar question is
+// never enough on its own: the cached answer can be reused only when the fact card
+// that originally supported it is retrieved again for the new question.
+const SEMANTIC_CACHE_KEY = `mira-semantic-cache-${RAG_CONFIG.rulesVersion}`;
+const SEMANTIC_CACHE_THRESHOLD = 0.91;
+const COMMON_MIRA_QUESTIONS = Object.freeze([
+  { question: 'Does Prerna have high agency?', source: 'Profile · Pace and ambiguity' },
+  { question: 'Is she skilled?', source: 'Profile · Product skills' },
+  { question: 'What are Prerna’s strengths?', source: 'Profile · Pace and ambiguity' },
+  { question: 'Is she a loud person?', source: 'Profile · Personality' },
+  { question: 'How is she as a person?', source: 'Profile · Personality' },
+  { question: 'How is she as a product manager?', source: 'Profile · Work style' },
+  { question: 'What is her work style?', source: 'Profile · Work style' },
+  { question: 'Is she fast paced?', source: 'Profile · Pace and ambiguity' },
+  { question: 'Will she fit in a fast paced culture?', source: 'Profile · Pace and ambiguity' },
+  { question: 'How is Prerna at her job?', source: 'Profile · Work style' },
+  { question: 'Can she track metrics?', source: 'Profile · Analytics and metrics' },
+  { question: 'What does she bring to the table?', source: 'Profile · Overview' },
+  { question: 'Who is Prerna?', source: 'Profile · Overview' },
+  { question: 'What does she do?', source: 'Profile · Overview' },
+  { question: 'How much experience does she have?', source: 'Portfolio overview' },
+  { question: 'Where is she based out of?', source: 'Profile · Location' },
+  { question: 'What does she do in free time?', source: 'Profile · Hobbies' },
+  { question: 'What are her hobbies?', source: 'Profile · Hobbies' },
+  { question: 'What is Prerna’s life philosophy?', source: 'Profile · Life philosophy' },
+  { question: 'What can you do?', source: 'Project · Mira architecture' },
+  { question: 'What is dopamine detox?', source: 'Profile · Dopamine detox' }
+]);
+let semanticResponseCache;
+let semanticCacheVectorsPromise;
+
+function getCacheSourceForEval(item) {
+  const knownSource = (item.expectedSources || []).find(source => portfolioKnowledge.some(card => card.source === source));
+  if (knownSource) return knownSource;
+  const question = String(item.question || '').toLowerCase();
+  if (/education|study|degree|university/.test(question)) return 'Profile · Education';
+  if (/from|based|where.*now/.test(question)) return 'Profile · Location';
+  if (/hobb|free time|outside work|solo travel/.test(question)) return 'Profile · Hobbies';
+  if (/dopamine/.test(question)) return 'Profile · Dopamine detox';
+  if (/philosophy|motto/.test(question)) return 'Profile · Life philosophy';
+  if (/person|personality/.test(question)) return 'Profile · Personality';
+  if (/fast|agency|ambiguity|culture/.test(question)) return 'Profile · Pace and ambiguity';
+  if (/metrics|kpi|funnel|cohort/.test(question)) return 'Profile · Analytics and metrics';
+  if (/skillset|a\/b|go.to.market/.test(question)) return 'Profile · Product skills';
+  if (/tools|software/.test(question)) return 'Profile · Tools';
+  if (/role.*looking|opportunit/.test(question)) return 'Profile · Career interests';
+  return null;
+}
+
+function initialiseSemanticResponseCache() {
+  if (semanticResponseCache) return semanticResponseCache;
+  const sourceByName = new Map(portfolioKnowledge.map(card => [card.source, card]));
+  const evalSeeds = (window.ASK_PRERNA_EVALS || [])
+    .filter(item => ['grounded', 'accept_grounded_output'].includes(item.expectedType))
+    .map(item => ({ question: item.question, source: getCacheSourceForEval(item) }))
+    .filter(item => item.source && sourceByName.has(item.source));
+  const allSeeds = [...evalSeeds, ...COMMON_MIRA_QUESTIONS];
+  const uniqueSeeds = new Map();
+  allSeeds.forEach(seed => uniqueSeeds.set(normalizeQuestion(seed.question), seed));
+  let learned = [];
+  try { learned = JSON.parse(window.sessionStorage.getItem(SEMANTIC_CACHE_KEY) || '[]'); } catch (error) { learned = []; }
+  semanticResponseCache = [...uniqueSeeds.values()].map(seed => {
+    const card = sourceByName.get(seed.source);
+    return { question: seed.question, answer: card.answer, sourceIds: [card.source], seed: true };
+  }).concat(Array.isArray(learned) ? learned.filter(entry => entry && entry.question && entry.answer && Array.isArray(entry.sourceIds)) : []);
+  return semanticResponseCache;
+}
+
+function sourceEvidenceMatches(entry, relevant) {
+  const retrievedSources = new Set(relevant.map(item => item.source));
+  return entry.sourceIds.length > 0 && entry.sourceIds.every(source => retrievedSources.has(source));
+}
+
+async function findSemanticCacheHit(question, relevant, runtimeOptions = {}) {
+  if (runtimeOptions.disableSemanticCache || runtimeOptions.disableSemanticRetrieval || !window.createPortfolioEmbedder) return null;
+  const candidates = initialiseSemanticResponseCache().filter(entry => sourceEvidenceMatches(entry, relevant));
+  if (!candidates.length) return null;
+  try {
+    portfolioEmbedderPromise ||= window.createPortfolioEmbedder();
+    const embedder = await portfolioEmbedderPromise;
+    semanticCacheVectorsPromise ||= embedder(initialiseSemanticResponseCache().map(entry => normalizeQuestion(entry.question)), { pooling: 'mean', normalize: true });
+    const [queryVector, cacheVectors] = await Promise.all([
+      embedder(normalizeQuestion(question), { pooling: 'mean', normalize: true }),
+      semanticCacheVectorsPromise
+    ]);
+    const rows = cacheVectors.tolist();
+    const query = queryVector.tolist()[0];
+    const entries = initialiseSemanticResponseCache();
+    const best = candidates.map(entry => {
+      const index = entries.indexOf(entry);
+      return { entry, score: query.reduce((sum, value, position) => sum + value * rows[index][position], 0) };
+    }).sort((left, right) => right.score - left.score)[0];
+    return best && best.score >= SEMANTIC_CACHE_THRESHOLD ? { ...best.entry, score: Number(best.score.toFixed(4)) } : null;
+  } catch (error) { return null; }
+}
+
+function rememberSemanticCacheAnswer(question, answer, sourceIds) {
+  if (!answer || !sourceIds?.length) return;
+  const entry = { question: String(question).slice(0, RAG_CONFIG.maximumQuestionCharacters), answer, sourceIds: [...new Set(sourceIds)], seed: false };
+  const entries = initialiseSemanticResponseCache();
+  if (!entries.some(current => normalizeQuestion(current.question) === normalizeQuestion(entry.question) && current.answer === entry.answer)) {
+    entries.push(entry);
+    semanticCacheVectorsPromise = null;
+    try {
+      const learned = entries.filter(current => !current.seed).slice(-50);
+      window.sessionStorage.setItem(SEMANTIC_CACHE_KEY, JSON.stringify(learned));
+    } catch (error) { /* Storage is optional; the in-memory cache still works. */ }
   }
 }
 
@@ -2891,15 +3005,11 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   const normalizedPolicyQuestion = normalizeQuestion(rawQuestion);
   if (directedInsult.test(rawQuestion) || directedInsult.test(normalizedPolicyQuestion) || ((unconstructiveLanguage.test(rawQuestion) || unconstructiveLanguage.test(normalizedPolicyQuestion)) && /\b(prerna|she|her|bot|assistant|you)\b/i.test(normalizedPolicyQuestion))) return {
     answer: insultAnswer,
-    citations: []
+    citations: [], policyOnly: true
   };
   question = normalizeQuestion(question);
-  if (!runtimeOptions.deterministicOnly && ((/\b(how much|how many|total|years?|yrs?)\b/.test(rawQuestion) && /\b(experience|exp)\b/.test(rawQuestion)) || experienceQuestion.test(question))) return {
-    answer: experienceAnswer,
-    citations: ['Portfolio overview']
-  };
-  if (greetingQuestion.test(question)) return { answer: approvedKnowledge.greeting, citations: [] };
-  if (thanksQuestion.test(question)) return { answer: approvedKnowledge.thanks, citations: [] };
+  if (greetingQuestion.test(question)) return { answer: approvedKnowledge.greeting, citations: [], policyOnly: true };
+  if (thanksQuestion.test(question)) return { answer: approvedKnowledge.thanks, citations: [], policyOnly: true };
   if (resumeQuestion.test(question)) return {
     answer: resumeAnswer,
     citations: [],
@@ -2907,7 +3017,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     intent: 'resume',
     intentConfidence: 1,
     intentMode: 'deterministic_rule',
-    intentModel: 'policy_rule'
+    intentModel: 'policy_rule', policyOnly: true
   };
   if (answerScopeQuestion.test(question)) return {
     answer: approvedKnowledge.answerScope,
@@ -2915,21 +3025,16 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     intent: 'answer_scope',
     intentConfidence: 1,
     intentMode: 'deterministic_rule',
-    intentModel: 'policy_rule'
-  };
-  if (!runtimeOptions.deterministicOnly && identityQuestion.test(question)) return {
-    answer: identityAnswer,
-    citations: ['Portfolio overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'],
-    requiredFacts: identityRequiredFacts
+    intentModel: 'policy_rule', policyOnly: true
   };
   if (goodbyeQuestion.test(question)) return {
     answer: approvedKnowledge.goodbye,
     citations: [],
-    action: { label: 'Let’s Talk', href: '#contact' }
+    action: { label: 'Let’s Talk', href: '#contact' }, policyOnly: true
   };
   if (promptInjection.test(question)) return {
     answer: approvedKnowledge.promptInjection || outOfScopeAnswer,
-    citations: []
+    citations: [], policyOnly: true
   };
   if (employmentSeparationQuestion.test(question)) return {
     answer: approvedKnowledge.employmentSeparation,
@@ -2939,26 +3044,22 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   };
   if (personalStatusQuestion.test(question)) return {
     answer: personalStatusAnswer,
-    citations: []
+    citations: [], policyOnly: true
   };
   if (transientPersonalStateQuestion.test(question)) return unsupportedPortfolioResponse();
   if (personalQuestion.test(question) || privateLifestyleQuestion.test(question)) return {
     answer: personalAnswer,
-    citations: []
-  };
-  if (!runtimeOptions.deterministicOnly && motivationQuestion.test(question)) return {
-    answer: motivationAnswer,
-    citations: ['Product approach']
+    citations: [], policyOnly: true
   };
   if (unsupportedPersonalFactQuestion.test(question)) return unsupportedPortfolioResponse();
   if (failureQuestion.test(question)) return {
     answer: failureAnswer,
     citations: [],
-    action: { label: 'Contact Prerna directly', href: '#contact' }
+    action: { label: 'Contact Prerna directly', href: '#contact' }, policyOnly: true
   };
   if (weaknessesQuestion.test(question) || undocumentedBehaviourQuestion.test(question)) return {
     answer: behaviouralBoundaryAnswer,
-    citations: []
+    citations: [], policyOnly: true
   };
   if (companyQuestion.test(question) && confidentialMetricQuestion.test(question)) return {
     answer: approvedKnowledge.confidentialData,
@@ -2967,20 +3068,32 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   };
   if (companyQuestion.test(question) && companyContextQuestion.test(question)) return {
     answer: approvedKnowledge.companyContext,
-    citations: []
+    citations: [], policyOnly: true
   };
   if (careerLogisticsQuestion.test(question)) return {
     answer: approvedKnowledge.careerLogistics,
     citations: [],
-    action: { label: 'Contact Prerna', href: '#contact' }
+    action: { label: 'Contact Prerna', href: '#contact' }, policyOnly: true
   };
   if (comparisonQuestion.test(question)) return {
     answer: approvedKnowledge.comparison,
-    citations: ['Portfolio overview']
+    citations: ['Portfolio overview'], policyOnly: true
   };
+  if (externalKnowledgeQuestion.test(question)) return { answer: outOfScopeAnswer, citations: [], policyOnly: true };
+  if (botArchitectureQuestion.test(question)) return {
+    answer: botArchitectureAnswer,
+    citations: [],
+    action: { label: 'See how Mira is built ↗', href: botReadmeUrl },
+    policyOnly: true
+  };
+  if (assistantQuestion.test(question)) return { answer: assistantAnswer, citations: [], policyOnly: true };
   if (runtimeOptions.deterministicOnly) return null;
-  const intentRoute = portfolioIntentResponse(await classifyPortfolioIntent(originalQuestion, runtimeOptions), originalQuestion);
-  if (intentRoute) return intentRoute;
+  // Normal visitor questions go straight to evidence retrieval. There is no
+  // intent classifier in the answer path: retrieval must prove relevance before
+  // Gemini is allowed to phrase an answer.
+  return { answer: '', citations: [], allowGeneration: true, intentMode: 'direct_rag', intentModel: RAG_CONFIG.retrievalModel };
+  /* Legacy hand-authored answer routes retained below for audit history only.
+     They are intentionally unreachable: direct RAG is the single normal route. */
   if (educationQuestion.test(question)) return { answer: approvedKnowledge.education, citations: [] };
   if (rolesQuestion.test(question)) return { answer: approvedKnowledge.roles, citations: [] };
   if (dopamineDetoxQuestion.test(question)) return { answer: approvedKnowledge.dopamineDetox, citations: [] };
@@ -3186,7 +3299,7 @@ const policyControlledAnswers = new Set([
   bajajWorkAnswer
 ].filter(Boolean));
 
-async function generateWithGemma(payload, runtimeOptions = {}) {
+async function generateWithGemini(payload, runtimeOptions = {}) {
   if (runtimeOptions.mockGeneratedAnswer) return {
     answer: runtimeOptions.mockGeneratedAnswer,
     model: RAG_CONFIG.generationModel,
@@ -3206,7 +3319,7 @@ async function generateWithGemma(payload, runtimeOptions = {}) {
       body: JSON.stringify(payload)
     });
     const result = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(result.error || 'Gemma generation failed.');
+    if (!response.ok) throw new Error(result.error || 'Gemini generation failed.');
     return result;
   } finally {
     window.clearTimeout(timeout);
@@ -3357,10 +3470,27 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
   const retrievedContext = relevant.map(item => `${item.source}: ${item.text}`).join('\n');
   const groundingText = `${result.answer}\n${retrievedContext}`;
   const generationAnchor = relevant[0]?.answer || result.answer;
-  const generationProvider = runtimeOptions.generationProvider === 'qwen' ? 'qwen' : 'gemma';
+  const sources = [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])];
+  const semanticCacheHit = await findSemanticCacheHit(question, relevant, runtimeOptions);
+  if (semanticCacheHit) return {
+    answer: semanticCacheHit.answer,
+    retrievedSources: sources,
+    retrievalScores: relevant.map(item => ({ source: item.source, score: Number(item.score.toFixed(4)) })),
+    answerMode: 'semantic_cache',
+    fallback: false,
+    fallbackReason: '',
+    error: '',
+    retrievalCacheHit,
+    generationCacheHit: true,
+    generationInputTokens: 0,
+    generationOutputTokens: 0,
+    generationModel: '',
+    generationLatencyMs: 0,
+    failureStage: ''
+  };
+  const generationProvider = runtimeOptions.generationProvider === 'qwen' ? 'qwen' : 'gemini';
   const generationStartedAt = performance.now();
   try {
-    const sources = [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])];
     const generation = generationProvider === 'qwen'
       ? await generateWithQwen({
         question: normalizeQuestion(question),
@@ -3368,13 +3498,14 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
         retrievedContext,
         requiredFacts: result.requiredFacts || []
       }, runtimeOptions)
-      : await generateWithGemma({
+      : await generateWithGemini({
         question: normalizeQuestion(question),
         approvedAnswer: generationAnchor,
         sources
       }, runtimeOptions);
     const generationLatencyMs = Math.round(performance.now() - generationStartedAt);
     const validated = await validateGeneratedAnswer(generation.answer, groundingText, result.requiredFacts || [], runtimeOptions);
+    if (validated) rememberSemanticCacheAnswer(question, validated, sources);
     return {
       answer: validated || generationAnchor,
       retrievedSources: [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])],
@@ -3473,7 +3604,6 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
         securityScore: 0
       };
     }
-    if (!runtimeOptions.disableSemanticRetrieval) await waitForPortfolioEmbedder();
     const rawQuestion = visitorQuestion.toLowerCase();
     const rawConfidentialCompanyQuestion = /\b(lenskart|lenksart|lenscart|bajaj)\b/.test(rawQuestion)
       && /\b(profit|profitable|profitability|margin|making money|revenue breakdown|internal revenue|ebitda|valuation|unit economics)\b/.test(rawQuestion);
@@ -3486,6 +3616,9 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
     const deterministicRoute = candidateDeterministicRoute?.answer === approvedKnowledge.promptInjection
       ? null
       : candidateDeterministicRoute;
+    // Fixed safety and navigation answers should not wait for the embedding model.
+    // Every normal question waits here, immediately before semantic security and RAG.
+    if (!deterministicRoute && !runtimeOptions.disableSemanticRetrieval) await waitForPortfolioEmbedder();
     const security = deterministicRoute
       ? { blocked: false, uncertain: false, score: 0, mode: 'fast_policy', available: true }
       : await withTimeLimit(

@@ -1698,8 +1698,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-14.9"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-14.9"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-14.10"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-14.10"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2296,7 +2296,7 @@ approvedResumeDocuments.forEach(document => (document.sections || []).forEach(se
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-14.9',
+  rulesVersion: '2026-10-14.10',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2558,7 +2558,6 @@ function getLexicalRelevance(question, item) {
 }
 
 const PROFESSIONAL_EVIDENCE_BACKSTOP = Object.freeze([
-  'Profile · Work style',
   'Profile · Pace and ambiguity'
 ]);
 
@@ -2570,8 +2569,16 @@ function isShortProfessionalAssessment(question) {
 }
 
 function selectEvidenceCandidates(matches, question = '') {
+  const matchBySource = new Map(matches.map(item => [item.source, item]));
+  const backstop = isShortProfessionalAssessment(question)
+    ? PROFESSIONAL_EVIDENCE_BACKSTOP.map(source => matchBySource.get(source)).filter(Boolean)
+    : [];
   const topScore = Number(matches?.[0]?.score || 0);
-  if (!topScore || topScore < RAG_CONFIG.evidenceCandidateFloor) return [];
+  // If MiniLM is still loading or a terse professional adjective has little
+  // lexical overlap, a documented work-style passage remains valid recall
+  // context. It cannot produce an answer on its own: Gemini must still find
+  // it supports the question or return NO_EVIDENCE.
+  if (!topScore || topScore < RAG_CONFIG.evidenceCandidateFloor) return backstop;
   // Keep enough semantically adjacent evidence for Gemini to disambiguate a
   // natural question, without treating every portfolio passage as context.
   const relativeFloor = Math.max(RAG_CONFIG.evidenceCandidateFloor, topScore - 0.18);
@@ -2582,9 +2589,7 @@ function selectEvidenceCandidates(matches, question = '') {
   // verbatim in a resume (for example, a question about pace). Widen recall to
   // a fixed group of first-party work-style evidence; this only selects context.
   // Gemini and the grounding check still decide whether any claim is supportable.
-  if (!isShortProfessionalAssessment(question)) return candidates;
-  const matchBySource = new Map(matches.map(item => [item.source, item]));
-  const backstop = PROFESSIONAL_EVIDENCE_BACKSTOP.map(source => matchBySource.get(source)).filter(Boolean);
+  if (!backstop.length) return candidates;
   const preferred = candidates.filter(item => !PROFESSIONAL_EVIDENCE_BACKSTOP.includes(item.source));
   const merged = [...backstop, ...preferred, ...candidates];
   return [...new Map(merged.map(item => [item.source, item])).values()]

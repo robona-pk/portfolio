@@ -106,7 +106,7 @@ flowchart TD
 ## Tech stack—in plain English
 
 - 🖥️ **Interface:** HTML, CSS, and JavaScript create the floating chat window.
-- 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js`; the resume is indexed as source-document sections, alongside portfolio passages in `index.html`.
+- 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js`; the resume is indexed as source-document chunks based on its original summary and achievement bullets, alongside portfolio passages in `index.html`.
 - ⚡ **Direct handling:** safety boundaries and actions such as resume access bypass retrieval and generation.
 - 🛡️ **Guardrail routing:** private, unsafe, abusive, confidential, unrelated, and injection attempts receive controlled responses without reaching open-ended generation.
 - ⏳ **Readiness gate:** the system briefly waits for MiniLM to register before a semantic request runs. If it never becomes available, the bot fails closed instead of guessing.

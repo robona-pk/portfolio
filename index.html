@@ -1698,8 +1698,8 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-14.6"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-14.6"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-14.7"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-14.7"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2296,7 +2296,7 @@ approvedResumeDocuments.forEach(document => (document.sections || []).forEach(se
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-14.6',
+  rulesVersion: '2026-10-14.7',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -3402,7 +3402,10 @@ async function validateGeneratedAnswer(answer, groundingText, requiredFacts = []
   const normalizedAnswer = clean.toLowerCase().replace(/\s+/g, ' ');
   if (requiredFacts.some(fact => !normalizedAnswer.includes(String(fact).toLowerCase()))) return null;
   const properNouns = clean.match(/\b[A-Z][a-z]{2,}\b/g) || [];
-  if (properNouns.some(name => !['Prerna', 'She', 'Her', 'At'].includes(name) && !groundingText.toLowerCase().includes(name.toLowerCase()))) return null;
+  // Sentence-leading words such as “Yes” are capitalised but are not entities.
+  // Reject only ungrounded entity-like names, not ordinary response language.
+  const capitalisedNonEntities = new Set(['A', 'An', 'And', 'At', 'For', 'Her', 'I', 'It', 'No', 'She', 'That', 'The', 'This', 'Yes']);
+  if (properNouns.some(name => !capitalisedNonEntities.has(name) && !groundingText.toLowerCase().includes(name.toLowerCase()))) return null;
 
   const sentences = clean.match(/[^.!?]+[.!?]?/g)?.map(sentence => sentence.trim()).filter(Boolean) || [];
   const supportSegments = groundingText.split(/\n+/).map(segment => segment.trim()).filter(Boolean);

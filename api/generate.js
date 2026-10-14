@@ -35,13 +35,25 @@ const SOURCE_LIBRARY = Object.freeze({
     answer: 'At Lenskart, Prerna leads strategy for Lenskart@Home and has delivered growth work across conversion, customer journeys, pricing, retention, store attribution, and lead routing.',
     text: 'At Lenskart, Prerna tripled booking funnel conversion from 1.1% to 3.5% through structured experimentation. She transformed an at-home eye-test journey into an eyewear home trial and scaled it across five cities, increasing bookings 7%. She established channel-specific pricing, launched lens-only ordering, pioneered a deterministic store-attribution engine that recovered 3.7% of lost demand at zero CAC, lifted NPS from 41 to 60 with post-delivery calls, and built a customer-value lead-routing model that lifted average transaction value 10% and generated ₹50L in two months.'
   },
-  'Resume · Bajaj Finserv Health': {
-    answer: 'At Bajaj Finserv Health, Prerna led a four-person APM team while launching a ₹28L diabetes wellness product, and shipped an OCR + NER pre-authorisation pipeline that raised throughput 26% and saved ₹17L annually.',
-    text: 'At Bajaj Finserv Health, Prerna increased doctor-search CTR 18% and annual revenue 11.6% through a quality-ranking algorithm. She took a diabetes wellness product from 0 to 1, generating ₹28L within five months while leading a four-person APM team. She created ₹7L+ incremental MRR from personalised health insights, shipped an ML-powered OCR + NER document-extraction pipeline for insurance pre-authorisation that increased throughput 26% and saved ₹17L annually, drove 15K+ new users and 44K+ Health ID registrations through ABHA, and added 50K+ monthly traffic through multilingual B2B2C partner journeys.'
+  'Resume · Bajaj — Product outcomes': {
+    answer: 'At Bajaj Finserv Health, Prerna improved doctor-search CTR 18%, generated ₹7L+ incremental MRR from personalised health insights, and grew Health ID and partner-led journeys.',
+    text: 'At Bajaj Finserv Health, Prerna increased doctor-search CTR 18% and annual revenue 11.6% through a quality-ranking algorithm. She created ₹7L+ incremental MRR from personalised health insights, drove 15K+ new users and 44K+ Health ID registrations through ABHA, and added 50K+ monthly traffic through multilingual B2B2C partner journeys.'
   },
-  'Resume · Skills': {
-    answer: 'Prerna’s resume includes product strategy, experimentation, analytics, AI/LLM product use cases, and prompt design and evaluations.',
-    text: 'Product strategy: product roadmapping, PRDs, go-to-market planning, cross-functional stakeholder management, API integration, AI/LLM product use cases, prompt design and evaluations, and behavioural analytics. Growth: funnel optimisation, A/B testing and MVPs, user-journey mapping, experimentation frameworks, conversion-rate optimisation, cohort analysis, retention and engagement, and feature adoption. Analytics: GA4, Microsoft Clarity, Julius AI, CleverTap, SQL, Excel app scripts/VBA, Tableau, and Mixpanel.'
+  'Resume · Bajaj — Product leadership': {
+    answer: 'At Bajaj Finserv Health, Prerna led a four-person APM team while taking a diabetes wellness product from 0 to 1; it generated ₹28L within five months.',
+    text: 'At Bajaj Finserv Health, Prerna took a diabetes wellness product from 0 to 1, generating ₹28L within five months while leading a four-person APM team.'
+  },
+  'Resume · Bajaj — AI automation': {
+    answer: 'Prerna shipped an ML-powered OCR + NER document-extraction pipeline for insurance pre-authorisation at Bajaj Finserv Health; it raised throughput 26% and saved ₹17L annually.',
+    text: 'At Bajaj Finserv Health, Prerna shipped an ML-powered OCR + NER document-extraction pipeline for insurance pre-authorisation. It increased throughput 26% and saved ₹17L annually.'
+  },
+  'Resume · Skills — Product and analytics': {
+    answer: 'Prerna’s resume includes product roadmapping, PRDs, go-to-market planning, experimentation, behavioural analytics, funnel optimisation, A/B testing, and cohort analysis.',
+    text: 'Product strategy: product roadmapping, PRDs, go-to-market planning, cross-functional stakeholder management, API integration, and behavioural analytics. Growth: funnel optimisation, A/B testing and MVPs, user-journey mapping, experimentation frameworks, conversion-rate optimisation, cohort analysis, retention and engagement, and feature adoption. Analytics: GA4, Microsoft Clarity, Julius AI, CleverTap, SQL, Excel app scripts/VBA, Tableau, and Mixpanel.'
+  },
+  'Resume · Skills — AI product practice': {
+    answer: 'Prerna’s resume includes AI/LLM product use cases, prompt design and evaluations, and API integration alongside product strategy and analytics.',
+    text: 'Prerna’s product strategy skills include API integration, AI/LLM product use cases, prompt design and evaluations, and behavioural analytics.'
   },
   'Profile · Pace and ambiguity': {
     answer: 'Her work shows signs of high agency: she finds ambiguous problems through data and customer conversations, turns them into focused experiments, and stays involved through iteration. That suggests comfort with ownership and pace, though culture fit is always mutual.',

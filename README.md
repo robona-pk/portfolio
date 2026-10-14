@@ -116,7 +116,7 @@ flowchart TD
 - ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
 - ⚡ **Latency controls:** direct safety/actions avoid AI generation; valid cache hits avoid Gemini; MiniLM is reused after its first load; semantic safety has an 8-second ceiling and Gemini has a 10-second ceiling before an approved fallback is shown.
-- 🧪 **Golden evaluation dataset:** 131 fixed test cases define the expected facts, sources, intent, response type, and safety behaviour.
+- 🧪 **Golden evaluation dataset:** a growing set of fixed test cases defines the expected facts, sources, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
 - 🚀 **Hosting:** GitHub + Vercel. The Gemini key is stored as a server-side Vercel environment variable.
 

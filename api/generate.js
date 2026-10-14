@@ -56,7 +56,7 @@ const SOURCE_LIBRARY = Object.freeze({
     text: 'Prerna’s product strategy skills include API integration, AI/LLM product use cases, prompt design and evaluations, and behavioural analytics.'
   },
   'Profile · Pace and ambiguity': {
-    answer: 'Her work shows signs of high agency: she finds ambiguous problems through data and customer conversations, turns them into focused experiments, and stays involved through iteration. That suggests comfort with ownership and pace, though culture fit is always mutual.',
+    answer: 'Her documented work suggests comfort with pace and ambiguity: she uses data and customer conversations to clarify problems, turns insights into focused experiments, and stays involved through iteration. Culture fit is always mutual.',
     text: 'Evidence from Prerna’s work shows ownership and an iterative operating style: she uses data and customer conversations to clarify ambiguous problems, turns insights into focused experiments, and stays involved through iteration. This supports high agency and comfort with pace and ambiguity; culture fit remains mutual.'
   },
   'Profile · Product skills': {

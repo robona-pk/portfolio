@@ -50,7 +50,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     },
     {
       id: 'pace-and-ambiguity', source: 'Profile · Pace and ambiguity', topics: ['work_style', 'career', 'product_skills'], retrievalHints: ['high agency', 'fast paced', 'fast pace', 'ownership', 'initiative', 'proactive', 'autonomous', 'adaptable', 'startup', 'culture fit', 'ambiguity'],
-      answer: 'Her work shows signs of high agency: she finds ambiguous problems through data and customer conversations, turns them into focused experiments, and stays involved through iteration. That suggests comfort with ownership and pace, though culture fit is always mutual.',
+      answer: 'Her documented work suggests comfort with pace and ambiguity: she uses data and customer conversations to clarify problems, turns insights into focused experiments, and stays involved through iteration. Culture fit is always mutual.',
       facts: 'Evidence from Prerna’s work shows ownership and an iterative operating style: she uses data and customer conversations to clarify ambiguous problems, turns insights into focused experiments, and stays involved through iteration. This supports high agency and comfort with pace and ambiguity; culture fit remains mutual.'
     },
     {

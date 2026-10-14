@@ -39,27 +39,27 @@ window.ASK_PRERNA_KNOWLEDGE = {
   },
   factCards: [
     {
-      id: 'profile-overview', source: 'Profile · Overview', topics: ['profile', 'experience', 'career'],
+      id: 'profile-overview', source: 'Profile · Overview', topics: ['profile', 'experience', 'career'], retrievalHints: ['who is prerna', 'what does she do', 'bring to the table', 'value', 'candidate', 'hire', 'companies'],
       answer: 'Prerna is a Growth and Adoption Product Manager with 5+ years across e-commerce, health-tech, and insurance. Her work includes ₹6Cr+ in annualised impact at Lenskart and a ₹28L 0→1 wellness business at Bajaj Finserv Health.',
       facts: 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years of product experience across e-commerce, health-tech, and insurance. Her documented work includes ₹6Cr+ incremental annualised impact at Lenskart and a ₹28L zero-to-one wellness business at Bajaj Finserv Health.'
     },
     {
-      id: 'work-style', source: 'Profile · Work style', topics: ['work_style', 'product_skills'],
+      id: 'work-style', source: 'Profile · Work style', topics: ['work_style', 'product_skills'], retrievalHints: ['job', 'at work', 'performance', 'operator', 'pm', 'product manager', 'works'],
       answer: 'Prerna starts with data and customer conversations to understand where a journey is breaking. She turns the insight into a hypothesis, validates it through the smallest useful experiment, and iterates using customer and business outcomes.',
       facts: 'Prerna studies product data and speaks with customers to locate the real break in a journey. She turns the insight into a measurable hypothesis, tests the smallest useful intervention, and iterates using both customer and business outcomes.'
     },
     {
-      id: 'pace-and-ambiguity', source: 'Profile · Pace and ambiguity', topics: ['work_style', 'career', 'product_skills'],
+      id: 'pace-and-ambiguity', source: 'Profile · Pace and ambiguity', topics: ['work_style', 'career', 'product_skills'], retrievalHints: ['high agency', 'fast paced', 'fast pace', 'ownership', 'initiative', 'proactive', 'autonomous', 'adaptable', 'startup', 'culture fit', 'ambiguity'],
       answer: 'Her work shows signs of high agency: she finds ambiguous problems through data and customer conversations, turns them into focused experiments, and stays involved through iteration. That suggests comfort with ownership and pace, though culture fit is always mutual.',
       facts: 'Evidence from Prerna’s work shows ownership and an iterative operating style: she uses data and customer conversations to clarify ambiguous problems, turns insights into focused experiments, and stays involved through iteration. This supports high agency and comfort with pace and ambiguity; culture fit remains mutual.'
     },
     {
-      id: 'product-skills', source: 'Profile · Product skills', topics: ['product_skills', 'work_style'],
+      id: 'product-skills', source: 'Profile · Product skills', topics: ['product_skills', 'work_style'], retrievalHints: ['skilled', 'competent', 'capability', 'capabilities', 'skillset', 'what can she do'],
       answer: 'Prerna’s PM toolkit covers discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, and cross-functional execution. She uses data and AI-assisted prototyping to move from insight to measurable impact.',
       facts: 'Approved product capabilities: discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, cross-functional execution, and AI-assisted prototyping.'
     },
     {
-      id: 'analytics-and-metrics', source: 'Profile · Analytics and metrics', topics: ['analytics', 'product_skills', 'tools'],
+      id: 'analytics-and-metrics', source: 'Profile · Analytics and metrics', topics: ['analytics', 'product_skills', 'tools'], retrievalHints: ['track metrics', 'metrics', 'kpi', 'kpis', 'measurement', 'measure', 'dashboard', 'funnel'],
       answer: 'Prerna defines product and business metrics, tracks funnels and cohorts, and evaluates experiments across activation, conversion, retention, CTR, NPS, revenue, and operational outcomes.',
       facts: 'Prerna defines product and business metrics, tracks funnels and cohorts, and evaluates experiments using activation, conversion, retention, click-through rate, NPS, revenue, and operational outcomes.'
     },
@@ -69,7 +69,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
       facts: 'Analytics tools: SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, and Python. Builder tools: Figma, Notion, Jira, Codex, Claude Code, GitHub, Vercel, Google Apps Script, Gemini, MiniLM, and Transformers.js.'
     },
     {
-      id: 'personality', source: 'Profile · Personality', topics: ['personality'],
+      id: 'personality', source: 'Profile · Personality', topics: ['personality'], retrievalHints: ['loud', 'person', 'personality', 'character', 'like as a person'],
       answer: 'People may experience Prerna as energetic and persistent. She cares about meaningful problems, learns from people and new perspectives, and prefers steady progress to quick wins.',
       facts: 'Approved personal qualities: energetic, persistent, interested in meaningful problems, open to learning from people and new perspectives, and oriented toward steady progress.'
     },

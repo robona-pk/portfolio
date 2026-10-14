@@ -2276,7 +2276,7 @@ approvedFactCards.forEach(card => portfolioKnowledge.push({
   source: card.source,
   answer: card.answer,
   text: card.facts,
-  tags: [...(card.topics || []), card.id].join(' '),
+  tags: [...(card.topics || []), ...(card.retrievalHints || []), card.id].join(' '),
   topics: card.topics || [],
   factCardId: card.id
 }));
@@ -2287,7 +2287,6 @@ const RAG_CONFIG = Object.freeze({
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   relevanceSemanticThreshold: 0.42,
-  relevanceStrongSemanticThreshold: 0.64,
   relevanceLexicalCoverageThreshold: 0.25,
   relevanceLexicalMinimumMatches: 1,
   maximumQuestionCharacters: 500,
@@ -2519,7 +2518,7 @@ function editDistance(left, right) {
 }
 
 const RETRIEVAL_GENERIC_TERMS = new Set([
-  'about','and','answer','anything','are','background','can','could','currently','details','did','does','doing','experience','explain','for','from','give','has','have','help','her','how','information','is','it','know','manager','me','my','now','of','on','or','please','portfolio','prerna','product','really','role','she','something','tell','the','their','this','to','was','were','what','when','where','which','who','why','with','work','would','you'
+  'about','and','answer','anything','are','background','can','could','currently','details','did','does','doing','experience','explain','for','from','give','has','have','help','her','high','how','information','is','it','know','manager','me','my','now','of','on','or','please','portfolio','prerna','product','really','role','she','something','tell','the','their','this','to','was','were','what','when','where','which','who','why','with','work','would','you'
 ]);
 
 function getRetrievalTerms(question) {
@@ -2542,12 +2541,11 @@ function getLexicalRelevance(question, item) {
 function isRelevantRetrievalMatch(item) {
   const lexicalMatch = item.lexicalScore >= RAG_CONFIG.relevanceLexicalMinimumMatches
     && item.lexicalCoverage >= RAG_CONFIG.relevanceLexicalCoverageThreshold;
-  if (!item.semantic) return lexicalMatch;
-  // A clear semantic match may use recruiter vocabulary that is absent from the
-  // fact card (for example, "high agency" or "fast paced"). Otherwise require
-  // both semantic and lexical support so unrelated questions fail closed.
-  return item.score >= RAG_CONFIG.relevanceStrongSemanticThreshold
-    || (lexicalMatch && item.score >= RAG_CONFIG.relevanceSemanticThreshold);
+  // Semantic similarity alone is not enough: every answer needs at least one
+  // meaningful match in the supporting fact card or its retrieval hints. This
+  // prevents an adjacent concept such as discipline from becoming dopamine detox.
+  if (!lexicalMatch) return false;
+  return item.semantic ? item.score >= RAG_CONFIG.relevanceSemanticThreshold : true;
 }
 
 function retrievePortfolioContext(question) {

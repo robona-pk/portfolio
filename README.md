@@ -61,7 +61,7 @@ flowchart TD
     Q --> I{"🛡️ Injection check"}
     I -- "Attack or uncertain" --> G
     I -- "Safe" --> H["🔎 RAG retrieval<br/>Approved fact cards"]
-    H --> P{"🎯 Relevant enough?<br/>Strong meaning or meaning + terms"}
+    H --> P{"🎯 Relevant enough?<br/>Meaning + evidence terms"}
     P -- "No" --> F["🤷 Approved fallback<br/>Contact Prerna directly"]
     P -- "Yes" --> C{"⚡ Evidence-aware<br/>semantic cache hit?"}
     C -- "Same evidence + close question" --> M["💬 Reuse validated answer"]
@@ -110,7 +110,7 @@ flowchart TD
 - ⚡ **Direct handling:** safety boundaries and actions such as resume access bypass retrieval and generation.
 - 🛡️ **Guardrail routing:** private, unsafe, abusive, confidential, unrelated, and injection attempts receive controlled responses without reaching open-ended generation.
 - ⏳ **Readiness gate:** the system briefly waits for MiniLM to register before a semantic request runs. If it never becomes available, the bot fails closed instead of guessing.
-- 🔎 **Retrieval:** every normal portfolio question uses MiniLM to find passages with similar meaning. A strict relevance gate requires either a very strong semantic match or both meaning and meaningful topic-word coverage. A passage is rejected if it is merely the closest bad match.
+- 🔎 **Retrieval:** every normal portfolio question uses MiniLM to find passages with similar meaning. A strict relevance gate requires semantic similarity **and** at least one meaningful evidence term or retrieval hint. A passage is rejected if it is merely the closest bad match.
 - ⚡ **Evidence-aware semantic cache:** common Golden Dataset and real-world question variants are pre-seeded. A cached answer is reused only when the same supporting fact card is retrieved again; it never bypasses evidence checks.
 - 🤖 **Generation:** Gemini Flash-Lite writes short responses for supported, open-ended questions through `/api/generate`.
 - ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
@@ -131,7 +131,7 @@ flowchart TD
 | **Direct RAG** | The normal path: retrieve approved evidence before Gemini may answer, with no separate intent classifier. |
 | **Evidence-aware semantic cache** | A cache of validated answers that can respond quickly only when the new question is semantically close **and** its retrieved source IDs still match the cached evidence. |
 | **Readiness gate** | A short wait that prevents an evaluation or visitor question from running before MiniLM is available. |
-| **Hybrid retrieval** | MiniLM measures semantic similarity, while lexical coverage checks that meaningful question topics appear in the evidence. A very strong semantic match can also pass for recruiter vocabulary not literally written in a fact card. |
+| **Hybrid retrieval** | MiniLM measures semantic similarity, while lexical coverage checks that meaningful question topics—or approved recruiter-language retrieval hints—appear in the evidence. Both must pass. |
 | **Relevance gate** | The acceptance rule that rejects the nearest passage when it does not genuinely answer the question. Rejected questions receive the safe fallback and contact CTA. |
 | **Generator** | Gemini writes a concise answer using only the approved answer and retrieved evidence. |
 | **Grounding checks** | Output checks verify that Gemini's claims are supported by the retrieved sources. |

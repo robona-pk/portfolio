@@ -46,7 +46,7 @@ Growth & Adoption Product Manager | Activation • Conversion • Retention • 
 - Open-ended questions can use **Gemini Flash-Lite** to phrase concise, natural answers.
 - Gemini runs behind a protected Vercel endpoint; its API key is never exposed in the browser.
 
-Mira is a **guarded RAG system**. Privacy, safety, confidential-data, and direct navigation requests use fixed approved responses. Every normal question about Prerna retrieves evidence first. Gemini then answers only if the shortlisted evidence directly supports that specific question; otherwise Mira uses the approved fallback.
+Mira is a **guarded, evidence-grounded assistant**. Privacy, safety, confidential-data, and direct navigation requests use fixed approved responses. For every normal question, the protected backend gives Gemini the compact approved knowledge base; Gemini must select supporting sources before it may answer. Missing evidence produces the approved fallback.
 
 ## How one question becomes an answer
 
@@ -57,20 +57,17 @@ flowchart TD
     A["👤 Visitor asks a question"] --> B["🧹 Normalise spelling,<br/>shorthand and hidden characters"]
     B --> S{"🛡️ Safety / privacy / direct action?"}
     S -- "Yes" --> G["✅ Approved response or action"]
-    S -- "No" --> Q["⏳ MiniLM readiness gate"]
-    Q --> I{"🛡️ Injection check"}
-    I -- "Attack or uncertain" --> G
-    I -- "Safe" --> H["🔎 RAG retrieval<br/>Portfolio + resume + interview evidence"]
-    H --> P{"🎯 Evidence shortlist<br/>broad semantic recall"}
-    P -- "No candidates" --> F["🤷 Approved fallback<br/>Contact Prerna directly"]
-    P -- "Candidates" --> J{"📌 Approved structured fact<br/>in the shortlist?"}
-    J -- "Yes" --> D["🤖 Gemini evidence decision<br/>Fact + stance + confidence"]
-    D -- "Supported" --> M
-    D -- "Unclear / below 0.72" --> N
-    J -- "No" --> C{"⚡ Evidence-aware<br/>semantic cache hit?"}
-    C -- "Same evidence + close question" --> M["💬 Reuse validated answer"]
-    C -- "No" --> K["🤖 Gemini Flash-Lite<br/>Phrases only retrieved evidence"]
-    K --> L{"🔍 Directly supported<br/>and grounded?"}
+    S -- "No" --> C{"⚡ Evidence-bound<br/>near-match cache hit?"}
+    C -- "Validated near-duplicate" --> M["💬 Reuse validated answer"]
+    C -- "No" --> K["🤖 Protected Gemini call<br/>Approved knowledge base only"]
+    K --> I{"🛡️ Injection or unsupported?"}
+    I -- "Attack" --> G
+    I -- "No evidence / below 0.72" --> F["🤷 Approved fallback<br/>Contact Prerna directly"]
+    I -- "Supported" --> P["🎯 Select up to 3<br/>supporting sources"]
+    P --> J{"📌 Structured fact?"}
+    J -- "Yes" --> D["Fact + stance + confidence<br/>Server returns approved wording"]
+    J -- "No" --> L{"🔍 Generated answer<br/>directly grounded?"}
+    D --> M
     L -- "Yes" --> M
     L -- "No / unavailable" --> N["↩️ Approved fallback"]
     G --> O["📊 Record anonymous quality data"]
@@ -86,9 +83,9 @@ flowchart TD
     classDef output fill:#edf6dd,stroke:#5d7f25,color:#263611;
 
     class A,B visitor;
-    class S,I,P,J,C,L decision;
+    class S,I,J,C,L decision;
     class F,G policy;
-    class H,Q retrieval;
+    class P retrieval;
     class D,K,M ai;
     class G,N,O output;
 ```
@@ -98,14 +95,14 @@ flowchart TD
 | Question type | Example | Answered by |
 | --- | --- | --- |
 | Direct action | “Where is her resume?” | ✅ Approved response + link |
-| Work or recruiter question | “What impact did she drive at Lenskart?” | 🔎 RAG retrieval + 🤖 Gemini (or validated cache) |
-| Open-ended portfolio question | “How does customer research shape her decisions?” | 🔎 RAG route: retrieval + 🤖 Gemini |
+| Work or recruiter question | “What impact did she drive at Lenskart?” | 🤖 Gemini evidence selection + grounded answer (or validated cache) |
+| Open-ended portfolio question | “How does customer research shape her decisions?” | 🤖 Gemini selects approved evidence before answering |
 | Private or confidential | “What is Lenskart's profit margin?” | 🛡️ Deterministic guardrail |
 | Inappropriate or unsafe question | — | 🛡️ Respectful guardrail response |
 | Unrelated question | “Who is the US president?” | 🛡️ Deterministic scope boundary |
 | Missing evidence | An unpublished personal or work detail | 🤷 Safe fallback |
 
-> **Important:** The guardrail route is not RAG. The RAG route is specifically the sequence where Mira retrieves approved evidence and then gives that evidence to Gemini to phrase an answer. Gemini does not decide the facts, and unverified output is rejected.
+> **Important:** This pre-production version is no longer classic vector RAG. It uses **LLM-based evidence selection** over a compact approved knowledge base. Gemini chooses allowlisted sources, but it cannot add sources or facts, and unverified output is rejected.
 
 ## Tech stack—in plain English
 
@@ -113,14 +110,12 @@ flowchart TD
 - 📚 **Knowledge base:** portfolio passages, resume achievements, and verified interview-prep stories remain in `assets/chatbot-knowledge.js`. A pre-production pilot in `assets/mira-facts.js` adds governed facts with an approved claim, evidence references, answer, optional opposite/contrast answer, and approval status.
 - ⚡ **Direct handling:** safety boundaries and actions such as resume access bypass retrieval and generation.
 - 🛡️ **Guardrail routing:** private, unsafe, abusive, confidential, unrelated, and injection attempts receive controlled responses without reaching open-ended generation.
-- ⏳ **Readiness gate:** the system briefly waits for MiniLM to register before a semantic request runs. If it never becomes available, the bot fails closed instead of guessing.
-- 🔎 **Retrieval:** every normal portfolio question uses MiniLM to retrieve a small shortlist of source passages by meaning. Retrieval optimises for recall; it does not decide whether the question is supported.
-- ⚡ **Evidence-aware semantic cache:** Golden Dataset cases can pre-seed repeat answers. A cached answer is reused only when the same supporting source is retrieved again; it never bypasses evidence checks or becomes knowledge-base content.
-- 🤖 **Evidence decision:** when retrieval surfaces a governed fact, Gemini selects only among that small shortlist and returns the fact ID, question stance, and confidence. The server returns the approved answer or approved contrast; it does not let Gemini invent a new claim. Other supported evidence continues through grounded generation.
-- ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
+- ⚡ **Evidence-bound cache:** Golden Dataset cases pre-seed validated answers for exact or near-identical wording. A hit is allowed only while its approved sources still exist and the question stance matches; broader paraphrases go to Gemini.
+- 🤖 **Evidence selection:** Vercel sends the compact approved knowledge base to Gemini. Gemini must return allowlisted source names, confidence, and—where relevant—fact ID and stance before an answer is accepted.
+- ⚙️ **AI runtime:** Gemini runs behind a protected Vercel function. Visitors no longer download an embedding model or wait for WebGPU/model initialisation.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
-- ⚡ **Latency controls:** direct safety/actions avoid AI generation; valid cache hits avoid Gemini; MiniLM is reused after its first load; semantic safety has an 8-second ceiling and Gemini has a 14-second browser ceiling before an approved fallback is shown.
-- 🧪 **Local preview:** opening `index.html` directly cannot run the hosted Gemini endpoint. If retrieval identifies one clearly strongest approved passage, the preview shows its reviewed grounded answer; deployed pre-prod and production use the complete RAG → Gemini flow.
+- ⚡ **Latency controls:** direct safety/actions and valid cache hits avoid Gemini; other questions use one backend model call with a 14-second browser ceiling before an approved fallback is shown.
+- 🧪 **Local preview:** opening `index.html` directly cannot run the hosted Gemini endpoint, so open-ended questions fail closed. Deployed pre-production uses the complete evidence-selection flow.
 - 🧪 **Golden evaluation dataset:** a growing set of fixed test cases defines the expected facts, sources, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
 - 🚀 **Hosting:** GitHub + Vercel. The Gemini key is stored as a server-side Vercel environment variable.
@@ -131,13 +126,11 @@ flowchart TD
 | --- | --- |
 | **Knowledge base** | The approved facts and portfolio passages the bot is allowed to use. |
 | **Guardrail route** | Deterministic rules and approved responses for privacy, confidentiality, abuse, irrelevant questions, and prompt injection. It does not use RAG. |
-| **RAG route** | For a supported open-ended question: retrieve approved evidence, give it to Gemini as context, then validate the generated answer against that evidence. |
+| **Classic vector RAG** | An embedding model retrieves a shortlist before an LLM answers. Mira used this previously; the current pre-production pilot removes that browser retrieval step. |
 | **Direct route** | Code that handles safety boundaries and clear actions such as resume access without asking Gemini. |
-| **Direct RAG** | The normal path: retrieve approved evidence before Gemini may answer, with no separate intent classifier. |
-| **Evidence-aware semantic cache** | A cache of validated answers that can respond quickly only when the new question is semantically close **and** its retrieved source IDs still match the cached evidence. |
-| **Readiness gate** | A short wait that prevents an evaluation or visitor question from running before MiniLM is available. |
-| **Semantic retrieval** | MiniLM finds the most similar approved portfolio, resume, and interview-prep passages, even when a visitor uses different wording. It is a shortlist, not a final answer. |
-| **Evidence decision** | Gemini is instructed to answer only when a shortlisted passage directly supports the question; no support produces a safe fallback. |
+| **LLM-based evidence selection** | Gemini receives the compact approved knowledge base and must identify allowlisted supporting sources before answering. |
+| **Evidence-bound near-match cache** | A conservative cache for validated exact or near-identical questions. It checks question stance and that every attached source remains approved. |
+| **Evidence decision** | Gemini is instructed to select approved support and answer only when confidence is at least 0.72; no support produces a safe fallback. |
 | **Structured fact** | An approved claim with evidence references, fixed answer wording, optional contrast wording, and test-only paraphrases. Test examples are not indexed for retrieval. |
 | **Question stance** | Whether a question asks for the documented fact (`affirm`), asks whether its opposite is true (`negate`), or is too unclear to answer safely. |
 | **Generator** | Gemini writes a concise answer using only the retrieved evidence. |
@@ -290,21 +283,22 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 | **19. Broader evidence and production parity · Production** | Portfolio and resume evidence covered outcomes, but richer interview stories were outside retrieval and old classifier code still remained in the bundle | Questions about decision-making, prioritisation, setbacks, stakeholder management, pace, and metrics could lack the most specific evidence | Added the updated resume and verified interview-prep stories as retrieval chunks, expanded pace regressions, removed the unused intent-classifier code, and aligned the eval console and documentation with the direct-RAG architecture. |
 | **20. Ask Mira identity · Production** | The assistant was still presented as “Ask Prerna” | A named assistant felt more distinctive, while mixed labels in the UI and video made the product appear unfinished | Renamed the assistant to **Mira** across the portfolio UI, supporting copy, documentation, and product video so one identity is used consistently. |
 | **21. Structured fact and stance pilot · Pre-production** | Retrieval could find relevant prose but opposite wording could still be rejected or answered inconsistently | “Is she slow?” and “What is her pace like?” refer to the same evidence but require different framing | Added a governed-fact registry, shortlist-level Gemini fact/stance decisions, server-controlled approved answers and contrasts, fact-aware caching, and paraphrase/opposite/hard-negative evaluations. The global intent classifier remains removed. This stage must pass pre-production evaluation before release. |
+| **22. Remove browser MiniLM · Pre-production** | MiniLM still downloaded and initialised on each visitor’s device before open-ended questions | At this portfolio’s expected scale (up to roughly 300 peak visitors), the 20–30 second cold path, device variability, and retrieval errors outweighed the small token saving | Removed the browser embedding download. The protected Gemini call now selects allowlisted evidence from the compact approved knowledge base and answers in one step. A conservative evidence-bound near-match cache handles validated repeats; deterministic guardrails, output validation, confidence thresholds, rate limits, telemetry, and fail-closed fallbacks remain. |
 
 ## Cost and trade-offs
 
 - **Model cost:** expected to remain ₹0 while the project stays within Gemini's free-tier quota; telemetry also records a paid-rate estimate for visibility.
-- **Fast path:** approved safety/actions return without Gemini; evidence-aware cache hits return without Gemini only after the retrieved source IDs match.
+- **Fast path:** approved safety/actions return without Gemini; evidence-bound cache hits return without Gemini only for validated near-identical wording, matching stance, and still-approved source IDs.
 - **Trade-off:** open-ended generation now depends on a network service and its quota instead of the visitor's device.
-- **Retrieval trade-off:** every normal question pays the MiniLM retrieval cost. This is intentional: it removes a separate intent guess and makes the evidence gate the single source of truth.
+- **Evidence-selection trade-off:** Gemini receives more approved context per uncached question, increasing input tokens slightly. In return, visitors avoid browser model downloads and Gemini handles paraphrases, misspellings, negative wording, and evidence selection together.
 - **Compatibility:** generation no longer requires WebGPU; if Gemini fails or times out, the bot returns the approved fallback rather than the nearest unrelated answer.
 - **Privacy:** only public portfolio questions and allowlisted evidence should reach Gemini. Email addresses and phone numbers are redacted server-side.
 - **Free-tier caveat:** Google's free tier is quota-based, not guaranteed as a one-month trial, and its data-use terms differ from the paid tier. Recheck current terms before production use.
 
 ## Is this technically RAG?
 
-**Yes—for normal portfolio questions.** Mira retrieves relevant approved portfolio evidence and supplies it to Gemini before an answer is written. Only safety boundaries and direct actions deliberately avoid RAG because fixed approved responses are safer.
+The production version still uses vector retrieval, so it is classic RAG. The new pre-production pilot is more accurately described as a **guarded, evidence-grounded assistant with LLM-based evidence selection**: Gemini receives a compact approved knowledge base, selects allowlisted sources, and answers from them in one call.
 
-That makes the complete product a **guarded RAG assistant with an evidence-aware semantic cache**, rather than a chatbot that guesses an intent and sends every question to an LLM.
+It preserves the central grounding principle of RAG—answers must be backed by external approved evidence—but it does not use a separate embedding retriever. The README states this caveat explicitly rather than overstating the architecture.
 
 Preproduction is validated first; the same tested commit is then fast-forwarded to production so the bot, evaluation console, knowledge base, and documentation remain aligned.

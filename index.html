@@ -1655,7 +1655,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
           <div class="rag-message bot">Hi, I can answer questions about Prerna's experience, growth work, case studies, and builder projects.</div>
           <div class="rag-build-note" id="ragBuildNote">
             <span class="rag-build-icon" aria-hidden="true">i</span>
-            <span class="rag-build-copy">Built with an approved knowledge base, semantic retrieval, and Gemini. <a class="rag-build-link" id="ragBuildLink" href="https://github.com/robona-pk/portfolio#mira--portfolio-chatbot" target="_blank" rel="noopener">How it works ↗</a></span>
+            <span class="rag-build-copy">Built with an approved knowledge base, Gemini evidence selection, and strict validation. <a class="rag-build-link" id="ragBuildLink" href="https://github.com/robona-pk/portfolio#mira--portfolio-chatbot" target="_blank" rel="noopener">How it works ↗</a></span>
           </div>
         </div>
         <div class="rag-prompts" aria-label="Suggested questions">
@@ -1698,9 +1698,9 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/mira-facts.js?v=2026-10-15.2"></script>
+  <script src="assets/mira-facts.js?v=2026-10-15.3"></script>
   <script src="assets/chatbot-knowledge.js?v=2026-10-15.1"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-15.2"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-15.3"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2260,14 +2260,14 @@ function send() {
 
 /* ═══════════════════════════════════════════════════════
    PORTFOLIO RAG DEMO
-   Safety checks, semantic retrieval, and validation run in the browser.
-   Supported open-ended answers use Gemini through a protected Vercel endpoint.
+   Deterministic safety checks and validation run in the browser.
+   Supported open-ended questions use server-side Gemini evidence selection.
 ═══════════════════════════════════════════════════════ */
 const portfolioKnowledge = [
   { source: 'Lenskart@Home case study', answer: 'At Lenskart, Prerna helped reposition home trials from an eye-test-led journey into a fashion-forward way to try frames at home. Her initiatives contributed ₹6Cr+ in annualised revenue, including ₹1.8Cr from personalisation; a pan-India pilot lifted bookings 7%.', text: 'At Lenskart, Prerna helped reposition Lenskart@Home from an eye-test-led feature into a more fashion-forward way to try frames at home. She owned growth initiatives across this O2O experience, including home trials, store ownership, and post-purchase journeys. Her initiatives contributed more than ₹6Cr in incremental annualised revenue. A personalised home-trial experience generated ₹1.8Cr annualised incremental revenue across five cities. A three-week pan-India pilot improved completed home-trial bookings by 7 percent versus the weekly baseline. Territory ownership and 48-hour check-ins improved NPS for the called cohort from 41 to 60 in one month.', tags: 'lenskart home trial fashion eyewear o2o revenue booking nps customer experience growth' },
   { source: 'Bajaj Finserv Health case study', answer: 'At Bajaj Finserv Health, Prerna worked across wellness, diagnostics, consultations, insurance, and digital health. Outcomes included ₹28L revenue, 8x Health Files adoption, an 18% doctor-listing CTR lift, and 26% higher pre-authorisation throughput.', text: 'At Bajaj Finserv Health, Prerna built and scaled products across wellness, diagnostics, consultations, insurance, and digital health from discovery and strategy through launch, GTM, and iteration. She built a diabetes wellness business from 0 to 1, generating ₹28L revenue in five months. Research showed 7 in 10 customers searched Google to understand lab-report parameters; Smart Health Reports made results clearer, increased active Health Files users 8 times, and generated ₹7L+ incremental MRR. Doctor results had been ordered almost randomly; a two-layer score used experience, ratings, and fair fees, gated by attendance and profile quality. It improved CTR 18 percent and annual revenue 11.6 percent. For insurance pre-authorisation, operations teams had collected patient documents and manually entered their details into the Vidal portal. Email intake, OCR, and NER reduced that manual work, improved throughput 26 percent, and saved ₹17L annually.', tags: 'bajaj health wellness diagnostics consultation insurance health reports doctor listing ctr revenue operations ocr ner vidal' },
   { source: 'Product approach', answer: 'Prerna starts with a behavioural break in the customer journey, turns it into a measurable hypothesis, and tests the smallest useful intervention. She measures activation, conversion, retention, customer outcomes, and business impact.', text: 'Prerna focuses on behavioural breaks in customer journeys such as an abandoned booking, an unclear choice, an unread report, or a post-purchase issue. She uses customer research to form measurable hypotheses, tests the smallest viable intervention, designs adoption mechanics across product, operations, and lifecycle touchpoints, and measures activation, conversion, retention, customer outcomes, and business impact.', tags: 'approach how work methodology experiment experimentation activation conversion retention hypothesis customer research journey adoption' },
-  { source: 'Skills and tools', answer: 'Prerna combines growth and adoption strategy with SQL, BigQuery, GA4, Firebase, A/B testing, PostHog, Python automation, and AI-assisted prototyping. Her builder toolset includes Codex, Claude Code, Gemini, MiniLM, GitHub, and Vercel.', text: 'Prerna brings growth and adoption strategy, funnel optimisation, lifecycle and retention strategy, SQL and BigQuery, GA4 and Firebase, A/B testing, cohort and behavioural segmentation, Python automation, and AI-assisted prototyping. Tools include Notion, Jira, Figma, Miro, CleverTap, Tableau, Power BI, PostHog, Codex, Claude Code, Gemini, MiniLM, GitHub, Vercel, and Google Apps Script.', tags: 'skills tools technical python sql bigquery analytics ai gemini minilm codex claude code posthog github vercel figma product manager' },
+  { source: 'Skills and tools', answer: 'Prerna combines growth and adoption strategy with SQL, BigQuery, GA4, Firebase, A/B testing, PostHog, Python automation, and AI-assisted prototyping. Her builder toolset includes Codex, Claude Code, Gemini, GitHub, and Vercel.', text: 'Prerna brings growth and adoption strategy, funnel optimisation, lifecycle and retention strategy, SQL and BigQuery, GA4 and Firebase, A/B testing, cohort and behavioural segmentation, Python automation, and AI-assisted prototyping. Tools include Notion, Jira, Figma, Miro, CleverTap, Tableau, Power BI, PostHog, Codex, Claude Code, Gemini, GitHub, Vercel, and Google Apps Script.', tags: 'skills tools technical python sql bigquery analytics ai gemini codex claude code posthog github vercel figma product manager' },
   { source: 'Portfolio overview', answer: 'Prerna is a Growth and Adoption Product Manager with 5+ years across e-commerce, health-tech, and insurance. Alongside measurable commercial work, she builds AI-enabled product experiments.', text: 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years improving activation, conversion, retention, and revenue across e-commerce, health-tech, and insurance. She partners with design, engineering, operations, and commercial teams from discovery through iteration. Alongside her core roles, she builds AI-enabled product experiments.', tags: 'about experience role background industries ecommerce health tech insurance collaboration ai builder' }
 ];
 const approvedPilotFacts = Array.isArray(window.MIRA_APPROVED_FACTS)
@@ -2324,8 +2324,8 @@ approvedInterviewPrepDocuments.forEach(document => (document.sections || []).for
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-15.2',
-  retrievalModel: 'Xenova/all-MiniLM-L6-v2',
+  rulesVersion: '2026-10-15.3',
+  retrievalModel: 'Gemini evidence selection (server-side)',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
   // Relevant resume and portfolio phrasing should survive without an exact
@@ -2346,20 +2346,6 @@ const RAG_CONFIG = Object.freeze({
   estimatedOutputCostPerMillionTokensUsd: 1.5
 });
 window.ASK_PRERNA_RAG_CONFIG = RAG_CONFIG;
-let resolvePortfolioEmbedderReady;
-const portfolioEmbedderReady = new Promise(resolve => { resolvePortfolioEmbedderReady = resolve; });
-window.markPortfolioEmbedderReady = () => resolvePortfolioEmbedderReady?.(true);
-
-async function waitForPortfolioEmbedder(waitMs = 3000) {
-  if (window.createPortfolioEmbedder) return true;
-  let timeout;
-  const ready = await Promise.race([
-    portfolioEmbedderReady,
-    new Promise(resolve => { timeout = window.setTimeout(() => resolve(false), waitMs); })
-  ]);
-  window.clearTimeout(timeout);
-  return Boolean(ready && window.createPortfolioEmbedder);
-}
 
 const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|hate|overrated|toxic|rude|bossy|lazy|annoying|slut|whore|bitch|hoe|gold digger)\b/i;
 const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|she|her|you|this bot|the bot|assistant)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|overrated|toxic|rude|bossy|lazy|annoying|slut|whore|bitch|hoe|gold digger)\b|\b(?:prerna|she|her|you|this bot|the bot|assistant)\s+(?:is|are|was|were)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|overrated|toxic|rude|bossy|lazy|annoying|slut|whore|bitch|hoe|gold digger)\b/i;
@@ -2429,7 +2415,7 @@ const answerScopeQuestion = /\b(what (questions?|things?|topics?) can (you|this 
 const botArchitectureQuestion = /\b(how|what).{0,18}\b(this bot|the bot|chatbot|portfolio assistant)\b.{0,24}\b(made|built|work|implemented|architecture|tech stack)|\b(how (?:was|is).{0,12}\b(this bot|the bot|chatbot)\b.{0,12}\b(made|built))\b/i;
 const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
 const assistantAnswer = 'I’m Mira, Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work.';
-const botArchitectureAnswer = approvedKnowledge.botArchitecture || 'This bot applies safety checks, retrieves an approved fact-card knowledge base with MiniLM, and uses Gemini for grounded generation through a protected Vercel endpoint. A semantic cache reuses validated answers only when the same evidence is retrieved.';
+const botArchitectureAnswer = approvedKnowledge.botArchitecture || 'Mira applies deterministic safety and privacy rules, then sends the approved compact knowledge base to Gemini through a protected Vercel endpoint. Gemini selects the supporting evidence before answering; validation and an evidence-bound cache prevent unsupported reuse.';
 const botReadmeUrl = 'https://github.com/robona-pk/portfolio#mira--portfolio-chatbot';
 const resumeAnswer = 'You can view or download Prerna’s resume here.';
 const resumeUrl = 'https://drive.google.com/file/d/1To5xUIDQBddvdafDoVcgCVNxidGA1Cfo/view?usp=sharing';
@@ -2841,7 +2827,18 @@ function initialiseSemanticResponseCache() {
   const sourceByName = new Map(portfolioKnowledge.map(card => [card.source, card]));
   const evalSeeds = (window.ASK_PRERNA_EVALS || [])
     .filter(item => ['grounded', 'accept_grounded_output'].includes(item.expectedType))
-    .map(item => ({ question: item.question, source: getCacheSourceForEval(item) }))
+    .map(item => {
+      const fact = item.expectedFactId ? approvedPilotFacts.find(candidate => candidate.id === item.expectedFactId) : null;
+      const stance = item.expectedStance || inferQuestionStance(item.question);
+      if (fact) return {
+        question: item.question,
+        source: fact.source,
+        answer: stance === 'negate' ? fact.contrast : fact.answer,
+        factIds: [fact.id],
+        stance
+      };
+      return { question: item.question, source: getCacheSourceForEval(item), answer: '', factIds: [], stance };
+    })
     .filter(item => item.source && sourceByName.has(item.source));
   // The Golden Dataset provides cache seeds. These improve repeat latency only;
   // they never become knowledge-base content or choose an answer route.
@@ -2852,9 +2849,37 @@ function initialiseSemanticResponseCache() {
   try { learned = JSON.parse(window.sessionStorage.getItem(SEMANTIC_CACHE_KEY) || '[]'); } catch (error) { learned = []; }
   semanticResponseCache = [...uniqueSeeds.values()].map(seed => {
     const card = sourceByName.get(seed.source);
-    return { question: seed.question, answer: card.answer, sourceIds: [card.source], seed: true };
+    return { question: seed.question, answer: seed.answer || card.answer, sourceIds: [card.source], factIds: seed.factIds || [], stance: seed.stance || '', seed: true };
   }).concat(Array.isArray(learned) ? learned.filter(entry => entry && entry.question && entry.answer && Array.isArray(entry.sourceIds)) : []);
   return semanticResponseCache;
+}
+
+function cacheQuestionSimilarity(left, right) {
+  const first = normalizeQuestion(left);
+  const second = normalizeQuestion(right);
+  if (!first || !second) return 0;
+  if (first === second) return 1;
+  const editScore = 1 - editDistance(first, second) / Math.max(first.length, second.length, 1);
+  const firstTerms = new Set(getRetrievalTerms(first));
+  const secondTerms = new Set(getRetrievalTerms(second));
+  const intersection = [...firstTerms].filter(term => secondTerms.has(term)).length;
+  const union = new Set([...firstTerms, ...secondTerms]).size;
+  const tokenScore = union ? intersection / union : 0;
+  return Math.max(editScore, tokenScore * 0.97);
+}
+
+function findEvidenceBoundCacheHit(question, runtimeOptions = {}) {
+  if (runtimeOptions.disableSemanticCache) return null;
+  const approvedSources = new Set(portfolioKnowledge.map(card => card.source));
+  const stance = inferQuestionStance(question);
+  const best = initialiseSemanticResponseCache()
+    .filter(entry => entry.sourceIds?.length && entry.sourceIds.every(source => approvedSources.has(source)))
+    .filter(entry => !entry.stance || entry.stance === stance)
+    .map(entry => ({ ...entry, score: cacheQuestionSimilarity(question, entry.question) }))
+    .sort((left, right) => right.score - left.score)[0];
+  // This is deliberately a near-duplicate cache, not a replacement retriever.
+  // Broader paraphrases go to Gemini so evidence selection remains authoritative.
+  return best && best.score >= 0.94 ? best : null;
 }
 
 function inferQuestionStance(question) {
@@ -3161,23 +3186,16 @@ async function validateGeneratedAnswer(answer, groundingText, requiredFacts = []
 
   const sentences = clean.match(/[^.!?]+[.!?]?/g)?.map(sentence => sentence.trim()).filter(Boolean) || [];
   const supportSegments = groundingText.split(/\n+/).map(segment => segment.trim()).filter(Boolean);
-  if (!sentences.length || !supportSegments.length || runtimeOptions.disableSemanticRetrieval || !window.createPortfolioEmbedder) return null;
-  try {
-    portfolioEmbedderPromise ||= window.createPortfolioEmbedder();
-    const embedder = await portfolioEmbedderPromise;
-    const vectors = await embedder([...sentences, ...supportSegments], { pooling: 'mean', normalize: true });
-    const rows = vectors.tolist();
-    const supportRows = rows.slice(sentences.length);
-    const supportTermSet = new Set(groundingTerms(groundingText));
-    for (let index = 0; index < sentences.length; index += 1) {
-      const semanticScore = maximumSimilarity(rows[index], supportRows);
-      const terms = groundingTerms(sentences[index]);
-      const lexicalCoverage = terms.length ? terms.filter(term => supportTermSet.has(term)).length / terms.length : 1;
-      if (semanticScore < 0.5 || (semanticScore < 0.62 && lexicalCoverage < 0.34)) return null;
-      if (/\b(no|not|never|without)\b/i.test(sentences[index]) && !/\b(no|not|never|without)\b/i.test(groundingText)) return null;
-    }
-  } catch (error) {
-    return null;
+  if (!sentences.length || !supportSegments.length) return null;
+  const supportTermSet = new Set(groundingTerms(groundingText));
+  for (const sentence of sentences) {
+    const terms = groundingTerms(sentence);
+    const lexicalCoverage = terms.length ? terms.filter(term => supportTermSet.has(term)).length / terms.length : 1;
+    // Gemini has already selected the approved supporting passages server-side.
+    // This independent output gate still rejects sentences that introduce too
+    // much vocabulary or a negation absent from those passages.
+    if (terms.length >= 4 && lexicalCoverage < 0.42) return null;
+    if (/\b(no|not|never|without)\b/i.test(sentence) && !/\b(no|not|never|without)\b/i.test(groundingText)) return null;
   }
   return clean;
 }
@@ -3209,6 +3227,10 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
     generationLatencyMs: 0,
     failureStage: result.answer === (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer) ? 'retrieval' : ''
   };
+  return generatePortfolioAnswerWithServerSelection(question, result, runtimeOptions);
+
+  /* Legacy browser-retrieval implementation retained below temporarily for
+     comparison history; it is unreachable in the active pre-production path. */
   const retrievalOptions = {
     ...runtimeOptions,
     rewrittenQuestion: result.rewrittenQuestion || '',
@@ -3355,6 +3377,138 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
   }
 }
 
+async function generatePortfolioAnswerWithServerSelection(question, result, runtimeOptions = {}) {
+  const cached = findEvidenceBoundCacheHit(question, runtimeOptions);
+  if (cached) return {
+    answer: cached.answer,
+    retrievedSources: cached.sourceIds,
+    retrievalScores: cached.sourceIds.map(source => ({ source, score: Number(cached.score.toFixed(4)) })),
+    answerMode: 'evidence_cache',
+    fallback: false,
+    fallbackReason: '',
+    error: '',
+    retrievalCacheHit: true,
+    generationCacheHit: true,
+    generationInputTokens: 0,
+    generationOutputTokens: 0,
+    generationModel: '',
+    factId: cached.factIds?.[0] || '',
+    stance: cached.stance || '',
+    factConfidence: 1,
+    generationLatencyMs: 0,
+    failureStage: ''
+  };
+
+  const generationProvider = runtimeOptions.generationProvider === 'qwen' ? 'qwen' : 'gemini';
+  const generationStartedAt = performance.now();
+  try {
+    // Gemini now performs evidence selection against the compact approved
+    // knowledge base on the server. Visitors no longer download MiniLM.
+    const selection = await generateWithGemini({
+      question: normalizeQuestion(question),
+      fullKnowledge: true
+    }, runtimeOptions);
+    const selectedSources = [...new Set((selection.sources || []).filter(source => portfolioKnowledge.some(item => item.source === source)))];
+    if (selection.blocked || selection.answer === 'BLOCKED') return {
+      answer: approvedKnowledge.promptInjection || outOfScopeAnswer,
+      retrievedSources: [],
+      retrievalScores: [],
+      answerMode: 'guardrail',
+      fallback: false,
+      fallbackReason: '',
+      error: '',
+      retrievalCacheHit: false,
+      generationCacheHit: false,
+      generationInputTokens: Number(selection.inputTokens || 0),
+      generationOutputTokens: Number(selection.outputTokens || 0),
+      generationModel: selection.model || RAG_CONFIG.generationModel,
+      generationLatencyMs: Math.round(performance.now() - generationStartedAt),
+      failureStage: '',
+      securityBlocked: true
+    };
+    if (String(selection.answer || '').trim() === 'NO_EVIDENCE' || !selectedSources.length) return {
+      answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
+      retrievedSources: [],
+      retrievalScores: [],
+      answerMode: 'unsupported_fallback',
+      fallback: true,
+      fallbackReason: 'model_found_no_supporting_evidence',
+      error: '',
+      retrievalCacheHit: false,
+      generationCacheHit: false,
+      generationInputTokens: Number(selection.inputTokens || 0),
+      generationOutputTokens: Number(selection.outputTokens || 0),
+      generationModel: selection.model || RAG_CONFIG.generationModel,
+      generationLatencyMs: Math.round(performance.now() - generationStartedAt),
+      failureStage: 'evidence_selection'
+    };
+
+    const relevant = selectedSources.map(source => portfolioKnowledge.find(item => item.source === source)).filter(Boolean);
+    const groundingText = relevant.map(item => `${item.source}: ${item.text}`).join('\n');
+    let generated = selection;
+    if (generationProvider === 'qwen') {
+      generated = await generateWithQwen({
+        question: normalizeQuestion(question),
+        approvedAnswer: relevant[0]?.answer || '',
+        retrievedContext: groundingText,
+        requiredFacts: result.requiredFacts || []
+      }, runtimeOptions);
+    }
+    const approvedFactText = selection.factId
+      ? validateApprovedFactAnswer(selection, [selection.factId])
+      : null;
+    const validated = approvedFactText || await validateGeneratedAnswer(
+      generated.answer,
+      `${result.answer || ''}\n${groundingText}`,
+      result.requiredFacts || [],
+      runtimeOptions
+    );
+    if (validated) rememberSemanticCacheAnswer(
+      question,
+      validated,
+      selectedSources,
+      selection.factId ? [selection.factId] : [],
+      selection.stance || ''
+    );
+    return {
+      answer: validated || (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer),
+      retrievedSources: selectedSources,
+      retrievalScores: selectedSources.map(source => ({ source, score: 1 })),
+      answerMode: validated ? generationProvider : 'unsupported_fallback',
+      fallback: !validated,
+      fallbackReason: validated ? '' : 'output_validation_failed',
+      error: '',
+      retrievalCacheHit: false,
+      generationCacheHit: false,
+      generationInputTokens: Number(selection.inputTokens || 0) + Number(generated === selection ? 0 : generated.inputTokens || 0),
+      generationOutputTokens: Number(selection.outputTokens || 0) + Number(generated === selection ? 0 : generated.outputTokens || 0),
+      generationModel: generated.model || selection.model || (generationProvider === 'qwen' ? RAG_CONFIG.comparisonModel : RAG_CONFIG.generationModel),
+      factId: selection.factId || '',
+      stance: selection.stance || '',
+      factConfidence: Number(selection.confidence || 0),
+      generationLatencyMs: Math.round(performance.now() - generationStartedAt),
+      failureStage: validated ? '' : 'grounding'
+    };
+  } catch (error) {
+    return {
+      answer: approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer,
+      retrievedSources: [],
+      retrievalScores: [],
+      answerMode: 'unsupported_fallback',
+      fallback: true,
+      fallbackReason: 'generation_unavailable',
+      error: error?.message || 'Generation failed.',
+      retrievalCacheHit: false,
+      generationCacheHit: false,
+      generationInputTokens: 0,
+      generationOutputTokens: 0,
+      generationModel: generationProvider === 'qwen' ? RAG_CONFIG.comparisonModel : RAG_CONFIG.generationModel,
+      generationLatencyMs: Math.round(performance.now() - generationStartedAt),
+      failureStage: 'generation'
+    };
+  }
+}
+
 function estimateTokenCount(value) {
   return Math.max(1, Math.ceil(String(value || '').length / 4));
 }
@@ -3383,7 +3537,7 @@ function withTimeLimit(promise, waitMs, fallbackValue) {
 async function resolvePortfolioRequest(question, runtimeOptions = {}) {
   const startedAt = performance.now();
   const requestId = createRequestId();
-  const retrievalCacheHit = Boolean(portfolioVectorsPromise);
+  const retrievalCacheHit = false;
   try {
     const visitorQuestion = String(question || '').trim();
     if (!visitorQuestion || visitorQuestion.length > RAG_CONFIG.maximumQuestionCharacters) {
@@ -3425,16 +3579,11 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
     const deterministicRoute = candidateDeterministicRoute?.answer === approvedKnowledge.promptInjection
       ? null
       : candidateDeterministicRoute;
-    // Fixed safety and navigation answers should not wait for the embedding model.
-    // Every normal question waits here, immediately before semantic security and RAG.
-    if (!deterministicRoute && !runtimeOptions.disableSemanticRetrieval) await waitForPortfolioEmbedder();
-    const security = deterministicRoute
-      ? { blocked: false, uncertain: false, score: 0, mode: 'fast_policy', available: true }
-      : await withTimeLimit(
-        classifyPromptInjection(visitorQuestion, runtimeOptions),
-        RAG_CONFIG.maximumSecurityWaitMs,
-        { blocked: false, uncertain: false, score: 0, mode: 'semantic_timeout', available: false }
-      );
+    // Literal injection rules remain client-side. More subtle attempts are
+    // classified inside the same protected Gemini evidence-selection call.
+    const security = literalInjection
+      ? { blocked: true, uncertain: false, score: 1, mode: 'rule', available: true }
+      : { blocked: false, uncertain: false, score: 0, mode: deterministicRoute ? 'fast_policy' : 'server_evidence_guard', available: true };
     let routed;
     if (security.blocked || security.uncertain) {
       routed = { answer: approvedKnowledge.promptInjection || outOfScopeAnswer, citations: [], policyOnly: true };
@@ -3469,7 +3618,7 @@ async function resolvePortfolioRequest(question, runtimeOptions = {}) {
       estimatedCostUsd,
       totalLatencyMs,
       rulesVersion: RAG_CONFIG.rulesVersion,
-      securityMode: security.mode,
+      securityMode: resolved.securityBlocked ? 'model_guardrail' : security.mode,
       securityScore: security.score || 0
     };
   } catch (error) {
@@ -3778,11 +3927,6 @@ document.addEventListener('click', event => {
     $process_person_profile: false
   });
 });
-</script>
-<script type="module">
-  import { pipeline } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0';
-  window.createPortfolioEmbedder = () => pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', { dtype: 'q8' });
-  window.markPortfolioEmbedderReady?.();
 </script>
 <script>
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };

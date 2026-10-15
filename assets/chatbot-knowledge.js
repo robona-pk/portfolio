@@ -20,13 +20,13 @@ window.ASK_PRERNA_KNOWLEDGE = {
     workOverview: 'Prerna has 5+ years in product across e-commerce, health-tech, and insurance. Her work includes ₹6Cr+ in annualised impact at Lenskart and a ₹28L 0→1 wellness business at Bajaj Finserv Health. Ask about either company or how she approaches product problems.',
     productManagerStyle: 'Prerna starts with data and customer conversations to understand where a journey is breaking. She turns the insight into a hypothesis, validates it through the smallest useful experiment, and then iterates using customer and business outcomes.',
     skillset: 'Prerna’s PM toolkit covers discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, and cross-functional execution. She uses data and AI-assisted prototyping to move from insight to measurable impact.',
-    tools: 'Prerna uses SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, and Python. For design and building, she works with Figma, Notion, Jira, Codex, Claude Code, GitHub, Vercel, Google Apps Script, Gemini, MiniLM, and Transformers.js.',
+    tools: 'Prerna uses SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, and Python. For design and building, she works with Figma, Notion, Jira, Codex, Claude Code, GitHub, Vercel, Google Apps Script, and Gemini.',
     metricsCapability: 'Yes. Prerna defines product and business metrics, tracks funnels and cohorts, and evaluates experiments across activation, conversion, retention, CTR, NPS, revenue, and operational outcomes. She works with SQL, BigQuery, GA4, Firebase, CleverTap, PostHog, Tableau, and Power BI.',
     cultureFit: 'Her work suggests she is comfortable with pace and ambiguity: she uses data and customer conversations to find the real problem, tests the smallest useful intervention, and stays close through iteration. Culture fit is mutual, so the team’s working style still matters.',
     confidentialData: 'That concerns confidential company financials or operating data, which Prerna cannot share. I can, however, discuss the public outcomes of her work at Lenskart@Home and Bajaj Finserv Health.',
     companyContext: 'I can speak to Prerna’s work and published outcomes at that company, but not company strategy, internal performance, or non-public financials.',
     outOfScope: 'That sits outside what this portfolio assistant is designed to answer. If you are assessing Prerna, try asking about her product approach, growth outcomes, skills, career interests, or the projects she has built.',
-    botArchitecture: 'Mira applies safety and privacy checks, retrieves approved portfolio, resume, and interview-prep evidence with MiniLM, and uses Gemini through a protected Vercel endpoint to write a grounded answer. Its evidence-aware cache reuses validated answers only when the same source is retrieved again.',
+    botArchitecture: 'Mira applies deterministic safety and privacy checks, then sends its compact approved portfolio, resume, and interview-prep knowledge base to Gemini through a protected Vercel endpoint. Gemini selects the supporting evidence before answering. Output validation and an evidence-bound near-match cache prevent unsupported reuse.',
     undocumented: 'I don’t have that information right now. You can reach out to Prerna to ask her directly.',
     careerLogistics: 'Prerna has not published those logistics here. The best way to discuss notice period, compensation, relocation, remote preferences, or interview availability is to contact her directly.',
     comparison: 'I wouldn’t make an unsupported comparison. The fairest way to assess Prerna is through her documented product decisions, measurable outcomes, and the scope she has owned.',
@@ -65,8 +65,8 @@ window.ASK_PRERNA_KNOWLEDGE = {
     },
     {
       id: 'tools', source: 'Profile · Tools', topics: ['tools', 'analytics'],
-      answer: 'Prerna uses SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, and Python. Her builder toolkit includes Figma, Codex, Claude Code, GitHub, Vercel, Gemini, MiniLM, and Transformers.js.',
-      facts: 'Analytics tools: SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, and Python. Builder tools: Figma, Notion, Jira, Codex, Claude Code, GitHub, Vercel, Google Apps Script, Gemini, MiniLM, and Transformers.js.'
+      answer: 'Prerna uses SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, and Python. Her builder toolkit includes Figma, Codex, Claude Code, GitHub, Vercel, and Gemini.',
+      facts: 'Analytics tools: SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, and Python. Builder tools: Figma, Notion, Jira, Codex, Claude Code, GitHub, Vercel, Google Apps Script, and Gemini.'
     },
     {
       id: 'personality', source: 'Profile · Personality', topics: ['personality'], retrievalHints: ['loud', 'person', 'personality', 'character', 'like as a person'],
@@ -115,8 +115,8 @@ window.ASK_PRERNA_KNOWLEDGE = {
     },
     {
       id: 'bot-architecture', source: 'Project · Mira architecture', topics: ['bot_architecture'],
-      answer: 'Mira applies safety checks, retrieves approved portfolio, resume, and interview-prep evidence with MiniLM, and uses Gemini to write a grounded answer. An evidence-aware cache makes validated common answers faster; a Golden Dataset and PostHog support evaluation.',
-      facts: 'Mira normalises the question and applies safety and privacy checks. Normal questions retrieve and rerank approved portfolio, resume, and interview-prep evidence with MiniLM; Gemini answers only when that evidence supports the question, then grounding checks validate the output. An evidence-aware semantic cache returns a validated answer only when the same supporting evidence is retrieved. A Golden Dataset supports human evaluation; PostHog tracks usage and feedback.'
+      answer: 'Mira applies safety checks, sends its approved compact knowledge base to Gemini for evidence selection and grounded answering, then validates the output. An evidence-bound cache speeds up validated repeat questions; a Golden Dataset and PostHog support evaluation.',
+      facts: 'Mira normalises the question and applies deterministic safety and privacy checks. Normal questions send the approved portfolio, resume, and interview-prep knowledge base to Gemini through a protected Vercel endpoint. Gemini selects supporting sources before answering; grounding checks validate the output. An evidence-bound near-match cache can reuse validated answers only while their approved sources still exist. A Golden Dataset supports human evaluation; PostHog tracks usage and feedback.'
     }
   ],
   // Resume evidence is a source document split by its natural sections—not a

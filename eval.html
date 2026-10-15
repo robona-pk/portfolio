@@ -21,7 +21,7 @@
       <div>
         <p class="kicker">Mira quality system</p>
         <h1>Evaluation console</h1>
-        <p class="intro">Run the complete evaluation suite or rerun only those marked Incorrect. Use <strong>Compare models</strong> on an open-ended case to send the same retrieved evidence through Gemini Flash-Lite and browser-hosted Qwen 2.5. The visitor-facing bot uses Gemini; Qwen is evaluation-only and needs WebGPU. Its first run may take longer while the local model loads.</p>
+        <p class="intro">Run the complete evaluation suite or rerun only those marked Incorrect. Mira’s visitor path uses Gemini to select approved evidence and answer in one protected backend call. <strong>Compare models</strong> remains an evaluation-only experiment: Gemini first selects the evidence, then the same evidence can be phrased by browser-hosted Qwen 2.5.</p>
       </div>
       <div class="controls">
         <button class="button primary" id="runAll" type="button">Run all</button>
@@ -54,8 +54,8 @@
         <div class="field"><code>input_tokens_estimate</code><span>Approximate input tokens based on characters.</span></div>
         <div class="field"><code>output_tokens_estimate</code><span>Approximate generated answer tokens.</span></div>
         <div class="field"><code>estimated_cost_usd</code><span>Hosted-model reference estimate; browser-hosted Qwen comparisons are zero.</span></div>
-        <div class="field"><code>retrieval_cache_hit</code><span>Whether the semantic index was already warm.</span></div>
-        <div class="field"><code>generation_cache_hit</code><span>Whether an evidence-aware semantic cache reused a validated answer. A hit is allowed only when the same supporting source is retrieved again.</span></div>
+        <div class="field"><code>retrieval_cache_hit</code><span>Whether an approved evidence-bound cache answered before Gemini was called.</span></div>
+        <div class="field"><code>generation_cache_hit</code><span>Whether a validated near-identical question reused an answer whose approved sources are still present.</span></div>
         <div class="field"><code>retrieved_sources</code><span>Portfolio sources supplied to the answer path.</span></div>
         <div class="field"><code>fallback</code><span>Whether a safe fallback was returned.</span></div>
         <div class="field"><code>error</code><span>Generation or request failure, when present.</span></div>
@@ -66,9 +66,9 @@
     </section>
   </main>
 
-  <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-15.2" title="Mira evaluation engine"></iframe>
-  <script src="assets/mira-facts.js?v=2026-10-15.2"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-15.2"></script>
+  <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-15.3" title="Mira evaluation engine"></iframe>
+  <script src="assets/mira-facts.js?v=2026-10-15.3"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-15.3"></script>
   <script>
     const STORAGE_KEY = 'ask-prerna-eval-reviews-v1';
     const CASE_TIMEOUT_MS = 90000;
@@ -111,7 +111,8 @@
       const labels = {
         policy: 'Deterministic answer',
         gemini: 'LLM: Gemini',
-        semantic_cache: 'Evidence-aware semantic cache',
+        semantic_cache: 'Legacy semantic cache',
+        evidence_cache: 'Evidence-bound near-match cache',
         qwen: 'LLM: Qwen',
         unsupported_fallback: 'No-evidence fallback',
         input_guard_fallback: 'Input guard',

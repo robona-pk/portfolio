@@ -31,13 +31,13 @@ The assistant may answer only from:
 - Verified resume and interview-prep chunks indexed from approved source documents
 - The visitor's question
 
-Known direct actions, confidentiality rules, and safety boundaries return approved answers without generation. Every normal portfolio or recruiter question goes directly to evidence retrieval—there is no separate intent classifier. Gemini is reserved for evidence-based synthesis through a protected Vercel endpoint. It is instructed to paraphrase supplied facts rather than introduce claims and must not infer private details, dates, employers, metrics, ownership, or personality traits.
+Known direct actions, confidentiality rules, and safety boundaries return approved answers without generation. There is no separate intent classifier or browser embedding model. Every normal portfolio or recruiter question goes to a protected Gemini endpoint with the compact approved knowledge base. Gemini must select allowlisted supporting sources before answering and must not infer private details, dates, employers, metrics, ownership, or personality traits.
 
 The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 
 | Setting | Value | Purpose |
 | --- | ---: | --- |
-| Evidence candidate floor | `0.16` | Broad semantic-recall floor before evidence validation |
+| Evidence confidence floor | `0.72` | Minimum Gemini confidence before selected evidence or a structured fact may answer |
 | Maximum evidence candidates | `5` | Limits the context Gemini receives |
 | Semantic cache threshold | `0.91` | Reuses an answer only for a very close question with matching evidence sources |
 | Maximum question length | `500` characters | Limits abuse and unnecessary processing |
@@ -49,9 +49,9 @@ The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 
 Gemini is limited to 120 output tokens and a 14-second browser response budget. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected or slow response falls back to the approved answer.
 
-Before retrieval, input is canonicalised to expose zero-width characters, selected Unicode homoglyphs, Base64-encoded instructions, and common leetspeak. Literal rules screen every request. Questions that match a deterministic approved action or policy boundary return that fixed response without generation. Other questions pass through the MiniLM injection check before direct evidence retrieval. If semantic security classification cannot load, those open-ended requests fail closed. These are layered risk controls, not a proof that every novel attack will be caught.
+Before evidence selection, input is canonicalised to expose zero-width characters, selected Unicode homoglyphs, Base64-encoded instructions, and common leetspeak. Literal rules screen every request. Questions that match a deterministic approved action or policy boundary return that fixed response without generation. For remaining questions, the protected Gemini call must classify prompt injection and select allowlisted evidence in the same constrained JSON response. These are layered risk controls, not a proof that every novel attack will be caught.
 
-MiniLM loads only when an open-ended request needs semantic checks or retrieval. Approved recruiter questions and policy responses stay on the fast path. Gemini runs server-side, so visitors no longer download a generation model or depend on WebGPU; an open-ended request can still experience network, Vercel, or provider latency.
+Approved policy responses and evidence-cache hits stay on the fast path. Other open-ended questions use one server-side Gemini call; visitors no longer download MiniLM or wait for an embedding index. Requests can still experience network, Vercel, provider, or quota latency.
 
 ## Live request event
 
@@ -70,7 +70,7 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `fallback` | Whether a safe fallback was used |
 | `fallback_reason` | Why the fallback occurred |
 | `error` | Request or generation error when present |
-| `retrieval_model` | Embedding model used for retrieval |
+| `retrieval_model` | Evidence-selection mechanism used for the request |
 | `generation_model` | Generation model when Gemini produced the final answer |
 | `fact_id` | Approved structured fact selected after retrieval, when the pilot route is used |
 | `question_stance` | `affirm` or `negate` for a supported structured-fact answer |
@@ -80,11 +80,11 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `input_tokens_estimate` | Approximate input tokens using a four-characters-per-token estimate |
 | `output_tokens_estimate` | Approximate output tokens using the same estimate |
 | `estimated_cost_usd` | Paid-rate reference estimate for Gemini generation; actual cost may be `0` while within free-tier quota |
-| `retrieval_cache_hit` | Whether the semantic retrieval model and vectors were already warm |
+| `retrieval_cache_hit` | Whether the evidence-bound near-match cache answered before Gemini was called |
 | `generation_cache_hit` | Whether a generated answer was reused from cache; hosted Gemini calls currently report false |
 | `rules_version` | Version of the policy and threshold configuration |
-| `security_mode` | `fast_policy`, `rule`, `semantic`, `semantic_clear`, `semantic_uncertain`, `semantic_unavailable`, `semantic_timeout`, `input_guard`, or `request_error` |
-| `security_score` | Similarity score produced by the semantic injection classifier when available |
+| `security_mode` | `fast_policy`, `rule`, `server_evidence_guard`, `model_guardrail`, `input_guard`, or `request_error` |
+| `security_score` | Rule score where applicable; model guardrails report through `security_mode` |
 
 ### `portfolio_assistant_rate_limited`
 

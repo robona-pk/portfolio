@@ -13,15 +13,15 @@ It must not reuse that fact for a nearby but unsupported question, such as an em
 
 ## Architecture under test
 
-1. MiniLM retrieves a small shortlist from the approved knowledge base.
-2. If the shortlist contains a structured fact, Gemini decides only:
+1. The protected backend supplies Gemini with the compact approved knowledge base; no browser embedding model is downloaded.
+2. If a structured fact supports the question, Gemini decides:
    - which approved fact is supported;
    - whether the question affirms or negates it;
    - its confidence.
 3. The server returns the approved positive or contrast wording. Gemini does not write a new factual claim.
 4. If confidence is below `0.72`, Mira fails closed with: “I don’t have that information available.”
 
-This is not a global intent classifier. Every professional question still goes through retrieval first.
+This is not a global intent classifier. Gemini performs evidence selection and answering in one constrained backend call; it can return only allowlisted sources and approved fact IDs.
 
 ## Approved facts in the pilot
 
@@ -74,6 +74,6 @@ Pre-production smoke checks completed on 15 October 2026:
 | “Is she a slow PM?” | Selected `pace_and_ambiguity`, `negate`, confidence `0.89`; returned the approved contrast answer with no fallback. |
 | “How fast did Lenskart revenue grow?” | Rejected the pace fact and returned `NO_EVIDENCE`; it did not reuse a nearby but unsupported claim. |
 
-The full browser path also passed for “Is she a slow PM?” with the expected source, stance, and wording. Its measured model generation time was about 2.2 seconds; total cold-path latency was about 27 seconds because the browser retrieval model still had to initialise. This latency is a pre-production issue to measure across the complete pilot, not a production-readiness pass.
+The earlier MiniLM browser path passed for “Is she a slow PM?” with the expected source, stance, and wording, but its cold path took about 27 seconds. The next pre-production run must measure the replacement Gemini evidence-selection path and confirm that removing browser model initialisation materially reduces P50/P95 total latency.
 
 Before any production decision, run the four **Fact pilot** categories in the Evaluation Console and review pass rate, fallbacks, P50/P95 total latency, P50/P95 generation latency, answer source, and reviewed-correct rate.

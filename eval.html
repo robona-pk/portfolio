@@ -21,9 +21,11 @@
       <div>
         <p class="kicker">Mira quality system</p>
         <h1>Evaluation console</h1>
-        <p class="intro">Run the complete evaluation suite or rerun only those marked Incorrect. Mira’s visitor path uses Gemini to select approved evidence and answer in one protected backend call. <strong>Compare models</strong> remains an evaluation-only experiment: Gemini first selects the evidence, then the same evidence can be phrased by browser-hosted Qwen 2.5.</p>
+        <p class="intro">Use the smaller release check for routine validation, resume an interrupted run with <strong>Run remaining</strong>, or run the complete Golden Dataset for a full regression audit. Results persist in this browser. <strong>Compare models</strong> remains an evaluation-only experiment.</p>
       </div>
       <div class="controls">
+        <button class="button primary" id="runRelease" type="button">Run release check</button>
+        <button class="button targeted" id="runRemaining" type="button">Run remaining</button>
         <button class="button primary" id="runAll" type="button">Run all</button>
         <button class="button targeted" id="runIncorrect" type="button" disabled>Run incorrect (0)</button>
         <button class="button" id="stopRun" type="button" disabled>Stop</button>
@@ -66,13 +68,19 @@
     </section>
   </main>
 
-  <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-15.3" title="Mira evaluation engine"></iframe>
-  <script src="assets/mira-facts.js?v=2026-10-15.3"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-15.3"></script>
+  <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-15.4" title="Mira evaluation engine"></iframe>
+  <script src="assets/mira-facts.js?v=2026-10-15.4"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-15.4"></script>
   <script>
     const STORAGE_KEY = 'ask-prerna-eval-reviews-v1';
     const CASE_TIMEOUT_MS = 90000;
     const dataset = window.ASK_PRERNA_EVALS || [];
+    const RELEASE_SMOKE_IDS = new Set([
+      'identity-01', 'bajaj-30', 'security-88', 'security-91', 'intent-141',
+      'intent-145', 'intent-151', 'retrieval-151a', 'resume-152', 'resume-154a',
+      'resume-155', 'pace-159', 'pace-161a', 'interview-162', 'interview-163',
+      'interview-164', 'interview-165', 'interview-166', 'interview-167', 'interview-168'
+    ]);
     const state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     Object.keys(state).forEach(id => {
       if (state[id]?.running || state[id]?.comparisonRunning) state[id] = { ...state[id], running:false, comparisonRunning:false };
@@ -205,6 +213,14 @@
       const runAll = document.getElementById('runAll');
       runAll.textContent = `Run all ${dataset.length}`;
       runAll.disabled = batchRunning;
+      const releaseCases = dataset.filter(item => RELEASE_SMOKE_IDS.has(item.id));
+      const remainingCases = dataset.filter(item => !state[item.id]?.result);
+      const runRelease = document.getElementById('runRelease');
+      runRelease.textContent = `Run release check (${releaseCases.length})`;
+      runRelease.disabled = batchRunning || releaseCases.length === 0;
+      const runRemaining = document.getElementById('runRemaining');
+      runRemaining.textContent = `Run remaining (${remainingCases.length})`;
+      runRemaining.disabled = batchRunning || remainingCases.length === 0;
       document.getElementById('stopRun').disabled = !batchRunning;
     }
 
@@ -350,11 +366,15 @@
       batchRunning = false;
       render();
       status.textContent = stopRequested
-        ? 'Run stopped. Completed results were saved.'
-        : label === 'incorrect cases'
-          ? `Reran ${cases.length} incorrect evaluations. Review the new answers, then update their verdicts.`
-          : `All ${dataset.length} evaluations completed.`;
+        ? 'Run stopped. Completed results were saved; use Run remaining to resume.'
+        : `Completed ${cases.length} ${label}. Results were saved in this browser.`;
     }
+    document.getElementById('runRelease').addEventListener('click', () => {
+      runBatch(dataset.filter(item => RELEASE_SMOKE_IDS.has(item.id)), 'release-check evaluations');
+    });
+    document.getElementById('runRemaining').addEventListener('click', () => {
+      runBatch(dataset.filter(item => !state[item.id]?.result), 'remaining evaluations');
+    });
     document.getElementById('runAll').addEventListener('click', () => runBatch(dataset, 'evaluations'));
     document.getElementById('runIncorrect').addEventListener('click', () => {
       const incorrectCases = dataset.filter(item => state[item.id]?.verdict === 'incorrect');

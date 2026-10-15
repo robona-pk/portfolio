@@ -146,7 +146,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
         {
           id: 'resume-bajaj-leadership', source: 'Resume · Bajaj — Product leadership', topics: ['bajaj', 'experience', 'leadership'],
           answer: 'At Bajaj Finserv Health, Prerna led a four-person APM team while taking a diabetes wellness product from 0 to 1; it generated ₹28L within five months.',
-          text: 'At Bajaj Finserv Health, Prerna took a diabetes wellness product from 0 to 1, generating ₹28L within five months while leading a four-person APM team.'
+          text: 'At Bajaj Finserv Health, Prerna took a diabetes wellness product from 0 to 1, generating ₹28L within five months while leading a four-person APM team. This is approved evidence of team leadership, people leadership, and managing junior product managers.'
         },
         {
           id: 'resume-bajaj-ai-automation', source: 'Resume · Bajaj — AI automation', topics: ['bajaj', 'experience', 'ai', 'machine_learning', 'ocr', 'ner', 'insurance'],

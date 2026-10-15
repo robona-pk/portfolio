@@ -19,7 +19,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     answerScope: 'I can help you explore Prerna’s experience, PM approach, skills, strengths, education, career interests, location, hobbies, life philosophy, and documented work at Lenskart or Bajaj Finserv Health. Try asking about her product style, measurable impact, or interests outside work.',
     workOverview: 'Prerna has 5+ years in product across e-commerce, health-tech, and insurance. Her work includes ₹6Cr+ in annualised impact at Lenskart and a ₹28L 0→1 wellness business at Bajaj Finserv Health. Ask about either company or how she approaches product problems.',
     productManagerStyle: 'Prerna starts with data and customer conversations to understand where a journey is breaking. She turns the insight into a hypothesis, validates it through the smallest useful experiment, and then iterates using customer and business outcomes.',
-    skillset: 'Prerna’s PM toolkit covers discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, and cross-functional execution. She uses data and AI-assisted prototyping to move from insight to measurable impact.',
+    skillset: 'Prerna’s toolkit spans discovery, research, roadmaps, GTM, funnels, A/B testing, lifecycle and retention. She analyses with SQL, BigQuery, GA4, Firebase, PostHog and cohorts, and prototypes with Python, Gemini, Codex, GitHub and Vercel.',
     tools: 'Prerna uses SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, and Python. For design and building, she works with Figma, Notion, Jira, Codex, Claude Code, GitHub, Vercel, Google Apps Script, and Gemini.',
     metricsCapability: 'Yes. Prerna defines product and business metrics, tracks funnels and cohorts, and evaluates experiments across activation, conversion, retention, CTR, NPS, revenue, and operational outcomes. She works with SQL, BigQuery, GA4, Firebase, CleverTap, PostHog, Tableau, and Power BI.',
     cultureFit: 'Her work suggests she is comfortable with pace and ambiguity: she uses data and customer conversations to find the real problem, tests the smallest useful intervention, and stays close through iteration. Culture fit is mutual, so the team’s working style still matters.',
@@ -55,8 +55,8 @@ window.ASK_PRERNA_KNOWLEDGE = {
     },
     {
       id: 'product-skills', source: 'Profile · Product skills', topics: ['product_skills', 'work_style'], retrievalHints: ['skilled', 'competent', 'capability', 'capabilities', 'skillset', 'what can she do'],
-      answer: 'Prerna’s PM toolkit covers discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, and cross-functional execution. She uses data and AI-assisted prototyping to move from insight to measurable impact.',
-      facts: 'Approved product capabilities: discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, cross-functional execution, and AI-assisted prototyping.'
+      answer: 'Prerna’s toolkit spans discovery, research, roadmaps, GTM, funnels, A/B testing, lifecycle and retention. She analyses with SQL, BigQuery, GA4, Firebase, PostHog and cohorts, and prototypes with Python, Gemini, Codex, GitHub and Vercel.',
+      facts: 'Product: discovery, customer research, roadmaps, PRDs, go-to-market, funnel optimisation, A/B testing, lifecycle, retention, and cross-functional execution. Analytics: SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, funnels, and cohorts. Technical and AI building: Python, API integrations, Gemini, Codex, Claude Code, GitHub, Vercel, prompt design, and evaluations.'
     },
     {
       id: 'analytics-and-metrics', source: 'Profile · Analytics and metrics', topics: ['analytics', 'product_skills', 'tools'], retrievalHints: ['track metrics', 'metrics', 'kpi', 'kpis', 'measurement', 'measure', 'dashboard', 'funnel'],

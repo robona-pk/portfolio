@@ -1698,9 +1698,9 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/mira-facts.js?v=2026-10-15.1"></script>
+  <script src="assets/mira-facts.js?v=2026-10-15.2"></script>
   <script src="assets/chatbot-knowledge.js?v=2026-10-15.1"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-15.1"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-15.2"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2324,7 +2324,7 @@ approvedInterviewPrepDocuments.forEach(document => (document.sections || []).for
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-15.1',
+  rulesVersion: '2026-10-15.2',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -3182,6 +3182,16 @@ async function validateGeneratedAnswer(answer, groundingText, requiredFacts = []
   return clean;
 }
 
+function validateApprovedFactAnswer(generation, requestedFactIds) {
+  if (!generation?.factId || !requestedFactIds.includes(generation.factId)) return null;
+  const fact = approvedPilotFacts.find(item => item.id === generation.factId);
+  const stance = generation.stance;
+  const confidence = Number(generation.confidence || 0);
+  if (!fact || confidence < 0.72 || !['affirm', 'negate'].includes(stance)) return null;
+  const approvedText = stance === 'negate' ? fact.contrast : fact.answer;
+  return approvedText && String(generation.answer || '').trim() === approvedText ? approvedText : null;
+}
+
 async function generatePortfolioAnswer(question, result, retrievalCacheHit = false, runtimeOptions = {}) {
   if (result.policyOnly || (!result.allowGeneration && (result.action || policyControlledAnswers.has(result.answer)))) return {
     answer: result.answer,
@@ -3298,7 +3308,13 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
       generationLatencyMs,
       failureStage: 'grounding'
     };
-    const validated = await validateGeneratedAnswer(generation.answer, groundingText, result.requiredFacts || [], runtimeOptions);
+    // Structured-fact answers are selected from approved server-side strings;
+    // they are not newly generated prose. Verify fact identity, confidence,
+    // stance, and exact equality rather than reinterpreting that approved text
+    // with the free-form sentence-level grounding validator.
+    const validated = generation.factId
+      ? validateApprovedFactAnswer(generation, factIds)
+      : await validateGeneratedAnswer(generation.answer, groundingText, result.requiredFacts || [], runtimeOptions);
     if (validated) rememberSemanticCacheAnswer(question, validated, sources, factIds, generation.stance || '');
     return {
       answer: validated || (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer),

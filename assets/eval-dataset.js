@@ -171,3 +171,40 @@ window.ASK_PRERNA_EVALS = [
   { id: 'interview-169', category: 'Interview evidence', question: 'Has she ever pushed back on scope to meet a deadline?', expectedType: 'grounded', expectedFacts: ['14-day launch', 'deferred PDP entry', 'core launch on time', 'about a week later'], expectedSignals: ['retrieves scope-pushback evidence'], expectedSources: ['Interview prep · Scope pushback'] },
   { id: 'interview-170', category: 'Interview evidence', question: 'How does Prerna diagnose a product metric that is moving the wrong way?', expectedType: 'grounded', expectedFacts: ['define metric', 'validate data', 'funnel step', 'segment', 'timing'], expectedSignals: ['retrieves metrics framework'], expectedSources: ['Interview prep · Product metrics framework'] }
 ];
+
+// Structured-fact pilot: paraphrases are evaluation inputs, never retrieval
+// hints. This tests whether the direct-RAG shortlist plus Gemini's evidence
+// decision generalises beyond wording that appears in the knowledge base.
+const miraFactParaphraseEvals = (window.MIRA_APPROVED_FACTS || [])
+  .filter(fact => fact.status === 'approved')
+  .flatMap(fact => {
+    const makeCase = (question, group, index, expectedType, expectedStance) => ({
+      id: `fact-${fact.id}-${group}-${index + 1}`,
+      category: `Fact pilot · ${group}`,
+      question,
+      expectedType,
+      expectedFacts: expectedType === 'must_not_match_fact'
+        ? [`must not answer with ${fact.id}`, 'may use another genuinely supported route or the approved no-information fallback']
+        : [expectedStance === 'negate' ? fact.contrast : fact.answer],
+      expectedSignals: expectedType === 'must_not_match_fact'
+        ? ['hard negative must not return this fact', 'fact_id must be empty or different']
+        : [`fact_id is ${fact.id}`, `stance is ${expectedStance}`, 'answer uses approved wording only'],
+      expectedSources: expectedType === 'must_not_match_fact' ? [] : [fact.source],
+      expectedFactId: expectedType === 'must_not_match_fact' ? null : fact.id,
+      expectedStance: expectedType === 'must_not_match_fact' ? null : expectedStance
+    });
+    return [
+      ...(fact.affirmExamples || []).slice(0, 5).map((question, index) => makeCase(question, 'affirm', index, 'grounded', 'affirm')),
+      ...(fact.negateExamples || []).slice(0, 5).map((question, index) => makeCase(question, 'negate', index, 'grounded', 'negate')),
+      ...(fact.casualExamples || []).slice(0, 3).map((question, index) => makeCase(question, 'casual', index, 'grounded', inferExpectedFactStance(question))),
+      ...(fact.hardNegatives || []).slice(0, 3).map((question, index) => makeCase(question, 'hard negative', index, 'must_not_match_fact', null))
+    ];
+  });
+
+function inferExpectedFactStance(question) {
+  return /\b(slow|wing|bad|nah|fluff|lack|no |not |never|cant|cannot|doesnt|isnt|hasnt)\b/i.test(question)
+    ? 'negate'
+    : 'affirm';
+}
+
+window.ASK_PRERNA_EVALS.push(...miraFactParaphraseEvals);

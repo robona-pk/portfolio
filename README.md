@@ -63,7 +63,11 @@ flowchart TD
     I -- "Safe" --> H["🔎 RAG retrieval<br/>Portfolio + resume + interview evidence"]
     H --> P{"🎯 Evidence shortlist<br/>broad semantic recall"}
     P -- "No candidates" --> F["🤷 Approved fallback<br/>Contact Prerna directly"]
-    P -- "Candidates" --> C{"⚡ Evidence-aware<br/>semantic cache hit?"}
+    P -- "Candidates" --> J{"📌 Approved structured fact<br/>in the shortlist?"}
+    J -- "Yes" --> D["🤖 Gemini evidence decision<br/>Fact + stance + confidence"]
+    D -- "Supported" --> M
+    D -- "Unclear / below 0.72" --> N
+    J -- "No" --> C{"⚡ Evidence-aware<br/>semantic cache hit?"}
     C -- "Same evidence + close question" --> M["💬 Reuse validated answer"]
     C -- "No" --> K["🤖 Gemini Flash-Lite<br/>Phrases only retrieved evidence"]
     K --> L{"🔍 Directly supported<br/>and grounded?"}
@@ -82,10 +86,10 @@ flowchart TD
     classDef output fill:#edf6dd,stroke:#5d7f25,color:#263611;
 
     class A,B visitor;
-    class S,I,P,C,L decision;
+    class S,I,P,J,C,L decision;
     class F,G policy;
     class H,Q retrieval;
-    class K,M ai;
+    class D,K,M ai;
     class G,N,O output;
 ```
 
@@ -106,13 +110,13 @@ flowchart TD
 ## Tech stack—in plain English
 
 - 🖥️ **Interface:** HTML, CSS, and JavaScript create the floating chat window.
-- 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js`; portfolio passages, resume achievements, and verified interview-prep stories are indexed as separate evidence chunks.
+- 📚 **Knowledge base:** portfolio passages, resume achievements, and verified interview-prep stories remain in `assets/chatbot-knowledge.js`. A pre-production pilot in `assets/mira-facts.js` adds governed facts with an approved claim, evidence references, answer, optional opposite/contrast answer, and approval status.
 - ⚡ **Direct handling:** safety boundaries and actions such as resume access bypass retrieval and generation.
 - 🛡️ **Guardrail routing:** private, unsafe, abusive, confidential, unrelated, and injection attempts receive controlled responses without reaching open-ended generation.
 - ⏳ **Readiness gate:** the system briefly waits for MiniLM to register before a semantic request runs. If it never becomes available, the bot fails closed instead of guessing.
 - 🔎 **Retrieval:** every normal portfolio question uses MiniLM to retrieve a small shortlist of source passages by meaning. Retrieval optimises for recall; it does not decide whether the question is supported.
 - ⚡ **Evidence-aware semantic cache:** Golden Dataset cases can pre-seed repeat answers. A cached answer is reused only when the same supporting source is retrieved again; it never bypasses evidence checks or becomes knowledge-base content.
-- 🤖 **Generation:** Gemini Flash-Lite writes a short answer through `/api/generate` only when the shortlisted evidence directly supports the question. It returns a no-evidence signal otherwise.
+- 🤖 **Evidence decision:** when retrieval surfaces a governed fact, Gemini selects only among that small shortlist and returns the fact ID, question stance, and confidence. The server returns the approved answer or approved contrast; it does not let Gemini invent a new claim. Other supported evidence continues through grounded generation.
 - ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
 - ⚡ **Latency controls:** direct safety/actions avoid AI generation; valid cache hits avoid Gemini; MiniLM is reused after its first load; semantic safety has an 8-second ceiling and Gemini has a 14-second browser ceiling before an approved fallback is shown.
@@ -134,6 +138,8 @@ flowchart TD
 | **Readiness gate** | A short wait that prevents an evaluation or visitor question from running before MiniLM is available. |
 | **Semantic retrieval** | MiniLM finds the most similar approved portfolio, resume, and interview-prep passages, even when a visitor uses different wording. It is a shortlist, not a final answer. |
 | **Evidence decision** | Gemini is instructed to answer only when a shortlisted passage directly supports the question; no support produces a safe fallback. |
+| **Structured fact** | An approved claim with evidence references, fixed answer wording, optional contrast wording, and test-only paraphrases. Test examples are not indexed for retrieval. |
+| **Question stance** | Whether a question asks for the documented fact (`affirm`), asks whether its opposite is true (`negate`), or is too unclear to answer safely. |
 | **Generator** | Gemini writes a concise answer using only the retrieved evidence. |
 | **Grounding checks** | Output checks verify that Gemini's claims are supported by the retrieved sources. |
 | **Fail-closed fallback** | If the system is uncertain or a component fails, it returns an approved safe answer. |
@@ -280,8 +286,10 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 | **15. Resume navigation** | Resume questions were recognised as portfolio-related but had no dedicated answer route | “Where is her resume?” incorrectly returned the missing-information fallback | Added a `resume` intent and fast deterministic route with a clickable resume action, including CV and misspelling regression cases |
 | **16. Clearer human evaluation** | Every benchmark expectation was labelled “Expected facts” | Simulated output-validator cases looked like incorrect interpretations of the visitor's question | Renamed the section **Pass criteria — not model input** and added plain-language test-purpose explanations |
 | **17. Portfolio interaction polish** | Native scrolling and entrance reveals worked, but desktop scrolling felt abrupt | The page lacked the restrained fluidity of the reference experience | Added lightweight inertial desktop scrolling while preserving native touch, keyboard, nested-panel, and reduced-motion behaviour |
-| **18. Direct RAG with evidence-aware caching** | A separate intent classifier guessed labels before retrieval | Recruiter phrasing such as “high agency” or “fast paced” could be assigned to the wrong category, producing unrelated answers | Removed the intent classifier from the live route. Normal questions now retrieve evidence directly; common Golden Dataset and real-world variants are pre-seeded in a cache that can answer only when the same evidence is retrieved again. |
-| **19. Broader evidence and production parity** | Portfolio and resume evidence covered outcomes, but richer interview stories were outside retrieval and old classifier code still remained in the bundle | Questions about decision-making, prioritisation, setbacks, stakeholder management, pace, and metrics could lack the most specific evidence | Added verified interview-prep stories as retrieval chunks, expanded pace regressions, removed the unused intent-classifier code, and aligned the eval console and documentation with the direct-RAG architecture. |
+| **18. Direct RAG with evidence-aware caching · Production** | A separate intent classifier guessed labels before retrieval | Recruiter phrasing such as “high agency” or “fast paced” could be assigned to the wrong category, producing unrelated answers | Removed the intent classifier from the live route. Normal questions now retrieve evidence directly; common Golden Dataset and real-world variants are pre-seeded in a cache that can answer only when the same evidence is retrieved again. |
+| **19. Broader evidence and production parity · Production** | Portfolio and resume evidence covered outcomes, but richer interview stories were outside retrieval and old classifier code still remained in the bundle | Questions about decision-making, prioritisation, setbacks, stakeholder management, pace, and metrics could lack the most specific evidence | Added the updated resume and verified interview-prep stories as retrieval chunks, expanded pace regressions, removed the unused intent-classifier code, and aligned the eval console and documentation with the direct-RAG architecture. |
+| **20. Ask Mira identity · Production** | The assistant was still presented as “Ask Prerna” | A named assistant felt more distinctive, while mixed labels in the UI and video made the product appear unfinished | Renamed the assistant to **Mira** across the portfolio UI, supporting copy, documentation, and product video so one identity is used consistently. |
+| **21. Structured fact and stance pilot · Pre-production** | Retrieval could find relevant prose but opposite wording could still be rejected or answered inconsistently | “Is she slow?” and “What is her pace like?” refer to the same evidence but require different framing | Added a governed-fact registry, shortlist-level Gemini fact/stance decisions, server-controlled approved answers and contrasts, fact-aware caching, and paraphrase/opposite/hard-negative evaluations. The global intent classifier remains removed. This stage must pass pre-production evaluation before release. |
 
 ## Cost and trade-offs
 

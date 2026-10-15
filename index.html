@@ -1698,8 +1698,9 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-14.11"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-14.11"></script>
+  <script src="assets/mira-facts.js?v=2026-10-15.1"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-15.1"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-15.1"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2269,10 +2270,24 @@ const portfolioKnowledge = [
   { source: 'Skills and tools', answer: 'Prerna combines growth and adoption strategy with SQL, BigQuery, GA4, Firebase, A/B testing, PostHog, Python automation, and AI-assisted prototyping. Her builder toolset includes Codex, Claude Code, Gemini, MiniLM, GitHub, and Vercel.', text: 'Prerna brings growth and adoption strategy, funnel optimisation, lifecycle and retention strategy, SQL and BigQuery, GA4 and Firebase, A/B testing, cohort and behavioural segmentation, Python automation, and AI-assisted prototyping. Tools include Notion, Jira, Figma, Miro, CleverTap, Tableau, Power BI, PostHog, Codex, Claude Code, Gemini, MiniLM, GitHub, Vercel, and Google Apps Script.', tags: 'skills tools technical python sql bigquery analytics ai gemini minilm codex claude code posthog github vercel figma product manager' },
   { source: 'Portfolio overview', answer: 'Prerna is a Growth and Adoption Product Manager with 5+ years across e-commerce, health-tech, and insurance. Alongside measurable commercial work, she builds AI-enabled product experiments.', text: 'Prerna Kapoor is a Growth and Adoption Product Manager with 5+ years improving activation, conversion, retention, and revenue across e-commerce, health-tech, and insurance. She partners with design, engineering, operations, and commercial teams from discovery through iteration. Alongside her core roles, she builds AI-enabled product experiments.', tags: 'about experience role background industries ecommerce health tech insurance collaboration ai builder' }
 ];
+const approvedPilotFacts = Array.isArray(window.MIRA_APPROVED_FACTS)
+  ? window.MIRA_APPROVED_FACTS.filter(fact => fact.status === 'approved')
+  : [];
+const approvedPilotFactIds = new Set(approvedPilotFacts.map(fact => fact.id));
+const approvedPilotSources = new Set(approvedPilotFacts.map(fact => fact.source));
+approvedPilotFacts.forEach(fact => portfolioKnowledge.push({
+  source: fact.source,
+  answer: fact.answer,
+  text: [fact.claim, fact.answer, fact.contrast, ...(fact.evidence || [])].filter(Boolean).join(' '),
+  tags: fact.id.replaceAll('_', ' '),
+  topics: ['approved_fact'],
+  factId: fact.id,
+  contrast: fact.contrast || ''
+}));
 const approvedFactCards = Array.isArray(window.ASK_PRERNA_KNOWLEDGE?.factCards)
   ? window.ASK_PRERNA_KNOWLEDGE.factCards
   : [];
-approvedFactCards.forEach(card => portfolioKnowledge.push({
+approvedFactCards.filter(card => !approvedPilotFactIds.has(card.id.replaceAll('-', '_')) && !approvedPilotSources.has(card.source)).forEach(card => portfolioKnowledge.push({
   source: card.source,
   answer: card.answer,
   text: card.facts,
@@ -2309,7 +2324,7 @@ approvedInterviewPrepDocuments.forEach(document => (document.sections || []).for
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-14.11',
+  rulesVersion: '2026-10-15.1',
   retrievalModel: 'Xenova/all-MiniLM-L6-v2',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2346,8 +2361,8 @@ async function waitForPortfolioEmbedder(waitMs = 3000) {
   return Boolean(ready && window.createPortfolioEmbedder);
 }
 
-const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|hate|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b/i;
-const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|she|her|you|this bot|the bot|assistant)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b|\b(?:prerna|she|her|you|this bot|the bot|assistant)\s+(?:is|are|was|were)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|incompetent|overrated|toxic|rude|bossy|lazy|annoying|bad|slut|whore|bitch|hoe|gold digger)\b/i;
+const unconstructiveLanguage = /\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|hate|overrated|toxic|rude|bossy|lazy|annoying|slut|whore|bitch|hoe|gold digger)\b/i;
+const directedInsult = /\b(?:why\s+(?:is|was)|(?:is|are|was|were))\s+(?:prerna|she|her|you|this bot|the bot|assistant)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|overrated|toxic|rude|bossy|lazy|annoying|slut|whore|bitch|hoe|gold digger)\b|\b(?:prerna|she|her|you|this bot|the bot|assistant)\s+(?:is|are|was|were)\b[\s\w]{0,24}\b(stupid|dumb|idiot|idiotic|horrible|terrible|awful|useless|worthless|pathetic|overrated|toxic|rude|bossy|lazy|annoying|slut|whore|bitch|hoe|gold digger)\b/i;
 const insultAnswer = 'Let’s keep the conversation respectful and focused on Prerna’s work. I can help with her experience, product approach, projects, skills, or outcomes.';
 const capabilityQuestion = /\b(competent|qualified|capable|effective)\b|\bgood at (her )?job\b/i;
 const capabilityAnswer = 'The work gives the clearest answer: Prerna has driven ₹6Cr+ in incremental annualised revenue at Lenskart, built a ₹28L 0→1 wellness business at Bajaj Finserv Health, and delivered measurable improvements to activation, CTR, and operations. The outcomes are there to evaluate.';
@@ -2602,7 +2617,23 @@ function selectEvidenceCandidates(matches, question = '') {
   // verbatim in a resume (for example, a question about pace). Widen recall to
   // a fixed group of first-party work-style evidence; this only selects context.
   // Gemini and the grounding check still decide whether any claim is supportable.
-  if (!backstop.length) return candidates;
+  if (!backstop.length) {
+    // Structured facts are judged independently from ordinary document chunks.
+    // A broad resume passage can otherwise outrank the precise fact by enough
+    // that the fact never reaches Gemini. Preserve up to three plausible facts
+    // in the shortlist; Gemini still has to accept the fact and its stance.
+    const factMatches = matches.filter(item => item.factId);
+    const topFactScore = Number(factMatches[0]?.score || 0);
+    const factFloor = Math.max(0.32, topFactScore - 0.1);
+    const bestFactIsCompetitive = topFactScore >= 0.38 && topFactScore >= topScore - 0.1;
+    const plausibleFacts = bestFactIsCompetitive
+      ? factMatches.filter(item => item.score >= factFloor).slice(0, 3)
+      : [];
+    const documentCandidates = candidates.filter(item => !item.factId);
+    return [...plausibleFacts, ...documentCandidates]
+      .filter((item, index, items) => items.findIndex(candidate => candidate.source === item.source) === index)
+      .slice(0, RAG_CONFIG.maximumEvidenceCandidates);
+  }
   // For this narrow evidence facet, the pace source is more useful than a
   // broader bundle of adjacent passages. It keeps the hosted prompt short and
   // prevents an unrelated metric or case-study result from diluting the claim.
@@ -2826,14 +2857,26 @@ function initialiseSemanticResponseCache() {
   return semanticResponseCache;
 }
 
-function sourceEvidenceMatches(entry, relevant) {
+function inferQuestionStance(question) {
+  const text = normalizeQuestion(question);
+  return /\b(slow|sluggish|unskilled|incompetent|incapable|bad at|weak with|weak at|lack|lacks|lacking|never|no experience|no background|unable|cannot|cant|doesnt|isnt|hasnt|not)\b/.test(text)
+    ? 'negate'
+    : 'affirm';
+}
+
+function sourceEvidenceMatches(entry, relevant, question) {
   const retrievedSources = new Set(relevant.map(item => item.source));
+  const retrievedFactIds = new Set(relevant.map(item => item.factId).filter(Boolean));
+  if (retrievedFactIds.size) {
+    if (!Array.isArray(entry.factIds) || !entry.factIds.some(factId => retrievedFactIds.has(factId))) return false;
+    if (entry.stance && entry.stance !== inferQuestionStance(question)) return false;
+  }
   return entry.sourceIds.length > 0 && entry.sourceIds.every(source => retrievedSources.has(source));
 }
 
 async function findSemanticCacheHit(question, relevant, runtimeOptions = {}) {
   if (runtimeOptions.disableSemanticCache || runtimeOptions.disableSemanticRetrieval || !window.createPortfolioEmbedder) return null;
-  const candidates = initialiseSemanticResponseCache().filter(entry => sourceEvidenceMatches(entry, relevant));
+  const candidates = initialiseSemanticResponseCache().filter(entry => sourceEvidenceMatches(entry, relevant, question));
   if (!candidates.length) return null;
   try {
     portfolioEmbedderPromise ||= window.createPortfolioEmbedder();
@@ -2854,9 +2897,16 @@ async function findSemanticCacheHit(question, relevant, runtimeOptions = {}) {
   } catch (error) { return null; }
 }
 
-function rememberSemanticCacheAnswer(question, answer, sourceIds) {
+function rememberSemanticCacheAnswer(question, answer, sourceIds, factIds = [], stance = '') {
   if (!answer || !sourceIds?.length) return;
-  const entry = { question: String(question).slice(0, RAG_CONFIG.maximumQuestionCharacters), answer, sourceIds: [...new Set(sourceIds)], seed: false };
+  const entry = {
+    question: String(question).slice(0, RAG_CONFIG.maximumQuestionCharacters),
+    answer,
+    sourceIds: [...new Set(sourceIds)],
+    factIds: [...new Set(factIds)],
+    stance: stance || inferQuestionStance(question),
+    seed: false
+  };
   const entries = initialiseSemanticResponseCache();
   if (!entries.some(current => normalizeQuestion(current.question) === normalizeQuestion(entry.question) && current.answer === entry.answer)) {
     entries.push(entry);
@@ -3177,6 +3227,7 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
   const groundingText = `${result.answer}\n${retrievedContext}`;
   const generationAnchor = relevant[0]?.answer || result.answer;
   const sources = [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])];
+  const factIds = [...new Set(relevant.map(item => item.factId).filter(Boolean))].slice(0, 3);
   const localPreviewEvidence = selectLocalPreviewEvidence(relevant);
   // A file:// preview has no Vercel function behind `/api/generate`. When
   // retrieval has identified one clearly strongest approved passage,
@@ -3227,7 +3278,8 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
       }, runtimeOptions)
       : await generateWithGemini({
         question: normalizeQuestion(question),
-        sources
+        sources,
+        factIds
       }, runtimeOptions);
     const generationLatencyMs = Math.round(performance.now() - generationStartedAt);
     if (String(generation.answer || '').trim() === 'NO_EVIDENCE') return {
@@ -3247,7 +3299,7 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
       failureStage: 'grounding'
     };
     const validated = await validateGeneratedAnswer(generation.answer, groundingText, result.requiredFacts || [], runtimeOptions);
-    if (validated) rememberSemanticCacheAnswer(question, validated, sources);
+    if (validated) rememberSemanticCacheAnswer(question, validated, sources, factIds, generation.stance || '');
     return {
       answer: validated || (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer),
       retrievedSources: [...new Set([...(result.citations || []), ...relevant.map(item => item.source)])],
@@ -3261,6 +3313,9 @@ async function generatePortfolioAnswer(question, result, retrievalCacheHit = fal
       generationInputTokens: Number(generation.inputTokens || estimateTokenCount(JSON.stringify({ question, result, retrievedContext }))),
       generationOutputTokens: Number(generation.outputTokens || estimateTokenCount(generation.answer)),
       generationModel: generation.model || (generationProvider === 'qwen' ? RAG_CONFIG.comparisonModel : RAG_CONFIG.generationModel),
+      factId: generation.factId || '',
+      stance: generation.stance || '',
+      factConfidence: Number(generation.confidence || 0),
       generationLatencyMs,
       failureStage: validated ? '' : 'grounding'
     };
@@ -3446,6 +3501,9 @@ function captureAssistantTelemetry(result) {
     error: result.error,
     retrieval_model: result.retrievalModel,
     generation_model: result.generationModel,
+    fact_id: result.factId || '',
+    question_stance: result.stance || '',
+    fact_confidence: result.factConfidence || 0,
     generation_latency_ms: result.generationLatencyMs,
     total_latency_ms: result.totalLatencyMs,
     input_tokens_estimate: result.inputTokens,

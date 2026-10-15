@@ -26,6 +26,7 @@ Dictation uses the browser's Web Speech API and requires microphone permission. 
 The assistant may answer only from:
 
 - Approved profile and policy responses in `assets/chatbot-knowledge.js`
+- Approved structured facts in `assets/mira-facts.js`; only entries marked `approved` may answer, and their evaluation examples are never indexed for retrieval
 - Portfolio passages in `portfolioKnowledge` inside `index.html`
 - Verified resume and interview-prep chunks indexed from approved source documents
 - The visitor's question
@@ -43,7 +44,8 @@ The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 | Maximum answer length | `300` characters | Keeps Mira concise |
 | Semantic security wait | `8` seconds | Fails closed if the security model cannot decide in time |
 | Gemini browser wait | `14` seconds | Returns the approved fallback instead of leaving the visitor waiting |
-| Unsupported fallback | `I don’t have that information right now. You can reach out to Prerna to ask her directly.` | Returned with a contact CTA when approved context is insufficient |
+| Structured-fact confidence | `0.72` | Below this, Gemini's shortlist decision fails closed |
+| Unsupported fallback | `I don’t have that information available.` | Returned when approved context is insufficient |
 
 Gemini is limited to 120 output tokens and a 14-second browser response budget. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected or slow response falls back to the approved answer.
 
@@ -70,6 +72,9 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `error` | Request or generation error when present |
 | `retrieval_model` | Embedding model used for retrieval |
 | `generation_model` | Generation model when Gemini produced the final answer |
+| `fact_id` | Approved structured fact selected after retrieval, when the pilot route is used |
+| `question_stance` | `affirm` or `negate` for a supported structured-fact answer |
+| `fact_confidence` | Gemini confidence for the fact-and-stance decision; answers require at least `0.72` |
 | `generation_latency_ms` | Time spent in the generation step; zero when no model was used |
 | `total_latency_ms` | Total time from submitted question to final answer |
 | `input_tokens_estimate` | Approximate input tokens using a four-characters-per-token estimate |

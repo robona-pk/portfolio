@@ -1698,9 +1698,9 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/mira-facts.js?v=2026-10-15.4"></script>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-15.4"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-15.4"></script>
+  <script src="assets/mira-facts.js?v=2026-10-15.6"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-15.6"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-15.6"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2324,7 +2324,7 @@ approvedInterviewPrepDocuments.forEach(document => (document.sections || []).for
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-15.4',
+  rulesVersion: '2026-10-15.6',
   retrievalModel: 'Gemini evidence selection (server-side)',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2409,7 +2409,7 @@ const hobbiesQuestion = /\b(hobb(y|ies)|outside (of )?work|free time|spare time|
 const interestQuestion = /\b(interests?|what topics?.{0,20}\b(enjoy|like|love|talk)|what does.{0,18}\benjoy|what does.{0,18}\blove)\b/i;
 const lifePhilosophyQuestion = /\b(life philosophy|philosophy (in|on|about) life|personal philosophy|personal motto|life motto|mantra|outlook on life|what does.{0,18}\bbelieve in)\b/i;
 const promptInjection = /\b(ignore|disregard|forget|override|bypass)\b.{0,48}\b(instructions?|rules?|prompt|policy|previous|prior|above|safety)|\b(system|hidden|developer)\s*(prompt|message|instructions?)\b|\b(jailbreak|unrestricted mode|reveal|repeat|print|expose|show)\b.{0,48}\b(instructions?|rules?|prompt|policy|developer message|system message)|\b(pretend (to be|you are)|change your role|higher priority instructions?)\b|\bact as\b.{0,32}\b(unrestricted|system|developer|assistant|model|jailbroken|different role)\b/i;
-const externalKnowledgeQuestion = /\b(president|prime minister|capital of|weather|news|stock price|share price|crypto|bitcoin|election|sports score|recipe|joke|translate|current time)\b/i;
+const externalKnowledgeQuestion = /\b(president|prime minister|capital of|capitol of|weather|news|stock price|share price|crypto|bitcoin|election|sports score|recipe|joke|translate|current time)\b|\b(?:what|which).{0,24}\b(?:capital|capitol)\b/i;
 const outOfScopeAnswer = 'I’m designed as a guide to Prerna’s work—not as a general web search. If you are assessing fit, ask about her product approach, growth outcomes, skills, career interests, or the projects she has built.';
 const answerScopeQuestion = /\b(what (questions?|things?|topics?) can (you|this bot|the bot|mira).{0,20}\b(answer|help with|talk about)|what can (i|we).{0,20}\b(ask|ask you)|how can (you|this bot|the bot|mira).{0,20}\bhelp|what do (you|this bot|the bot|mira) know(?: about (?:prerna|her))?|what can (you|this bot|the bot|mira) do|what (?:are|can) (you|this bot|the bot|mira) able to do|(?:tell|show) me what (you|this bot|the bot|mira) can do|(?:your|mira'?s|the bot'?s) capabilities)\b/i;
 const botArchitectureQuestion = /\b(how|what).{0,18}\b(this bot|the bot|chatbot|portfolio assistant)\b.{0,24}\b(made|built|work|implemented|architecture|tech stack)|\b(how (?:was|is).{0,12}\b(this bot|the bot|chatbot)\b.{0,12}\b(made|built))\b/i;
@@ -2826,7 +2826,11 @@ function initialiseSemanticResponseCache() {
   if (semanticResponseCache) return semanticResponseCache;
   const sourceByName = new Map(portfolioKnowledge.map(card => [card.source, card]));
   const evalSeeds = (window.ASK_PRERNA_EVALS || [])
-    .filter(item => ['grounded', 'accept_grounded_output'].includes(item.expectedType))
+    // A Golden Dataset item may still carry the older `policy` label even
+    // though the current architecture answers it from approved evidence.
+    // Source-backed cases are safe cache seeds regardless of that legacy label.
+    .filter(item => item.expectedFactId || ((item.expectedSources || []).length > 0
+      && !['must_not_match_fact', 'fallback', 'out_of_scope', 'private', 'confidential'].includes(item.expectedType)))
     .map(item => {
       const fact = item.expectedFactId ? approvedPilotFacts.find(candidate => candidate.id === item.expectedFactId) : null;
       const stance = item.expectedStance || inferQuestionStance(item.question);
@@ -2884,7 +2888,7 @@ function findEvidenceBoundCacheHit(question, runtimeOptions = {}) {
 
 function inferQuestionStance(question) {
   const text = normalizeQuestion(question);
-  return /\b(slow|sluggish|unskilled|incompetent|incapable|bad at|weak with|weak at|lack|lacks|lacking|never|no experience|no background|unable|cannot|cant|doesnt|isnt|hasnt|not)\b/.test(text)
+  return /\b(slow|sluggish|forever|unskilled|incompetent|incapable|bad at|badly|weak with|weak at|lack|lacks|lacking|never|no experience|no background|unable|cannot|cant|doesnt|isnt|hasnt|not|ignore|ignores|difficult|struggle|struggles|fluff|passive|give up|only on instinct|jump straight)\b/.test(text)
     ? 'negate'
     : 'affirm';
 }
@@ -3408,7 +3412,11 @@ async function generatePortfolioAnswerWithServerSelection(question, result, runt
       question: normalizeQuestion(question),
       fullKnowledge: true
     }, runtimeOptions);
-    const selectedSources = [...new Set((selection.sources || []).filter(source => portfolioKnowledge.some(item => item.source === source)))];
+    const selectedFactSource = selection.factId
+      ? approvedPilotFacts.find(fact => fact.id === selection.factId)?.source
+      : '';
+    const selectedSources = [...new Set([...(selection.sources || []), selectedFactSource]
+      .filter(source => source && portfolioKnowledge.some(item => item.source === source)))];
     if (selection.blocked || selection.answer === 'BLOCKED') return {
       answer: approvedKnowledge.promptInjection || outOfScopeAnswer,
       retrievedSources: [],
@@ -3463,20 +3471,24 @@ async function generatePortfolioAnswerWithServerSelection(question, result, runt
       result.requiredFacts || [],
       runtimeOptions
     );
-    if (validated) rememberSemanticCacheAnswer(
+    // Gemini has already selected an allowlisted source. If its fresh wording
+    // fails the independent output gate, use that source's reviewed answer
+    // rather than incorrectly telling the visitor that no information exists.
+    const safeAnswer = validated || relevant[0]?.answer || null;
+    if (safeAnswer) rememberSemanticCacheAnswer(
       question,
-      validated,
+      safeAnswer,
       selectedSources,
       selection.factId ? [selection.factId] : [],
       selection.stance || ''
     );
     return {
-      answer: validated || (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer),
+      answer: safeAnswer || (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer),
       retrievedSources: selectedSources,
       retrievalScores: selectedSources.map(source => ({ source, score: 1 })),
-      answerMode: validated ? generationProvider : 'unsupported_fallback',
-      fallback: !validated,
-      fallbackReason: validated ? '' : 'output_validation_failed',
+      answerMode: validated ? generationProvider : safeAnswer ? 'curated_fallback' : 'unsupported_fallback',
+      fallback: !safeAnswer,
+      fallbackReason: safeAnswer ? (validated ? '' : 'generated_wording_replaced') : 'output_validation_failed',
       error: '',
       retrievalCacheHit: false,
       generationCacheHit: false,
@@ -3487,7 +3499,7 @@ async function generatePortfolioAnswerWithServerSelection(question, result, runt
       stance: selection.stance || '',
       factConfidence: Number(selection.confidence || 0),
       generationLatencyMs: Math.round(performance.now() - generationStartedAt),
-      failureStage: validated ? '' : 'grounding'
+      failureStage: safeAnswer ? '' : 'grounding'
     };
   } catch (error) {
     return {

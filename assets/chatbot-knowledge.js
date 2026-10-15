@@ -115,8 +115,8 @@ window.ASK_PRERNA_KNOWLEDGE = {
     },
     {
       id: 'bot-architecture', source: 'Project · Mira architecture', topics: ['bot_architecture'],
-      answer: 'Mira applies safety checks, sends its approved compact knowledge base to Gemini for evidence selection and grounded answering, then validates the output. An evidence-bound cache speeds up validated repeat questions; a Golden Dataset and PostHog support evaluation.',
-      facts: 'Mira normalises the question and applies deterministic safety and privacy checks. Normal questions send the approved portfolio, resume, and interview-prep knowledge base to Gemini through a protected Vercel endpoint. Gemini selects supporting sources before answering; grounding checks validate the output. An evidence-bound near-match cache can reuse validated answers only while their approved sources still exist. A Golden Dataset supports human evaluation; PostHog tracks usage and feedback.'
+      answer: 'Prerna designed and built Mira, her portfolio assistant. Mira uses safety checks, an approved knowledge base, Gemini evidence selection, output validation, an evidence-bound cache, a Golden Dataset, and PostHog analytics.',
+      facts: 'Prerna designed and built this portfolio and Mira, its assistant. Mira normalises the question and applies deterministic safety and privacy checks. Normal questions send the approved portfolio, resume, and interview-prep knowledge base to Gemini through a protected Vercel endpoint. Gemini selects supporting sources before answering; grounding checks validate the output. An evidence-bound near-match cache can reuse validated answers only while their approved sources still exist. A Golden Dataset supports human evaluation; PostHog tracks usage and feedback.'
     }
   ],
   // Resume evidence is a source document split by its natural sections—not a

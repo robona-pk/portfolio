@@ -68,8 +68,8 @@ const SOURCE_LIBRARY = Object.freeze({
     text: 'Evidence from Prerna’s work shows ownership and an iterative operating style: she uses data and customer conversations to clarify ambiguous problems, turns insights into focused experiments, and stays involved through iteration. This supports high agency and comfort with pace and ambiguity; culture fit remains mutual.'
   },
   'Profile · Product skills': {
-    answer: 'Prerna’s PM toolkit covers discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, and cross-functional execution. She uses data and AI-assisted prototyping to move from insight to measurable impact.',
-    text: 'Approved product capabilities: discovery, customer research, funnel optimisation, A/B testing, go-to-market planning, lifecycle and retention strategy, cross-functional execution, and AI-assisted prototyping.'
+    answer: 'Prerna’s toolkit spans discovery, research, roadmaps, GTM, funnels, A/B testing, lifecycle and retention. She analyses with SQL, BigQuery, GA4, Firebase, PostHog and cohorts, and prototypes with Python, Gemini, Codex, GitHub and Vercel.',
+    text: 'Product capabilities include discovery, customer research, roadmaps, PRDs, go-to-market, funnel optimisation, A/B testing, lifecycle, retention, and cross-functional execution. Analytics and technical capabilities include SQL, BigQuery, GA4, Firebase, CleverTap, Tableau, Power BI, PostHog, cohort analysis, Python, API integrations, Gemini, Codex, Claude Code, GitHub, Vercel, prompt design, and evaluations.'
   },
   'Profile · Analytics and metrics': {
     answer: 'Prerna defines product and business metrics, tracks funnels and cohorts, and evaluates experiments across activation, conversion, retention, CTR, NPS, revenue, and operational outcomes.',
@@ -238,7 +238,9 @@ export default async function handler(req, res) {
       applies_to: fact.appliesTo || [],
       evidence: fact.evidence,
       approved_answer: fact.answer,
-      approved_contrast: fact.contrast || null
+      approved_contrast: fact.contrast || null,
+      must_include: fact.mustInclude || [],
+      must_not_include: fact.mustNotInclude || []
     });
   }).join('\n');
   const controller = new AbortController();
@@ -262,7 +264,7 @@ export default async function handler(req, res) {
         contents: [{
           role: 'user',
           parts: [{ text: fullKnowledge
-            ? `Visitor question:\n${safeQuestion}\n\nApproved sources:\n${context}\n\nApproved structured facts:\n${Object.values(FACT_LIBRARY).map(fact => JSON.stringify({ id: fact.id, claim: fact.claim, applies_to: fact.appliesTo || [], evidence: fact.evidence, approved_answer: fact.answer, approved_contrast: fact.contrast || null })).join('\n')}`
+            ? `Visitor question:\n${safeQuestion}\n\nApproved sources:\n${context}\n\nApproved answer contracts:\n${Object.values(FACT_LIBRARY).map(fact => JSON.stringify({ id: fact.id, claim: fact.claim, applies_to: fact.appliesTo || [], evidence: fact.evidence, approved_answer: fact.answer, approved_contrast: fact.contrast || null, must_include: fact.mustInclude || [], must_not_include: fact.mustNotInclude || [] })).join('\n')}`
             : factIds.length
             ? `Visitor question:\n${safeQuestion}\n\nCandidate approved facts:\n${factContext}`
             : `Visitor question:\n${safeQuestion}\n\nApproved source material:\n${context}` }]
@@ -312,7 +314,11 @@ export default async function handler(req, res) {
         } else if (matchedFact && confidence >= 0.72 && stance !== 'unclear' && (stance !== 'negate' || matchedFact.contrast)) {
           answer = stance === 'negate' ? matchedFact.contrast : matchedFact.answer;
           factDecision = { factId: matchedFact.id, stance, confidence: Number(confidence.toFixed(3)) };
-          if (!selectedSources.length && SOURCE_LIBRARY[matchedFact.source]) selectedSources = [matchedFact.source];
+          // Governed fact sources are valid evidence identities even when they
+          // are composed from several lower-level source passages. Previously
+          // these IDs were discarded unless duplicated in SOURCE_LIBRARY,
+          // causing a correct contract decision to become a false fallback.
+          selectedSources = [...new Set([...selectedSources, matchedFact.source])];
         } else {
           answer = limitAnswerLength(parsed.answer || '');
           if (!selectedSources.length || confidence < 0.72 || !answer || answer === 'NO_EVIDENCE') {

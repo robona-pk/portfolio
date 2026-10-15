@@ -76,4 +76,12 @@ Pre-production smoke checks completed on 15 October 2026:
 
 The earlier MiniLM browser path passed for “Is she a slow PM?” with the expected source, stance, and wording, but its cold path took about 27 seconds. The next pre-production run must measure the replacement Gemini evidence-selection path and confirm that removing browser model initialisation materially reduces P50/P95 total latency.
 
+MiniLM-free smoke checks after the architecture change:
+
+- “Is she slow?” selected `pace_and_ambiguity`, `negate`, confidence `0.95`, and returned the approved contrast.
+- “Does Prerna have high agency?” selected `pace_and_ambiguity`, `affirm`, confidence `0.95`.
+- “Does she has any AI ML experience?” selected `ai_ml_experience`, `affirm`, confidence `0.99`.
+- “What is Lenskart profit margin?” returned `NO_EVIDENCE`; the live client’s deterministic confidentiality boundary handles this question before generation.
+- A novel end-to-end paraphrase—“Would she take ownership without a detailed brief?”—returned the pace-and-ambiguity answer successfully. A timed backend call completed in about 5.0 seconds, materially below the earlier 27-second cold browser path.
+
 Before any production decision, run the four **Fact pilot** categories in the Evaluation Console and review pass rate, fallbacks, P50/P95 total latency, P50/P95 generation latency, answer source, and reviewed-correct rate.

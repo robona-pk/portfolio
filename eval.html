@@ -41,7 +41,7 @@
       <input id="search" type="search" placeholder="Filter by question, category, or expected fact" aria-label="Filter evaluations">
       <select id="category" aria-label="Filter by category"><option value="">All categories</option></select>
       <select id="verdict" aria-label="Filter by verdict"><option value="">All verdicts</option><option value="incorrect">Incorrect only</option><option value="correct">Correct only</option><option value="unreviewed">Not reviewed only</option></select>
-      <select id="answerSource" aria-label="Filter by answer source"><option value="">All answer sources</option><option value="policy">Deterministic answers</option><option value="llm">RAG + LLM answers</option><option value="fallback">Fallback answers</option><option value="guardrail">Guardrail answers</option><option value="error">Errors</option><option value="not_run">Not run yet</option></select>
+      <select id="answerSource" aria-label="Filter by answer source"><option value="">All answer sources</option><option value="policy">Deterministic answers</option><option value="llm">Evidence + LLM answers</option><option value="cache">Evidence-cache answers</option><option value="fallback">Fallback answers</option><option value="guardrail">Guardrail answers</option><option value="error">Errors</option><option value="not_run">Not run yet</option></select>
     </div>
     <section class="eval-list" id="evalList" aria-label="Evaluation cases"></section>
 
@@ -101,7 +101,7 @@
       if (!result) return 'not_run';
       if (result.answerMode === 'policy') return 'policy';
       if (result.answerMode === 'gemini' || result.answerMode === 'qwen') return 'llm';
-      if (result.answerMode === 'semantic_cache') return 'cache';
+      if (result.answerMode === 'semantic_cache' || result.answerMode === 'evidence_cache') return 'cache';
       if (result.answerMode === 'input_guard_fallback') return 'guardrail';
       if (result.answerMode === 'error' || result.answerMode === 'error_fallback' || result.error && !result.answer) return 'error';
       return 'fallback';

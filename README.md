@@ -60,7 +60,7 @@ flowchart TD
     S -- "No" --> Q["⏳ MiniLM readiness gate"]
     Q --> I{"🛡️ Injection check"}
     I -- "Attack or uncertain" --> G
-    I -- "Safe" --> H["🔎 RAG retrieval<br/>Portfolio + resume evidence"]
+    I -- "Safe" --> H["🔎 RAG retrieval<br/>Portfolio + resume + interview evidence"]
     H --> P{"🎯 Evidence shortlist<br/>broad semantic recall"}
     P -- "No candidates" --> F["🤷 Approved fallback<br/>Contact Prerna directly"]
     P -- "Candidates" --> C{"⚡ Evidence-aware<br/>semantic cache hit?"}
@@ -106,7 +106,7 @@ flowchart TD
 ## Tech stack—in plain English
 
 - 🖥️ **Interface:** HTML, CSS, and JavaScript create the floating chat window.
-- 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js`; the resume is indexed as source-document chunks based on its original summary and achievement bullets, alongside portfolio passages in `index.html`.
+- 📚 **Knowledge base:** approved facts and boundaries live in `assets/chatbot-knowledge.js`; portfolio passages, resume achievements, and verified interview-prep stories are indexed as separate evidence chunks.
 - ⚡ **Direct handling:** safety boundaries and actions such as resume access bypass retrieval and generation.
 - 🛡️ **Guardrail routing:** private, unsafe, abusive, confidential, unrelated, and injection attempts receive controlled responses without reaching open-ended generation.
 - ⏳ **Readiness gate:** the system briefly waits for MiniLM to register before a semantic request runs. If it never becomes available, the bot fails closed instead of guessing.
@@ -115,7 +115,7 @@ flowchart TD
 - 🤖 **Generation:** Gemini Flash-Lite writes a short answer through `/api/generate` only when the shortlisted evidence directly supports the question. It returns a no-evidence signal otherwise.
 - ⚙️ **AI runtime:** Transformers.js runs MiniLM semantic retrieval in the browser; Vercel calls Gemini server-side.
 - ✅ **Validation:** checks block invented metrics, unsupported names, private claims, prompt leakage, and ungrounded sentences.
-- ⚡ **Latency controls:** direct safety/actions avoid AI generation; valid cache hits avoid Gemini; MiniLM is reused after its first load; semantic safety has an 8-second ceiling and Gemini has a 10-second ceiling before an approved fallback is shown.
+- ⚡ **Latency controls:** direct safety/actions avoid AI generation; valid cache hits avoid Gemini; MiniLM is reused after its first load; semantic safety has an 8-second ceiling and Gemini has a 14-second browser ceiling before an approved fallback is shown.
 - 🧪 **Local preview:** opening `index.html` directly cannot run the hosted Gemini endpoint. If retrieval identifies one clearly strongest approved passage, the preview shows its reviewed grounded answer; deployed pre-prod and production use the complete RAG → Gemini flow.
 - 🧪 **Golden evaluation dataset:** a growing set of fixed test cases defines the expected facts, sources, response type, and safety behaviour.
 - 📊 **Analytics:** PostHog records anonymous quality, latency, fallback, feedback, and conversion events.
@@ -132,7 +132,7 @@ flowchart TD
 | **Direct RAG** | The normal path: retrieve approved evidence before Gemini may answer, with no separate intent classifier. |
 | **Evidence-aware semantic cache** | A cache of validated answers that can respond quickly only when the new question is semantically close **and** its retrieved source IDs still match the cached evidence. |
 | **Readiness gate** | A short wait that prevents an evaluation or visitor question from running before MiniLM is available. |
-| **Semantic retrieval** | MiniLM finds the most similar approved portfolio and resume passages, even when a visitor uses different wording. It is a shortlist, not a final answer. |
+| **Semantic retrieval** | MiniLM finds the most similar approved portfolio, resume, and interview-prep passages, even when a visitor uses different wording. It is a shortlist, not a final answer. |
 | **Evidence decision** | Gemini is instructed to answer only when a shortlisted passage directly supports the question; no support produces a safe fallback. |
 | **Generator** | Gemini writes a concise answer using only the retrieved evidence. |
 | **Grounding checks** | Output checks verify that Gemini's claims are supported by the retrieved sources. |
@@ -178,7 +178,7 @@ For an open-ended case, **Compare models** runs the same question, retrieval, ap
 
 ```mermaid
 flowchart LR
-    A["🏆 Golden dataset<br/>131 test cases"] --> B["▶️ Run through the live bot"]
+    A["🏆 Golden dataset"] --> B["▶️ Run through the live bot"]
     B --> C["📋 Compare with<br/>expected facts and sources"]
     C --> D["👤 Human-as-judge review"]
     D --> E{"Correct and helpful?"}
@@ -281,6 +281,7 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 | **16. Clearer human evaluation** | Every benchmark expectation was labelled “Expected facts” | Simulated output-validator cases looked like incorrect interpretations of the visitor's question | Renamed the section **Pass criteria — not model input** and added plain-language test-purpose explanations |
 | **17. Portfolio interaction polish** | Native scrolling and entrance reveals worked, but desktop scrolling felt abrupt | The page lacked the restrained fluidity of the reference experience | Added lightweight inertial desktop scrolling while preserving native touch, keyboard, nested-panel, and reduced-motion behaviour |
 | **18. Direct RAG with evidence-aware caching** | A separate intent classifier guessed labels before retrieval | Recruiter phrasing such as “high agency” or “fast paced” could be assigned to the wrong category, producing unrelated answers | Removed the intent classifier from the live route. Normal questions now retrieve evidence directly; common Golden Dataset and real-world variants are pre-seeded in a cache that can answer only when the same evidence is retrieved again. |
+| **19. Broader evidence and production parity** | Portfolio and resume evidence covered outcomes, but richer interview stories were outside retrieval and old classifier code still remained in the bundle | Questions about decision-making, prioritisation, setbacks, stakeholder management, pace, and metrics could lack the most specific evidence | Added verified interview-prep stories as retrieval chunks, expanded pace regressions, removed the unused intent-classifier code, and aligned the eval console and documentation with the direct-RAG architecture. |
 
 ## Cost and trade-offs
 
@@ -298,4 +299,4 @@ See [TELEMETRY.md](TELEMETRY.md) and the [preproduction security audit](evaluati
 
 That makes the complete product a **guarded RAG assistant with an evidence-aware semantic cache**, rather than a chatbot that guesses an intent and sends every question to an LLM.
 
-The preproduction build is connected to the `codex/portfolio-rag-preprod` branch and is intentionally separate from production.
+Preproduction is validated first; the same tested commit is then fast-forwarded to production so the bot, evaluation console, knowledge base, and documentation remain aligned.

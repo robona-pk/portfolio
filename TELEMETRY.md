@@ -1,12 +1,12 @@
 # Mira evaluation and telemetry guide
 
-This document explains what the chatbot records, how to review the 127-question evaluation set, and how to build the PostHog views needed to improve the product and detect likely abuse.
+This document explains what the chatbot records, how to review the golden evaluation dataset, and how to build the PostHog views needed to improve the product and detect likely abuse.
 
 ## Evaluation workflow
 
 Open `/eval.html` on the preproduction deployment.
 
-1. Run one question while debugging a specific route, or select **Run all 127** for a complete pass.
+1. Run one question while debugging a specific route, or select **Run all** for a complete pass.
 2. Open each result and compare the answer with the expected facts, response type, and sources.
 3. Mark the result **Correct** or **Incorrect**.
 4. Give it a helpfulness score from 1 to 5.
@@ -15,7 +15,7 @@ Open `/eval.html` on the preproduction deployment.
 
 Use **Compare models** on an individual open-ended case to run Gemini Flash-Lite and Qwen 2.5 against the same retrieved evidence. Compare factual completeness, tone, concision, fallback behaviour, total latency, and model-generation latency. Qwen runs locally through WebGPU and may take several minutes on its first run; if WebGPU is unavailable, the console records that limitation instead of changing the live bot.
 
-Use the **Answer source** filter to isolate policy answers, accepted LLM answers, fallbacks, guardrails, or errors. Model-generation latency is shown as **Not used** when a policy or guardrail answer bypassed the model. For generated answers, it measures the generation step, including provider or local-model overhead. Total latency still includes routing, security checks, retrieval, validation, and generation.
+Use the **Answer source** filter to isolate policy answers, accepted LLM answers, fallbacks, guardrails, or errors. Model-generation latency is shown as **Not used** when a policy or guardrail answer bypassed the model. For generated answers, it measures the generation step, including provider or local-model overhead. Total latency includes security checks, retrieval, semantic-cache lookup, validation, and generation.
 
 Answers and manual reviews are stored in the current browser with `localStorage`. They are not uploaded automatically. Exporting produces a dated JSON file containing the dataset, answers, telemetry, verdicts, helpfulness ratings, and reviewer reasons.
 
@@ -27,27 +27,27 @@ The assistant may answer only from:
 
 - Approved profile and policy responses in `assets/chatbot-knowledge.js`
 - Portfolio passages in `portfolioKnowledge` inside `index.html`
+- Verified resume and interview-prep chunks indexed from approved source documents
 - The visitor's question
 
-Known recruiter questions, published metrics, confidentiality rules, and safety boundaries return approved answers without generation. Gemini is reserved for open-ended synthesis through a protected Vercel endpoint. It is instructed to paraphrase supplied facts rather than introduce claims and must not infer people management, seniority, private details, dates, employers, metrics, ownership, or personality traits.
-
-For wording that does not match a known fast path, MiniLM compares the question with a fixed intent taxonomy. A confident match routes to the relevant approved answer category. When MiniLM is uncertain, `/api/classify` asks Gemini for one allowlisted intent label. The classifier cannot supply facts or visitor-facing copy. If neither classifier is confident, the request continues to evidence retrieval or fails closed.
+Known direct actions, confidentiality rules, and safety boundaries return approved answers without generation. Every normal portfolio or recruiter question goes directly to evidence retrieval—there is no separate intent classifier. Gemini is reserved for evidence-based synthesis through a protected Vercel endpoint. It is instructed to paraphrase supplied facts rather than introduce claims and must not infer private details, dates, employers, metrics, ownership, or personality traits.
 
 The active thresholds are exposed as `window.ASK_PRERNA_RAG_CONFIG`:
 
 | Setting | Value | Purpose |
 | --- | ---: | --- |
-| Semantic relevance threshold | `0.24` | Minimum cosine score after hybrid reranking |
-| Meaningful-term coverage | `0.50` | At least half of the non-generic question topics must appear in the evidence |
-| Minimum topic matches | `1` | Rejects passages that are only close because of generic words such as “Prerna”, “work”, or “product” |
-| Intent similarity threshold | `0.38` | Minimum MiniLM score for accepting a local intent |
-| Intent separation margin | `0.05` | Requires the best local intent to beat the runner-up |
-| Hosted intent confidence | `0.72` | Minimum confidence for accepting Gemini’s allowlisted intent label |
+| Evidence candidate floor | `0.16` | Broad semantic-recall floor before evidence validation |
+| Maximum evidence candidates | `5` | Limits the context Gemini receives |
+| Semantic cache threshold | `0.91` | Reuses an answer only for a very close question with matching evidence sources |
+| Maximum question length | `500` characters | Limits abuse and unnecessary processing |
+| Maximum answer length | `300` characters | Keeps Mira concise |
+| Semantic security wait | `8` seconds | Fails closed if the security model cannot decide in time |
+| Gemini browser wait | `14` seconds | Returns the approved fallback instead of leaving the visitor waiting |
 | Unsupported fallback | `I don’t have that information right now. You can reach out to Prerna to ask her directly.` | Returned with a contact CTA when approved context is insufficient |
 
-Gemini is limited to 120 output tokens and a 10-second browser response budget. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected or slow response falls back to the approved answer.
+Gemini is limited to 120 output tokens and a 14-second browser response budget. Its output is trimmed at a sentence or word boundary and hard-capped at 300 characters. Generated responses are rejected when they are empty, malformed, exceed that cap, introduce an unsupported quantified claim, mention unsupported proper nouns or private topics, leak prompt language, or fail sentence-level semantic grounding. A rejected or slow response falls back to the approved answer.
 
-Before retrieval, input is canonicalised to expose zero-width characters, selected Unicode homoglyphs, Base64-encoded instructions, and common leetspeak. Literal rules screen every request. Questions that match a deterministic approved answer or policy boundary return that fixed response without loading an AI model; because visitor text is never supplied to generation on this path, it cannot alter the answer. Unmatched open-ended questions also pass through the MiniLM injection classifier before retrieval or generation. If semantic security classification cannot load, those open-ended requests fail closed. These are layered risk controls, not a proof that every novel attack will be caught.
+Before retrieval, input is canonicalised to expose zero-width characters, selected Unicode homoglyphs, Base64-encoded instructions, and common leetspeak. Literal rules screen every request. Questions that match a deterministic approved action or policy boundary return that fixed response without generation. Other questions pass through the MiniLM injection check before direct evidence retrieval. If semantic security classification cannot load, those open-ended requests fail closed. These are layered risk controls, not a proof that every novel attack will be caught.
 
 MiniLM loads only when an open-ended request needs semantic checks or retrieval. Approved recruiter questions and policy responses stay on the fast path. Gemini runs server-side, so visitors no longer download a generation model or depend on WebGPU; an open-ended request can still experience network, Vercel, or provider latency.
 
@@ -71,10 +71,6 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `retrieval_model` | Embedding model used for retrieval |
 | `generation_model` | Generation model when Gemini produced the final answer |
 | `generation_latency_ms` | Time spent in the generation step; zero when no model was used |
-| `intent` | Supported semantic intent selected for the question, when applicable |
-| `intent_confidence` | Confidence score for the selected semantic intent |
-| `intent_mode` | `semantic_intent`, `hosted_intent`, `deterministic_rule`, `retrieval`, or a guardrail/error mode |
-| `intent_model` | MiniLM or hosted model used for intent classification |
 | `total_latency_ms` | Total time from submitted question to final answer |
 | `input_tokens_estimate` | Approximate input tokens using a four-characters-per-token estimate |
 | `output_tokens_estimate` | Approximate output tokens using the same estimate |

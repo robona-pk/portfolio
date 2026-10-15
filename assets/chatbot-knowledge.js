@@ -26,7 +26,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     confidentialData: 'That concerns confidential company financials or operating data, which Prerna cannot share. I can, however, discuss the public outcomes of her work at Lenskart@Home and Bajaj Finserv Health.',
     companyContext: 'I can speak to Prerna’s work and published outcomes at that company, but not company strategy, internal performance, or non-public financials.',
     outOfScope: 'That sits outside what this portfolio assistant is designed to answer. If you are assessing Prerna, try asking about her product approach, growth outcomes, skills, career interests, or the projects she has built.',
-    botArchitecture: 'Mira applies safety and privacy checks, retrieves approved portfolio and resume evidence with MiniLM, and uses Gemini through a protected Vercel endpoint to write a grounded answer. An evidence-aware semantic cache reuses validated common answers only when the same source is retrieved again. The GitHub README explains the architecture and evaluation setup.',
+    botArchitecture: 'Mira applies safety and privacy checks, retrieves approved portfolio, resume, and interview-prep evidence with MiniLM, and uses Gemini through a protected Vercel endpoint to write a grounded answer. Its evidence-aware cache reuses validated answers only when the same source is retrieved again.',
     undocumented: 'I don’t have that information right now. You can reach out to Prerna to ask her directly.',
     careerLogistics: 'Prerna has not published those logistics here. The best way to discuss notice period, compensation, relocation, remote preferences, or interview availability is to contact her directly.',
     comparison: 'I wouldn’t make an unsupported comparison. The fairest way to assess Prerna is through her documented product decisions, measurable outcomes, and the scope she has owned.',
@@ -115,8 +115,8 @@ window.ASK_PRERNA_KNOWLEDGE = {
     },
     {
       id: 'bot-architecture', source: 'Project · Mira architecture', topics: ['bot_architecture'],
-      answer: 'Mira applies safety checks, retrieves approved portfolio and resume evidence with MiniLM, and uses Gemini to write a grounded answer. An evidence-aware semantic cache makes validated common answers faster. A Golden Dataset and PostHog support evaluation and product analytics.',
-      facts: 'Mira normalises the question and applies safety and privacy checks. Normal portfolio questions retrieve and rerank approved portfolio and resume evidence with MiniLM; Gemini answers only when that evidence supports the question, then grounding checks validate the output. An evidence-aware semantic cache returns a validated answer only when the same supporting evidence is retrieved. A Golden Dataset supports human evaluation; PostHog tracks usage and feedback.'
+      answer: 'Mira applies safety checks, retrieves approved portfolio, resume, and interview-prep evidence with MiniLM, and uses Gemini to write a grounded answer. An evidence-aware cache makes validated common answers faster; a Golden Dataset and PostHog support evaluation.',
+      facts: 'Mira normalises the question and applies safety and privacy checks. Normal questions retrieve and rerank approved portfolio, resume, and interview-prep evidence with MiniLM; Gemini answers only when that evidence supports the question, then grounding checks validate the output. An evidence-aware semantic cache returns a validated answer only when the same supporting evidence is retrieved. A Golden Dataset supports human evaluation; PostHog tracks usage and feedback.'
     }
   ],
   // Resume evidence is a source document split by its natural sections—not a
@@ -162,6 +162,64 @@ window.ASK_PRERNA_KNOWLEDGE = {
           id: 'resume-skills-ai', source: 'Resume · Skills — AI product practice', topics: ['product_skills', 'ai', 'llm', 'prompt_design'],
           answer: 'Prerna’s resume includes AI/LLM product use cases, prompt design and evaluations, and API integration alongside product strategy and analytics.',
           text: 'Prerna’s product strategy skills include API integration, AI/LLM product use cases, prompt design and evaluations, and behavioural analytics.'
+        }
+      ]
+    }
+  ],
+  // Interview-prep evidence is split by story so semantic retrieval can select
+  // the relevant behaviour and outcome without exposing the entire document.
+  // Generic sample calculations and provisional back-working are deliberately
+  // excluded because they are practice material, not published performance.
+  interviewPrepDocuments: [
+    {
+      id: 'interview-prep-2026',
+      source: 'Interview prep · STAR answer bank',
+      sourceUrl: 'https://docs.google.com/document/d/1ntXYsZkUJ1yNdl7gvytK0azrdMf4S3Y_tUqmT9igCYE/edit',
+      sections: [
+        {
+          id: 'ambiguous-data-decision', source: 'Interview prep · Ambiguous-data decision', topics: ['interview_prep', 'lenskart', 'problem_solving', 'customer_research', 'experimentation'],
+          answer: 'When Home Trial users dropped between cart and address selection without a clear data signal, Prerna combined journey walkthroughs with open-ended customer interviews. Clarifying that the trial was free lifted conversion from 26% to 58%.',
+          text: 'At Lenskart, Home Trial users were dropping between the cart and address-selection steps without a clear quantitative signal. Prerna asked colleagues unfamiliar with the journey to narrate what they thought each screen meant, which surfaced a pricing-confusion hypothesis. She then used open-ended interviews with customers who had dropped at that step, avoiding leading questions. Customers independently said the displayed frame price made a free trial look chargeable. She removed the pricing display, added clear trial-is-free messaging, and cart-to-address conversion increased from 26 percent to 58 percent.'
+        },
+        {
+          id: 'stakeholder-disagreement', source: 'Interview prep · Stakeholder disagreement', topics: ['interview_prep', 'bajaj', 'collaboration', 'stakeholder_management', 'experimentation'],
+          answer: 'At Bajaj Finserv Health, Prerna and a designer disagreed over a full-page review prompt. They kept the less disruptive bottom sheet but made skipping deliberate; review submission rose from 7% to 12%.',
+          text: 'At Bajaj Finserv Health, too few users completed the post-appointment ratings prompt for review data to support doctor ranking. Prerna proposed a full-page prompt; the designer challenged it as manipulative and disruptive after a care experience. Prerna did not force the original idea. They kept the bottom sheet, moved skip to a deliberate top-corner action, and disabled accidental background-tap dismissal without hiding the choice. Completed-appointment review submission increased from 7 percent to 12 percent.'
+        },
+        {
+          id: 'failed-rollout-recovery', source: 'Interview prep · Failed rollout and recovery', topics: ['interview_prep', 'lenskart', 'failure', 'vendor_management', 'problem_solving', 'lead_routing'],
+          answer: 'A high-value-customer routing pilot worked, but the pan-India rollout created unassigned bookings because a vendor used a hard filter instead of fallback sorting. Prerna diagnosed and corrected it; low-ranker share fell from 44% to 28% and blended revenue per appointment rose about 6.8%.',
+          text: 'At Lenskart, Prerna designed high-value-customer routing that prioritised tier 4-5 agents with an explicit fallback to tier 1-3. The Hyderabad pilot worked, but after the pan-India rollout she noticed waiting-unassigned appointments spiking in some cities. The routing vendor had implemented a hard filter instead of sort-with-fallback. She checked the implementation against the original specification and got the vendor to correct it. Low-ranker share of high-value-customer appointments fell from 44 percent to 28 percent, while blended revenue per appointment rose from ₹2,938 to ₹3,137, about 6.8 percent.'
+        },
+        {
+          id: 'roadmap-prioritisation', source: 'Interview prep · Roadmap prioritisation', topics: ['interview_prep', 'lenskart', 'prioritisation', 'decision_making', 'customer_experience'],
+          answer: 'Prerna prioritised fixing missing requested frames over a zone-mismatch acquisition issue because Home Trial still needed to prove experience quality. Frame adherence improved from 60% to 95%; broader Omni NPS moved from 41 to 49, though she does not claim isolated attribution.',
+          text: 'At Lenskart, Prerna had to choose between a zone-mismatch issue causing 20 percent drop-off at slot booking and a fulfilment gap where 40 percent of appointments arrived without the requested frames. Because Home Trial was still an unproven proposition and NPS was the core validation signal, she prioritised frame-pickup verification over growing traffic into a weak experience. Frame adherence improved from 60 percent to 95 percent. Broader Omni NPS moved from 41 to 49, but Prerna explicitly does not attribute that movement to this change alone because several initiatives shipped in parallel.'
+        },
+        {
+          id: 'senior-buy-in', source: 'Interview prep · Senior stakeholder buy-in', topics: ['interview_prep', 'lenskart', 'stakeholder_management', 'operations', 'inventory'],
+          answer: 'To resolve an operations blocker, Prerna designed a scan-based handoff that transferred frame accountability from store to agent at pickup. Booking-time inventory decrementing kept availability accurate, and the VP of Operations approved the launch.',
+          text: 'Before Lenskart Home Trial launched, the VP of Operations objected that stores would carry shrinkage penalties after inventory had physically left their control. Prerna designed a simple scan-based handoff in the agent app: pickup transferred responsibility for the frame from store to agent. She also decremented inventory at booking time so the last available unit stopped appearing to other customers. This resolved the accountability concern without making the customer journey more complex, secured the VP’s sign-off, and aligned stores before launch.'
+        },
+        {
+          id: 'challenged-own-assumption', source: 'Interview prep · Challenging an assumption with data', topics: ['interview_prep', 'lenskart', 'data', 'customer_research', 'decision_making', 'store_attribution'],
+          answer: 'Prerna’s team initially favoured assigning online orders to the customer’s last eye-test store. Data showed it was the nearest store only 31% of the time; customer research disproved the loyalty assumption, so she replaced it with deterministic geographic ownership.',
+          text: 'For Lenskart store attribution, Prerna’s team initially recommended assigning an online order to the customer’s most recent eye-test store, with distance as a fallback. Before committing, she found that this store was actually nearest in only 31 percent of cases. Customer interviews showed far-away visits were usually caused by workplace proximity, errands, or lack of awareness—not loyalty. She dropped the original recommendation and moved to a deterministic hex-grid ownership model with no overlap or dead zones. Combined with 48-hour post-delivery calls, territory ownership contributed to online customer NPS moving from 41 to 60.'
+        },
+        {
+          id: 'success-and-kill-criteria', source: 'Interview prep · Success and kill criteria', topics: ['interview_prep', 'metrics', 'experimentation', 'decision_making', 'lenskart'],
+          answer: 'Prerna defines one falsifiable primary metric, a guardrail for side effects, and a kill threshold before launch. For the Home Trial MVP, bookings rose 7% without adding inventory and eye-checkup demand was not cannibalised, so the test passed its pre-agreed bar.',
+          text: 'Prerna defines product success with one narrow, falsifiable primary metric plus a guardrail metric, and agrees the kill threshold before launch so later decisions are less political. For the Home Trial MVP, the primary test was whether bookings increased without adding inventory; the guardrail was that total area bookings should grow without cannibalising home eye-checkup demand. The MVP increased bookings 7 percent and the guardrail held. Had bookings not moved, the customer-choice hypothesis would have been killed rather than endlessly iterated.'
+        },
+        {
+          id: 'scope-pushback', source: 'Interview prep · Scope pushback', topics: ['interview_prep', 'lenskart', 'prioritisation', 'leadership', 'execution'],
+          answer: 'Facing a 14-day Home Trial deadline, Prerna pushed back on launching every entry point at once. She protected the core browse-and-select journey, deferred the engineering-heavy PDP entry point, launched on schedule, and shipped PDP entry about a week later.',
+          text: 'For the full Lenskart Home Trial launch, leadership set a 14-day deadline covering the customer journey, agent scanning and ownership transfer, and several entry points. Prerna proposed a specific scope cut instead of only raising risk: defer the product-detail-page entry point because matching a selected frame against live store inventory required extra engineering. The core browse-and-select journey launched on schedule, and the PDP entry point followed about one week later without disrupting the main launch.'
+        },
+        {
+          id: 'metrics-framework', source: 'Interview prep · Product metrics framework', topics: ['interview_prep', 'metrics', 'analytics', 'product_skills', 'root_cause_analysis'],
+          answer: 'Prerna’s measurement framework starts by defining the metric precisely, validating the data, locating the funnel step, segmenting affected users, and checking timing. She then pairs a primary outcome with guardrails across acquisition, activation, engagement, retention, revenue, and customer experience.',
+          text: 'Prerna’s root-cause checklist asks five questions: what exactly counts as the metric, whether the change is real or a tracking issue, where in the funnel it began, which users are affected, and exactly when it started. Her product measurement framework covers acquisition and funnel conversion, activation, engagement and feature adoption, retention and churn, revenue and commerce, and customer experience metrics such as NPS, CSAT, support-contact rate, on-time delivery, and cancellation. Generic worked examples in the preparation document are illustrative and are not claims about Prerna’s employers or results.'
         }
       ]
     }

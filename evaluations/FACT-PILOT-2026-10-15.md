@@ -66,4 +66,14 @@ Before this pilot, short recruiter questions could fall back or retrieve an adja
 
 ## Results
 
-Run the pilot on the pre-production Evaluation Console and record pass rate, fallbacks, P50/P95 latency, answer source, and reviewed-correct rate here before any production decision.
+Pre-production smoke checks completed on 15 October 2026:
+
+| Check | Result |
+|---|---|
+| “What is her pace like?” | Selected `pace_and_ambiguity`, `affirm`, confidence `0.95`; returned the approved positive answer. |
+| “Is she a slow PM?” | Selected `pace_and_ambiguity`, `negate`, confidence `0.89`; returned the approved contrast answer with no fallback. |
+| “How fast did Lenskart revenue grow?” | Rejected the pace fact and returned `NO_EVIDENCE`; it did not reuse a nearby but unsupported claim. |
+
+The full browser path also passed for “Is she a slow PM?” with the expected source, stance, and wording. Its measured model generation time was about 2.2 seconds; total cold-path latency was about 27 seconds because the browser retrieval model still had to initialise. This latency is a pre-production issue to measure across the complete pilot, not a production-readiness pass.
+
+Before any production decision, run the four **Fact pilot** categories in the Evaluation Console and review pass rate, fallbacks, P50/P95 total latency, P50/P95 generation latency, answer source, and reviewed-correct rate.

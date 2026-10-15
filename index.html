@@ -1698,9 +1698,9 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <footer>
   <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
 </footer>
-  <script src="assets/mira-facts.js?v=2026-10-15.7"></script>
-  <script src="assets/chatbot-knowledge.js?v=2026-10-15.7"></script>
-  <script src="assets/eval-dataset.js?v=2026-10-15.7"></script>
+  <script src="assets/mira-facts.js?v=2026-10-15.8"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-10-15.8"></script>
+  <script src="assets/eval-dataset.js?v=2026-10-15.8"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2324,7 +2324,7 @@ approvedInterviewPrepDocuments.forEach(document => (document.sections || []).for
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-15.7',
+  rulesVersion: '2026-10-15.8',
   retrievalModel: 'Gemini evidence selection (server-side)',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2419,6 +2419,22 @@ const botArchitectureAnswer = approvedKnowledge.botArchitecture || 'Mira applies
 const botReadmeUrl = 'https://github.com/robona-pk/portfolio#mira--portfolio-chatbot';
 const resumeAnswer = 'You can view or download Prerna’s resume here.';
 const resumeUrl = 'https://drive.google.com/file/d/1To5xUIDQBddvdafDoVcgCVNxidGA1Cfo/view?usp=sharing';
+const evidenceActions = Object.freeze({
+  'Lenskart@Home case study': { label: 'Read the Lenskart@Home case study', href: '#case-1' },
+  'Work · Lenskart impact': { label: 'Read the Lenskart@Home case study', href: '#case-1' },
+  'Interview prep · Challenging an assumption with data': { label: 'Read the omnichannel case study', href: '#case-2' },
+  'Work · Smart Health Reports': { label: 'Read the Smart Health Reports case study', href: '#case-3' },
+  'Work · Doctor listing ranking': { label: 'Read the Doctor Quality Score case study', href: '#case-4' },
+  'Project · Mira architecture': { label: 'See how Mira is built ↗', href: botReadmeUrl }
+});
+function evidenceActionForSources(sourceIds = [], factId = '') {
+  const factAction = factId
+    ? approvedPilotFacts.find(fact => fact.id === factId)?.action
+    : null;
+  if (factAction) return factAction;
+  const matchedSource = sourceIds.find(source => evidenceActions[source]);
+  return matchedSource ? evidenceActions[matchedSource] : null;
+}
 const resumeQuestion = /\b(resume|curriculum vitae|cv)\b/i;
 const strengthsQuestion = /\b(strengths?|strongest|strong suit|best at|superpower)\b/i;
 const strengthsAnswer = 'Her work shows signs of high agency: Prerna brings energy and persistence to ambiguous problems, looks for evidence, turns insights into experiments, and stays involved through iteration.';
@@ -2840,9 +2856,10 @@ function initialiseSemanticResponseCache() {
         answer: stance === 'negate' ? fact.contrast : fact.answer,
         factIds: [fact.id],
         stance,
-        action: fact.action || null
+        action: fact.action || evidenceActionForSources([fact.source], fact.id)
       };
-      return { question: item.question, source: getCacheSourceForEval(item), answer: '', factIds: [], stance };
+      const source = getCacheSourceForEval(item);
+      return { question: item.question, source, answer: '', factIds: [], stance, action: evidenceActionForSources([source]) };
     })
     .filter(item => item.source && sourceByName.has(item.source));
   // The Golden Dataset provides cache seeds. These improve repeat latency only;
@@ -2935,6 +2952,7 @@ function rememberSemanticCacheAnswer(question, answer, sourceIds, factIds = [], 
     sourceIds: [...new Set(sourceIds)],
     factIds: [...new Set(factIds)],
     stance: stance || inferQuestionStance(question),
+    action: evidenceActionForSources(sourceIds, factIds[0] || ''),
     seed: false
   };
   const entries = initialiseSemanticResponseCache();
@@ -3487,7 +3505,7 @@ async function generatePortfolioAnswerWithServerSelection(question, result, runt
     );
     return {
       answer: safeAnswer || (approvedKnowledge.undocumented || RAG_CONFIG.fallbackAnswer),
-      action: selectedFact?.action || null,
+      action: selectedFact?.action || evidenceActionForSources(selectedSources, selection.factId || ''),
       retrievedSources: selectedSources,
       retrievalScores: selectedSources.map(source => ({ source, score: 1 })),
       answerMode: validated ? generationProvider : safeAnswer ? 'curated_fallback' : 'unsupported_fallback',

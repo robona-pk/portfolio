@@ -235,6 +235,7 @@
       appliesTo: ['doctor listing', 'doctor ranking', 'doctor search order', 'quality score'],
       evidence: ['Bajaj Finserv Health case study'],
       answer: 'Doctor results had been effectively random. Prerna introduced a two-layer quality score using experience, ratings, fair fees, attendance, and profile quality; CTR rose 18% and annual revenue 11.6%.',
+      action: { label: 'Read the Doctor Quality Score case study', href: '#case-4' },
       contrast: 'The doctor-listing change was evidence-based, not random: a two-layer quality score lifted CTR 18% and annual revenue 11.6%.',
       affirmExamples: ['How did Prerna override the old doctor-listing order?', 'What changed in doctor ranking?'],
       negateExamples: ['Did doctor ordering remain random?'],

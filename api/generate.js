@@ -172,6 +172,11 @@ const MAX_SOURCES = 5;
 // This is a response-quality limit, not a display crop. Keep it aligned with
 // the generation prompt so an answer has one consistent server-side contract.
 const MAX_ANSWER_CHARACTERS = 280;
+const FALLBACK_RETRIEVAL_STOP_WORDS = new Set([
+  'about', 'and', 'are', 'can', 'did', 'do', 'does', 'for', 'from', 'give',
+  'has', 'have', 'her', 'how', 'in', 'is', 'me', 'of', 'on', 'prerna', 'she',
+  'tell', 'the', 'to', 'was', 'what', 'where', 'which', 'who', 'with', 'work'
+]);
 
 function requestIp(req) {
   return String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
@@ -208,6 +213,45 @@ function limitAnswerLength(value) {
   // treats this as unusable and fails closed instead of exposing a crop.
   if (!lastEnding || typeof lastEnding.index !== 'number') return '';
   return withinLimit.slice(0, lastEnding.index + 1).trim();
+}
+
+function retrieveApprovedFallback(question) {
+  const terms = [...new Set((String(question || '').toLowerCase().match(/[a-z0-9]+/g) || [])
+    .filter(term => term.length > 1 && !FALLBACK_RETRIEVAL_STOP_WORDS.has(term)))];
+  if (!terms.length) return null;
+
+  const ranked = Object.entries(SOURCE_LIBRARY).map(([source, value], sourceIndex) => {
+    const sourceWords = new Set(source.toLowerCase().match(/[a-z0-9]+/g) || []);
+    const evidenceWords = new Set(`${source} ${value.text}`.toLowerCase().match(/[a-z0-9]+/g) || []);
+    const matchedTerms = terms.filter(term => evidenceWords.has(term));
+    const titleMatches = matchedTerms.filter(term => sourceWords.has(term)).length;
+    return {
+      source,
+      answer: limitAnswerLength(value.answer),
+      matchedTerms,
+      coverage: matchedTerms.length / terms.length,
+      score: matchedTerms.length + titleMatches * 3,
+      sourceIndex
+    };
+  }).filter(item => item.answer && item.coverage === 1 && item.score > 0)
+    .sort((left, right) => right.score - left.score || left.sourceIndex - right.sourceIndex);
+
+  return ranked[0] || null;
+}
+
+function sendApprovedFallback(res, question, model, payload = {}) {
+  const fallback = retrieveApprovedFallback(question);
+  if (!fallback) return false;
+  res.status(200).json({
+    answer: fallback.answer,
+    model,
+    sources: [fallback.source],
+    blocked: false,
+    inputTokens: Number(payload?.usageMetadata?.promptTokenCount || 0),
+    outputTokens: 0,
+    fallbackMode: 'approved_source_retrieval'
+  });
+  return true;
 }
 
 export default async function handler(req, res) {
@@ -288,6 +332,7 @@ export default async function handler(req, res) {
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
       console.error('Gemini generation failed', response.status, payload?.error?.status || 'unknown');
+      if (fullKnowledge && sendApprovedFallback(res, safeQuestion, model, payload)) return;
       return res.status(502).json({
         error: 'The answer service is temporarily unavailable.',
         ...(process.env.VERCEL_ENV === 'preview' ? {
@@ -328,9 +373,15 @@ export default async function handler(req, res) {
           selectedSources = [...new Set([...selectedSources, matchedFact.source])];
         } else {
           answer = limitAnswerLength(parsed.answer || '');
-          if (!selectedSources.length || confidence < 0.72 || !answer || answer === 'NO_EVIDENCE') {
+          const approvedSourceAnswer = selectedSources
+            .map(source => limitAnswerLength(SOURCE_LIBRARY[source]?.answer || ''))
+            .find(Boolean) || '';
+          if (!selectedSources.length || confidence < 0.72 || answer === 'NO_EVIDENCE') {
             answer = 'NO_EVIDENCE';
             selectedSources = [];
+          } else if (!answer) {
+            answer = approvedSourceAnswer || 'NO_EVIDENCE';
+            if (answer === 'NO_EVIDENCE') selectedSources = [];
           }
         }
       } catch (error) {
@@ -370,6 +421,7 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('Gemini request error', error?.name || 'unknown');
+    if (fullKnowledge && sendApprovedFallback(res, safeQuestion, model)) return;
     return res.status(504).json({ error: 'The answer service timed out.' });
   } finally {
     clearTimeout(timeout);

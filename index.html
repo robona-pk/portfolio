@@ -2819,6 +2819,10 @@ const SEMANTIC_CACHE_THRESHOLD = 0.91;
 let semanticResponseCache;
 let semanticCacheVectorsPromise;
 
+function hasTruncatedAnswerEnding(value) {
+  return /(?:…|\.\.\.)\s*$/.test(String(value || '').trim());
+}
+
 function getCacheSourceForEval(item) {
   const knownSource = (item.expectedSources || []).find(source => portfolioKnowledge.some(card => card.source === source));
   if (knownSource) return knownSource;
@@ -2871,7 +2875,7 @@ function initialiseSemanticResponseCache() {
   semanticResponseCache = [...uniqueSeeds.values()].map(seed => {
     const card = sourceByName.get(seed.source);
     return { question: seed.question, answer: seed.answer || card.answer, sourceIds: [card.source], factIds: seed.factIds || [], stance: seed.stance || '', action: seed.action || null, seed: true };
-  }).concat(Array.isArray(learned) ? learned.filter(entry => entry && entry.question && entry.answer && Array.isArray(entry.sourceIds)) : []);
+  }).concat(Array.isArray(learned) ? learned.filter(entry => entry && entry.question && entry.answer && !hasTruncatedAnswerEnding(entry.answer) && Array.isArray(entry.sourceIds)) : []);
   return semanticResponseCache;
 }
 
@@ -2944,7 +2948,9 @@ async function findSemanticCacheHit(question, relevant, runtimeOptions = {}) {
 }
 
 function rememberSemanticCacheAnswer(question, answer, sourceIds, factIds = [], stance = '') {
-  if (!answer || !sourceIds?.length) return;
+  // Never preserve an old, clipped response: a cache hit must be as safe to
+  // display as a newly generated answer.
+  if (!answer || hasTruncatedAnswerEnding(answer) || !sourceIds?.length) return;
   const entry = {
     question: String(question).slice(0, RAG_CONFIG.maximumQuestionCharacters),
     answer,

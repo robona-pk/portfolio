@@ -404,6 +404,22 @@
       hardNegatives: ['Is Lenskart profitable?']
     },
     {
+      id: 'bajaj_work_overview',
+      source: 'Bajaj Finserv Health case study',
+      status: 'approved',
+      includeInFactPilot: false,
+      claim: 'At Bajaj Finserv Health, Prerna worked across wellness, diagnostics, doctor consultations, insurance pre-authorisation, and digital health, with measurable revenue, adoption, conversion, and operational outcomes.',
+      appliesTo: ['Bajaj Finserv Health role overview', 'what Prerna did at Bajaj', 'Bajaj work overview', 'Bajaj experience', 'Bajaj product portfolio'],
+      evidence: ['Bajaj Finserv Health case study', 'Resume · Bajaj — Product outcomes', 'Resume · Bajaj — Product leadership', 'Resume · Bajaj — AI automation'],
+      answer: 'At Bajaj Finserv Health, Prerna built a ₹28L diabetes wellness business, grew Health Files 8x, improved consultations by lifting doctor-search CTR 18%, and automated insurance pre-authorisation with OCR + NER—raising throughput 26% and saving ₹17L annually.',
+      contrast: 'Her Bajaj work was broader than one product: it covered diabetes wellness, Smart Health Reports, doctor consultations, and OCR + NER insurance pre-authorisation automation.',
+      mustInclude: ['₹28L', 'Health Files 8x', 'doctor-search CTR 18%', 'insurance pre-authorisation', 'OCR + NER', 'throughput 26%', '₹17L annually'],
+      affirmExamples: ['What did Prerna do at Bajaj Finserv Health?', 'What did she work on at Bajaj?', 'Give me an overview of her Bajaj work.', 'What did Prerna do in Bajaj?'],
+      negateExamples: ['Did Prerna only work on diabetes wellness at Bajaj?', 'Was her Bajaj role limited to one product?'],
+      casualExamples: ['what she do in bajaj?', 'bajaj work rundown?', 'her bajaj role?'],
+      hardNegatives: ['Is Bajaj profitable?', 'What is Bajaj’s revenue?', 'Does Prerna have diabetes?']
+    },
+    {
       id: 'diabetes_wellness',
       source: 'Work · Governed diabetes wellness',
       status: 'approved',

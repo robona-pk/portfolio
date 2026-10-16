@@ -110,7 +110,7 @@ window.ASK_PRERNA_KNOWLEDGE = {
     },
     {
       id: 'bajaj-impact', source: 'Work · Bajaj Finserv Health impact', topics: ['bajaj', 'experience'],
-      answer: 'At Bajaj Finserv Health, outcomes from Prerna’s work included ₹28L from a new wellness business, 8x Health Files adoption, an 18% doctor-listing CTR lift, and 26% higher pre-authorisation throughput.',
+      answer: 'At Bajaj Finserv Health, Prerna built a ₹28L diabetes wellness business, grew Health Files 8x, improved consultations by lifting doctor-search CTR 18%, and automated insurance pre-authorisation with OCR + NER—raising throughput 26% and saving ₹17L annually.',
       facts: 'At Bajaj Finserv Health, Prerna built a diabetes wellness business that generated ₹28L in five months, helped increase active Health Files users 8x, improved doctor-listing CTR by 18 percent, and improved insurance pre-authorisation throughput by 26 percent.'
     },
     {

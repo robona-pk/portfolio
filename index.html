@@ -788,8 +788,15 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .build-card h3{color:var(--t1)!important;font-size:clamp(2.2rem,4vw,3.5rem)!important}.build-card p{max-width:62ch!important}.build-note{color:var(--t2)!important}
 .build-tags{margin:1.15rem 0 1.35rem!important}.build-actions{margin-top:auto!important}.build-note{margin-top:1rem!important;padding-top:1rem;border-top:1px solid var(--border)}
 .build-tags span{border-color:var(--bhi)!important;background:rgba(20,15,27,.45)!important;color:var(--t2)!important;border-radius:0!important}
+.build-evidence{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:1.25rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.build-evidence-item{min-width:0;padding:1rem .8rem 1rem 0}.build-evidence-item+.build-evidence-item{padding-left:.8rem;border-left:1px solid var(--border)}
+.build-evidence strong{display:block;color:var(--s2);font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.25rem);line-height:1;letter-spacing:-.035em}
+.build-evidence span{display:block;margin-top:.45rem;color:var(--t2);font-size:.68rem;line-height:1.35}
+.build-proof{margin:.15rem 0 0!important;color:var(--t1)!important;font-size:.83rem!important;line-height:1.6!important}
 .build-visual{position:relative;width:100%;min-width:0;max-width:100%;height:100%;min-height:0;overflow:hidden;margin:0;border:1px solid var(--border);background:#1b1422;box-shadow:4px 4px 0 rgba(189,137,233,.22)}
 .build-visual img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.88) contrast(.98)}
+.build-visual.build-visual-mira{background:radial-gradient(circle at 50% 42%,rgba(225,184,91,.16),transparent 46%),#120e17}
+.build-visual.build-visual-mira img{object-fit:contain;padding:clamp(2rem,7vw,5rem);filter:saturate(.92) contrast(1.02);transform:translateY(-1.5%)}
 .build-visual figcaption{position:absolute;left:1rem;bottom:1rem;margin:0;padding:.42rem .65rem;background:rgba(20,15,27,.82);border:1px solid rgba(247,240,248,.26);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--t1)}
 .sk-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:1rem!important}
 .sk-card{min-height:230px!important;padding:1.5rem!important;background:linear-gradient(145deg,#23192c,#17111d)!important;border:1px solid #554962!important;box-shadow:4px 4px 0 #0b090f!important}
@@ -922,7 +929,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
   <ul class="nav-links" id="nl">
     <li><a href="#about">About</a></li>
     <li><a href="#cases">Work</a></li>
-    <li><a href="#builds">Hobby Projects</a></li>
+    <li><a href="#builds">Independent AI Products</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
   </ul>
@@ -1048,8 +1055,30 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 <!-- PRODUCT BUILDS -->
 <hr class="divider">
 <div class="wrap" id="builds">
-  <div class="sec-mark"><span class="sec-t">Hobby Projects</span><div class="sec-rule"></div></div>
+  <div class="sec-mark"><span class="sec-t">Independent AI Products</span><div class="sec-rule"></div></div>
   <div class="build-grid">
+    <article class="build-card reveal">
+      <span class="build-kicker">Evidence-grounded AI product · Live</span>
+      <h3>Mira</h3>
+      <p>A production portfolio assistant that answers from approved professional evidence. Gemini selects supporting sources, while deterministic guardrails, output validation, and an evidence-bound semantic cache keep unsupported claims out.</p>
+      <div class="build-evidence" aria-label="Mira product evidence">
+        <div class="build-evidence-item"><strong>341</strong><span>evaluation cases</span></div>
+        <div class="build-evidence-item"><strong>13</strong><span>blind production questions</span></div>
+        <div class="build-evidence-item"><strong>8</strong><span>new coverage regressions added</span></div>
+      </div>
+      <p class="build-proof">A blind external test exposed two answer-coverage gaps. Both were traced to the responsible routing and evidence contracts, fixed on production, and converted into regression cases.</p>
+      <div class="build-tags"><span>RAG workflow</span><span>Gemini</span><span>Semantic cache</span><span>Evaluation harness</span><span>PostHog</span></div>
+      <div class="build-actions">
+        <a class="build-primary" href="#hero" onclick="openRagModal();return false;">Try Mira ↗</a>
+        <a class="build-secondary" href="eval.html" target="_blank" rel="noopener">View eval console ↗</a>
+        <a class="build-secondary" href="https://github.com/robona-pk/portfolio#product-changelog" target="_blank" rel="noopener">Read changelog ↗</a>
+      </div>
+      <p class="build-note">Built as an AI product system, not a chatbot demo: evidence, evaluations, observed behaviour, and production iteration are part of the product.</p>
+    </article>
+    <figure class="build-visual build-visual-mira reveal">
+      <img src="assets/prerna-portfolio-bot.png" alt="Mira, Prerna Kapoor's evidence-grounded portfolio assistant" loading="lazy">
+      <figcaption>Mira, live on this portfolio</figcaption>
+    </figure>
     <article class="build-card reveal">
       <span class="build-kicker">Independent AI workflow · 2026</span>
       <h3>FindAMatch</h3>

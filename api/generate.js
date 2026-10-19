@@ -174,8 +174,9 @@ const MAX_SOURCES = 5;
 const MAX_ANSWER_CHARACTERS = 280;
 const FALLBACK_RETRIEVAL_STOP_WORDS = new Set([
   'about', 'and', 'are', 'can', 'did', 'do', 'does', 'for', 'from', 'give',
-  'has', 'have', 'her', 'how', 'in', 'is', 'me', 'of', 'on', 'prerna', 'she',
-  'tell', 'the', 'to', 'was', 'what', 'where', 'which', 'who', 'with', 'work'
+  'has', 'have', 'her', 'how', 'in', 'is', 'me', 'of', 'on', 'or', 'prerna',
+  'she', 'tell', 'the', 'to', 'use', 'used', 'was', 'what', 'where', 'which',
+  'who', 'with', 'work', 'worked'
 ]);
 
 function requestIp(req) {
@@ -220,7 +221,7 @@ function retrieveApprovedFallback(question) {
     .filter(term => term.length > 1 && !FALLBACK_RETRIEVAL_STOP_WORDS.has(term)))];
   if (!terms.length) return null;
 
-  const ranked = Object.entries(SOURCE_LIBRARY).map(([source, value], sourceIndex) => {
+  const sourceCandidates = Object.entries(SOURCE_LIBRARY).map(([source, value], sourceIndex) => {
     const sourceWords = new Set(source.toLowerCase().match(/[a-z0-9]+/g) || []);
     const evidenceWords = new Set(`${source} ${value.text}`.toLowerCase().match(/[a-z0-9]+/g) || []);
     const matchedTerms = terms.filter(term => evidenceWords.has(term));
@@ -233,7 +234,31 @@ function retrieveApprovedFallback(question) {
       score: matchedTerms.length + titleMatches * 3,
       sourceIndex
     };
-  }).filter(item => item.answer && item.coverage === 1 && item.score > 0)
+  });
+
+  // Approved fact contracts are first-class evidence too. Including them in
+  // the fail-closed retrieval path keeps specific coverage (for example RAG
+  // experience or named AI tools) when hosted generation is unavailable.
+  const factCandidates = Object.values(FACT_LIBRARY).map((fact, factIndex) => {
+    const sourceWords = new Set(String(fact.source || '').toLowerCase().match(/[a-z0-9]+/g) || []);
+    const evidenceText = [fact.source, fact.claim, ...(fact.appliesTo || []), ...(fact.evidence || [])].join(' ');
+    const evidenceWords = new Set(evidenceText.toLowerCase().match(/[a-z0-9]+/g) || []);
+    const matchedTerms = terms.filter(term => evidenceWords.has(term));
+    const titleMatches = matchedTerms.filter(term => sourceWords.has(term)).length;
+    return {
+      source: fact.source,
+      answer: limitAnswerLength(fact.answer),
+      factId: fact.id,
+      stance: 'affirm',
+      matchedTerms,
+      coverage: matchedTerms.length / terms.length,
+      score: matchedTerms.length + titleMatches * 3 + 1,
+      sourceIndex: Object.keys(SOURCE_LIBRARY).length + factIndex
+    };
+  });
+
+  const ranked = [...sourceCandidates, ...factCandidates]
+    .filter(item => item.answer && item.coverage === 1 && item.score > 0)
     .sort((left, right) => right.score - left.score || left.sourceIndex - right.sourceIndex);
 
   return ranked[0] || null;
@@ -249,6 +274,9 @@ function sendApprovedFallback(res, question, model, payload = {}) {
     blocked: false,
     inputTokens: Number(payload?.usageMetadata?.promptTokenCount || 0),
     outputTokens: 0,
+    factId: fallback.factId || undefined,
+    stance: fallback.stance || undefined,
+    confidence: fallback.factId ? 1 : undefined,
     fallbackMode: 'approved_source_retrieval'
   });
   return true;

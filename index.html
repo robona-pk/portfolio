@@ -2323,7 +2323,7 @@ approvedInterviewPrepDocuments.forEach(document => (document.sections || []).for
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-16.1',
+  rulesVersion: '2026-10-19.1',
   retrievalModel: 'Gemini evidence selection (server-side)',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2411,8 +2411,8 @@ const promptInjection = /\b(ignore|disregard|forget|override|bypass)\b.{0,48}\b(
 const externalKnowledgeQuestion = /\b(president|prime minister|capital of|capitol of|weather|news|stock price|share price|crypto|bitcoin|election|sports score|recipe|joke|translate|current time)\b|\b(?:what|which).{0,24}\b(?:capital|capitol)\b/i;
 const outOfScopeAnswer = 'I’m designed as a guide to Prerna’s work—not as a general web search. If you are assessing fit, ask about her product approach, growth outcomes, skills, career interests, or the projects she has built.';
 const answerScopeQuestion = /\b(what (questions?|things?|topics?) can (you|this bot|the bot|mira).{0,20}\b(answer|help with|talk about)|what can (i|we).{0,20}\b(ask|ask you)|how can (you|this bot|the bot|mira).{0,20}\bhelp|what do (you|this bot|the bot|mira) know(?: about (?:prerna|her))?|what can (you|this bot|the bot|mira) do|what (?:are|can) (you|this bot|the bot|mira) able to do|(?:tell|show) me what (you|this bot|the bot|mira) can do|(?:your|mira'?s|the bot'?s) capabilities)\b/i;
-const botArchitectureQuestion = /\b(how|what).{0,18}\b(this bot|the bot|chatbot|portfolio assistant)\b.{0,24}\b(made|built|work|implemented|architecture|tech stack)|\b(how (?:was|is).{0,12}\b(this bot|the bot|chatbot)\b.{0,12}\b(made|built))\b|\b(?:what|which) tools? does mira use\b|\bmira.{0,18}\b(?:tools?|tech stack|architecture)\b/i;
-const assistantQuestion = /\b(are you|what are you|who are you|how do you work|rag|retrieval|knowledge base|answer bank)\b/i;
+const botArchitectureQuestion = /\b(how|what).{0,18}\b(this bot|the bot|chatbot|portfolio assistant)\b.{0,24}\b(made|built|work|implemented|architecture|tech stack)|\b(how (?:was|is).{0,12}\b(this bot|the bot|chatbot)\b.{0,12}\b(made|built))\b|\b(?:what|which) tools? does mira use\b|\bmira.{0,18}\b(?:tools?|tech stack|architecture)\b|\bdoes mira.{0,18}\b(?:use|run on|work with)\b.{0,18}\b(?:rag|retrieval|knowledge base|answer bank)\b|\b(?:rag|retrieval|knowledge base|answer bank)\b.{0,18}\b(?:mira|this bot|the bot|portfolio assistant)\b/i;
+const assistantQuestion = /\b(are you|what are you|who are you|how do you work)\b/i;
 const assistantAnswer = 'I’m Mira, Prerna’s portfolio assistant. I use curated portfolio material to answer questions about her work.';
 const botArchitectureAnswer = approvedKnowledge.botArchitecture || 'Mira applies deterministic safety and privacy rules, then sends the approved compact knowledge base to Gemini through a protected Vercel endpoint. Gemini selects the supporting evidence before answering; validation and an evidence-bound cache prevent unsupported reuse.';
 const botReadmeUrl = 'https://github.com/robona-pk/portfolio#mira--portfolio-chatbot';

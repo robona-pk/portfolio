@@ -92,6 +92,34 @@
       hardNegatives: ['Which AI model answers Mira?', 'What is machine learning?', 'Is Gemini better than Qwen?']
     },
     {
+      id: 'rag_experience',
+      source: 'Project · Mira — RAG experience',
+      status: 'approved',
+      claim: 'Prerna has hands-on RAG experience from designing and building Mira’s evidence-grounded retrieval and answer workflow.',
+      appliesTo: ['RAG experience', 'RAG and LLM products', 'retrieval-augmented generation', 'retrieval augmented generation', 'semantic retrieval', 'evidence retrieval', 'grounded AI answers', 'knowledge retrieval'],
+      evidence: ['Project · Mira architecture', 'Resume · Skills — AI product practice'],
+      answer: 'Yes. Prerna designed and built Mira’s RAG workflow: approved knowledge retrieval, Gemini evidence selection, an evidence-bound semantic cache, output validation, a Golden Dataset, and PostHog feedback loops.',
+      contrast: 'It would be inaccurate to say she has no RAG experience. She designed and built Mira’s approved knowledge retrieval, Gemini evidence selection, semantic cache, output validation, evaluations, and analytics loops.',
+      affirmExamples: ['Does she have RAG experience?', 'Has Prerna built a RAG system?', 'Has she worked with retrieval-augmented generation?', 'What is her retrieval experience?', 'Does she understand RAG?'],
+      negateExamples: ['Has she never worked with RAG?', 'Does she lack retrieval experience?', 'Has she not built a grounded AI system?'],
+      casualExamples: ['any rag exp?', 'has pren built rag?', 'she know retrieval augmented generation?'],
+      hardNegatives: ['How does Mira answer questions?', 'Does Mira use RAG?', 'What tools does Mira use?']
+    },
+    {
+      id: 'ai_tools',
+      source: 'Profile · AI builder toolkit',
+      status: 'approved',
+      claim: 'Prerna’s documented AI builder toolkit includes Gemini, Codex, Claude Code, Python, GitHub, Vercel, and PostHog, alongside hands-on prompt, retrieval, guardrail, and evaluation workflows.',
+      appliesTo: ['AI tools', 'LLM tools', 'generative AI tools', 'AI builder toolkit', 'AI tech stack', 'tools used for AI projects', 'models and tools'],
+      evidence: ['Skills and tools', 'Profile · Tools', 'Resume · Skills — AI product practice', 'Project · Mira architecture'],
+      answer: 'Prerna’s AI builder toolkit includes Gemini, Codex, Claude Code, Python, GitHub, Vercel, and PostHog. She also works with prompt design, retrieval, guardrails, and evaluation workflows.',
+      contrast: 'Her AI work is not limited to generic ideation. Her documented toolkit includes Gemini, Codex, Claude Code, Python, GitHub, Vercel, and PostHog, plus prompt, retrieval, guardrail, and evaluation workflows.',
+      affirmExamples: ['What LLM or AI tools has she worked with?', 'Which AI tools does she use?', 'What is her AI builder stack?', 'What tools has she used for AI projects?', 'Which models and tools does Prerna know?'],
+      negateExamples: ['Has she never used AI tools?', 'Does she lack hands-on AI tooling experience?'],
+      casualExamples: ['wht ai tools has pren used?', 'her ai stack?', 'which llm tools she know?'],
+      hardNegatives: ['Does she have AI experience?', 'What tools does Mira use?', 'Is Gemini better than Qwen?']
+    },
+    {
       id: 'cross_functional_collaboration',
       source: 'Profile · Collaboration',
       status: 'approved',

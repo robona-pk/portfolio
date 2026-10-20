@@ -66,7 +66,7 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `retrieved_sources` | Source names used by the answer path |
 | `retrieval_scores` | Source and cosine score pairs used for generation |
 | `answer` | Final answer displayed to the visitor |
-| `answer_mode` | `gemini`, `policy`, `curated_fallback`, `unsupported_fallback`, or `error_fallback` |
+| `answer_mode` | `gemini`, `server_cache`, `policy`, `curated_fallback`, `unsupported_fallback`, or `error_fallback` |
 | `fallback` | Whether a safe fallback was used |
 | `fallback_reason` | Why the fallback occurred |
 | `error` | Request or generation error when present |
@@ -81,7 +81,8 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `output_tokens_estimate` | Approximate output tokens using the same estimate |
 | `estimated_cost_usd` | Paid-rate reference estimate for Gemini generation; actual cost may be `0` while within free-tier quota |
 | `retrieval_cache_hit` | Whether the evidence-bound near-match cache answered before Gemini was called |
-| `generation_cache_hit` | Whether a generated answer was reused from cache; hosted Gemini calls currently report false |
+| `generation_cache_hit` | Whether an answer was reused by the browser cache, local model cache, or shared server response cache |
+| `server_answer_cache_hit` | Whether Vercel served a reviewed evidence-bound answer without another Gemini call |
 | `rules_version` | Version of the policy and threshold configuration |
 | `security_mode` | `fast_policy`, `rule`, `server_evidence_guard`, `model_guardrail`, `input_guard`, or `request_error` |
 | `security_score` | Rule score where applicable; model guardrails report through `security_mode` |

@@ -6,6 +6,13 @@ const FACT_LIBRARY = Object.freeze(Object.fromEntries(
     .map(fact => [fact.id, fact])
 ));
 
+// Version the public cache key alongside the approved evidence contracts.
+// A deployment with changed evidence increments this value, so a response can
+// never outlive the knowledge and validation rules that produced it.
+const EVIDENCE_CACHE_VERSION = '2026-10-20.1';
+const EVIDENCE_CACHE_TTL_SECONDS = 86400;
+const EVIDENCE_CACHE_STALE_SECONDS = 604800;
+
 const SOURCE_LIBRARY = Object.freeze({
   'Lenskart@Home case study': {
     answer: 'At Lenskart, Prerna helped reposition home trials from an eye-test-led journey into a fashion-forward way to try frames at home. Her initiatives contributed ₹6Cr+ in annualised revenue, including ₹1.8Cr from personalisation; a pan-India pilot lifted bookings 7%.',
@@ -284,19 +291,27 @@ function sendApprovedFallback(res, question, model, payload = {}) {
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
+  const isEvidenceCacheRequest = req.method === 'GET';
+  if (!['GET', 'POST'].includes(req.method)) return res.status(405).json({ error: 'Method not allowed.' });
   const fetchSite = String(req.headers['sec-fetch-site'] || '');
   if (fetchSite && fetchSite !== 'same-origin') return res.status(403).json({ error: 'Cross-site requests are not allowed.' });
   if (!withinRateLimit(req)) return res.status(429).json({ error: 'Please wait a moment and try again.' });
 
-  const question = cleanText(req.body?.question, MAX_QUESTION_CHARACTERS);
+  if (isEvidenceCacheRequest && String(req.query?.v || '') !== EVIDENCE_CACHE_VERSION) {
+    return res.status(400).json({ error: 'The evidence cache version is not current.' });
+  }
+
+  const requestBody = isEvidenceCacheRequest
+    ? { question: req.query?.q, fullKnowledge: true }
+    : req.body;
+  const question = cleanText(requestBody?.question, MAX_QUESTION_CHARACTERS);
   const safeQuestion = redactPrivateText(question);
-  const fullKnowledge = req.body?.fullKnowledge === true;
-  const sourceNames = Array.isArray(req.body?.sources)
-    ? [...new Set(req.body.sources.filter(source => typeof source === 'string' && SOURCE_LIBRARY[source]))].slice(0, MAX_SOURCES)
+  const fullKnowledge = requestBody?.fullKnowledge === true;
+  const sourceNames = Array.isArray(requestBody?.sources)
+    ? [...new Set(requestBody.sources.filter(source => typeof source === 'string' && SOURCE_LIBRARY[source]))].slice(0, MAX_SOURCES)
     : [];
-  const factIds = Array.isArray(req.body?.factIds)
-    ? [...new Set(req.body.factIds.filter(factId => typeof factId === 'string' && FACT_LIBRARY[factId]))].slice(0, 3)
+  const factIds = Array.isArray(requestBody?.factIds)
+    ? [...new Set(requestBody.factIds.filter(factId => typeof factId === 'string' && FACT_LIBRARY[factId]))].slice(0, 3)
     : [];
   if (!question || question.length > MAX_QUESTION_CHARACTERS || (!fullKnowledge && !sourceNames.length && !factIds.length)) {
     return res.status(400).json({ error: 'The generation request is not grounded in approved portfolio material.' });
@@ -438,6 +453,18 @@ export default async function handler(req, res) {
       answer = 'NO_EVIDENCE';
       selectedSources = [];
     }
+    // Only immutable, reviewed fact-contract answers are shared through the
+    // CDN. Generated prose, fallbacks, blocked requests and no-evidence results
+    // remain no-store. This keeps the speed-up evidence-bound while avoiding a
+    // database, Redis, vector store or any other paid cache dependency.
+    const cacheEligible = isEvidenceCacheRequest && Boolean(factDecision) && !blocked;
+    if (cacheEligible) {
+      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+      res.setHeader(
+        'Vercel-CDN-Cache-Control',
+        `public, s-maxage=${EVIDENCE_CACHE_TTL_SECONDS}, stale-while-revalidate=${EVIDENCE_CACHE_STALE_SECONDS}`
+      );
+    }
     return res.status(200).json({
       answer,
       model: payload.modelVersion || model,
@@ -445,6 +472,8 @@ export default async function handler(req, res) {
       blocked,
       inputTokens: Number(payload.usageMetadata?.promptTokenCount || 0),
       outputTokens: Number(payload.usageMetadata?.candidatesTokenCount || 0),
+      serverCacheEligible: cacheEligible,
+      evidenceCacheVersion: EVIDENCE_CACHE_VERSION,
       ...(factDecision || {})
     });
   } catch (error) {

@@ -2352,7 +2352,7 @@ approvedInterviewPrepDocuments.forEach(document => (document.sections || []).for
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-10-19.1',
+  rulesVersion: '2026-10-20.1',
   retrievalModel: 'Gemini evidence selection (server-side)',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -3146,15 +3146,34 @@ async function generateWithGemini(payload, runtimeOptions = {}) {
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), RAG_CONFIG.maximumGenerationWaitMs);
   try {
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    // Production evidence selection uses a versioned GET so Vercel can share
+    // reviewed fact-contract responses at the CDN. Evaluation runs and scoped
+    // generation stay POST/no-store so the harness continues testing the live
+    // model path rather than a cached answer.
+    const useSharedEvidenceCache = payload.fullKnowledge === true
+      && !runtimeOptions.disableSemanticCache
+      && !new URLSearchParams(window.location.search).has('eval');
+    const cacheUrl = new URL('/api/generate', window.location.origin);
+    if (useSharedEvidenceCache) {
+      cacheUrl.searchParams.set('q', normalizeQuestion(payload.question));
+      cacheUrl.searchParams.set('v', RAG_CONFIG.rulesVersion);
+    }
+    const response = await fetch(useSharedEvidenceCache ? cacheUrl : '/api/generate', {
+      method: useSharedEvidenceCache ? 'GET' : 'POST',
+      headers: useSharedEvidenceCache ? { Accept: 'application/json' } : { 'Content-Type': 'application/json' },
       signal: controller.signal,
-      body: JSON.stringify(payload)
+      ...(useSharedEvidenceCache ? {} : { body: JSON.stringify(payload) })
     });
     const result = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(result.error || 'Gemini generation failed.');
-    return result;
+    const serverCacheHit = String(response.headers.get('x-vercel-cache') || '').toUpperCase() === 'HIT';
+    return {
+      ...result,
+      serverCacheHit,
+      // A CDN hit did not spend model tokens on this request. Do not attribute
+      // the original cached response's usage or estimated cost to this visitor.
+      ...(serverCacheHit ? { inputTokens: 0, outputTokens: 0 } : {})
+    };
   } finally {
     window.clearTimeout(timeout);
   }
@@ -3542,12 +3561,12 @@ async function generatePortfolioAnswerWithServerSelection(question, result, runt
       action: selectedFact?.action || evidenceActionForSources(selectedSources, selection.factId || ''),
       retrievedSources: selectedSources,
       retrievalScores: selectedSources.map(source => ({ source, score: 1 })),
-      answerMode: validated ? generationProvider : safeAnswer ? 'curated_fallback' : 'unsupported_fallback',
+      answerMode: selection.serverCacheHit ? 'server_cache' : validated ? generationProvider : safeAnswer ? 'curated_fallback' : 'unsupported_fallback',
       fallback: !safeAnswer,
       fallbackReason: safeAnswer ? (validated ? '' : 'generated_wording_replaced') : 'output_validation_failed',
       error: '',
       retrievalCacheHit: false,
-      generationCacheHit: false,
+      generationCacheHit: Boolean(selection.serverCacheHit),
       generationInputTokens: Number(selection.inputTokens || 0) + Number(generated === selection ? 0 : generated.inputTokens || 0),
       generationOutputTokens: Number(selection.outputTokens || 0) + Number(generated === selection ? 0 : generated.outputTokens || 0),
       generationModel: generated.model || selection.model || (generationProvider === 'qwen' ? RAG_CONFIG.comparisonModel : RAG_CONFIG.generationModel),
@@ -3744,6 +3763,7 @@ function captureAssistantTelemetry(result) {
     estimated_cost_usd: result.estimatedCostUsd,
     retrieval_cache_hit: result.retrievalCacheHit,
     generation_cache_hit: result.generationCacheHit,
+    server_answer_cache_hit: result.answerMode === 'server_cache',
     security_mode: result.securityMode,
     security_score: result.securityScore,
     rules_version: result.rulesVersion,

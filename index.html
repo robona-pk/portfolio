@@ -911,6 +911,27 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .rag-prompts{border-top-color:rgba(255,220,151,.1)}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:#E5A534;color:#FFE2A4}.rag-input{background:#11100d;border-color:rgba(255,220,151,.15);border-radius:14px}.rag-input:focus{border-color:#E5A534}.rag-send{background:#D89524;color:#171108;border-radius:14px}.rag-send:hover{background:#F3C45D;color:#171108}
 @media(max-width:640px){.rag-launcher{right:.55rem;bottom:.65rem}.rag-launch{width:94px;height:98px}.rag-nudge{display:none!important}.rag-modal{right:.55rem;bottom:102px;padding:0;align-items:flex-end}.rag-chat{width:calc(100vw - 1.1rem);border-radius:22px}.rag-launch{animation-duration:5.5s}}
 @media(prefers-reduced-motion:reduce){.rag-launch{animation:none}.rag-launch img,.rag-build-note.is-leaving{transition:none}}
+
+/* Contact: one divider system, list-style contact card, footer outside the section */
+#contact .sec-mark{border-bottom:none;padding-bottom:0;margin-bottom:3rem}
+.contact-layout{align-items:center}
+.contact-note{margin-top:.9rem;font-size:.8rem;color:var(--t3)}
+.clinks{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:16px;background:var(--card);overflow:hidden}
+.clink{display:grid;grid-template-columns:6.5rem 1fr auto;align-items:center;gap:1rem;padding:1.15rem 1.5rem;color:var(--t1);text-decoration:none;border-top:1px solid var(--border);transition:background .2s,color .2s}
+.clink:first-child{border-top:none}
+.clink:hover,.clink:focus-visible{background:rgba(255,255,255,.035);color:var(--t1)}
+.clink-k{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
+.clink-v{font-size:.95rem;font-weight:500;overflow-wrap:anywhere}
+.clink-go{color:var(--t3);transition:transform .2s,color .2s}
+.clink:hover .clink-go,.clink:focus-visible .clink-go{color:var(--s);transform:translate(2px,-2px)}
+footer{display:block;border-top:1px solid var(--border);background:var(--bg2);padding:1.5rem 0}
+.foot-in{max-width:1200px;margin:0 auto;padding:0 3rem}
+@media(max-width:640px){
+  #contact .sec-mark{margin-bottom:2rem}
+  .clink{grid-template-columns:1fr auto;row-gap:.2rem;padding:1rem 1.15rem}
+  .clink-v{grid-row:2}.clink-go{grid-column:2;grid-row:1/3}
+  .foot-in{padding:0 1.25rem;text-align:center}
+}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -931,7 +952,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
     <li><a href="#cases">Work</a></li>
     <li><a href="#builds">Independent AI Products</a></li>
     <li><a href="#skills">Skills</a></li>
-    <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+    <li><a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" class="nav-cta" data-cta="get-in-touch">Get in Touch</a></li>
   </ul>
   <button class="nav-hamburger" id="nt" aria-label="Menu">
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -1703,30 +1724,30 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 </div>
 
 <!-- CONTACT -->
-<hr class="divider">
 <div id="cw">
   <div class="wrap" id="contact">
     <div class="sec-mark"><span class="sec-t">Contact</span><div class="sec-rule"></div></div>
-   <div class="contact-layout">
+    <div class="contact-layout">
       <div class="reveal">
         <h2 class="contact-hl">Let&#39;s<br><span style="color:var(--s) !important">Talk.</span></h2>
         <p class="csub">Open to senior PM roles where I can drive meaningful revenue growth and own high-impact products end-to-end.</p>
-        <div style="margin-top:2rem">
-          <a href="mailto:alternate.prerna@gmail.com" class="btn btn-p" style="display:inline-block">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        </div>
+        <a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" class="btn btn-p" data-cta="get-in-touch" style="display:inline-flex;align-items:center;gap:.5rem">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <p class="contact-note">Opens LinkedIn. The quickest way to reach me is a message there.</p>
       </div>
       <div class="reveal">
         <div class="clinks">
-         <a href="mailto:alternate.prerna@gmail.com" class="clink"><span class="clink-i">&#9993;</span>alternate.prerna@gmail.com</a>
-<a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" class="clink"><span class="clink-i" style="font-size:.7rem;font-weight:700;font-style:normal">in</span>LinkedIn Profile</a>
-<a href="https://github.com/robona-pk" target="_blank" rel="noopener" class="clink"><span class="clink-i" style="font-size:.75rem;font-weight:700;font-style:normal">GH</span>GitHub Projects</a>
-<a href="https://drive.google.com/file/d/1p7K9pWwQJKkITaDjHE6cRPmKTec2aYS0/view?usp=sharing" target="_blank" rel="noopener" class="clink"><span class="clink-i" style="font-size:.8rem">&#128065;</span>View Resume</a>
+          <a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" class="clink"><span class="clink-k">LinkedIn</span><span class="clink-v">Message me</span><span class="clink-go" aria-hidden="true">&#8599;</span></a>
+          <a href="mailto:alternate.prerna@gmail.com" class="clink"><span class="clink-k">Email</span><span class="clink-v">alternate.prerna@gmail.com</span><span class="clink-go" aria-hidden="true">&#8599;</span></a>
+          <a href="https://github.com/robona-pk" target="_blank" rel="noopener" class="clink"><span class="clink-k">GitHub</span><span class="clink-v">robona-pk</span><span class="clink-go" aria-hidden="true">&#8599;</span></a>
+          <a href="https://drive.google.com/file/d/1p7K9pWwQJKkITaDjHE6cRPmKTec2aYS0/view?usp=sharing" target="_blank" rel="noopener" class="clink"><span class="clink-k">Resume</span><span class="clink-v">View resume</span><span class="clink-go" aria-hidden="true">&#8599;</span></a>
         </div>
       </div>
     </div>
-    <a href="mailto:alternate.prerna@gmail.com" id="flt">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" id="flt" data-cta="get-in-touch">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</div>
 <footer>
-  <p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p>
+  <div class="foot-in"><p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p></div>
 </footer>
   <script src="assets/mira-facts.js?v=2026-10-15.10"></script>
   <script src="assets/chatbot-knowledge.js?v=2026-10-15.10"></script>
@@ -4003,13 +4024,13 @@ document.addEventListener('click', event => {
   let eventName = '';
   let conversionType = '';
   if (href.includes('drive.google.com')) { eventName = 'resume_opened'; conversionType = 'resume_click'; }
-  else if (href.includes('linkedin.com')) eventName = 'linkedin_opened';
+  else if (href.includes('linkedin.com')) { eventName = 'linkedin_opened'; if (link.dataset.cta === 'get-in-touch') conversionType = 'contact_click'; }
   else if (href.includes('github.com')) eventName = 'github_opened';
   else if (href.startsWith('mailto:')) { eventName = 'email_contact_clicked'; conversionType = 'contact_click'; }
   else if (href.startsWith('tel:')) { eventName = 'phone_contact_clicked'; conversionType = 'contact_click'; }
   else if (href.includes('wa.me')) { eventName = 'whatsapp_contact_clicked'; conversionType = 'contact_click'; }
   else if (href === '#contact') { eventName = 'contact_section_opened'; conversionType = 'contact_click'; }
-  if (eventName) posthog.capture(eventName, { link_location: link.closest('#hero') ? 'hero' : link.closest('#contact') ? 'contact' : 'page' });
+  if (eventName) posthog.capture(eventName, { link_location: link.closest('#hero') ? 'hero' : link.closest('#contact') ? 'contact' : link.closest('nav') ? 'nav' : 'page', cta: link.dataset.cta || '' });
   if (conversionType) posthog.capture('portfolio_conversion', {
     conversion_type: conversionType,
     link_location: link.closest('#hero') ? 'hero' : link.closest('#contact') ? 'contact' : 'page',

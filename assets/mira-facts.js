@@ -362,7 +362,23 @@
       affirmExamples: ['Where is she from?', 'Where is she based now?'],
       negateExamples: ['Has she always lived in Bengaluru?'],
       casualExamples: ['where she from?'],
-      hardNegatives: ['Where is Lenskart headquartered?']
+      hardNegatives: ['Where is Lenskart headquartered?', 'Where is she currently working?', 'Where does she work now?', 'Which company is she at?']
+    },
+    {
+      id: 'current_role',
+      source: 'Profile · Governed current role',
+      status: 'approved',
+      claim: 'Prerna currently works at Lenskart as a Product Manager, leading strategy for Lenskart@Home, an ₹84Cr+ ARR omnichannel business. Before Lenskart, she worked at Bajaj Finserv Health.',
+      appliesTo: ['where she currently works', 'where she is currently working', 'which company she works for right now', 'current employer', 'current company', 'current workplace', 'current role', 'current job', 'present position'],
+      evidence: ['Resume · Professional summary', 'Resume · Lenskart'],
+      answer: 'Prerna currently works at Lenskart as a Product Manager, leading strategy for Lenskart@Home, an ₹84Cr+ ARR omnichannel business. Before Lenskart, she worked at Bajaj Finserv Health.',
+      contrast: 'Prerna is currently employed: she works at Lenskart as a Product Manager, leading strategy for Lenskart@Home. Before that, she worked at Bajaj Finserv Health.',
+      mustInclude: ['Lenskart', 'Product Manager', 'Lenskart@Home'],
+      mustNotInclude: ['Delhi', 'Chennai', 'Pune', 'Hyderabad'],
+      affirmExamples: ['Where is she currently working?', 'Where does she work now?', 'Which company is she at?', 'What is her current role?', 'Who is her current employer?'],
+      negateExamples: ['Is she not working anywhere right now?'],
+      casualExamples: ['where she wrkin rn?', 'current company?', 'whr does pren work'],
+      hardNegatives: ['Where is she based?', 'Where is Lenskart headquartered?', 'Which companies has she worked at?']
     },
     {
       id: 'target_roles',

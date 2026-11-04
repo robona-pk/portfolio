@@ -9,7 +9,7 @@ const FACT_LIBRARY = Object.freeze(Object.fromEntries(
 // Version the public cache key alongside the approved evidence contracts.
 // A deployment with changed evidence increments this value, so a response can
 // never outlive the knowledge and validation rules that produced it.
-const EVIDENCE_CACHE_VERSION = '2026-10-20.1';
+const EVIDENCE_CACHE_VERSION = '2026-11-04.1';
 const EVIDENCE_CACHE_TTL_SECONDS = 86400;
 const EVIDENCE_CACHE_STALE_SECONDS = 604800;
 

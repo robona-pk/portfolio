@@ -912,28 +912,16 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 @media(max-width:640px){.rag-launcher{right:.55rem;bottom:.65rem}.rag-launch{width:94px;height:98px}.rag-nudge{display:none!important}.rag-modal{right:.55rem;bottom:102px;padding:0;align-items:flex-end}.rag-chat{width:calc(100vw - 1.1rem);border-radius:22px}.rag-launch{animation-duration:5.5s}}
 @media(prefers-reduced-motion:reduce){.rag-launch{animation:none}.rag-launch img,.rag-build-note.is-leaving{transition:none}}
 
-/* Contact: one divider system, list-style contact card, footer outside the section */
+/* Contact: one divider, more breathing room, footer outside the section */
 #contact .sec-mark{border-bottom:none;padding-bottom:0;margin-bottom:3rem}
 #contact .sec-rule{display:none}
 #contact.wrap{padding-top:4.5rem;padding-bottom:6rem}
-.contact-layout{align-items:center}
-.contact-note{margin-top:.9rem;font-size:.8rem;color:var(--t3)}
-.clinks{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:16px;background:var(--card);overflow:hidden}
-.clink{display:grid;grid-template-columns:6.5rem 1fr auto;align-items:center;gap:1rem;padding:1.15rem 1.5rem;color:var(--t1);text-decoration:none;border-top:1px solid var(--border);transition:background .2s,color .2s}
-.clink:first-child{border-top:none}
-.clink:hover,.clink:focus-visible{background:rgba(255,255,255,.035);color:var(--t1)}
-.clink-k{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
-.clink-v{font-size:.95rem;font-weight:500;overflow-wrap:anywhere}
-.clink-go{color:var(--t3);transition:transform .2s,color .2s}
-.clink:hover .clink-go,.clink:focus-visible .clink-go{color:var(--s);transform:translate(2px,-2px)}
 footer{display:block;border-top:1px solid var(--border);background:var(--bg2);padding:2.25rem 0 2.5rem}
 .foot-in{max-width:1200px;margin:0 auto;padding:0 3rem}
 @media(max-width:640px){
   #contact .sec-mark{margin-bottom:2rem}
   #contact.wrap{padding-top:3.5rem;padding-bottom:4.5rem}
   footer{padding:1.75rem 0 2rem}
-  .clink{grid-template-columns:1fr auto;row-gap:.2rem;padding:1rem 1.15rem}
-  .clink-v{grid-row:2}.clink-go{grid-column:2;grid-row:1/3}
   .foot-in{padding:0 6.5rem 0 1.25rem;text-align:left}
 }
 </style>
@@ -1735,15 +1723,16 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
       <div class="reveal">
         <h2 class="contact-hl">Let&#39;s<br><span style="color:var(--s) !important">Talk.</span></h2>
         <p class="csub">Open to senior PM roles where I can drive meaningful revenue growth and own high-impact products end-to-end.</p>
-        <a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" class="btn btn-p" data-cta="get-in-touch" style="display:inline-flex;align-items:center;gap:.5rem">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <p class="contact-note">Opens LinkedIn. The quickest way to reach me is a message there.</p>
+        <div style="margin-top:2rem">
+          <a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" class="btn btn-p" data-cta="get-in-touch" style="display:inline-block">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
       </div>
       <div class="reveal">
         <div class="clinks">
-          <a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" class="clink"><span class="clink-k">LinkedIn</span><span class="clink-v">Message me</span><span class="clink-go" aria-hidden="true">&#8599;</span></a>
-          <a href="mailto:alternate.prerna@gmail.com" class="clink"><span class="clink-k">Email</span><span class="clink-v">alternate.prerna@gmail.com</span><span class="clink-go" aria-hidden="true">&#8599;</span></a>
-          <a href="https://github.com/robona-pk" target="_blank" rel="noopener" class="clink"><span class="clink-k">GitHub</span><span class="clink-v">robona-pk</span><span class="clink-go" aria-hidden="true">&#8599;</span></a>
-          <a href="https://drive.google.com/file/d/1p7K9pWwQJKkITaDjHE6cRPmKTec2aYS0/view?usp=sharing" target="_blank" rel="noopener" class="clink"><span class="clink-k">Resume</span><span class="clink-v">View resume</span><span class="clink-go" aria-hidden="true">&#8599;</span></a>
+         <a href="mailto:alternate.prerna@gmail.com" class="clink"><span class="clink-i">&#9993;</span>alternate.prerna@gmail.com</a>
+<a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" class="clink"><span class="clink-i" style="font-size:.7rem;font-weight:700;font-style:normal">in</span>LinkedIn Profile</a>
+<a href="https://github.com/robona-pk" target="_blank" rel="noopener" class="clink"><span class="clink-i" style="font-size:.75rem;font-weight:700;font-style:normal">GH</span>GitHub Projects</a>
+<a href="https://drive.google.com/file/d/1p7K9pWwQJKkITaDjHE6cRPmKTec2aYS0/view?usp=sharing" target="_blank" rel="noopener" class="clink"><span class="clink-i" style="font-size:.8rem">&#128065;</span>View Resume</a>
         </div>
       </div>
     </div>

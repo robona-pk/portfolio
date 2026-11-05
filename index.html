@@ -973,6 +973,13 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
 .build-visual img{position:absolute;inset:0}
 .build-visual.build-visual-mira img{padding:clamp(1.25rem,4vw,2.75rem)!important}
 @media(max-width:900px){.build-visual{min-height:220px!important;aspect-ratio:16/9}}
+
+/* Tech-stack tags: tinted pills, clearly not buttons */
+.build-tags{display:flex;flex-wrap:wrap;gap:.4rem!important}
+.build-tags span{border:none!important;border-radius:999px!important;padding:.22rem .65rem!important;font-size:.68rem!important;font-weight:600!important;letter-spacing:.02em;cursor:default;user-select:none;
+  background:rgba(160,146,197,.16)!important;color:#c9bde8!important}
+.build-card:nth-of-type(2) .build-tags span{background:rgba(225,184,91,.14)!important;color:#ead29a!important}
+.build-card:nth-of-type(3) .build-tags span{background:rgba(199,131,167,.16)!important;color:#e6b3cd!important}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);

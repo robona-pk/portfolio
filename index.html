@@ -1325,7 +1325,7 @@ footer p{color:var(--t3)!important}
 @media(prefers-reduced-motion:reduce){.career-list::before,.career-item::before,.career-item.is-now::after{animation:none}.career-item>*{transition:none!important}}
 
 /* career card experiment D: soft light travelling down the timeline */
-@keyframes careerFlow{0%{top:.45rem;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:calc(100% - 3.2rem);opacity:0}}
+@keyframes careerFlow{0%{top:calc(100% - 3.2rem);opacity:0}15%{opacity:1}85%{opacity:1}100%{top:.45rem;opacity:0}}
 .career-list::after{content:"";position:absolute;left:calc(.3rem - 1px);top:.45rem;width:3px;height:2.6rem;border-radius:3px;background:linear-gradient(transparent,rgba(201,178,255,.95),transparent);filter:blur(.4px);opacity:0;animation:careerFlow 4.5s ease-in-out 2.4s infinite;pointer-events:none}
 /* career card experiment E: impact numbers count up */
 .career-impact .career-num{font-variant-numeric:tabular-nums}

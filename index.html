@@ -993,9 +993,6 @@ html,body{background:var(--bg)!important}
 body{color:var(--t1);font-family:'Inter',system-ui,sans-serif}
 body::before{display:none!important}
 .orb,.scan-line,.hero-ghost,#hero .hero-avatar-wrap{display:none!important}
-#liquid-cursor{display:none!important}
-html.liquid-cursor-active *, html.liquid-cursor-active body{cursor:auto}
-a,button,[role="button"],.case-card{cursor:pointer}
 
 /* Starfield */
 #starfield{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
@@ -1177,6 +1174,43 @@ footer p{color:var(--t3)!important}
 .vital-ey,.build-kicker,.sk-card .sk-cat,.cc-num,.cc-co{font-size:.74rem!important}
 .cc-teaser,.build-card p,.sk-name,.clink,.csub,.about-copy p{font-weight:400!important}
 @media(max-width:560px){#hero .hero-name{font-size:clamp(3.2rem,15vw,4.4rem)!important}}
+
+/* Motion & glow pass */
+@keyframes riseIn{from{opacity:0;translate:0 22px;filter:blur(6px)}to{opacity:1;translate:0 0;filter:blur(0)}}
+@keyframes eclipseRise{from{opacity:0;translate:0 22%}to{opacity:1;translate:0 0}}
+@keyframes flarePulse{0%,100%{opacity:.75;scale:1}50%{opacity:1;scale:1.35}}
+@keyframes glowBreath{0%,100%{box-shadow:0 0 0 1px rgba(201,178,255,.16),0 18px 50px -18px rgba(123,92,255,.45),inset 0 1px 0 rgba(255,255,255,.06)}50%{box-shadow:0 0 0 1px rgba(201,178,255,.26),0 22px 64px -16px rgba(123,92,255,.62),inset 0 1px 0 rgba(255,255,255,.09)}}
+#hero .hero-inner{animation:none!important}
+#hero .hero-inner>*{animation:riseIn 1s cubic-bezier(.16,1,.3,1) both}
+#hero .hero-status{animation-delay:.15s!important}
+#hero .hero-name{animation-delay:.3s!important;animation-duration:1.3s!important}
+#hero .hero-role{animation-delay:.55s!important}
+#hero .hero-sub{animation-delay:.68s!important}
+#hero .hero-actions{animation-delay:.82s!important}
+#hero .hero-facts{animation-delay:.96s!important}
+.eclipse-disc{animation:eclipseRise 2.6s cubic-bezier(.16,1,.3,1) .35s both,corona 9s ease-in-out 3s infinite alternate}
+.eclipse-haze{animation:eclipseRise 3.2s cubic-bezier(.16,1,.3,1) .2s both,hazeDrift 26s ease-in-out infinite alternate}
+.eclipse-flare{animation:flarePulse 4.5s ease-in-out 2.6s infinite}
+@media(min-width:901px){.eclipse{transform:translateY(calc(var(--sy,0) * .18px))}}
+#starfield .st1{translate:0 calc(var(--sy,0) * -.03px)}
+#starfield .st2{translate:0 calc(var(--sy,0) * -.07px)}
+#starfield .st3{translate:0 calc(var(--sy,0) * -.12px)}
+/* Cursor-following glow on cards */
+.case-card,.build-card,.sk-card,.clink,#vitals .vital{background-image:radial-gradient(420px circle at var(--mx,-999px) var(--my,-999px),rgba(201,178,255,.11),transparent 42%)!important}
+.build-card,.sk-card{transition:border-color .25s,transform .25s,box-shadow .25s}
+.sk-card:hover{border-color:rgba(201,178,255,.32)!important;transform:translateY(-2px)}
+/* First-fold number tiles: glowing */
+#vitals .vital{position:relative;overflow:hidden;border:1px solid rgba(201,178,255,.2)!important;background-color:rgba(16,12,36,.72)!important;animation:glowBreath 6s ease-in-out infinite;transition:transform .3s,border-color .3s}
+#vitals .vital:nth-child(2){animation-delay:-1.5s}#vitals .vital:nth-child(3){animation-delay:-3s}#vitals .vital:nth-child(4){animation-delay:-4.5s}
+#vitals .vital::after{content:"";position:absolute;left:12%;right:12%;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(214,196,255,.85),transparent);pointer-events:none}
+#vitals .vital::before{content:"";position:absolute;inset:auto -30% -60% -30%;height:120%;background:radial-gradient(closest-side,rgba(123,92,255,.22),transparent);pointer-events:none}
+#vitals .vital>*{position:relative;z-index:1}
+#vitals .vital:hover{transform:translateY(-3px);border-color:rgba(214,196,255,.45)!important}
+.vital-n{color:#EFE8FF!important;text-shadow:0 0 22px rgba(201,178,255,.55),0 0 46px rgba(123,92,255,.35)}
+@media(prefers-reduced-motion:reduce){
+  #hero .hero-inner>*,.eclipse-disc,.eclipse-haze,.eclipse-flare,#vitals .vital{animation:none!important}
+  .eclipse,#starfield .st{transform:none!important;translate:none!important}
+}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -2115,7 +2149,7 @@ document.body.prepend(progressEl);
 (() => {
   const finePointer = window.matchMedia('(pointer:fine)');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion:reduce)');
-  if (!finePointer.matches || reducedMotion.matches || document.documentElement.classList.contains('theme-eclipse')) return;
+  if (!finePointer.matches || reducedMotion.matches) return;
 
   const canvas = document.createElement('canvas');
   canvas.id = 'liquid-cursor';
@@ -2195,26 +2229,26 @@ document.body.prepend(progressEl);
         context.moveTo(point.x, point.y);
         context.quadraticCurveTo(midpointX, midpointY, previous.x, previous.y);
         context.lineWidth = point.radius;
-        context.strokeStyle = `rgba(247,240,248,${.055 + progress * .22})`;
+        context.strokeStyle = `rgba(201,178,255,${.06 + progress * .26})`;
         context.stroke();
       }
 
       context.beginPath();
       context.arc(lead.x, lead.y, 7.5, 0, Math.PI * 2);
-      context.fillStyle = 'rgba(186,113,154,.09)';
+      context.fillStyle = 'rgba(157,134,255,.14)';
       context.fill();
 
       if (pointer.interactive) {
         context.beginPath();
         context.arc(visual.x, visual.y, pointer.pressed ? 8 : 12, 0, Math.PI * 2);
         context.lineWidth = 1.25;
-        context.strokeStyle = 'rgba(247,240,248,.62)';
+        context.strokeStyle = 'rgba(201,178,255,.7)';
         context.stroke();
       }
 
       context.beginPath();
       context.arc(visual.x, visual.y, pointer.pressed ? 3.8 : 6, 0, Math.PI * 2);
-      context.fillStyle = '#f7f0f8';
+      context.fillStyle = '#F4F1FF';
       context.fill();
     }
 
@@ -4298,5 +4332,30 @@ document.addEventListener('click', event => {
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => { root.style.setProperty('--sy', String(Math.round(window.scrollY))); ticking = false; });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  const glowSelector = '.case-card,.build-card,.sk-card,.clink,#vitals .vital';
+  document.addEventListener('pointermove', event => {
+    const card = event.target.closest && event.target.closest(glowSelector);
+    if (!card) return;
+    const box = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (event.clientX - box.left) + 'px');
+    card.style.setProperty('--my', (event.clientY - box.top) + 'px');
+  }, { passive: true });
+  document.addEventListener('pointerout', event => {
+    const card = event.target.closest && event.target.closest(glowSelector);
+    if (card && !card.contains(event.relatedTarget)) { card.style.removeProperty('--mx'); card.style.removeProperty('--my'); }
+  }, { passive: true });
+})();
+</script>
 </body>
 </html>

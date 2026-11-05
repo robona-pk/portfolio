@@ -1239,6 +1239,38 @@ footer p{color:var(--t3)!important}
   .eclipse{--ecl:clamp(520px,150vw,820px)!important;bottom:calc(var(--ecl) * -.86)!important}
   .eclipse-flare{left:14.6%!important;top:14.6%!important}
 }
+
+/* Hero: impact tiles fill the right side */
+@media(min-width:1001px){
+  #hero{display:grid!important;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);column-gap:clamp(2.5rem,5vw,5.5rem);align-items:center!important;justify-items:stretch}
+  #hero .hero-inner{grid-column:1;grid-row:1}
+  #hero #vitals{grid-column:2;grid-row:1}
+}
+#hero #vitals{position:relative;z-index:3;padding:0!important;margin:0!important;border:none!important;background:none!important;max-width:560px;width:100%;justify-self:end}
+#hero .vitals-row{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:.9rem!important;max-width:none!important;margin:0!important}
+#hero #vitals .vital{min-height:0!important;padding:1.25rem 1.3rem!important;gap:.5rem}
+#hero #vitals .vital:first-child{grid-column:1 / -1}
+#hero #vitals .vital:first-child .vital-n{font-size:clamp(2.4rem,3.6vw,3.2rem)!important}
+#hero #vitals .vital-n{font-size:clamp(1.7rem,2.4vw,2.2rem)!important}
+@media(max-width:1000px){
+  #hero #vitals{grid-column:auto;max-width:none;margin-top:2.25rem!important;justify-self:stretch}
+}
+@media(max-width:560px){#hero .vitals-row{grid-template-columns:1fr!important}#hero #vitals .vital:first-child{grid-column:auto}}
+
+/* Gold = important: every metric and key detail, on the page and in case studies */
+:root{--impact:#F3C77A;--impact-soft:rgba(243,199,122,.14)}
+.hl-impact{color:var(--impact);font-weight:500}
+.vital-n{color:var(--impact)!important;text-shadow:0 0 20px rgba(243,199,122,.35),0 0 44px rgba(226,135,74,.18)!important}
+#vitals .vital::after,#hero #vitals .vital::after{background:linear-gradient(90deg,transparent,rgba(243,199,122,.75),transparent)!important}
+.case-card .cc-metric,.cc-metric{color:var(--impact)!important;-webkit-text-fill-color:var(--impact)!important;text-shadow:0 0 22px rgba(243,199,122,.22)}
+.case-modal .cs-metric:not(.cs-metric-text),.case-modal .cs-stat-n,.case-modal .cs-stat-hero-n{color:var(--impact)!important;-webkit-text-fill-color:var(--impact)!important;text-shadow:0 0 22px rgba(243,199,122,.22)}
+.case-modal .cs-evidence{color:var(--impact)!important;font-weight:700}
+.case-modal .cs-em{color:var(--impact)!important}
+.case-modal .cs-weight-fill{background:var(--impact)!important}
+.case-modal .cs-weight-pct{color:var(--impact)!important}
+.cs-rank-tag{background:var(--impact-soft)!important;color:var(--impact)!important}
+.cs-rank-tag.off{background:rgba(255,255,255,.06)!important;color:var(--t3)!important}
+.cs-chosen-verdict{background:var(--impact-soft)!important;color:var(--impact)!important}.cs-chosen-row{background:rgba(243,199,122,.035)!important}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -1292,17 +1324,15 @@ footer p{color:var(--t3)!important}
       <a href="https://drive.google.com/file/d/1p7K9pWwQJKkITaDjHE6cRPmKTec2aYS0/view?usp=sharing" target="_blank" rel="noopener" class="btn btn-s">Resume <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v8M2 7l4 4 4-4M1 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
-</section>
-
-<!-- VITALS -->
+  <!-- VITALS -->
 <div id="vitals">
   <div class="vitals-row">
     <div class="vital reveal"><span class="vital-ey">Revenue &#183; Lenskart</span><span class="vital-n" data-target="6" data-prefix="&#8377;" data-suffix="Cr+">&#8377;0Cr+</span><div class="vital-l">Incremental annualised revenue across Lenskart@Home initiatives</div></div>
     <div class="vital reveal"><span class="vital-ey">Revenue &#183; Bajaj Finserv Health</span><span class="vital-n" data-target="1.5" data-prefix="&#8377;" data-suffix="Cr+">&#8377;0Cr+</span><div class="vital-l">Incremental annualised revenue across Bajaj Finserv Health initiatives</div></div>
     <div class="vital reveal"><span class="vital-ey">Lenskart@Home</span><span class="vital-n" data-target="84" data-prefix="&#8377;" data-suffix="Cr+ ARR">&#8377;0Cr+ ARR</span><div class="vital-l">India's largest at-home eyewear platform</div></div>
-    <div class="vital reveal"><span class="vital-ey">Experience</span><span class="vital-n" data-target="5" data-suffix=" years">0 yrs</span><div class="vital-l">Across 3 industries</div></div>
   </div>
 </div>
+</section>
 
 <!-- ABOUT -->
 <hr class="divider">

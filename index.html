@@ -1330,6 +1330,25 @@ footer p{color:var(--t3)!important}
 /* career card experiment E: impact numbers count up */
 .career-impact .career-num{font-variant-numeric:tabular-nums}
 @media(prefers-reduced-motion:reduce){.career-list::after{animation:none;display:none}}
+
+/* independent AI products: compact cards */
+.aip-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.1rem}
+.aip-card{position:relative;display:flex;flex-direction:column;gap:.85rem;padding:1.3rem 1.35rem 1.15rem;border:1px solid var(--border);border-radius:12px;background-color:var(--card);background-image:radial-gradient(420px circle at var(--mx,-999px) var(--my,-999px),rgba(201,178,255,.10),transparent 42%);transition:border-color .3s}
+.aip-card:hover{border-color:rgba(201,178,255,.3)}
+.aip-head{display:flex;align-items:center;gap:.85rem}
+.aip-thumb{flex:0 0 52px;width:52px;height:52px;border-radius:10px;overflow:hidden;border:1px solid rgba(201,178,255,.18);background:#120e1f}
+.aip-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.aip-thumb-mira{background:radial-gradient(circle at 50% 45%,rgba(230,200,142,.18),transparent 65%),#120e1f}
+.aip-thumb-mira img{object-fit:contain;padding:4px}
+.aip-title{margin:0;font-family:var(--fs);font-weight:600;font-size:1.2rem;letter-spacing:-.01em;color:var(--t1)}
+.aip-stack{margin:.2rem 0 0;color:var(--t3);font-size:.74rem;letter-spacing:.01em;line-height:1.4}
+.aip-desc{margin:0;color:var(--t2);font-size:.9rem;line-height:1.55}
+.aip-actions{margin-top:auto;padding-top:.9rem;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.1rem}
+.aip-btn{display:inline-flex;align-items:center;padding:.42rem .85rem;border-radius:8px;background:var(--s);color:#140f24;font-size:.8rem;font-weight:600;text-decoration:none;transition:background .2s,transform .2s}
+.aip-btn:hover{background:#DCCBFF;transform:translateY(-1px)}
+.aip-link{color:var(--s);font-size:.8rem;font-weight:500;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s,color .2s}
+.aip-link:hover{color:var(--t1);border-bottom-color:rgba(201,178,255,.6)}
+@media(max-width:1000px){.aip-grid{grid-template-columns:1fr}}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -1483,55 +1502,42 @@ footer p{color:var(--t3)!important}
 <hr class="divider">
 <div class="wrap" id="builds">
   <div class="sec-mark"><span class="sec-t">Independent AI Products</span><div class="sec-rule"></div></div>
-  <div class="build-grid">
-    <article class="build-card reveal">
-      <span class="build-kicker">Evidence-grounded AI product · Live</span>
-      <h3>Mira</h3>
-      <p>Answers recruiter questions from approved evidence only. Gemini picks the sources, while guardrails, output validation and a semantic cache keep unsupported claims out.</p>
-      <p class="build-proof">A blind external test found two coverage gaps. Both were fixed in production and turned into regression tests.</p>
-      <div class="build-tags"><span>RAG workflow</span><span>Gemini</span><span>Semantic cache</span><span>Evaluation harness</span><span>PostHog</span></div>
-      <div class="build-actions">
-        <a class="build-primary" href="#hero" onclick="openRagModal();return false;">Try Mira ↗</a>
-        <a class="build-secondary" href="https://lnkd.in/p/gvAttirC" target="_blank" rel="noopener" data-cta="mira-demo-video">Watch demo ↗</a>
-        <a class="build-secondary" href="https://github.com/robona-pk/portfolio#product-changelog" target="_blank" rel="noopener">Read changelog ↗</a>
+  <div class="aip-grid">
+    <article class="aip-card reveal">
+      <header class="aip-head">
+        <span class="aip-thumb aip-thumb-mira"><img src="assets/prerna-portfolio-bot-720.webp" alt="" loading="lazy" decoding="async"></span>
+        <div><h3 class="aip-title">Mira</h3><p class="aip-stack">Gemini · RAG · Semantic cache · Evals · PostHog</p></div>
+      </header>
+      <p class="aip-desc">Answers recruiter questions about my work, using only approved evidence.</p>
+      <div class="aip-actions">
+        <a class="aip-btn" href="#hero" onclick="openRagModal();return false;">Try Mira</a>
+        <a class="aip-link" href="https://lnkd.in/p/gvAttirC" target="_blank" rel="noopener" data-cta="mira-demo-video">Watch demo ↗</a>
+        <a class="aip-link" href="https://github.com/robona-pk/portfolio#product-changelog" target="_blank" rel="noopener">Changelog ↗</a>
       </div>
-      <p class="build-note">An AI product system, not a chatbot demo.</p>
     </article>
-    <figure class="build-visual build-visual-mira reveal">
-      <img src="assets/prerna-portfolio-bot-720.webp" alt="Mira, Prerna Kapoor's evidence-grounded portfolio assistant" loading="lazy" decoding="async">
-      <figcaption>Mira, live on this portfolio</figcaption>
-    </figure>
-    <article class="build-card reveal">
-      <span class="build-kicker">Independent AI workflow · 2026</span>
-      <h3>FindAMatch</h3>
-      <p>A local-first job-search copilot for PMs. It turns a resume into a reviewable evidence ledger, filters job alerts on hard eligibility rules, and prepares an application packet for human review.</p>
-      <div class="build-tags"><span>Agentic workflow</span><span>Gmail OAuth</span><span>Explainable ranking</span><span>Human-in-the-loop</span><span>Privacy by design</span></div>
-      <div class="build-actions">
-        <a class="build-primary" href="https://applyguard-git-codex-5f9aa2-alternateprerna-gmailcoms-projects.vercel.app/?demo=1" target="_blank" rel="noopener">Open product ↗</a>
-        <a class="build-secondary" href="https://github.com/robona-pk/applyguard" target="_blank" rel="noopener">View source ↗</a>
+    <article class="aip-card reveal">
+      <header class="aip-head">
+        <span class="aip-thumb"><img src="assets/prerna-pm-collage-violet.jpg" alt="" loading="lazy" decoding="async"></span>
+        <div><h3 class="aip-title">FindAMatch</h3><p class="aip-stack">Agentic workflow · Gmail OAuth · Explainable ranking</p></div>
+      </header>
+      <p class="aip-desc">A job-search copilot for PMs. It filters job alerts and drafts applications for a human to review.</p>
+      <div class="aip-actions">
+        <a class="aip-btn" href="https://applyguard-git-codex-5f9aa2-alternateprerna-gmailcoms-projects.vercel.app/?demo=1" target="_blank" rel="noopener">Open product ↗</a>
+        <a class="aip-link" href="https://github.com/robona-pk/applyguard" target="_blank" rel="noopener">View source ↗</a>
       </div>
-      <p class="build-note">It researches and drafts. It never submits an application or poses as the candidate.</p>
     </article>
-    <figure class="build-visual reveal">
-      <img src="assets/prerna-pm-collage-violet.jpg" alt="Editorial collage representing customer research, product journeys, and strategy" loading="lazy">
-      <figcaption>Research → decisions → outcomes</figcaption>
-    </figure>
-    <article class="build-card reveal">
-      <span class="build-kicker">Voice AI product experiment · 2026</span>
-      <h3>Charlie the Voice Booking Agent</h3>
-      <p>A phone-style booking agent for at-home eye tests and frame trials, built for customers who would rather call than use an app.</p>
-      <div class="build-tags"><span>FastAPI</span><span>SQLite</span><span>Browser voice APIs</span><span>State machine</span></div>
-      <div class="build-actions">
-        <a class="build-primary" href="#case-5" onclick="openCase(5);return false;">Explore case study ↗</a>
-        <a class="build-secondary" href="https://docs.google.com/videos/d/1ODUBoZVEVvevSUnQqDwE0KWQi2xAfvQpcNDs6XvWNaM/edit?usp=sharing" target="_blank" rel="noopener">Watch demo ↗</a>
-        <a class="build-secondary" href="https://github.com/robona-pk/Voice-Booking-Agent---ClearView" target="_blank" rel="noopener">View source ↗</a>
+    <article class="aip-card reveal">
+      <header class="aip-head">
+        <span class="aip-thumb"><img src="assets/clearview-voice-booking-agent-3d-1200.webp" alt="" loading="lazy" decoding="async"></span>
+        <div><h3 class="aip-title">Charlie</h3><p class="aip-stack">FastAPI · SQLite · Voice APIs · State machine</p></div>
+      </header>
+      <p class="aip-desc">A voice agent that books at-home eye tests for customers who would rather call than use an app.</p>
+      <div class="aip-actions">
+        <a class="aip-btn" href="#case-5" onclick="openCase(5);return false;">Case study</a>
+        <a class="aip-link" href="https://docs.google.com/videos/d/1ODUBoZVEVvevSUnQqDwE0KWQi2xAfvQpcNDs6XvWNaM/edit?usp=sharing" target="_blank" rel="noopener">Watch demo ↗</a>
+        <a class="aip-link" href="https://github.com/robona-pk/Voice-Booking-Agent---ClearView" target="_blank" rel="noopener">View source ↗</a>
       </div>
-      <p class="build-note">One question at a time, with every step validated by a state machine.</p>
     </article>
-    <figure class="build-visual reveal">
-      <img src="assets/clearview-voice-booking-agent-3d-1200.webp" alt="3D illustration of a voice booking agent for at-home eye care" loading="lazy" decoding="async">
-      <figcaption>Voice → booking → appointment</figcaption>
-    </figure>
   </div>
 </div>
 
@@ -4477,7 +4483,7 @@ document.addEventListener('click', event => {
     requestAnimationFrame(() => { root.style.setProperty('--sy', String(Math.round(window.scrollY))); ticking = false; });
   };
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
-  const glowSelector = '.case-card,.build-card,.sk-card,.clink,#vitals .vital';
+  const glowSelector = '.case-card,.build-card,.aip-card,.sk-card,.clink,#vitals .vital';
   document.addEventListener('pointermove', event => {
     const card = event.target.closest && event.target.closest(glowSelector);
     if (!card) return;

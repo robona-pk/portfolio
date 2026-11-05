@@ -431,6 +431,23 @@
       hardNegatives: ['What is her mood today?']
     },
     {
+      id: 'case_studies_overview',
+      source: 'Case studies overview',
+      status: 'approved',
+      includeInFactPilot: false,
+      claim: 'Prerna’s portfolio has five case studies: Personalised Home Trials and Truly Omnichannel at Lenskart, Smart Health Reports and Doctor Quality Score at Bajaj Finserv Health, and Charlie, an independent voice booking agent.',
+      appliesTo: ['case studies', 'portfolio case studies', 'list of case studies', 'which projects are in the portfolio', 'portfolio projects'],
+      evidence: ['Case studies overview', 'Lenskart@Home case study', 'Bajaj Finserv Health case study'],
+      answer: 'The portfolio has five case studies: Personalised Home Trials and Truly Omnichannel at Lenskart, Smart Health Reports and Doctor Quality Score at Bajaj Finserv Health, and Charlie, a voice booking agent Prerna built.',
+      contrast: 'The portfolio covers more than one company: five case studies span Lenskart, Bajaj Finserv Health, and Charlie, an independent voice booking agent.',
+      mustInclude: ['five case studies', 'Lenskart', 'Bajaj Finserv Health', 'Charlie'],
+      action: { label: 'Browse the case studies', href: '#cases' },
+      affirmExamples: ['Tell me about the case studies.', 'What case studies are in the portfolio?'],
+      negateExamples: ['Is there only one case study?'],
+      casualExamples: ['case studies?'],
+      hardNegatives: ['What is a case study?', 'What impact did Prerna drive at Lenskart?']
+    },
+    {
       id: 'lenskart_impact',
       source: 'Work · Governed Lenskart impact',
       status: 'approved',

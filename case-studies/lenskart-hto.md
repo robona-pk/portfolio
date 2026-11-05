@@ -37,7 +37,7 @@ This work is one component of **₹6Cr+ in incremental annualised revenue** from
 
 ## O2O ownership and retention
 
-I also worked on territory-based store ownership for online, offline, and home-trial customers. Stores completed 48-hour post-delivery check-ins to resolve issues early and create a clear service relationship for online customers.
+I also worked on territory-based store ownership for online, offline, and home-trial customers. Three ways of assigning orders to stores (fixed radius, last eye-test store, and a combination) were rejected on analysis before launch. The chosen polygon model builds territories from 0.1km² tiles on a 30-minute drive time, so every address has one accountable store. The accepted trade-off: it assigns the store responsible for serving a customer, not the store they would prefer, and that gap has not been measured. Stores completed 48-hour post-delivery check-ins to resolve issues early and create a clear service relationship for online customers.
 
 Over one month, NPS for orders where the assigned store completed a check-in rose from **41 to 60**. The no-call control cohort remained low. Return-rate impact is still being measured.
 

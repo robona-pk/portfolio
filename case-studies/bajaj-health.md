@@ -13,7 +13,7 @@ Health Files allowed customers to upload lab reports, but adoption was low becau
 
 We built Smart Health Reports to normalise lab data across formats and present parameters in plain language with historical trends. When an out-of-range result indicated a relevant service, the product offered an **optional next step**—for example, a diabetes consultation—rather than leaving customers to navigate the issue alone.
 
-**Outcomes:** Active Health Files users increased **8×**, showing that a useful report experience drove sustained adoption; relevant health-service recommendations generated **₹7L+ incremental MRR**.
+**Outcomes:** Active Health Files users increased **8×** within three months of launch, showing that a useful report experience drove sustained adoption; relevant health-service recommendations generated **₹7L+ incremental MRR**.
 
 The product principle was to replace fragmented, anxious searching with understandable context and a customer-controlled route to care.
 
@@ -25,7 +25,7 @@ Doctor listings had no meaningful ranking logic. We designed a two-layer model:
 
 The weighting was treated as a product hypothesis to validate through live behaviour, not as permanent truth. Gender was deliberately excluded from the algorithmic score and instead surfaced as a patient-controlled contextual filter where relevant.
 
-**Outcome:** **18% CTR improvement** and **11.6% annual revenue lift** after the listing reorder.
+**Outcome:** **18% CTR improvement** on doctor listings. Higher click-through improved overall conversion, which drove an **11.6% annual revenue lift**. The weights were derived from behavioural data and patient interviews.
 
 ## Additional outcomes
 

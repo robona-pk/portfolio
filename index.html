@@ -954,6 +954,7 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
 .cs-callout-lead{color:var(--t1);font-weight:700}
 .cs-rank-tag{display:inline-block;margin-left:.5rem;padding:.1rem .5rem;border-radius:999px;font-size:.66rem;font-weight:700;letter-spacing:.04em;background:var(--sd);color:var(--s);vertical-align:middle}
 .cs-rank-tag.off{background:rgba(255,255,255,.06);color:var(--t3)}
+.cs-source{display:block;margin-top:.5rem;font-size:.85em;color:var(--t3)}
 @media(max-width:640px){.cs-rank-tag{display:table;margin:.3rem 0 .1rem}}
 </style>
 <script>
@@ -1253,7 +1254,7 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
       <div class="cs-stat-hero">
         <div class="cs-stat-hero-figure teal">
           <div class="cs-stat-hero-n">30%</div>
-          <div class="cs-stat-hero-l">Of online returns trace back to fit or style issues; the exact uncertainty a home trial is supposed to remove. If customers didn't trust the kit, the trial couldn't do its job.</div>
+          <div class="cs-stat-hero-l">Of returns on online orders (18% return rate) cited reasons a home trial would have caught: frame too heavy, doesn't look good on me, colour different from expected, uncomfortable to wear. If customers didn't trust the kit, the trial couldn't do its job. <span class="cs-source">Source: my analysis of online return reasons.</span></div>
         </div>
       </div>
 
@@ -1329,7 +1330,7 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
       <div class="cs-hd">
         <div class="cs-hd-top">
           <span class="cs-num">02</span>
-          <span class="cs-co">Lenskart &#183; Omni</span>
+          <span class="cs-co">Lenskart &#183; Truly Omni Channel</span>
           <span class="cs-dot">&#183;</span>
           <span class="cs-st live">&#9679; Live</span>
         </div>
@@ -1359,7 +1360,7 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
 
       <div class="cs-sec">
         <span class="cs-lbl">Three Approaches Evaluated</span>
-        <p class="cs-p">All three sound reasonable. All three try to infer which store a customer has a <em>relationship</em> with. The data said that's the wrong question entirely.</p>
+        <p class="cs-p">All three sound reasonable. All three try to infer which store a customer has a <em>relationship</em> with. The data said that's the wrong question entirely. None of them went live: each was rejected on analysis.</p>
       </div>
       <div class="cs-rejected">
         <div class="cs-rejected-row">
@@ -1367,26 +1368,26 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
             <div class="cs-rejected-hd">Distance-based</div>
             <p class="cs-rejected-desc">Assign each order to the nearest store within a fixed 10km radius. Overlapping zones left online orders without one clear owning store.</p>
           </div>
-          <span class="cs-rejected-verdict">&#10007; Failed &nbsp;;&nbsp; Overlapping territories and fixed-radius dead zones meant no single accountable store for setting targets</span>
+          <span class="cs-rejected-verdict">&#10007; Rejected &nbsp;&#183;&nbsp; Overlapping territories and fixed-radius dead zones meant no single accountable store for setting targets</span>
         </div>
         <div class="cs-rejected-row">
           <div class="cs-rejected-text">
             <div class="cs-rejected-hd">Last QMS (Eye Test) Store</div>
             <p class="cs-rejected-desc">Assign to the store where the customer's most recent eye test happened. Relationship-based.</p>
           </div>
-          <span class="cs-rejected-verdict">&#10007; Failed &nbsp;;&nbsp; Only 31% of QMS stores matched the customer's actual nearest store</span>
+          <span class="cs-rejected-verdict">&#10007; Rejected &nbsp;&#183;&nbsp; Only 31% of QMS stores matched the customer's actual nearest store</span>
         </div>
         <div class="cs-rejected-row">
           <div class="cs-rejected-text">
             <div class="cs-rejected-hd">Combination</div>
             <p class="cs-rejected-desc">QMS where available, distance everywhere else. Best of both worlds?</p>
           </div>
-          <span class="cs-rejected-verdict">&#10007; Failed &nbsp;;&nbsp; Two attribution classes, impossible to explain or set fair targets against</span>
+          <span class="cs-rejected-verdict">&#10007; Rejected &nbsp;&#183;&nbsp; Two attribution classes, impossible to explain or set fair targets against</span>
         </div>
         <div class="cs-rejected-row cs-chosen-row">
           <div class="cs-rejected-text">
             <div class="cs-rejected-hd">Polygon Attribution</div>
-            <p class="cs-rejected-desc">Assign every delivery address to one accountable store, using a capacity-aware territory built from 0.1km&#178; tiles.</p>
+            <p class="cs-rejected-desc">Assign every delivery address to one accountable store, using a territory built from 0.1km&#178; tiles and a 30-minute drive time.</p>
           </div>
           <span class="cs-rejected-verdict cs-chosen-verdict">&#10003; Chosen &nbsp;&#183;&nbsp; No overlap, no dead zones, auditable ownership and explainable targets. Accepted cost: it assigns the store responsible for serving a customer, not the store they prefer.</span>
         </div>
@@ -1403,7 +1404,13 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
 
       <div class="cs-sec">
         <span class="cs-lbl">The Solution: Polygon Attribution</span>
-        <p class="cs-p">Polygon attribution replaced a blunt radius rule with a capacity-aware service territory. Inspired by Walmart's hex-grid catchment model and built from 0.1km&#178; tiles, it assigns every delivery address to one accountable store — no overlap, no dead zones, and no inference about customer loyalty. Territories change only when the store network changes, making ownership auditable and targets explainable.</p>
+        <p class="cs-p">Polygon attribution replaced a blunt radius rule with a drive-time service territory. From Walmart's hex-grid catchment model we took one idea: build territories from small tiles, here 0.1km&#178;. We did not size territories by store capacity. Instead, each territory is drawn on a 30-minute drive time.</p>
+        <p class="cs-p">Every delivery address maps to one accountable store, with no overlap, no dead zones, and no inference about customer loyalty. Territories change only when the store network changes, so ownership stays auditable and targets stay explainable.</p>
+      </div>
+
+      <div class="cs-callout cs-note decision">
+        <span class="cs-callout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a6 6 0 0 0 6 6h6"/><path d="m15 12 3 3-3 3"/><path d="M6 21v-6"/></svg></span>
+        <div><div class="cs-callout-lbl">Decision</div><p><strong class="cs-callout-lead">Trade-off we accepted: accountability over preference.</strong> Polygon assignment decides which store owns an order and its targets. It does not predict which store the customer would choose: 25% of customers were buying from stores 5km+ away. We have not measured how many assigned orders went to a store the customer would not have picked. We still chose accountability, because every rejected approach failed on the same point. Without one owning store per address, there are no fair targets and no one clearly responsible for the 48-hour check-in.</p></div>
       </div>
 
       <div class="cs-sec">
@@ -1512,6 +1519,7 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
       <div class="cs-results">
         <span class="cs-lbl">Outcome</span>
         <ul class="cs-rl">
+          <li>Active Health Files users grew 8&#215; within three months of launch.</li>
           <li>Smart Reports turned a dormant upload flow into a report experience people returned to.</li>
           <li>&#8377;7L incremental MRR from health-service recommendations surfaced inside the report.</li>
         </ul>
@@ -1542,7 +1550,7 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
 
       <div class="cs-sec">
         <span class="cs-lbl">What Patients Actually Weigh</span>
-        <p class="cs-p">Before rebuilding the ranking, we identified the signals patients used to choose a doctor and treated the weighting as a product hypothesis to validate through live behaviour — not as a permanent truth baked into the system.</p>
+        <p class="cs-p">Before rebuilding the ranking, we identified the signals patients used to choose a doctor, and derived their weights from behavioural data and patient interviews. We treated the weights as a hypothesis, not a permanent truth baked into the system. The live result of the reorder is in the outcome below.</p>
         <p class="cs-p">Signals 1&#8211;3 feed the Core Preference Score. Signal 4 is deliberately kept out of the score (see below).</p>
       </div>
       <div class="cs-ranked">
@@ -1628,8 +1636,12 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
         <div><div class="cs-callout-lbl">Decision</div><p><strong class="cs-callout-lead">Gender: a deliberate exclusion.</strong> Gender was a real, measurable signal in patient behaviour for specific specialties &#8212; but we chose not to fold it into the algorithmic score. Ranking doctors by a sensitive attribute would have been unfair to doctors themselves. Instead, we surfaced it as a contextual, patient-controlled filter in specialties where the pattern was strong, so the platform could serve the preference transparently without an algorithm making that call silently.</p></div>
       </div>
 
-      <div class="cs-stats one">
+      <div class="cs-stats two">
+        <div class="cs-stat"><div class="cs-stat-n">+18%</div><div class="cs-stat-l">Click-through rate on doctor listings after the reorder</div></div>
         <div class="cs-stat"><div class="cs-stat-n">11.6%</div><div class="cs-stat-l">Annual revenue lift after the listing reorder</div></div>
+      </div>
+      <div class="cs-sec">
+        <p class="cs-p">Higher click-through on the reordered listings improved overall conversion, and that conversion lift drove the annual revenue increase.</p>
       </div>
     </article>
 </div>

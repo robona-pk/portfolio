@@ -1357,6 +1357,8 @@ footer p{color:var(--t3)!important}
 .cs-sec.cs-sec-tight .cs-highlight{margin:0!important}
 
 .cs-rejected-why{margin-top:.4rem!important;color:var(--t3)!important;font-size:.82rem!important;line-height:1.5!important}
+
+.case-modal .cs-quote.cs-quote-sm p,.cs-quote.cs-quote-sm p{font-size:clamp(1.05rem,1.6vw,1.25rem)!important;line-height:1.5!important}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -1772,7 +1774,7 @@ footer p{color:var(--t3)!important}
       </div>
 
 
-      <div class="cs-quote">
+      <div class="cs-quote cs-quote-sm">
         <p>The goal was never to find the store a customer <em>prefers</em>. It's to find the store best <em>positioned</em> to physically serve them.</p>
       </div>
 
@@ -1783,7 +1785,7 @@ footer p{color:var(--t3)!important}
 
       <div class="cs-callout cs-note decision">
         <span class="cs-callout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a6 6 0 0 0 6 6h6"/><path d="m15 12 3 3-3 3"/><path d="M6 21v-6"/></svg></span>
-        <div><div class="cs-callout-lbl">Decision</div><p><strong class="cs-callout-lead">Trade-off we accepted: accountability over preference.</strong> Polygons decide who owns an order, not where the customer would shop. 25% of customers bought from stores 5km+ away, on the way to work or mid-errand. We haven't measured how often the assigned store isn't the one they'd pick. We chose accountability anyway: without one owner per address, there are no fair targets and no one responsible for the 48-hour check-in.</p></div>
+        <div><div class="cs-callout-lbl">Decision</div><p><strong class="cs-callout-lead">Accountability over preference.</strong> 25% of customers bought from stores 5km+ away, so the assigned store won&#39;t always be the one they&#39;d pick (not yet measured). But without one owner per address, there are no fair targets and no one owns the 48-hour check-in.</p></div>
       </div>
 
       <div class="cs-sec">

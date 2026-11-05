@@ -1105,20 +1105,20 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
     <article class="build-card reveal">
       <span class="build-kicker">Evidence-grounded AI product · Live</span>
       <h3>Mira</h3>
-      <p>A production portfolio assistant that answers from approved professional evidence. Gemini selects supporting sources, while deterministic guardrails, output validation, and an evidence-bound semantic cache keep unsupported claims out.</p>
+      <p>Answers recruiter questions from approved evidence only. Gemini picks the sources, while guardrails, output validation and a semantic cache keep unsupported claims out.</p>
       <div class="build-evidence" aria-label="Mira product evidence">
         <div class="build-evidence-item"><strong>341</strong><span>evaluation cases</span></div>
         <div class="build-evidence-item"><strong>13</strong><span>blind production questions</span></div>
         <div class="build-evidence-item"><strong>8</strong><span>new coverage regressions added</span></div>
       </div>
-      <p class="build-proof">A blind external test exposed two answer-coverage gaps. Both were traced to the responsible routing and evidence contracts, fixed on production, and converted into regression cases.</p>
+      <p class="build-proof">A blind external test found two coverage gaps. Both were fixed in production and turned into regression tests.</p>
       <div class="build-tags"><span>RAG workflow</span><span>Gemini</span><span>Semantic cache</span><span>Evaluation harness</span><span>PostHog</span></div>
       <div class="build-actions">
         <a class="build-primary" href="#hero" onclick="openRagModal();return false;">Try Mira ↗</a>
         <a class="build-secondary" href="eval.html" target="_blank" rel="noopener">View eval console ↗</a>
         <a class="build-secondary" href="https://github.com/robona-pk/portfolio#product-changelog" target="_blank" rel="noopener">Read changelog ↗</a>
       </div>
-      <p class="build-note">Built as an AI product system, not a chatbot demo: evidence, evaluations, observed behaviour, and production iteration are part of the product.</p>
+      <p class="build-note">An AI product system, not a chatbot demo.</p>
     </article>
     <figure class="build-visual build-visual-mira reveal">
       <img src="assets/prerna-portfolio-bot-720.webp" alt="Mira, Prerna Kapoor's evidence-grounded portfolio assistant" loading="lazy" decoding="async">
@@ -1127,13 +1127,13 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
     <article class="build-card reveal">
       <span class="build-kicker">Independent AI workflow · 2026</span>
       <h3>FindAMatch</h3>
-      <p>A local-first, evidence-grounded job-search copilot for product managers. It converts a resume into a reviewable evidence ledger, imports candidate-labeled job alerts, applies hard eligibility filters, and prepares a human-reviewed application packet.</p>
+      <p>A local-first job-search copilot for PMs. It turns a resume into a reviewable evidence ledger, filters job alerts on hard eligibility rules, and prepares an application packet for human review.</p>
       <div class="build-tags"><span>Agentic workflow</span><span>Gmail OAuth</span><span>Explainable ranking</span><span>Human-in-the-loop</span><span>Privacy by design</span></div>
       <div class="build-actions">
         <a class="build-primary" href="https://applyguard-git-codex-5f9aa2-alternateprerna-gmailcoms-projects.vercel.app/?demo=1" target="_blank" rel="noopener">Open product ↗</a>
         <a class="build-secondary" href="https://github.com/robona-pk/applyguard" target="_blank" rel="noopener">View source ↗</a>
       </div>
-      <p class="build-note">Designed to automate research and synthesis—not to impersonate a candidate or submit applications.</p>
+      <p class="build-note">It researches and drafts. It never submits an application or poses as the candidate.</p>
     </article>
     <figure class="build-visual reveal">
       <img src="assets/prerna-pm-collage-violet.jpg" alt="Editorial collage representing customer research, product journeys, and strategy" loading="lazy">
@@ -1142,14 +1142,14 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
     <article class="build-card reveal">
       <span class="build-kicker">Voice AI product experiment · 2026</span>
       <h3>Charlie the Voice Booking Agent</h3>
-      <p>A phone-based booking assistant for at-home eye tests and frame trials. It gives customers who are less comfortable with apps a simple way to book a visit, check serviceability, and choose a slot.</p>
+      <p>A phone-style booking agent for at-home eye tests and frame trials, built for customers who would rather call than use an app.</p>
       <div class="build-tags"><span>FastAPI</span><span>SQLite</span><span>Browser voice APIs</span><span>State machine</span></div>
       <div class="build-actions">
         <a class="build-primary" href="#case-5" onclick="openCase(5);return false;">Explore case study ↗</a>
         <a class="build-secondary" href="https://docs.google.com/videos/d/1ODUBoZVEVvevSUnQqDwE0KWQi2xAfvQpcNDs6XvWNaM/edit?usp=sharing" target="_blank" rel="noopener">Watch demo ↗</a>
         <a class="build-secondary" href="https://github.com/robona-pk/Voice-Booking-Agent---ClearView" target="_blank" rel="noopener">View source ↗</a>
       </div>
-      <p class="build-note">Designed around one-question-at-a-time booking, with deterministic validation around the conversational flow.</p>
+      <p class="build-note">One question at a time, with every step validated by a state machine.</p>
     </article>
     <figure class="build-visual reveal">
       <img src="assets/clearview-voice-booking-agent-3d-1200.webp" alt="3D illustration of a voice booking agent for at-home eye care" loading="lazy" decoding="async">
@@ -1176,25 +1176,24 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
 
   <div class="cs-sec">
     <span class="cs-lbl">Problem statement</span>
-    <p class="cs-p">At-home eye care is especially useful for customers who would rather call than navigate an app. Senior citizens and other less tech-confident customers may want a home eye test or frame trial, but need a low-friction way to complete the booking independently.</p>
-    <p class="cs-p">Charlie creates that access path: a customer can make a simple phone-style call, speak naturally, and have the agent book a visit on their behalf. The product challenge was to make this feel reassuringly simple while keeping the booking process precise and reliable.</p>
+    <p class="cs-p">Senior citizens and other less tech-confident customers may want a home eye test or frame trial, but would rather call than use an app. Charlie lets them speak naturally and books the visit for them. The challenge: feel reassuringly simple while keeping every booking precise.</p>
   </div>
 
   <div class="cs-sec">
     <span class="cs-lbl">The booking flow</span>
-    <p class="cs-p">Charlie uses voice only as the interface. The deterministic state machine decides what happens next, so every step is explicit, validated, and traceable.</p>
+    <p class="cs-p">Voice is only the interface. Every step is explicit, validated and traceable.</p>
   </div>
   <div class="cv-flow" aria-label="ClearView booking flowchart">
     <div class="cv-flow-step"><span class="cv-flow-node">01</span><strong>Capture intent</strong><p>Caller chooses an eye test or frame trial.</p></div>
-    <div class="cv-flow-step"><span class="cv-flow-node">02</span><strong>Check serviceability</strong><p>Validate a 6-digit pincode, then query eligible areas.</p></div>
-    <div class="cv-flow-step"><span class="cv-flow-node">03</span><strong>Offer a real slot</strong><p>Normalise the date and return only available slots.</p></div>
+    <div class="cv-flow-step"><span class="cv-flow-node">02</span><strong>Check serviceability</strong><p>Validate the 6-digit pincode and check coverage.</p></div>
+    <div class="cv-flow-step"><span class="cv-flow-node">03</span><strong>Offer a real slot</strong><p>Normalise the date and offer only open slots.</p></div>
     <div class="cv-flow-step"><span class="cv-flow-node">04</span><strong>Confirm safely</strong><p>Read the summary, collect explicit consent, then book.</p></div>
-    <div class="cv-flow-step"><span class="cv-flow-node">05</span><strong>Learn from demand</strong><p>Unsupported areas can opt into a waitlist for future coverage.</p></div>
+    <div class="cv-flow-step"><span class="cv-flow-node">05</span><strong>Learn from demand</strong><p>Uncovered areas can join a waitlist.</p></div>
   </div>
 
   <div class="cs-sec">
     <span class="cs-lbl">How Charlie works</span>
-    <p class="cs-p">A deterministic state machine owns every booking decision. An optional model only helps interpret the caller's current answer.</p>
+    <p class="cs-p">A deterministic state machine owns every booking decision. An optional model only helps interpret what the caller just said.</p>
   </div>
   <div class="cv-system-flow" aria-label="Charlie system flowchart">
     <div class="cv-system-node"><span class="cv-system-icon" aria-hidden="true">&#9742;</span><h4>Customer</h4><p>Calls or types</p></div>
@@ -1208,17 +1207,17 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
 
   <div class="cs-sec">
     <span class="cs-lbl">Where Charlie fits next</span>
-    <p class="cs-p">Charlie is a reusable assisted-action pattern for apps where a customer needs to complete a real-world task but would benefit from a phone-first, guided route.</p>
+    <p class="cs-p">The same pattern fits any app where a customer must complete a real-world task and would prefer a guided, phone-first route.</p>
   </div>
   <div class="cv-use-grid" aria-label="Applications for Charlie">
-    <div class="cv-use-item"><h4>Home-service apps</h4><p>Book appliance repair, beauty services, cleaning, or a home consultation by collecting the address, preferred date, and available slot.</p></div>
-    <div class="cv-use-item"><h4>Healthcare apps</h4><p>Schedule diagnostics, home sample collection, follow-up consultations, or medicine delivery for patients and caregivers who prefer calling.</p></div>
-    <div class="cv-use-item"><h4>Retail and mobility apps</h4><p>Arrange a home demo, test drive, store appointment, product installation, or service pickup without requiring the customer to navigate a complex flow.</p></div>
-    <div class="cv-use-item"><h4>Insurance and financial apps</h4><p>Schedule a claims callback, document collection, relationship-manager appointment, or assisted onboarding step with clear consent and confirmation.</p></div>
+    <div class="cv-use-item"><h4>Home-service apps</h4><p>Appliance repair, beauty, cleaning or home consultations: collect the address, date and slot.</p></div>
+    <div class="cv-use-item"><h4>Healthcare apps</h4><p>Diagnostics, home sample collection, follow-ups or medicine delivery for patients and caregivers who prefer calling.</p></div>
+    <div class="cv-use-item"><h4>Retail and mobility apps</h4><p>Home demos, test drives, store appointments, installations or service pickups.</p></div>
+    <div class="cv-use-item"><h4>Insurance and financial apps</h4><p>Claims callbacks, document collection or assisted onboarding, with clear consent and confirmation.</p></div>
   </div>
 
   <div class="cv-demo">
-    <div class="cv-demo-copy"><strong>Watch Charlie complete a booking</strong><p>The demo shows the phone-style flow from service selection to a confirmed appointment.</p></div>
+    <div class="cv-demo-copy"><strong>Watch Charlie complete a booking</strong><p>From service selection to a confirmed appointment.</p></div>
     <a class="cv-demo-link" href="https://docs.google.com/videos/d/1ODUBoZVEVvevSUnQqDwE0KWQi2xAfvQpcNDs6XvWNaM/edit?usp=sharing" target="_blank" rel="noopener">Watch demo ↗</a>
   </div>
 </article>

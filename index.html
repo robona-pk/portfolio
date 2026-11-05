@@ -1271,6 +1271,30 @@ footer p{color:var(--t3)!important}
 .cs-rank-tag{background:var(--impact-soft)!important;color:var(--impact)!important}
 .cs-rank-tag.off{background:rgba(255,255,255,.06)!important;color:var(--t3)!important}
 .cs-chosen-verdict{background:var(--impact-soft)!important;color:var(--impact)!important}.cs-chosen-row{background:rgba(243,199,122,.035)!important}
+
+/* Hero: career timeline card replaces the stat tiles */
+:root{--impact:#E6C88E}
+.hl-impact{color:var(--t1)!important;font-weight:500}
+.vital-n,.case-card .cc-metric,.cc-metric,.case-modal .cs-metric:not(.cs-metric-text),.case-modal .cs-stat-n,.case-modal .cs-stat-hero-n{text-shadow:none!important}
+@media(min-width:1001px){#hero .career{grid-column:2;grid-row:1}}
+#hero .career{position:relative;z-index:3;justify-self:end;width:100%;max-width:480px;margin:0;padding:1.6rem 1.7rem 1.4rem;
+  border:1px solid rgba(201,178,255,.22);border-radius:12px;background:rgba(14,11,32,.66);backdrop-filter:blur(10px);
+  box-shadow:0 20px 60px -24px rgba(123,92,255,.5),inset 0 1px 0 rgba(255,255,255,.05);
+  animation:riseIn 1s cubic-bezier(.16,1,.3,1) 1.05s both}
+.career-h{margin:0 0 1.1rem;color:var(--t3);font-size:.8rem;font-weight:500}
+.career-list{list-style:none;margin:0;padding:0 0 0 1.4rem;position:relative;display:flex;flex-direction:column;gap:1.35rem}
+.career-list::before{content:"";position:absolute;left:.3rem;top:.45rem;bottom:.6rem;width:1px;background:linear-gradient(rgba(201,178,255,.55),rgba(201,178,255,.1))}
+.career-item{position:relative}
+.career-item::before{content:"";position:absolute;left:-1.42rem;top:.38rem;width:9px;height:9px;border-radius:50%;background:#2A2147;border:1px solid rgba(201,178,255,.6)}
+.career-item.is-now::before{background:var(--s);border-color:var(--s);box-shadow:0 0 0 4px rgba(201,178,255,.15),0 0 14px rgba(201,178,255,.7)}
+.career-meta{display:flex;align-items:baseline;justify-content:space-between;gap:1rem}
+.career-co{font-family:var(--fs);font-weight:600;font-size:1.12rem;color:var(--t1);letter-spacing:-.01em}
+.career-when{color:var(--t3);font-size:.8rem;white-space:nowrap}
+.career-role{margin:.15rem 0 .45rem;color:var(--s);font-size:.86rem;font-weight:500}
+.career-line{margin:0;color:var(--t2);font-size:.92rem;line-height:1.6}
+.career-num{color:var(--impact);font-weight:600;white-space:nowrap}
+@media(max-width:1000px){#hero .career{justify-self:stretch;max-width:none;margin-top:2.25rem}}
+@media(prefers-reduced-motion:reduce){#hero .career{animation:none}}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -1324,14 +1348,21 @@ footer p{color:var(--t3)!important}
       <a href="https://drive.google.com/file/d/1p7K9pWwQJKkITaDjHE6cRPmKTec2aYS0/view?usp=sharing" target="_blank" rel="noopener" class="btn btn-s">Resume <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v8M2 7l4 4 4-4M1 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
-  <!-- VITALS -->
-<div id="vitals">
-  <div class="vitals-row">
-    <div class="vital reveal"><span class="vital-ey">Revenue &#183; Lenskart</span><span class="vital-n" data-target="6" data-prefix="&#8377;" data-suffix="Cr+">&#8377;0Cr+</span><div class="vital-l">Incremental annualised revenue across Lenskart@Home initiatives</div></div>
-    <div class="vital reveal"><span class="vital-ey">Revenue &#183; Bajaj Finserv Health</span><span class="vital-n" data-target="1.5" data-prefix="&#8377;" data-suffix="Cr+">&#8377;0Cr+</span><div class="vital-l">Incremental annualised revenue across Bajaj Finserv Health initiatives</div></div>
-    <div class="vital reveal"><span class="vital-ey">Lenskart@Home</span><span class="vital-n" data-target="84" data-prefix="&#8377;" data-suffix="Cr+ ARR">&#8377;0Cr+ ARR</span><div class="vital-l">India's largest at-home eyewear platform</div></div>
-  </div>
-</div>
+  <aside class="career" aria-label="Career so far">
+    <p class="career-h">Career so far</p>
+    <ol class="career-list">
+      <li class="career-item is-now">
+        <div class="career-meta"><span class="career-co">Lenskart</span><span class="career-when">2025 &#8211; now</span></div>
+        <p class="career-role">Product Manager, Lenskart@Home</p>
+        <p class="career-line">I own a <span class="career-num">&#8377;84Cr+ ARR</span> at-home eyewear business and have added <span class="career-num">&#8377;6Cr+</span> in annualised revenue.</p>
+      </li>
+      <li class="career-item">
+        <div class="career-meta"><span class="career-co">Bajaj Finserv Health</span><span class="career-when">2021 &#8211; 2024</span></div>
+        <p class="career-role">Product Manager</p>
+        <p class="career-line">Built a 0&#8594;1 diabetes wellness business (<span class="career-num">&#8377;28L</span> in five months) and added <span class="career-num">&#8377;1.5Cr+</span> in annualised revenue.</p>
+      </li>
+    </ol>
+  </aside>
 </section>
 
 <!-- ABOUT -->

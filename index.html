@@ -1191,7 +1191,6 @@ footer p{color:var(--t3)!important}
 .eclipse-disc{animation:eclipseRise 2.6s cubic-bezier(.16,1,.3,1) .35s both,corona 9s ease-in-out 3s infinite alternate}
 .eclipse-haze{animation:eclipseRise 3.2s cubic-bezier(.16,1,.3,1) .2s both,hazeDrift 26s ease-in-out infinite alternate}
 .eclipse-flare{animation:flarePulse 4.5s ease-in-out 2.6s infinite}
-@media(min-width:901px){.eclipse{transform:translateY(calc(var(--sy,0) * .18px))}}
 #starfield .st1{translate:0 calc(var(--sy,0) * -.03px)}
 #starfield .st2{translate:0 calc(var(--sy,0) * -.07px)}
 #starfield .st3{translate:0 calc(var(--sy,0) * -.12px)}
@@ -1225,6 +1224,13 @@ footer p{color:var(--t3)!important}
   #hero .hero-fact{padding:.85rem 1rem!important}
   #hero .hero-fact:nth-child(3){grid-column:1 / -1;border-left:none!important;border-top:1px solid rgba(201,178,255,.18)!important;margin:0!important}
 }
+
+/* Hero: no dead space; eclipse sits beside the name, not at the bottom edge */
+#hero{min-height:min(100dvh,820px)!important;padding-top:6.5rem!important;padding-bottom:4rem!important}
+@media(min-width:901px){
+  .eclipse{--ecl:clamp(440px,42vw,640px);top:calc(50% - var(--ecl) / 2 + 30px);bottom:auto;right:calc(var(--ecl) * -.3)}
+}
+@media(max-width:900px){#hero{min-height:auto!important;padding-bottom:10rem!important}}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -1265,7 +1271,6 @@ footer p{color:var(--t3)!important}
     <picture style="display:contents"><source srcset="assets/prerna-kapoor-avatar.webp" type="image/webp"><img class="hero-avatar" src="assets/prerna-kapoor-avatar.png" alt="Prerna Kapoor illustration" loading="lazy" decoding="async"></picture>
   </div>
   <div class="hero-inner">
-    <div class="hero-status"><span class="status-dot"></span>AVAILABLE FOR NEW OPPORTUNITIES</div>
     <h1 class="hero-name">Prerna<br><em>Kapoor.</em></h1>
     <p class="hero-role">Growth &amp; Adoption <strong>Product Manager</strong></p>
     <ul class="hero-facts" aria-label="Professional summary">

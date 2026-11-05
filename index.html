@@ -1304,6 +1304,32 @@ footer p{color:var(--t3)!important}
 .career-desc{margin:.15rem 0 0;color:var(--t2);font-size:.9rem;line-height:1.55}
 .career-impact{margin:.45rem 0 0;color:var(--t3);font-size:.85rem;letter-spacing:.01em}
 .career-impact .career-num{font-size:1rem;font-weight:600;margin-right:.2rem}
+
+/* career card: subtle motion */
+@keyframes careerLine{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes careerDot{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes careerPing{0%{transform:scale(1);opacity:.55}80%,100%{transform:scale(2.6);opacity:0}}
+.career-list::before{transform-origin:top;animation:careerLine 1.1s cubic-bezier(.22,1,.36,1) .9s both}
+.career-item::before{animation:careerDot .5s cubic-bezier(.34,1.56,.64,1) both;transition:background .3s,border-color .3s,box-shadow .3s}
+.career-item:nth-child(1)::before{animation-delay:1s}
+.career-item:nth-child(2)::before{animation-delay:1.45s}
+.career-item.is-now::after{content:"";position:absolute;left:-1.42rem;top:.38rem;width:9px;height:9px;border-radius:50%;border:1px solid var(--s);animation:careerPing 3.2s ease-out 2s infinite;pointer-events:none}
+.career-item>*:not(.career-meta){transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.career-item,.career-item .career-num{transition:opacity .3s,text-shadow .3s}
+@media(hover:hover) and (pointer:fine){
+  .career-list:has(.career-item:hover) .career-item:not(:hover){opacity:.55}
+  .career-item:hover>*:not(.career-meta){transform:translateX(3px)}
+  .career-item:hover::before{background:var(--s);border-color:var(--s);box-shadow:0 0 0 4px rgba(201,178,255,.15),0 0 14px rgba(201,178,255,.7)}
+  .career-item:hover .career-num{text-shadow:0 0 14px rgba(230,200,142,.35)}
+}
+@media(prefers-reduced-motion:reduce){.career-list::before,.career-item::before,.career-item.is-now::after{animation:none}.career-item>*{transition:none!important}}
+
+/* career card experiment D: soft light travelling down the timeline */
+@keyframes careerFlow{0%{top:.45rem;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:calc(100% - 3.2rem);opacity:0}}
+.career-list::after{content:"";position:absolute;left:calc(.3rem - 1px);top:.45rem;width:3px;height:2.6rem;border-radius:3px;background:linear-gradient(transparent,rgba(201,178,255,.95),transparent);filter:blur(.4px);opacity:0;animation:careerFlow 4.5s ease-in-out 2.4s infinite;pointer-events:none}
+/* career card experiment E: impact numbers count up */
+.career-impact .career-num{font-variant-numeric:tabular-nums}
+@media(prefers-reduced-motion:reduce){.career-list::after{animation:none;display:none}}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -4463,6 +4489,26 @@ document.addEventListener('click', event => {
     const card = event.target.closest && event.target.closest(glowSelector);
     if (card && !card.contains(event.relatedTarget)) { card.style.removeProperty('--mx'); card.style.removeProperty('--my'); }
   }, { passive: true });
+})();
+</script>
+
+<script>
+/* career card experiment E: count-up on impact numbers */
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('#hero .career-impact .career-num').forEach(function(el,i){
+    var m = el.textContent.match(/^(\D*)([\d.]+)(.*)$/); if(!m) return;
+    var pre=m[1], target=parseFloat(m[2]), post=m[3], dec=(m[2].split('.')[1]||'').length, final=el.textContent;
+    el.textContent = pre + (0).toFixed(dec) + post;
+    setTimeout(function(){
+      var t0=performance.now(), dur=1100;
+      (function tick(now){
+        var k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3);
+        el.textContent = k<1 ? pre+(target*e).toFixed(dec)+post : final;
+        if(k<1) requestAnimationFrame(tick);
+      })(t0);
+    }, 1300 + i*450);
+  });
 })();
 </script>
 </body>

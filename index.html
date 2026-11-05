@@ -956,6 +956,23 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
 .cs-rank-tag.off{background:rgba(255,255,255,.06);color:var(--t3)}
 .cs-source{display:block;margin-top:.5rem;font-size:.85em;color:var(--t3)}
 @media(max-width:640px){.cs-rank-tag{display:table;margin:.3rem 0 .1rem}}
+
+/* Compact Independent AI Products cards */
+.build-grid{gap:1.1rem!important}
+@media(min-width:901px){.build-grid{grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr)!important}}
+.build-card{padding:1.4rem 1.5rem!important}
+.build-card h3{font-size:clamp(1.6rem,2.6vw,2.2rem)!important;margin:.55rem 0 .6rem!important}
+.build-card p{font-size:.9rem!important;line-height:1.6!important}
+.build-tags{margin:.8rem 0 .9rem!important}
+.build-tags span{font-size:.68rem!important;padding:.2rem .5rem!important}
+.build-evidence{margin:.85rem 0!important}
+.build-evidence-item{padding:.65rem .7rem .65rem 0!important}
+.build-evidence strong{font-size:clamp(1.3rem,2.2vw,1.7rem)!important}
+.build-note{margin-top:.75rem!important;padding-top:.75rem!important;font-size:.82rem!important}
+.build-visual{height:auto!important}
+.build-visual img{position:absolute;inset:0}
+.build-visual.build-visual-mira img{padding:clamp(1.25rem,4vw,2.75rem)!important}
+@media(max-width:900px){.build-visual{min-height:220px!important;aspect-ratio:16/9}}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);

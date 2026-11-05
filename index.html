@@ -7,7 +7,7 @@
 <meta name="description" content="Growth &amp; Adoption Product Manager with 5 years of experience improving activation, conversion, retention, and revenue.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   /* RANKED PRIORITY LIST; sequence genuinely matters here */
 .cs-ranked{padding:1.75rem 2.5rem;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:1.1rem}
@@ -985,8 +985,8 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
 :root{
   --bg:#05040E;--bg2:#08061A;--card:rgba(13,11,28,.78);--border:rgba(201,178,255,.13);--bhi:rgba(201,178,255,.26);
   --s:#C9B2FF;--s2:#C9B2FF;--sd:rgba(201,178,255,.12);--d:#E58CC6;--dd:rgba(229,140,198,.12);--p:#6FD3CE;--v:#9D86FF;--acid:#C9B2FF;
-  --t1:#F2EEFF;--t2:#C9C3DE;--t3:#9C96B8;
-  --fd:'Inter',system-ui,sans-serif;--fs:'Instrument Serif',Georgia,serif;
+  --t1:#F4F1FF;--t2:#D3CEE6;--t3:#ABA5C6;
+  --fd:'Inter',system-ui,sans-serif;--fs:'Sora',system-ui,sans-serif;
   --violet:#7B5CFF;--magenta:#E05AB4;--teal:#3CC6C0;
 }
 html,body{background:var(--bg)!important}
@@ -1158,6 +1158,25 @@ footer p{color:var(--t3)!important}
   #hero .hero-name{font-size:clamp(4rem,19vw,5.4rem)!important}
 }
 @media(prefers-reduced-motion:reduce){#starfield .st,.eclipse-disc,.eclipse-haze{animation:none!important}}
+
+/* Readability pass: Sora for display, regular-weight body, larger labels */
+#hero .hero-name{font-weight:600!important;font-size:clamp(3.8rem,8.6vw,7.6rem)!important;line-height:.98!important;letter-spacing:-.045em!important}
+#hero .hero-name em,.hero-name em{font-style:normal!important}
+#hero .hero-sub{font-weight:400!important}
+#hero .hero-status,#hero .hero-fact-label{font-size:.74rem!important;letter-spacing:.12em!important}
+.nav-logo{font-weight:700!important;font-size:1.1rem!important;letter-spacing:-.02em!important}
+.vital-n,.cc-metric,.case-modal .cs-metric:not(.cs-metric-text),.case-modal .cs-stat-n,.case-modal .cs-stat-hero-n{font-weight:600!important;letter-spacing:-.035em!important}
+.vital-n{font-size:clamp(1.6rem,2.4vw,2.1rem)!important}
+.cc-metric{font-size:clamp(1.8rem,2.6vw,2.3rem)!important}
+.build-card h3{font-weight:600!important;font-size:clamp(1.6rem,2.4vw,2.1rem)!important;letter-spacing:-.03em!important}
+.contact-hl{font-weight:600!important;letter-spacing:-.04em!important}
+.contact-hl span{font-style:normal!important}
+#about .about-pull{font-style:normal!important;font-weight:500!important;font-size:clamp(1.5rem,2.4vw,2rem)!important;line-height:1.25!important;letter-spacing:-.02em}
+.case-modal .cs-quote p,.case-modal .cs-voc p{font-style:normal!important;font-weight:500!important;letter-spacing:-.01em}
+.sec-mark .sec-t,.sec-t{font-size:.76rem!important;letter-spacing:.16em!important}
+.vital-ey,.build-kicker,.sk-card .sk-cat,.cc-num,.cc-co{font-size:.74rem!important}
+.cc-teaser,.build-card p,.sk-name,.clink,.csub,.about-copy p{font-weight:400!important}
+@media(max-width:560px){#hero .hero-name{font-size:clamp(3.2rem,15vw,4.4rem)!important}}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);

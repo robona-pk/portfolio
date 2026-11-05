@@ -750,6 +750,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 @keyframes workbenchFloat{from{transform:translateY(0) rotate(-1.5deg)}to{transform:translateY(-11px) rotate(.8deg)}}
 #hero .hero-inner{position:relative;z-index:3!important;max-width:790px!important}
 #hero .hero-name{position:relative;z-index:4;font-size:clamp(4.9rem,10.6vw,10.2rem);margin-bottom:1rem;text-shadow:5px 5px 0 rgba(20,15,27,.72)}
+#hero .hero-name em{text-shadow:none;filter:drop-shadow(5px 5px 0 rgba(20,15,27,.72))}
 #hero .hero-role,#hero .hero-facts,#hero .hero-sub,#hero .hero-actions{position:relative;z-index:4;max-width:510px}
 #hero .hero-role{display:inline-flex;width:fit-content;align-items:baseline;padding:.58rem .78rem .62rem;border:1px solid rgba(160,146,197,.46);border-left:3px solid var(--s2);background:rgba(47,34,58,.68);color:var(--s2);font-size:clamp(1.28rem,2.1vw,1.62rem);line-height:1.05;letter-spacing:-.035em;margin-bottom:.8rem}
 #hero .hero-role strong{color:var(--t1)}
@@ -936,6 +937,24 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
   .clinks{max-width:none;justify-self:stretch}
   .foot-in{padding:0 6.5rem 0 1.25rem;text-align:left}
 }
+
+/* Case-study review fixes */
+body.modal-open #liquid-cursor{opacity:0!important}
+body.modal-open #scroll-progress{opacity:0}
+html.liquid-cursor-active body.modal-open{cursor:auto!important}
+html.liquid-cursor-active body.modal-open .case-modal-overlay a,
+html.liquid-cursor-active body.modal-open .case-modal-overlay button,
+html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cursor:pointer!important}
+.cs-title-sub{display:block;margin-top:.35rem;font-size:.62em;font-weight:600;color:var(--t2)}
+.cs-chosen-row{background:rgba(74,222,128,.04)}
+.cs-chosen-verdict{background:rgba(74,222,128,.12)!important;color:#86EFAC!important}
+.cs-callout.cs-note{background:rgba(255,255,255,.025)}
+.cs-callout-icon svg{width:17px;height:17px;display:block}
+.cs-callout-icon{display:grid!important;place-items:center}
+.cs-callout-lead{color:var(--t1);font-weight:700}
+.cs-rank-tag{display:inline-block;margin-left:.5rem;padding:.1rem .5rem;border-radius:999px;font-size:.66rem;font-weight:700;letter-spacing:.04em;background:var(--sd);color:var(--s);vertical-align:middle}
+.cs-rank-tag.off{background:rgba(255,255,255,.06);color:var(--t3)}
+@media(max-width:640px){.cs-rank-tag{display:table;margin:.3rem 0 .1rem}}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -1228,7 +1247,7 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
         <div class="cs-highlight">
           <p>Customers weren't rejecting home trials. They were rejecting a kit they had no say over.</p>
         </div>
-        <p class="cs-p">With no say over which frames showed up, booking felt like a gamble. A store visit felt certain. This wasn't a distance problem or a trust-in-service problem; it was a <span class="cs-em">control</span> problem.</p>
+        <p class="cs-p">With no say over which frames showed up, booking felt like a gamble. A store visit felt certain. This wasn't a distance problem or a trust-in-service problem. It was a <span class="cs-em">control</span> problem.</p>
       </div>
 
       <div class="cs-stat-hero">
@@ -1238,19 +1257,19 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
         </div>
       </div>
 
-      <div class="cs-callout">
-        <span class="cs-callout-icon constraint" aria-hidden="true">&#9888;</span>
+      <div class="cs-callout cs-note constraint">
+        <span class="cs-callout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/></svg></span>
         <div><div class="cs-callout-lbl">Constraint</div><p>No significant backend or inventory investment until demand was validated. Prove the hypothesis cheaply before committing engineering to a full integration.</p></div>
       </div>
 
-      <div class="cs-band ci">
-        <span class="cs-band-icon">&#128202;</span>
-        <div><div class="cs-band-lbl">Experiment design</div><p class="cs-band-text">A 3-week, pan-India pilot tested whether giving customers control over frame selection improved completed Home Trial bookings among landing-page visitors. The primary measure was booking conversion against the weekly baseline.</p></div>
+      <div class="cs-callout cs-note decision">
+        <span class="cs-callout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a6 6 0 0 0 6 6h6"/><path d="m15 12 3 3-3 3"/><path d="M6 21v-6"/></svg></span>
+        <div><div class="cs-callout-lbl">Decision</div><p><strong class="cs-callout-lead">Test control in isolation.</strong> A 3-week, pan-India pilot tested whether giving customers control over frame selection improved completed Home Trial bookings among landing-page visitors. The primary measure was booking conversion against the weekly baseline.</p></div>
       </div>
 
       <div class="cs-sec">
         <span class="cs-lbl">The MVP: Testing Control, Not Variety</span>
-        <p class="cs-p">The hypothesis: it wasn't <span class="cs-em">more</span> frames customers needed, it was the <span class="cs-em">act of choosing</span>. So we tested that in isolation. Using an existing Lenskart product listing page, we let customers browse and "select" frames for their trial; from the same ~150 frames the agent was already carrying. Nothing changed in the backend. The agent showed up with the exact same kit as before, just now hand-picked by the customer on paper.</p>
+        <p class="cs-p">The hypothesis: it wasn't <span class="cs-em">more</span> frames customers needed, it was the <span class="cs-em">act of choosing</span>. So we tested that in isolation. Using an existing Lenskart product listing page, we let customers browse and "select" frames for their trial, from the same ~150 frames the agent was already carrying. Nothing changed in the backend. The agent showed up with the exact same kit as before, just now hand-picked by the customer on paper.</p>
         <div class="cs-highlight">
           <p>If bookings moved without a single new frame in the kit, we'd know: choice itself was the lever, not variety. It was the cheapest possible way to test that.</p>
         </div>
@@ -1283,9 +1302,9 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
         <cite>Customer who ended up purchasing 3 frames</cite>
       </div>
 
-      <div class="cs-band ff">
-        <span class="cs-band-icon">&#9889;</span>
-        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">Nobody told agents to do this; but once they could see what customers had picked, they started calling them before appointments to discuss frames. We built a selection feature. Agents turned it into a styling concierge.</p></div>
+      <div class="cs-callout cs-note evidence">
+        <span class="cs-callout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span>
+        <div><div class="cs-callout-lbl">Evidence</div><p>Nobody told agents to do this; but once they could see what customers had picked, they started calling them before appointments to discuss frames. We built a selection feature. Agents turned it into a styling concierge.</p></div>
       </div>
 
       <div class="cs-sec">
@@ -1314,8 +1333,8 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
           <span class="cs-dot">&#183;</span>
           <span class="cs-st live">&#9679; Live</span>
         </div>
-        <div class="cs-metric cs-metric-text">Online-to-Offline (O2O) Journey</div>
-        <div class="cs-title">Truly Omnichannel Experience for Customers</div>
+        <div class="cs-metric">19-point NPS increase</div>
+        <div class="cs-title">Online-to-Offline (O2O) Journey<span class="cs-title-sub">Truly Omnichannel Experience for Customers</span></div>
       </div>
 
       <div class="cs-sec">
@@ -1335,7 +1354,7 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
       </div>
 
       <div class="cs-sec">
-        <p class="cs-p">The fix wasn't just closing that gap. It was making every store accountable for a defined <strong style="color:var(--t1)">territory</strong>; every customer in it, online, offline, or home trial, becomes that store's responsibility.</p>
+        <p class="cs-p">The fix wasn't just closing that gap. It was making every store accountable for a defined <strong style="color:var(--t1)">territory</strong>. Every customer in it, whether online, offline, or home trial, becomes that store's responsibility.</p>
       </div>
 
       <div class="cs-sec">
@@ -1364,11 +1383,18 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
           </div>
           <span class="cs-rejected-verdict">&#10007; Failed &nbsp;;&nbsp; Two attribution classes, impossible to explain or set fair targets against</span>
         </div>
+        <div class="cs-rejected-row cs-chosen-row">
+          <div class="cs-rejected-text">
+            <div class="cs-rejected-hd">Polygon Attribution</div>
+            <p class="cs-rejected-desc">Assign every delivery address to one accountable store, using a capacity-aware territory built from 0.1km&#178; tiles.</p>
+          </div>
+          <span class="cs-rejected-verdict cs-chosen-verdict">&#10003; Chosen &nbsp;&#183;&nbsp; No overlap, no dead zones, auditable ownership and explainable targets. Accepted cost: it assigns the store responsible for serving a customer, not the store they prefer.</span>
+        </div>
       </div>
 
-     <div class="cs-callout">
-        <span class="cs-callout-icon">&#128172;</span>
-        <div><div class="cs-callout-lbl">Why "last visited" broke down</div><p>We spoke with customers who'd bought from a store far from home. The pattern: some had visited a store near their <em>workplace</em>, not home; others wanted more variety than their nearest store carried; a few simply didn't know a closer store existed. Last visit wasn't loyalty; it was coincidence.</p></div>
+     <div class="cs-callout cs-note evidence">
+        <span class="cs-callout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span>
+        <div><div class="cs-callout-lbl">Evidence</div><p><strong class="cs-callout-lead">Why &#8220;last visited&#8221; broke down.</strong> We spoke with customers who'd bought from a store far from home. The pattern: some had visited a store near their <em>workplace</em>, not home; others wanted more variety than their nearest store carried; a few simply didn't know a closer store existed. Last visit wasn't loyalty. It was coincidence.</p></div>
       </div>
 
       <div class="cs-quote">
@@ -1397,9 +1423,9 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
         <p class="cs-cap">Live store POS; territory map + unified revenue view</p>
       </div>
 
-      <div class="cs-band ci">
-        <span class="cs-band-icon">&#128161;</span>
-        <div><div class="cs-band-lbl">Customer Insight</div><p class="cs-band-text">We assumed customers would naturally gravitate to their nearest store. 25% didn't; they were buying from stores 5km+ away, on the way to work or mid-errand. Proximity doesn't predict preference; it just predicts who's responsible for you now.</p></div>
+      <div class="cs-callout cs-note evidence">
+        <span class="cs-callout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span>
+        <div><div class="cs-callout-lbl">Evidence</div><p>We assumed customers would naturally gravitate to their nearest store. 25% didn't. They were buying from stores 5km+ away, on the way to work or mid-errand. Proximity doesn't predict preference. It only predicts who's responsible for you now.</p></div>
       </div>
 
       <div class="cs-stat-hero">
@@ -1426,9 +1452,9 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
         <p class="cs-p">Health Files let customers upload their lab reports to the platform. Almost nobody did. Rather than optimising the upload flow, we went back to customers to understand why.</p>
       </div>
 
-      <div class="cs-band ff">
-        <span class="cs-band-icon">&#9889;</span>
-        <div><div class="cs-band-lbl">Fun Fact</div><p class="cs-band-text">The few who did use Health Files were uploading everything from prescriptions to Aadhaar cards; Health Files had quietly become a general-purpose document locker nobody asked for.</p></div>
+      <div class="cs-callout cs-note evidence">
+        <span class="cs-callout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span>
+        <div><div class="cs-callout-lbl">Evidence</div><p>The few who did use Health Files were uploading everything from prescriptions to Aadhaar cards; Health Files had quietly become a general-purpose document locker nobody asked for.</p></div>
       </div>
 
       <div class="cs-quote">
@@ -1457,15 +1483,15 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
           <div class="cs-process-desc">Map each parameter to its universal medical ID; normalise across labs</div>
         </div>
         <div class="cs-process-step">
-          <span class="cs-process-icon">&#129504;</span>
-          <span class="cs-process-lbl">Pareto Scope</span>
-          <div class="cs-process-desc">Top 20% of AHC packages cover 80% of parameters; build those first.</div>
-        </div>
-        <div class="cs-process-step">
           <span class="cs-process-icon">&#127775;</span>
           <span class="cs-process-lbl">Smart Report</span>
           <div class="cs-process-desc">Plain English explanations + historical trend for every parameter</div>
         </div>
+      </div>
+
+      <div class="cs-callout cs-note decision">
+        <span class="cs-callout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a6 6 0 0 0 6 6h6"/><path d="m15 12 3 3-3 3"/><path d="M6 21v-6"/></svg></span>
+        <div><div class="cs-callout-lbl">Decision</div><p><strong class="cs-callout-lead">Scope by Pareto.</strong> The top 20% of AHC packages cover 80% of parameters, so we built those packages first and deferred the long tail.</p></div>
       </div>
 
       <div class="cs-sec">
@@ -1491,9 +1517,9 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
         </ul>
       </div>
 
-      <div class="cs-band ci">
-        <span class="cs-band-icon">&#128161;</span>
-        <div><div class="cs-band-lbl">Customer Insight</div><p class="cs-band-text">75% of customers googled out-of-range parameters as soon as they received a report. We replaced that fragmented, anxious search with plain-language context and an optional, relevant route to care.</p></div>
+      <div class="cs-callout cs-note evidence">
+        <span class="cs-callout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span>
+        <div><div class="cs-callout-lbl">Evidence</div><p>75% of customers googled out-of-range parameters as soon as they received a report. We replaced that fragmented, anxious search with plain-language context and an optional, relevant route to care.</p></div>
       </div>
     </article>
 
@@ -1517,33 +1543,34 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
       <div class="cs-sec">
         <span class="cs-lbl">What Patients Actually Weigh</span>
         <p class="cs-p">Before rebuilding the ranking, we identified the signals patients used to choose a doctor and treated the weighting as a product hypothesis to validate through live behaviour — not as a permanent truth baked into the system.</p>
+        <p class="cs-p">Signals 1&#8211;3 feed the Core Preference Score. Signal 4 is deliberately kept out of the score (see below).</p>
       </div>
       <div class="cs-ranked">
         <div class="cs-rank-item">
           <span class="cs-rank-badge">1</span>
           <div class="cs-rank-body">
-            <div class="cs-rank-hd">Years of experience</div>
+            <div class="cs-rank-hd">Years of experience <span class="cs-rank-tag">In the score &#183; 45%</span></div>
             <p class="cs-rank-desc">The strongest signal; patients defaulted to more experienced doctors first.</p>
           </div>
         </div>
         <div class="cs-rank-item">
           <span class="cs-rank-badge">2</span>
           <div class="cs-rank-body">
-            <div class="cs-rank-hd">Ratings</div>
+            <div class="cs-rank-hd">Ratings <span class="cs-rank-tag">In the score &#183; 35%</span></div>
             <p class="cs-rank-desc">The second filter, used to validate or override the experience signal.</p>
           </div>
         </div>
         <div class="cs-rank-item">
           <span class="cs-rank-badge">3</span>
           <div class="cs-rank-body">
-            <div class="cs-rank-hd">Fees</div>
+            <div class="cs-rank-hd">Fees <span class="cs-rank-tag">In the score &#183; 20% (Fair Fees Index)</span></div>
             <p class="cs-rank-desc">Not a hunt for the cheapest option, but a comparison against what felt reasonable for a doctor&#39;s experience and specialty.</p>
           </div>
         </div>
         <div class="cs-rank-item">
           <span class="cs-rank-badge">4</span>
           <div class="cs-rank-body">
-            <div class="cs-rank-hd">Gender, in specific specialties</div>
+            <div class="cs-rank-hd">Gender, in specific specialties <span class="cs-rank-tag off">Not scored &#183; patient-controlled filter</span></div>
             <p class="cs-rank-desc">Patients booking a gynecologist skewed toward preferring a female doctor; patients booking an andrologist skewed toward preferring a male doctor.</p>
           </div>
         </div>
@@ -1551,7 +1578,7 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
 
       <div class="cs-sec">
         <span class="cs-lbl">The Fix: A Two-Layer Scoring Model</span>
-        <p class="cs-p">Rather than averaging every signal into one flat score, we split the model into two layers; preference signals and trust signals aren&#39;t the same kind of thing. A highly experienced doctor with a poor attendance record shouldn&#39;t be able to average their way to a high ranking &#8212; reliability has to gate visibility, not just adjust it.</p>
+        <p class="cs-p">Rather than averaging every signal into one flat score, we split the model into two layers. Preference signals and trust signals aren&#39;t the same kind of thing. A highly experienced doctor with a poor attendance record shouldn&#39;t be able to average their way to a high ranking &#8212; reliability has to gate visibility, not just adjust it.</p>
       </div>
 
       <div class="cs-weights">
@@ -1596,9 +1623,9 @@ footer{display:block;border-top:1px solid var(--border);background:var(--bg2);pa
         <p class="cs-p">A complete profile isn&#39;t necessarily a trustworthy one; a doctor could fill every field with a blurry, badly cropped, unsmiling photo. So beyond checking whether fields were filled in, we bulk-cleaned photo backgrounds across the entire doctor directory for visual consistency, and scored photo professionalism directly on expression, blur, and framing (full face captured vs. zoomed-out or cropped).</p>
       </div>
 
-      <div class="cs-callout">
-        <span class="cs-callout-icon">&#9878;</span>
-        <div><div class="cs-callout-lbl">Gender: A Deliberate Exclusion</div><p>Gender was a real, measurable signal in patient behaviour for specific specialties &#8212; but we chose not to fold it into the algorithmic score. Ranking doctors by a sensitive attribute would have been unfair to doctors themselves. Instead, we surfaced it as a contextual, patient-controlled filter in specialties where the pattern was strong, so the platform could serve the preference transparently without an algorithm making that call silently.</p></div>
+      <div class="cs-callout cs-note decision">
+        <span class="cs-callout-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a6 6 0 0 0 6 6h6"/><path d="m15 12 3 3-3 3"/><path d="M6 21v-6"/></svg></span>
+        <div><div class="cs-callout-lbl">Decision</div><p><strong class="cs-callout-lead">Gender: a deliberate exclusion.</strong> Gender was a real, measurable signal in patient behaviour for specific specialties &#8212; but we chose not to fold it into the algorithmic score. Ranking doctors by a sensitive attribute would have been unfair to doctors themselves. Instead, we surfaced it as a contextual, patient-controlled filter in specialties where the pattern was strong, so the platform could serve the preference transparently without an algorithm making that call silently.</p></div>
       </div>
 
       <div class="cs-stats one">

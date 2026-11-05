@@ -9,7 +9,7 @@ const FACT_LIBRARY = Object.freeze(Object.fromEntries(
 // Version the public cache key alongside the approved evidence contracts.
 // A deployment with changed evidence increments this value, so a response can
 // never outlive the knowledge and validation rules that produced it.
-const EVIDENCE_CACHE_VERSION = '2026-11-04.1';
+const EVIDENCE_CACHE_VERSION = '2026-11-05.1';
 const EVIDENCE_CACHE_TTL_SECONDS = 86400;
 const EVIDENCE_CACHE_STALE_SECONDS = 604800;
 
@@ -29,6 +29,10 @@ const SOURCE_LIBRARY = Object.freeze({
   'Skills and tools': {
     answer: 'Prerna combines growth and adoption strategy with SQL, BigQuery, GA4, Firebase, A/B testing, PostHog, Python automation, and AI-assisted prototyping. Her builder toolset includes Codex, Claude Code, Gemini, GitHub, and Vercel.',
     text: 'Prerna brings growth and adoption strategy, funnel optimisation, lifecycle and retention strategy, SQL and BigQuery, GA4 and Firebase, A/B testing, cohort and behavioural segmentation, Python automation, and AI-assisted prototyping. Tools include Notion, Jira, Figma, Miro, CleverTap, Tableau, Power BI, PostHog, Codex, Claude Code, Gemini, GitHub, Vercel, and Google Apps Script.'
+  },
+  'Case studies overview': {
+    answer: 'The portfolio has five case studies: Personalised Home Trials and Truly Omnichannel at Lenskart, Smart Health Reports and Doctor Quality Score at Bajaj Finserv Health, and Charlie, a voice booking agent Prerna built.',
+    text: 'Prerna’s portfolio contains five case studies. Lenskart: Personalised Home Trials, which repositioned Lenskart@Home as a way to try frames at home, and Truly Omnichannel Experience for Customers, which covers store attribution and post-delivery ownership. Bajaj Finserv Health: Smart Health Reports, which rebuilt a dormant lab-report feature, and Doctor Quality Score and Listing Reorder, which changed how doctors are ranked. Independent AI build: Charlie, a voice booking agent for customers who prefer to call rather than use an app.'
   },
   'Portfolio overview': {
     answer: 'Prerna is a Growth and Adoption Product Manager with 5+ years across e-commerce, health-tech, and insurance. Alongside measurable commercial work, she builds AI-enabled product experiments.',
@@ -180,11 +184,35 @@ const MAX_SOURCES = 5;
 // the generation prompt so an answer has one consistent server-side contract.
 const MAX_ANSWER_CHARACTERS = 280;
 const FALLBACK_RETRIEVAL_STOP_WORDS = new Set([
-  'about', 'and', 'are', 'can', 'did', 'do', 'does', 'for', 'from', 'give',
-  'has', 'have', 'her', 'how', 'in', 'is', 'me', 'of', 'on', 'or', 'prerna',
-  'she', 'tell', 'the', 'to', 'use', 'used', 'was', 'what', 'where', 'which',
-  'who', 'with', 'work', 'worked'
+  'a', 'about', 'all', 'an', 'and', 'any', 'are', 'as', 'at', 'be', 'been', 'bring',
+  'by', 'can', 'could', 'did', 'do', 'does', 'doing', 'for', 'from', 'get', 'give',
+  'good', 'had', 'has', 'have', 'her', 'hers', 'how', 'i', 'if', 'in', 'into', 'is',
+  'it', 'its', 'just', 'kind', 'like', 'make', 'me', 'more', 'most', 'much', 'my',
+  'now', 'of', 'on', 'or', 'overview', 'please', 'prerna', 'right', 'she', 'should', 'so', 'some',
+  'still', 'tell', 'that', 'the', 'their', 'them', 'there', 'these', 'this', 'those',
+  'to', 'us', 'use', 'used', 'very', 'was', 'we', 'what', 'when', 'where', 'which',
+  'who', 'why', 'will', 'with', 'work', 'worked', 'working', 'works', 'would', 'you',
+  'your'
 ]);
+// Retry policy for the hosted model. Gemini returns 503 UNAVAILABLE when the
+// model is overloaded (seen in production on 5 Nov 2026) and occasionally
+// stalls until the abort. One retry inside the visitor's wait budget recovers
+// most of these; anything left goes to approved-source retrieval.
+const GENERATION_BUDGET_MS = 12500;
+const FIRST_ATTEMPT_TIMEOUT_MS = 7000;
+const MINIMUM_RETRY_TIMEOUT_MS = 3000;
+const RETRYABLE_STATUSES = new Set([429, 500, 502, 503, 504]);
+// The governed current-role contract may answer only when the visitor asks
+// about the present. Without this guard, any question containing "product
+// manager" could be answered with the current employer (regression F2).
+const CURRENT_TIME_SIGNAL = /\b(current|currently|now|still|right now|at present|presently|these days|today)\b/i;
+const EMPLOYMENT_SIGNAL = /\b(work|works|working|job|role|company|employer|employed|position|based at)\b/i;
+const TIME_BOUND_FACTS = new Set(['current_role']);
+// Questions that approved evidence must never answer by keyword overlap:
+// company financials, personal health, private logistics and contact details.
+// When Gemini is unavailable these return the service error instead of a
+// near-miss approved answer.
+const FALLBACK_REFUSAL_SIGNAL = /\b(profit\w*|loss-making|margins?|valuation|ebitda|funding|headquarter\w*|salary|ctc|compensation|notice period|phone|mobile number|address|working hours)\b|\b(?:bajaj|lenskart)\W{0,2}s\s+(?:revenue|growth|strategy)\b|\b(?:is|was)\s+(?:bajaj|lenskart)\b|\bhave\s+(?:diabetes|an? (?:illness|disease|condition))\b|\broles?\s+(?:are\s+)?open\b|\bwho (?:led|runs|founded) (?:bajaj|lenskart)\b/i;
 
 function requestIp(req) {
   return String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
@@ -223,14 +251,78 @@ function limitAnswerLength(value) {
   return withinLimit.slice(0, lastEnding.index + 1).trim();
 }
 
-function retrieveApprovedFallback(question) {
-  const terms = [...new Set((String(question || '').toLowerCase().match(/[a-z0-9]+/g) || [])
-    .filter(term => term.length > 1 && !FALLBACK_RETRIEVAL_STOP_WORDS.has(term)))];
+function stemTerm(term) {
+  if (term.length > 4 && term.endsWith('ies')) return `${term.slice(0, -3)}y`;
+  if (term.length > 3 && term.endsWith('s') && !term.endsWith('ss')) return term.slice(0, -1);
+  return term;
+}
+
+function retrievalTerms(value) {
+  return [...new Set((String(value || '').toLowerCase().match(/[a-z0-9]+/g) || [])
+    .filter(term => term.length > 1 && term.length < 40 && !FALLBACK_RETRIEVAL_STOP_WORDS.has(term))
+    .map(stemTerm))];
+}
+
+function wordSet(value) {
+  return new Set((String(value || '').toLowerCase().match(/[a-z0-9]+/g) || []).map(stemTerm));
+}
+
+// Share of a source title's content words that the question used. "Case
+// studies" should prefer the overview over one company's case study.
+function titlePrecision(title, matchedTerms) {
+  const titleTerms = retrievalTerms(title);
+  if (!titleTerms.length) return 0;
+  return titleTerms.filter(term => matchedTerms.includes(term)).length / titleTerms.length;
+}
+
+// A candidate is acceptable when it covers every content word, or when it
+// covers most of a multi-word question. Single partial matches are rejected
+// so an off-topic question cannot borrow an unrelated approved answer.
+function acceptableMatch(candidate) {
+  if (!candidate.answer || !candidate.matchedTerms.length) return false;
+  if (candidate.coverage === 1) return true;
+  if (candidate.phraseMatch && candidate.coverage >= 0.5) return true;
+  return candidate.matchedTerms.length >= 2 && candidate.coverage >= 0.6;
+}
+
+export function retrieveApprovedFallback(question) {
+  const text = String(question || '');
+  if (FALLBACK_REFUSAL_SIGNAL.test(text)) return null;
+  // Questions about the assistant itself are answered from Mira's own
+  // architecture source, not from Prerna's skill contracts that mention Mira.
+  if (/\b(mira|this bot|the bot|chatbot|portfolio assistant)\b/i.test(text) && SOURCE_LIBRARY['Project · Mira architecture']) {
+    return {
+      source: 'Project · Mira architecture',
+      answer: limitAnswerLength(SOURCE_LIBRARY['Project · Mira architecture'].answer),
+      matchedTerms: ['mira'],
+      coverage: 1,
+      score: 10,
+      sourceIndex: -1
+    };
+  }
+  const asksAboutPresent = CURRENT_TIME_SIGNAL.test(text);
+  const currentRole = FACT_LIBRARY.current_role;
+  // "Where does she work now?" reduces to no content words once stop words go,
+  // so the present-tense employment question is resolved explicitly.
+  if (currentRole && asksAboutPresent && EMPLOYMENT_SIGNAL.test(text) && retrievalTerms(text).length <= 1) {
+    return {
+      source: currentRole.source,
+      answer: limitAnswerLength(currentRole.answer),
+      factId: currentRole.id,
+      stance: 'affirm',
+      matchedTerms: ['current'],
+      coverage: 1,
+      score: 10,
+      sourceIndex: -1
+    };
+  }
+
+  const terms = retrievalTerms(text);
   if (!terms.length) return null;
 
   const sourceCandidates = Object.entries(SOURCE_LIBRARY).map(([source, value], sourceIndex) => {
-    const sourceWords = new Set(source.toLowerCase().match(/[a-z0-9]+/g) || []);
-    const evidenceWords = new Set(`${source} ${value.text}`.toLowerCase().match(/[a-z0-9]+/g) || []);
+    const sourceWords = wordSet(source);
+    const evidenceWords = wordSet(`${source} ${value.text}`);
     const matchedTerms = terms.filter(term => evidenceWords.has(term));
     const titleMatches = matchedTerms.filter(term => sourceWords.has(term)).length;
     return {
@@ -238,7 +330,7 @@ function retrieveApprovedFallback(question) {
       answer: limitAnswerLength(value.answer),
       matchedTerms,
       coverage: matchedTerms.length / terms.length,
-      score: matchedTerms.length + titleMatches * 3,
+      score: matchedTerms.length + titleMatches * 3 + titlePrecision(source, matchedTerms) * 3,
       sourceIndex
     };
   });
@@ -246,27 +338,36 @@ function retrieveApprovedFallback(question) {
   // Approved fact contracts are first-class evidence too. Including them in
   // the fail-closed retrieval path keeps specific coverage (for example RAG
   // experience or named AI tools) when hosted generation is unavailable.
-  const factCandidates = Object.values(FACT_LIBRARY).map((fact, factIndex) => {
-    const sourceWords = new Set(String(fact.source || '').toLowerCase().match(/[a-z0-9]+/g) || []);
-    const evidenceText = [fact.source, fact.claim, ...(fact.appliesTo || []), ...(fact.evidence || [])].join(' ');
-    const evidenceWords = new Set(evidenceText.toLowerCase().match(/[a-z0-9]+/g) || []);
-    const matchedTerms = terms.filter(term => evidenceWords.has(term));
-    const titleMatches = matchedTerms.filter(term => sourceWords.has(term)).length;
-    return {
-      source: fact.source,
-      answer: limitAnswerLength(fact.answer),
-      factId: fact.id,
-      stance: 'affirm',
-      matchedTerms,
-      coverage: matchedTerms.length / terms.length,
-      score: matchedTerms.length + titleMatches * 3 + 1,
-      sourceIndex: Object.keys(SOURCE_LIBRARY).length + factIndex
-    };
-  });
+  // Evaluation examples are deliberately not indexed.
+  const factCandidates = Object.values(FACT_LIBRARY)
+    .filter(fact => !TIME_BOUND_FACTS.has(fact.id) || asksAboutPresent)
+    .map((fact, factIndex) => {
+      const sourceWords = wordSet(fact.source);
+      const evidenceWords = wordSet([fact.source, fact.claim, ...(fact.appliesTo || []), ...(fact.evidence || [])].join(' '));
+      const matchedTerms = terms.filter(term => evidenceWords.has(term));
+      const titleMatches = matchedTerms.filter(term => sourceWords.has(term)).length;
+      // An applies_to phrase whose content words all appear in the question is
+      // the strongest signal that this contract was written for this question.
+      const phraseMatch = (fact.appliesTo || []).some(phrase => {
+        const phraseTerms = retrievalTerms(phrase);
+        return phraseTerms.length > 0 && phraseTerms.every(term => terms.includes(term));
+      });
+      return {
+        source: fact.source,
+        answer: limitAnswerLength(fact.answer),
+        factId: fact.id,
+        stance: 'affirm',
+        matchedTerms,
+        phraseMatch,
+        coverage: matchedTerms.length / terms.length,
+        score: matchedTerms.length + titleMatches * 3 + titlePrecision(fact.source, matchedTerms) * 3 + (phraseMatch ? 4 : 0) + 1,
+        sourceIndex: Object.keys(SOURCE_LIBRARY).length + factIndex
+      };
+    });
 
   const ranked = [...sourceCandidates, ...factCandidates]
-    .filter(item => item.answer && item.coverage === 1 && item.score > 0)
-    .sort((left, right) => right.score - left.score || left.sourceIndex - right.sourceIndex);
+    .filter(acceptableMatch)
+    .sort((left, right) => right.score - left.score || right.coverage - left.coverage || left.sourceIndex - right.sourceIndex);
 
   return ranked[0] || null;
 }
@@ -287,6 +388,39 @@ function sendApprovedFallback(res, question, model, payload = {}) {
     fallbackMode: 'approved_source_retrieval'
   });
   return true;
+}
+
+// Calls Gemini with one retry inside GENERATION_BUDGET_MS. The retry uses
+// GEMINI_FALLBACK_MODEL when it is set (a different model is more likely to
+// have capacity during an overload), otherwise the same model again.
+async function requestGemini(primaryModel, init) {
+  const startedAt = Date.now();
+  const models = [primaryModel, process.env.GEMINI_FALLBACK_MODEL || primaryModel];
+  let last = { response: null, payload: {}, model: primaryModel, error: null };
+  for (let index = 0; index < models.length; index += 1) {
+    const remaining = GENERATION_BUDGET_MS - (Date.now() - startedAt);
+    const timeoutMs = index === 0 ? Math.min(FIRST_ATTEMPT_TIMEOUT_MS, remaining) : remaining;
+    if (index > 0 && timeoutMs < MINIMUM_RETRY_TIMEOUT_MS) break;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(models[index])}:generateContent`, {
+        ...init,
+        signal: controller.signal
+      });
+      const payload = await response.json().catch(() => ({}));
+      last = { response, payload, model: models[index], error: null };
+      if (response.ok || !RETRYABLE_STATUSES.has(response.status)) return last;
+      if (index < models.length - 1) console.warn('Gemini retrying after', response.status, payload?.error?.status || 'unknown', models[index]);
+    } catch (error) {
+      last = { response: null, payload: {}, model: models[index], error };
+      if (index < models.length - 1) console.warn('Gemini retrying after', error?.name || 'unknown', models[index]);
+    } finally {
+      clearTimeout(timer);
+    }
+    if (index < models.length - 1) await new Promise(resolve => setTimeout(resolve, 250));
+  }
+  return last;
 }
 
 export default async function handler(req, res) {
@@ -337,16 +471,13 @@ export default async function handler(req, res) {
       must_not_include: fact.mustNotInclude || []
     });
   }).join('\n');
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 12000);
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
+    const attempt = await requestGemini(model, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-goog-api-key': process.env.GEMINI_API_KEY
       },
-      signal: controller.signal,
       body: JSON.stringify({
         systemInstruction: {
           parts: [{ text: fullKnowledge
@@ -372,7 +503,8 @@ export default async function handler(req, res) {
         }
       })
     });
-    const payload = await response.json().catch(() => ({}));
+    if (!attempt.response) throw attempt.error || new Error('Gemini request failed.');
+    const { response, payload } = attempt;
     if (!response.ok) {
       console.error('Gemini generation failed', response.status, payload?.error?.status || 'unknown');
       if (fullKnowledge && sendApprovedFallback(res, safeQuestion, model, payload)) return;
@@ -480,7 +612,5 @@ export default async function handler(req, res) {
     console.error('Gemini request error', error?.name || 'unknown');
     if (fullKnowledge && sendApprovedFallback(res, safeQuestion, model)) return;
     return res.status(504).json({ error: 'The answer service timed out.' });
-  } finally {
-    clearTimeout(timeout);
   }
 }

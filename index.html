@@ -980,6 +980,7 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
   background:rgba(160,146,197,.16)!important;color:#c9bde8!important}
 .build-card:nth-of-type(2) .build-tags span{background:rgba(225,184,91,.14)!important;color:#ead29a!important}
 .build-card:nth-of-type(3) .build-tags span{background:rgba(199,131,167,.16)!important;color:#e6b3cd!important}
+.build-proof{margin-top:.6rem!important}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -1130,11 +1131,6 @@ html.liquid-cursor-active body.modal-open .case-modal-overlay [role="button"]{cu
       <span class="build-kicker">Evidence-grounded AI product · Live</span>
       <h3>Mira</h3>
       <p>Answers recruiter questions from approved evidence only. Gemini picks the sources, while guardrails, output validation and a semantic cache keep unsupported claims out.</p>
-      <div class="build-evidence" aria-label="Mira product evidence">
-        <div class="build-evidence-item"><strong>341</strong><span>evaluation cases</span></div>
-        <div class="build-evidence-item"><strong>13</strong><span>blind production questions</span></div>
-        <div class="build-evidence-item"><strong>8</strong><span>new coverage regressions added</span></div>
-      </div>
       <p class="build-proof">A blind external test found two coverage gaps. Both were fixed in production and turned into regression tests.</p>
       <div class="build-tags"><span>RAG workflow</span><span>Gemini</span><span>Semantic cache</span><span>Evaluation harness</span><span>PostHog</span></div>
       <div class="build-actions">

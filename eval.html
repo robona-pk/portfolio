@@ -69,8 +69,8 @@
   </main>
 
   <iframe class="engine" id="engine" src="index.html?eval=1&amp;rules=2026-10-15.10" title="Mira evaluation engine"></iframe>
-  <script src="assets/mira-facts.js?v=2026-11-05.1"></script>
-  <script src="assets/eval-dataset.js?v=2026-11-05.1"></script>
+  <script src="assets/mira-facts.js?v=2026-11-06.1"></script>
+  <script src="assets/eval-dataset.js?v=2026-11-06.1"></script>
   <script>
     const STORAGE_KEY = 'ask-prerna-eval-reviews-v1';
     const CASE_TIMEOUT_MS = 90000;
@@ -83,7 +83,8 @@
       'intent-145', 'intent-151', 'retrieval-151a', 'resume-152', 'resume-154a',
       'resume-155', 'pace-159', 'pace-161a', 'interview-162', 'interview-163',
       'interview-164', 'interview-165', 'interview-166', 'interview-167', 'interview-168',
-      'current-role-172', 'current-role-174', 'origin-175'
+      'current-role-172', 'current-role-174', 'origin-175',
+      'beyond-resume-176', 'beyond-resume-177', 'beyond-resume-182'
     ]);
     const state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     Object.keys(state).forEach(id => {

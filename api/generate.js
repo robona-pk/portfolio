@@ -9,7 +9,7 @@ const FACT_LIBRARY = Object.freeze(Object.fromEntries(
 // Version the public cache key alongside the approved evidence contracts.
 // A deployment with changed evidence increments this value, so a response can
 // never outlive the knowledge and validation rules that produced it.
-const EVIDENCE_CACHE_VERSION = '2026-11-05.1';
+const EVIDENCE_CACHE_VERSION = '2026-11-06.1';
 const EVIDENCE_CACHE_TTL_SECONDS = 86400;
 const EVIDENCE_CACHE_STALE_SECONDS = 604800;
 
@@ -117,6 +117,10 @@ const SOURCE_LIBRARY = Object.freeze({
   'Profile · Dopamine detox': {
     answer: 'Dopamine detox is Prerna’s shorthand for stepping back from high-stimulation habits so she can reset her attention and act more intentionally. She enjoys discussing how it changed her relationship with focus and discipline.',
     text: 'Prerna uses dopamine detox to mean deliberately stepping back from high-stimulation habits, resetting attention, and acting more intentionally. She says it changed her relationship with focus and discipline.'
+  },
+  'Profile · Neuroscience': {
+    answer: 'Prerna is deeply into neuroscience. It ties closely to her dopamine detox, which changed her relationship with focus and discipline.',
+    text: 'Prerna is deeply interested in neuroscience. She connects it with dopamine detox: deliberately stepping back from high-stimulation habits to reset attention, which changed her relationship with focus and discipline.'
   },
   'Profile · Life philosophy': {
     answer: 'Prerna’s philosophy is simple: devotion to her future self must exceed attachment to her past. For her, that means choosing discipline, growth, and new perspectives over staying comfortable.',

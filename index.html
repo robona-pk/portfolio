@@ -2163,9 +2163,9 @@ footer p{color:var(--t3)!important}
 <footer>
   <div class="foot-in"><p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p></div>
 </footer>
-  <script src="assets/mira-facts.js?v=2026-11-05.1"></script>
-  <script src="assets/chatbot-knowledge.js?v=2026-11-05.1"></script>
-  <script src="assets/eval-dataset.js?v=2026-11-05.1"></script>
+  <script src="assets/mira-facts.js?v=2026-11-06.1"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-11-06.1"></script>
+  <script src="assets/eval-dataset.js?v=2026-11-06.1"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
 ═══════════════════════════════════════════════════════ */
@@ -2799,7 +2799,7 @@ approvedInterviewPrepDocuments.forEach(document => (document.sections || []).for
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-11-05.1',
+  rulesVersion: '2026-11-06.1',
   retrievalModel: 'Gemini evidence selection (server-side)',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2914,6 +2914,9 @@ function evidenceActionForSources(sourceIds = [], factId = '') {
   const matchedSource = sourceIds.find(source => evidenceActions[source]);
   return matchedSource ? evidenceActions[matchedSource] : null;
 }
+const beyondResumeQuestion = /\b(?:not|isn'?t|isn t|aren'?t|never)\b.{0,30}\b(?:in|on|from)\b.{0,14}\b(?:resume|cv|curriculum vitae)\b|\b(?:beyond|apart from|besides|other than|outside(?: of)?)\s+(?:her |the |prerna'?s |prerna s )?(?:resume|cv|curriculum vitae)\b|\b(?:resume|cv)\b.{0,24}\b(?:won'?t|won t|doesn'?t|doesn t|does not|wouldn'?t|wouldn t|will not|can'?t|can t|cannot|don'?t|don t)\b.{0,12}\b(?:tell|say|show|cover|mention|capture)|\b(?:won'?t|won t|doesn'?t|doesn t|does not|wouldn'?t|wouldn t|will not|can'?t|can t|cannot|don'?t|don t)\b.{0,16}\b(?:resume|cv)\b.{0,10}\b(?:tell|say|show|cover|mention|capture)|\b(?:fun|interesting|random|surprising|cool|unexpected|quirky|little[- ]known|lesser[- ]known)\s+facts?\b.{0,20}\b(?:her|prerna|she)\b|\bsomething\s+(?:fun|interesting|surprising|cool|unexpected|random|personal|different|unique)\s+about\s+(?:her|prerna)\b|\b(?:something|anything)\b.{0,12}\b(?:i|we|people|most people|recruiters?)\b.{0,12}\b(?:don'?t|don t|do not|wouldn'?t|wouldn t|would not|won'?t|won t|might not|may not)\b.{0,8}\bknow\b|\b(?:who|what)(?: is|'s| s|s)?\s+(?:she|prerna)\b.{0,8}\blike\s+as\s+a\s+(?:person|human)\b|\b(?:person|human)\s+behind\s+(?:the |her )?(?:resume|cv|portfolio)\b|\bbeyond (?:her )?work\b|\boff the record\b/i;
+const beyondResumeTopicGuard = /\b(lenskart|bajaj|case stud(?:y|ies)|projects?|metrics?|revenue|skills?|tools?|experience at|work at|work on|outcomes?)\b/i;
+const beyondResumeAnswer = approvedKnowledge.beyondResume || 'Prerna treats her brain like her favourite product: she studies how it works, then runs experiments on it. She’s deep into neuroscience, and her biggest experiment was a dopamine detox, stepping back from high-stimulation habits to win back her focus. Off-screen, she drums, lifts, and travels solo to meet strangers.';
 const resumeQuestion = /\b(resume|curriculum vitae|cv)\b/i;
 const strengthsQuestion = /\b(strengths?|strongest|strong suit|best at|superpower)\b/i;
 const strengthsAnswer = 'Her work shows signs of high agency: Prerna brings energy and persistence to ambiguous problems, looks for evidence, turns insights into experiments, and stays involved through iteration.';
@@ -3311,6 +3314,7 @@ function getCacheSourceForEval(item) {
   if (/from|based|where.*now/.test(question)) return 'Profile · Location';
   if (/hobb|free time|outside work|solo travel/.test(question)) return 'Profile · Hobbies';
   if (/dopamine/.test(question)) return 'Profile · Dopamine detox';
+  if (/neuroscien/.test(question)) return 'Profile · Neuroscience';
   if (/philosophy|motto/.test(question)) return 'Profile · Life philosophy';
   if (/person|personality/.test(question)) return 'Profile · Personality';
   if (/fast|agency|ambiguity|culture/.test(question)) return 'Profile · Pace and ambiguity';
@@ -3461,6 +3465,13 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   question = normalizeQuestion(question);
   if (greetingQuestion.test(question)) return { answer: approvedKnowledge.greeting, citations: [], policyOnly: true };
   if (thanksQuestion.test(question)) return { answer: approvedKnowledge.thanks, citations: [], policyOnly: true };
+  // "Something not on her resume" must reach the personal answer before the
+  // resume-link rule, which matches any mention of a resume or CV.
+  if (beyondResumeQuestion.test(question) && !beyondResumeTopicGuard.test(question) && !promptInjection.test(question)) return {
+    answer: beyondResumeAnswer,
+    citations: [],
+    policyOnly: true
+  };
   if (resumeQuestion.test(question)) return {
     answer: resumeAnswer,
     citations: [],
@@ -3545,6 +3556,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
 }
 
 const policyControlledAnswers = new Set([
+  beyondResumeAnswer,
   ...Object.values(approvedKnowledge),
   approvedKnowledge.greeting,
   approvedKnowledge.thanks,

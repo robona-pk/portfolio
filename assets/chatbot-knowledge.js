@@ -97,6 +97,11 @@ window.ASK_PRERNA_KNOWLEDGE = {
       facts: 'Prerna uses dopamine detox to mean deliberately stepping back from high-stimulation habits, resetting attention, and acting more intentionally. She says it changed her relationship with focus and discipline.'
     },
     {
+      id: 'neuroscience', source: 'Profile · Neuroscience', topics: ['neuroscience', 'dopamine_detox', 'personality'], retrievalHints: ['neuroscience', 'brain', 'neuro'],
+      answer: 'Prerna is deeply into neuroscience. It ties closely to her dopamine detox, which changed her relationship with focus and discipline.',
+      facts: 'Prerna is deeply interested in neuroscience. She connects it with dopamine detox: deliberately stepping back from high-stimulation habits to reset attention, which changed her relationship with focus and discipline.'
+    },
+    {
       id: 'life-philosophy', source: 'Profile · Life philosophy', topics: ['life_philosophy', 'personality'],
       answer: 'Prerna’s philosophy is simple: devotion to her future self must exceed attachment to her past. For her, that means choosing discipline, growth, and new perspectives over staying comfortable.',
       facts: 'Prerna’s stated philosophy is that devotion to her future self must exceed attachment to her past. She connects that idea with discipline, growth, new perspectives, and moving beyond comfort.'

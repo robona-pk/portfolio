@@ -1403,12 +1403,22 @@ body.amped .eclipse::after{animation:breathe var(--beat) ease-in-out infinite al
 .tonearm .arm-head{fill:#E6C88E}
 body.amped .tonearm{opacity:1;transform:rotate(0)}
 
-/* Light show: a pre-softened gradient layer that only fades in (no live blur, no movement: measured as the one costly effect) */
-#lightshow{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;will-change:opacity;
-  background:radial-gradient(30% 32% at 22% 30%,rgba(255,80,190,.16),transparent 72%),radial-gradient(28% 30% at 80% 28%,rgba(60,210,220,.12),transparent 72%),
-    radial-gradient(34% 34% at 64% 78%,rgba(123,92,255,.18),transparent 72%),radial-gradient(24% 24% at 30% 82%,rgba(243,199,122,.10),transparent 72%);
-  transition:opacity 1.6s}
+/* Colour wash: the page background takes on the music video's palette while it plays.
+   Three pre-softened gradient fields cross-fade (opacity only) so the colour slowly morphs;
+   no blur filters, no movement, so scrolling stays smooth. Content always sits on top. */
+#lightshow{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease;
+  background:radial-gradient(120% 90% at 50% 40%,transparent 35%,rgba(5,4,14,.55) 100%),
+    radial-gradient(55% 45% at 18% 22%,rgba(255,138,61,.40),transparent 70%),radial-gradient(50% 50% at 85% 75%,rgba(214,60,160,.38),transparent 70%),
+    radial-gradient(45% 45% at 55% 50%,rgba(255,190,80,.16),transparent 70%)}
+#lightshow i{position:absolute;inset:0;opacity:0;will-change:opacity;
+  background:radial-gradient(55% 50% at 80% 20%,rgba(232,72,140,.42),transparent 70%),radial-gradient(55% 45% at 22% 80%,rgba(40,190,190,.36),transparent 70%),
+    radial-gradient(45% 45% at 10% 45%,rgba(140,70,255,.30),transparent 70%)}
 body.amped #lightshow{opacity:1}
+body.amped #lightshow i{animation:wash 14s ease-in-out infinite alternate}
+@keyframes wash{0%,15%{opacity:0}85%,100%{opacity:1}}
+#lightshow.is-scrolling i{animation-play-state:paused}
+/* keep text crisp and readable over the colour */
+body.amped #hero .hero-inner,body.amped .about-copy{text-shadow:0 1px 18px rgba(5,4,14,.55)}
 
 /* Stars breathe with the song */
 body.amped #starfield{will-change:opacity;animation:starBreathe var(--beat) ease-in-out infinite alternate}
@@ -1462,7 +1472,7 @@ body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-
 @media(min-width:901px){.foot-riff{margin-right:7rem}}
 
 @media(prefers-reduced-motion:reduce){
-  .eclipse-disc::before,body.amped .eclipse::after,body.amped #lightshow,body.amped #starfield,body.amped .wave i,body.amped .np-eq i,
+  .eclipse-disc::before,body.amped .eclipse::after,body.amped #lightshow i,body.amped #starfield,body.amped .wave i,body.amped .np-eq i,
   .case-card:hover,.aip-card:hover,.sk-card:hover,.clink:hover{animation:none!important}
   body.amped .eclipse::after{opacity:.5}
   .tonearm{transition:opacity .3s}
@@ -2280,7 +2290,7 @@ body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-
 <footer>
   <div class="foot-in"><p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p><p class="foot-riff">Space, with the volume up <span aria-hidden="true">&#10022;</span></p></div>
 </footer>
-  <script src="assets/space-rock.js?v=2026-11-08.3" defer></script>
+  <script src="assets/space-rock.js?v=2026-11-08.4" defer></script>
   <script src="assets/mira-facts.js?v=2026-11-06.2"></script>
   <script src="assets/chatbot-knowledge.js?v=2026-11-06.2"></script>
   <script src="assets/eval-dataset.js?v=2026-11-06.2"></script>

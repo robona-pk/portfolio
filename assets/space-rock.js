@@ -111,10 +111,19 @@
   let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(placeArm, 150); });
   setTimeout(placeArm, 2600);
 
-  /* Light show layer (CSS only animates its opacity and transform) */
+  /* Colour-wash layer: two gradient palettes; CSS fades one over the other (opacity only) */
   const ls = document.createElement('div');
   ls.id = 'lightshow'; ls.setAttribute('aria-hidden', 'true');
+  ls.innerHTML = '<i></i>';
   body.prepend(ls);
+  // Pause the colour wash while the visitor is actively scrolling, resume when they stop
+  let st;
+  addEventListener('scroll', () => {
+    if (!playing) return;
+    if (!st) ls.classList.add('is-scrolling');
+    clearTimeout(st);
+    st = setTimeout(() => { ls.classList.remove('is-scrolling'); st = null; }, 180);
+  }, { passive: true });
 
   /* Section dividers become sound waves (pure CSS motion once inserted) */
   document.querySelectorAll('hr.divider').forEach(hr => {

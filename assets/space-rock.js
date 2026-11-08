@@ -13,7 +13,7 @@
 
   const VIDEO_ID = 'wycjnCCgUes'; // Tame Impala - Feels Like We Only Go Backwards (official video)
   const SONG = 'Feels Like We Only Go Backwards';
-  let yt = null, ready = false, loading = false, playing = false, startedAt = 0, pending = false;
+  let yt = null, ready = false, loading = false, startedAt = 0, pending = false;
 
   function setState(label) { if (knobState) knobState.textContent = label; }
   function track(name, props) {
@@ -63,30 +63,39 @@
   }
   addEventListener('resize', () => { if (!player.hidden) { const w = player.getBoundingClientRect().width; if (w > maxW()) setWidth(maxW(), false); checkWide(); } });
 
-  function setPlaying(on) {
-    if (on === playing) return;
-    playing = on;
+  /* Friday Mode is a simple on/off switch.
+     On: the video window appears, the song plays, the page goes into its Friday look.
+     Off: the song stops, the window disappears, the page goes back to normal. */
+  let modeOn = false;
+  function setMode(on) {
+    if (on === modeOn) return;
+    modeOn = on;
     body.classList.toggle('amped', on);
     knob.setAttribute('aria-pressed', on ? 'true' : 'false');
-    setState(on ? '11' : 'paused');
-    if (on) { startedAt = performance.now(); placeArm(); track('amp_turned_on', { song: SONG }); }
-    else track('amp_turned_off', { song: SONG, seconds_listened: Math.round((performance.now() - startedAt) / 1000) });
+    setState(on ? 'on' : 'off');
+    showPlayer(on);
+    if (on) {
+      startedAt = performance.now(); placeArm();
+      track('amp_turned_on', { song: SONG });
+      if (!yt) { pending = true; if (!loading) loadYouTube(); }
+      else if (ready) yt.playVideo();
+      else pending = true;
+    } else {
+      pending = false;
+      if (ready) yt.pauseVideo();
+      track('amp_turned_off', { song: SONG, seconds_listened: Math.round((performance.now() - startedAt) / 1000) });
+    }
   }
 
   function loadYouTube() {
-    loading = true; setState('tuning');
-    showPlayer(true);
+    loading = true;
     window.onYouTubeIframeAPIReady = () => {
       yt = new YT.Player(slot, {
         host: 'https://www.youtube-nocookie.com',
         videoId: VIDEO_ID, width: '100%', height: '100%',
-        playerVars: { autoplay: 1, playsinline: 1, rel: 0, modestbranding: 1 },
+        playerVars: { autoplay: 1, playsinline: 1, rel: 0, modestbranding: 1, loop: 1, playlist: VIDEO_ID },
         events: {
-          onReady: e => { ready = true; loading = false; if (pending) { pending = false; e.target.playVideo(); } },
-          onStateChange: e => {
-            if (e.data === 1) setPlaying(true);                     // playing
-            else if (e.data === 2 || e.data === 0) setPlaying(false); // paused or ended
-          },
+          onReady: e => { ready = true; loading = false; if (pending && modeOn) { pending = false; e.target.playVideo(); } },
           onError: fail
         }
       });
@@ -100,24 +109,11 @@
 
   function fail() {
     loading = false;
-    if (ready && !playing) { player.classList.add('np-failed'); setState('off'); return; }
-    if (ready) return;
-    player.classList.add('np-failed');
-    setState('off');
+    player.classList.add('np-failed'); // shows the "Watch on YouTube" link; Friday look stays on
   }
 
-  knob.addEventListener('click', () => {
-    if (!yt) { pending = true; if (!loading) loadYouTube(); return; }
-    showPlayer(true);
-    if (!ready) { pending = true; return; }
-    playing ? yt.pauseVideo() : yt.playVideo();
-  });
-
-  closeBtn && closeBtn.addEventListener('click', () => {
-    if (ready && playing) yt.pauseVideo();
-    setPlaying(false); setState('off');
-    showPlayer(false);
-  });
+  knob.addEventListener('click', () => setMode(!modeOn));
+  closeBtn && closeBtn.addEventListener('click', () => setMode(false));
 
   /* Tonearm that drops onto the eclipse record when the music plays */
   const hero = document.getElementById('hero');
@@ -161,7 +157,7 @@
   // Pause the colour wash while the visitor is actively scrolling, resume when they stop
   let st;
   addEventListener('scroll', () => {
-    if (!playing) return;
+    if (!modeOn) return;
     if (!st) ls.classList.add('is-scrolling');
     clearTimeout(st);
     st = setTimeout(() => { ls.classList.remove('is-scrolling'); st = null; }, 180);

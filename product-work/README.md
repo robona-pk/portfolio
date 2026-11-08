@@ -1,6 +1,6 @@
 # Independent AI Products & Experiments
 
-Products and prototypes I have built to explore product ideas hands-on. The first three are featured in the **Independent AI Products** section of the portfolio site.
+Products and prototypes I have built to explore product ideas hands-on. Mira and Charlie are featured in the **Independent AI Products** section of the portfolio site.
 
 ## Mira
 
@@ -11,14 +11,6 @@ A production assistant on this portfolio that answers from approved professional
 - [How Mira works](../README.md#mira---portfolio-chatbot)
 - [Eval console](../eval.html)
 - [Product changelog](../README.md#product-changelog)
-
-## FindAMatch
-
-**Job-search copilot for product managers · 2026**
-
-A local-first, evidence-grounded workflow. It converts a resume into a reviewable evidence ledger, imports candidate-labeled job alerts, applies hard eligibility filters and prepares a human-reviewed application packet. It automates research and synthesis; it does not impersonate the candidate or submit applications.
-
-- [View the source](https://github.com/robona-pk/applyguard)
 
 ## Charlie the Voice Booking Agent
 

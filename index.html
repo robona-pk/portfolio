@@ -1360,38 +1360,93 @@ footer p{color:var(--t3)!important}
 
 .case-modal .cs-quote.cs-quote-sm p,.cs-quote.cs-quote-sm p{font-size:clamp(1.05rem,1.6vw,1.25rem)!important;line-height:1.5!important}
 
-/* ── Rock layer: subtle, sits on top of the space theme ── */
-/* 1. Eclipse keeps time: a soft kick-drum shockwave, two hits per bar */
-.eclipse::before,.eclipse::after{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid rgba(214,196,255,.38);opacity:0;pointer-events:none;animation:kickRing 3.2s cubic-bezier(.2,.7,.3,1) 1.8s infinite}
-.eclipse::after{animation-delay:2.2s;border-color:rgba(243,199,122,.22)}
-@keyframes kickRing{0%{transform:scale(1);opacity:0}4%{opacity:.55}40%,100%{transform:scale(1.22);opacity:0}}
-/* 2. Section rules ring like a plucked string when they arrive or on hover */
-.sec-rule{transform-origin:left center}
-.sec-mark.in .sec-rule{animation:pluck .9s cubic-bezier(.3,.6,.4,1) .35s both}
-@media(hover:hover){.sec-mark:hover .sec-rule{animation:pluck .9s cubic-bezier(.3,.6,.4,1) both}}
-@keyframes pluck{0%{transform:translateY(0)}12%{transform:translateY(-2px)}24%{transform:translateY(1.6px)}36%{transform:translateY(-1.1px)}48%{transform:translateY(.7px)}62%{transform:translateY(-.35px)}100%{transform:translateY(0)}}
-/* 3. On rotation card in About */
-.rotation{margin-top:1.6rem;max-width:440px;padding:1rem 1.15rem .95rem;border:1px solid var(--border);border-radius:12px;background:rgba(14,11,32,.55);backdrop-filter:blur(8px)}
-.rotation-h{display:flex;align-items:center;gap:.6rem;margin:0 0 .7rem;color:var(--t3);font-size:.72rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
-.eq{display:inline-flex;align-items:flex-end;gap:2px;height:12px}
-.eq i{display:block;width:2px;height:100%;border-radius:1px;background:var(--impact);transform-origin:bottom;animation:eqBar 1.1s ease-in-out infinite alternate}
-.eq i:nth-child(2){animation-duration:.8s;animation-delay:-.3s}
-.eq i:nth-child(3){animation-duration:1.3s;animation-delay:-.6s}
-.eq i:nth-child(4){animation-duration:.95s;animation-delay:-.15s}
-@keyframes eqBar{from{transform:scaleY(.2)}to{transform:scaleY(1)}}
-.rotation-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
-.rotation-list li{display:grid;grid-template-columns:1.6rem 1fr auto;align-items:baseline;gap:.5rem;padding:.42rem 0;border-top:1px solid rgba(201,178,255,.08);font-size:.88rem;line-height:1.4}
-.rotation-list li:first-child{border-top:none}
-.rot-n{color:var(--t3);font-size:.72rem;font-variant-numeric:tabular-nums}
-.rot-track{color:var(--t1);font-weight:500}
-.rot-artist{color:var(--t3);font-size:.8rem;white-space:nowrap}
-.rotation-list li:first-child .rot-n{color:var(--impact)}
-/* 4. Footer sign-off */
+/* ════════ SPACE ROCK ════════
+   Default: calm, professional. Turn the amp knob and the site plays a live groove and reacts to it. */
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+:root{--bass:0;--lvl:0}
+
+/* Amp knob */
+.amp{position:relative;display:inline-flex;align-items:center;gap:.6rem;margin:0 auto 0 1.6rem;padding:.25rem .7rem .25rem .3rem;border:1px solid rgba(201,178,255,.18);border-radius:999px;background:rgba(14,11,32,.5);color:var(--t2);cursor:pointer;font:inherit;touch-action:none;transition:border-color .25s,box-shadow .25s}
+.amp:hover{border-color:rgba(201,178,255,.45)}
+.amp:focus-visible{outline:2px solid var(--s);outline-offset:3px}
+.amp-dial{--deg:calc(var(--v,0) * 24.5deg);position:relative;width:30px;height:30px;border-radius:50%;flex:none}
+.amp-cap{position:absolute;left:50%;top:50%;width:19px;height:19px;margin:-9.5px 0 0 -9.5px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4a3f6b,#17111f 70%);box-shadow:0 0 0 1px rgba(201,178,255,.3),0 2px 6px rgba(0,0,0,.6);transform:rotate(calc(-135deg + var(--v,0) * 24.5deg));transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
+.amp-cap::after{content:"";position:absolute;left:50%;top:2px;width:2px;height:6px;margin-left:-1px;border-radius:1px;background:#F3C77A}
+.amp-dial::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from -135deg,#F3C77A 0 var(--deg),rgba(201,178,255,.18) var(--deg) 270deg,transparent 270deg);-webkit-mask:radial-gradient(circle,transparent 0 11.5px,#000 12px);mask:radial-gradient(circle,transparent 0 11.5px,#000 12px)}
+.amp-label{display:flex;flex-direction:column;line-height:1.1;text-align:left}
+.amp-label b{font-size:.74rem;font-weight:600;color:var(--t1);letter-spacing:.01em}
+.amp-label small{font-size:.62rem;color:var(--t3);letter-spacing:.14em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+body.amped .amp{border-color:rgba(243,199,122,.5);box-shadow:0 0 calc(10px + var(--bass) * 26px) rgba(243,199,122,calc(.15 + var(--bass) * .35))}
+body.amped .amp-label small{color:#F3C77A}
+@media(max-width:640px){.amp{margin-left:.9rem;padding-right:.3rem}.amp-label{display:none}}
+
+/* The eclipse is also a record */
+.eclipse-disc::before{content:"";position:absolute;inset:5%;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from 0deg,transparent 0 30deg,rgba(201,178,255,.09) 48deg,transparent 68deg 205deg,rgba(243,199,122,.06) 222deg,transparent 242deg),
+    repeating-radial-gradient(circle at 50% 50%,rgba(255,255,255,.03) 0 1px,transparent 1px 6px);
+  animation:vinylSpin 36s linear infinite}
+@keyframes vinylSpin{to{transform:rotate(360deg)}}
+.tonearm{position:absolute;left:0;top:0;z-index:2;overflow:visible;pointer-events:none;opacity:0;transform:rotate(-16deg);transition:opacity .6s,transform 1.2s cubic-bezier(.3,1.3,.5,1)}
+.tonearm line{stroke:rgba(214,196,255,.7);stroke-width:1.5;stroke-linecap:round}
+.tonearm .arm-base{fill:#17111f;stroke:rgba(214,196,255,.65);stroke-width:1.5}
+.tonearm .arm-head{fill:#E6C88E}
+body.amped .tonearm{opacity:1;transform:rotate(0)}
+body.amped .eclipse-disc::before{animation-duration:1.8s}
+body.amped .eclipse-disc{animation:none;transform:scale(calc(1 + var(--bass) * .025));filter:brightness(calc(1 + var(--bass) * .55)) saturate(1.25)}
+body.amped .eclipse-haze{animation:hazeDrift 26s ease-in-out infinite alternate,hueFlow 16s linear infinite}
+@keyframes hueFlow{from{filter:blur(30px) hue-rotate(0deg) saturate(1.4)}to{filter:blur(30px) hue-rotate(360deg) saturate(1.4)}}
+
+/* Liquid light show behind the page while the music plays */
+#lightshow{position:fixed;inset:-10%;z-index:0;pointer-events:none;opacity:0;mix-blend-mode:screen;filter:blur(70px);
+  background:radial-gradient(30% 35% at 20% 30%,rgba(255,80,190,.55),transparent 70%),radial-gradient(28% 30% at 80% 25%,rgba(60,210,220,.45),transparent 70%),
+    radial-gradient(35% 35% at 65% 80%,rgba(123,92,255,.6),transparent 70%),radial-gradient(25% 25% at 30% 80%,rgba(243,199,122,.35),transparent 70%);
+  transition:opacity 1.2s}
+body.amped #lightshow{opacity:calc(.18 + var(--lvl) * .45);animation:oilDrift 18s ease-in-out infinite alternate}
+@keyframes oilDrift{0%{transform:rotate(0) scale(1);filter:blur(70px) hue-rotate(0deg)}100%{transform:rotate(25deg) scale(1.15);filter:blur(70px) hue-rotate(140deg)}}
+
+/* Stars pulse on the kick */
+body.amped #starfield{opacity:calc(.55 + var(--bass) * .8);transform:scale(calc(1 + var(--bass) * .02))}
+
+/* Chromatic split: on hover by default, on every beat when amped */
+.hero-name,.section-h,.contact-hl{transition:text-shadow .25s}
+.hero-name:hover,.section-h:hover,.contact-hl:hover{text-shadow:-3px 0 rgba(255,70,150,.55),3px 0 rgba(60,220,255,.5)}
+#hero .hero-name em{transition:filter .25s}
+#hero .hero-name:hover em{filter:drop-shadow(-3px 0 rgba(255,70,150,.6)) drop-shadow(3px 0 rgba(60,220,255,.55))!important}
+body.amped .hero-name,body.amped .contact-hl{text-shadow:calc(var(--bass) * -7px) 0 rgba(255,70,150,.6),calc(var(--bass) * 7px) 0 rgba(60,220,255,.55)}
+body.amped #hero .hero-name em{filter:drop-shadow(calc(var(--bass) * -7px) 0 rgba(255,70,150,.65)) drop-shadow(calc(var(--bass) * 7px) 0 rgba(60,220,255,.6))!important}
+
+/* Oil-slick edges on cards */
+.case-card:hover,.aip-card:hover,.sk-card:hover,.clink:hover{border-color:transparent!important;
+  background:linear-gradient(#150f22,#150f22) padding-box,conic-gradient(from var(--ang),#ff5fc8,#7b5cff,#3cc6c0,#f3c77a,#ff5fc8) border-box!important;
+  animation:angSpin 3.5s linear infinite;box-shadow:0 0 44px -14px rgba(255,95,200,.45)!important}
+@keyframes angSpin{to{--ang:360deg}}
+body.amped .case-card,body.amped .aip-card,body.amped .sk-card{box-shadow:0 0 calc(var(--bass) * 40px) -12px rgba(201,178,255,.55)!important}
+
+/* Dividers are waveforms */
+hr.divider{opacity:0!important}
+canvas.wave{display:block;position:relative;z-index:1;width:100%;height:44px;margin:-22px 0 -21px;pointer-events:none}
+
+/* Now playing */
+.np{position:fixed;left:1.25rem;bottom:1.25rem;z-index:150;display:flex;align-items:center;gap:.7rem;padding:.55rem .9rem .55rem .7rem;border:1px solid rgba(243,199,122,.35);border-radius:999px;background:rgba(10,8,22,.82);backdrop-filter:blur(12px);box-shadow:0 10px 30px -10px rgba(0,0,0,.7);animation:npIn .5s cubic-bezier(.2,1.2,.4,1) both}
+.np[hidden]{display:none}
+@keyframes npIn{from{opacity:0;transform:translateY(12px)}}
+.np-eq{display:flex;align-items:flex-end;gap:2px;height:16px}
+.np-eq i{display:block;width:3px;height:100%;border-radius:1px;background:linear-gradient(#ff5fc8,#F3C77A);transform-origin:bottom;transform:scaleY(.2)}
+.np-copy{display:flex;flex-direction:column;line-height:1.15}
+.np-copy b{font-size:.78rem;color:var(--t1);font-weight:600}
+.np-copy small{font-size:.66rem;color:var(--t3)}
+@media(max-width:640px){.np{left:.75rem;bottom:.85rem;max-width:calc(100% - 7.5rem)}.np-copy small{display:none}}
+
+/* Footer */
 .foot-in{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.foot-riff{color:var(--t3)!important;letter-spacing:.08em}
 .foot-riff span{color:var(--s)}
 @media(min-width:901px){.foot-riff{margin-right:7rem}}
-@media(prefers-reduced-motion:reduce){.eclipse::before,.eclipse::after,.eq i,.sec-mark.in .sec-rule,.sec-mark:hover .sec-rule{animation:none!important}.eclipse::before,.eclipse::after{display:none}.eq i:nth-child(1){transform:scaleY(.6)}.eq i:nth-child(2){transform:scaleY(1)}.eq i:nth-child(3){transform:scaleY(.4)}.eq i:nth-child(4){transform:scaleY(.8)}}
+
+@media(prefers-reduced-motion:reduce){
+  .eclipse-disc::before,body.amped #lightshow,body.amped .eclipse-haze,.case-card:hover,.aip-card:hover,.sk-card:hover,.clink:hover{animation:none!important}
+  body.amped .eclipse-disc,body.amped #starfield{transform:none}
+  .tonearm{transition:opacity .3s}
+}
 </style>
 <script>
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog&&window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}p||((p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",p.onerror=function(){p=null},(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r));var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],Object.defineProperty(u,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e}}),Object.defineProperty(u.people,"toString",{configurable:!0,enumerable:!0,writable:!0,value:function(){return u.toString(1)+".people (stub)"}}),o="init capture identify register register_once unregister reset get_distinct_id opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing startSessionRecording stopSessionRecording".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -1408,6 +1463,10 @@ footer p{color:var(--t3)!important}
 
 <nav>
   <a href="#hero" class="nav-logo">PK<em>·</em></a>
+  <button class="amp" id="ampKnob" type="button" aria-pressed="false" aria-label="Turn it up: play a live space-rock groove. Drag, scroll or use arrow keys for volume." title="Turn it up. This one goes to 11.">
+    <span class="amp-dial" aria-hidden="true"><span class="amp-cap"></span></span>
+    <span class="amp-label"><b>Turn it up</b><small id="ampState">off</small></span>
+  </button>
   <ul class="nav-links" id="nl">
     <li><a href="#about">About</a></li>
     <li><a href="#cases">Work</a></li>
@@ -1475,14 +1534,6 @@ footer p{color:var(--t3)!important}
         <p>I work where customer intent is highest and the journey breaks: an abandoned booking, an unread report, an uncertain choice. Research, behavioural data and small experiments turn those moments into lasting growth.</p>
         <p>Today I own Lenskart@Home at <strong>Lenskart</strong>. Before that, I built 0&#8594;1 products at <strong>Bajaj Finserv Health</strong>.</p>
         <p>Outside work, I lift and play the drums. Both taught me that progress is discipline, compounding quietly.</p>
-      </div>
-      <div class="rotation" aria-label="Songs on rotation">
-        <p class="rotation-h"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>On rotation</p>
-        <ol class="rotation-list">
-          <li><span class="rot-n">01</span><span class="rot-track">Let It Happen</span><span class="rot-artist">Tame Impala</span></li>
-          <li><span class="rot-n">02</span><span class="rot-track">Vienna</span><span class="rot-artist">Billy Joel</span></li>
-          <li><span class="rot-n">03</span><span class="rot-track">Back in Black</span><span class="rot-artist">AC/DC</span></li>
-        </ol>
       </div>
     </div>
     <figure class="about-portrait reveal">
@@ -2201,9 +2252,14 @@ footer p{color:var(--t3)!important}
     <a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" id="flt" data-cta="get-in-touch">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   </div>
 </div>
+<div class="np" id="nowPlaying" hidden aria-live="polite">
+  <span class="np-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+  <span class="np-copy"><b>Orbit Jam</b><small>live groove, made in your browser &#183; 96 BPM</small></span>
+</div>
 <footer>
   <div class="foot-in"><p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p><p class="foot-riff">Space, with the volume up <span aria-hidden="true">&#10022;</span></p></div>
 </footer>
+  <script src="assets/space-rock.js?v=2026-11-08.1" defer></script>
   <script src="assets/mira-facts.js?v=2026-11-06.2"></script>
   <script src="assets/chatbot-knowledge.js?v=2026-11-06.2"></script>
   <script src="assets/eval-dataset.js?v=2026-11-06.2"></script>

@@ -172,3 +172,12 @@ Gemini uses a server-side key, so abuse can consume quota or create cost. The en
 - Email addresses and phone numbers are redacted from questions before capture.
 - Evaluation traffic is excluded from live request telemetry.
 - Questions and answers are still potentially sensitive text. Review retention settings in PostHog and avoid collecting information that is not necessary for improving the portfolio experience.
+
+## Space rock amp events (pre-production)
+
+The "Turn it up" amp knob in the nav plays an original groove synthesised in the browser and makes the page react to it. Two events measure whether visitors use it.
+
+| Event | Properties | Meaning |
+| --- | --- | --- |
+| `amp_turned_on` | `volume` (0 to 11) | Visitor started the music |
+| `amp_turned_off` | `seconds_listened`, `volume` | Visitor stopped it; listening time shows whether the feature holds attention |

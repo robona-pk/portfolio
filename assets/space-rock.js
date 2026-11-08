@@ -125,6 +125,18 @@
     st = setTimeout(() => { ls.classList.remove('is-scrolling'); st = null; }, 180);
   }, { passive: true });
 
+  /* About portrait flips to the drum kit */
+  const flip = document.getElementById('portraitFlip');
+  const tag = document.getElementById('portraitTag');
+  if (flip) flip.addEventListener('click', () => {
+    const on = !flip.classList.contains('is-flipped');
+    flip.classList.toggle('is-flipped', on);
+    flip.setAttribute('aria-pressed', on ? 'true' : 'false');
+    flip.setAttribute('aria-label', on ? 'Flip the photo back to Prerna' : "Flip the photo to see Prerna's drum kit");
+    if (tag) tag.textContent = on ? 'DRUMS / 4:4' : 'PM / 05';
+    track('portrait_flipped', { side: on ? 'drums' : 'portrait' });
+  });
+
   /* Section dividers become sound waves (pure CSS motion once inserted) */
   document.querySelectorAll('hr.divider').forEach(hr => {
     const w = document.createElement('div');

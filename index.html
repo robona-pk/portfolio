@@ -1361,81 +1361,100 @@ footer p{color:var(--t3)!important}
 .case-modal .cs-quote.cs-quote-sm p,.cs-quote.cs-quote-sm p{font-size:clamp(1.05rem,1.6vw,1.25rem)!important;line-height:1.5!important}
 
 /* ════════ SPACE ROCK ════════
-   Default: calm, professional. Turn the amp knob and the site plays a live groove and reacts to it. */
-@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
-:root{--bass:0;--lvl:0}
+   Calm by default. "Turn it up" plays Tame Impala via Spotify and the page moves with it.
+   Performance: every animation here touches only transform or opacity (GPU-composited),
+   nothing is re-blurred or re-painted per frame, and no JS runs per frame. */
+:root{--beat:.96s} /* a slow, soft breath; it never fights the song's own rhythm */
 
 /* Amp knob */
-.amp{position:relative;display:inline-flex;align-items:center;gap:.6rem;margin:0 auto 0 1.6rem;padding:.25rem .7rem .25rem .3rem;border:1px solid rgba(201,178,255,.18);border-radius:999px;background:rgba(14,11,32,.5);color:var(--t2);cursor:pointer;font:inherit;touch-action:none;transition:border-color .25s,box-shadow .25s}
+.amp{position:relative;display:inline-flex;align-items:center;gap:.6rem;margin:0 auto 0 1.6rem;padding:.25rem .7rem .25rem .3rem;border:1px solid rgba(201,178,255,.18);border-radius:999px;background:rgba(14,11,32,.5);color:var(--t2);cursor:pointer;font:inherit;transition:border-color .25s,background .25s}
 .amp:hover{border-color:rgba(201,178,255,.45)}
 .amp:focus-visible{outline:2px solid var(--s);outline-offset:3px}
-.amp-dial{--deg:calc(var(--v,0) * 24.5deg);position:relative;width:30px;height:30px;border-radius:50%;flex:none}
-.amp-cap{position:absolute;left:50%;top:50%;width:19px;height:19px;margin:-9.5px 0 0 -9.5px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4a3f6b,#17111f 70%);box-shadow:0 0 0 1px rgba(201,178,255,.3),0 2px 6px rgba(0,0,0,.6);transform:rotate(calc(-135deg + var(--v,0) * 24.5deg));transition:transform .2s cubic-bezier(.3,1.5,.5,1)}
+.amp-dial{position:relative;width:30px;height:30px;border-radius:50%;flex:none}
+.amp-dial::before,.amp-dial::after{content:"";position:absolute;inset:0;border-radius:50%;-webkit-mask:radial-gradient(circle,transparent 0 11.5px,#000 12px);mask:radial-gradient(circle,transparent 0 11.5px,#000 12px)}
+.amp-dial::before{background:conic-gradient(from -135deg,rgba(201,178,255,.2) 0 270deg,transparent 270deg)}
+.amp-dial::after{background:conic-gradient(from -135deg,#F3C77A 0 270deg,transparent 270deg);opacity:0;transition:opacity .5s}
+.amp-cap{position:absolute;left:50%;top:50%;width:19px;height:19px;margin:-9.5px 0 0 -9.5px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4a3f6b,#17111f 70%);box-shadow:0 0 0 1px rgba(201,178,255,.3),0 2px 6px rgba(0,0,0,.6);transform:rotate(-135deg);transition:transform .7s cubic-bezier(.3,1.4,.5,1)}
 .amp-cap::after{content:"";position:absolute;left:50%;top:2px;width:2px;height:6px;margin-left:-1px;border-radius:1px;background:#F3C77A}
-.amp-dial::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from -135deg,#F3C77A 0 var(--deg),rgba(201,178,255,.18) var(--deg) 270deg,transparent 270deg);-webkit-mask:radial-gradient(circle,transparent 0 11.5px,#000 12px);mask:radial-gradient(circle,transparent 0 11.5px,#000 12px)}
 .amp-label{display:flex;flex-direction:column;line-height:1.1;text-align:left}
 .amp-label b{font-size:.74rem;font-weight:600;color:var(--t1);letter-spacing:.01em}
-.amp-label small{font-size:.62rem;color:var(--t3);letter-spacing:.14em;text-transform:uppercase;font-variant-numeric:tabular-nums}
-body.amped .amp{border-color:rgba(243,199,122,.5);box-shadow:0 0 calc(10px + var(--bass) * 26px) rgba(243,199,122,calc(.15 + var(--bass) * .35))}
+.amp-label small{font-size:.62rem;color:var(--t3);letter-spacing:.14em;text-transform:uppercase}
+body.amped .amp{border-color:rgba(243,199,122,.5);background:rgba(243,199,122,.06)}
+body.amped .amp-cap{transform:rotate(135deg)}
+body.amped .amp-dial::after{opacity:1}
 body.amped .amp-label small{color:#F3C77A}
 @media(max-width:640px){.amp{margin-left:.9rem;padding-right:.3rem}.amp-label{display:none}}
 
 /* The eclipse is also a record */
-.eclipse-disc::before{content:"";position:absolute;inset:5%;border-radius:50%;pointer-events:none;
+.eclipse-disc::before{content:"";position:absolute;inset:5%;border-radius:50%;pointer-events:none;will-change:transform;
   background:conic-gradient(from 0deg,transparent 0 30deg,rgba(201,178,255,.09) 48deg,transparent 68deg 205deg,rgba(243,199,122,.06) 222deg,transparent 242deg),
     repeating-radial-gradient(circle at 50% 50%,rgba(255,255,255,.03) 0 1px,transparent 1px 6px);
   animation:vinylSpin 36s linear infinite}
+body.amped .eclipse-disc::before{animation-duration:4s}
 @keyframes vinylSpin{to{transform:rotate(360deg)}}
+/* soft glow that breathes with the song: opacity only */
+.eclipse::after{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;opacity:0;will-change:opacity;
+  box-shadow:0 0 0 1px rgba(243,199,122,.35),0 0 40px 8px rgba(201,178,255,.45),0 0 120px 40px rgba(255,95,200,.16);transition:opacity .8s}
+body.amped .eclipse::after{animation:breathe var(--beat) ease-in-out infinite alternate}
+@keyframes breathe{from{opacity:.15}to{opacity:.75}}
 .tonearm{position:absolute;left:0;top:0;z-index:2;overflow:visible;pointer-events:none;opacity:0;transform:rotate(-16deg);transition:opacity .6s,transform 1.2s cubic-bezier(.3,1.3,.5,1)}
 .tonearm line{stroke:rgba(214,196,255,.7);stroke-width:1.5;stroke-linecap:round}
 .tonearm .arm-base{fill:#17111f;stroke:rgba(214,196,255,.65);stroke-width:1.5}
 .tonearm .arm-head{fill:#E6C88E}
 body.amped .tonearm{opacity:1;transform:rotate(0)}
-body.amped .eclipse-disc::before{animation-duration:1.8s}
-body.amped .eclipse-disc{animation:none;transform:scale(calc(1 + var(--bass) * .025));filter:brightness(calc(1 + var(--bass) * .55)) saturate(1.25)}
-body.amped .eclipse-haze{animation:hazeDrift 26s ease-in-out infinite alternate,hueFlow 16s linear infinite}
-@keyframes hueFlow{from{filter:blur(30px) hue-rotate(0deg) saturate(1.4)}to{filter:blur(30px) hue-rotate(360deg) saturate(1.4)}}
 
-/* Liquid light show behind the page while the music plays */
-#lightshow{position:fixed;inset:-10%;z-index:0;pointer-events:none;opacity:0;mix-blend-mode:screen;filter:blur(70px);
-  background:radial-gradient(30% 35% at 20% 30%,rgba(255,80,190,.55),transparent 70%),radial-gradient(28% 30% at 80% 25%,rgba(60,210,220,.45),transparent 70%),
-    radial-gradient(35% 35% at 65% 80%,rgba(123,92,255,.6),transparent 70%),radial-gradient(25% 25% at 30% 80%,rgba(243,199,122,.35),transparent 70%);
-  transition:opacity 1.2s}
-body.amped #lightshow{opacity:calc(.18 + var(--lvl) * .45);animation:oilDrift 18s ease-in-out infinite alternate}
-@keyframes oilDrift{0%{transform:rotate(0) scale(1);filter:blur(70px) hue-rotate(0deg)}100%{transform:rotate(25deg) scale(1.15);filter:blur(70px) hue-rotate(140deg)}}
+/* Light show: a pre-softened gradient layer that only fades in (no live blur, no movement: measured as the one costly effect) */
+#lightshow{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;will-change:opacity;
+  background:radial-gradient(30% 32% at 22% 30%,rgba(255,80,190,.16),transparent 72%),radial-gradient(28% 30% at 80% 28%,rgba(60,210,220,.12),transparent 72%),
+    radial-gradient(34% 34% at 64% 78%,rgba(123,92,255,.18),transparent 72%),radial-gradient(24% 24% at 30% 82%,rgba(243,199,122,.10),transparent 72%);
+  transition:opacity 1.6s}
+body.amped #lightshow{opacity:1}
 
-/* Stars pulse on the kick */
-body.amped #starfield{opacity:calc(.55 + var(--bass) * .8);transform:scale(calc(1 + var(--bass) * .02))}
+/* Stars breathe with the song */
+body.amped #starfield{will-change:opacity;animation:starBreathe var(--beat) ease-in-out infinite alternate}
+@keyframes starBreathe{from{opacity:.65}to{opacity:1}}
 
-/* Chromatic split: on hover by default, on every beat when amped */
-.hero-name,.section-h,.contact-hl{transition:text-shadow .25s}
-.hero-name:hover,.section-h:hover,.contact-hl:hover{text-shadow:-3px 0 rgba(255,70,150,.55),3px 0 rgba(60,220,255,.5)}
-#hero .hero-name em{transition:filter .25s}
-#hero .hero-name:hover em{filter:drop-shadow(-3px 0 rgba(255,70,150,.6)) drop-shadow(3px 0 rgba(60,220,255,.55))!important}
-body.amped .hero-name,body.amped .contact-hl{text-shadow:calc(var(--bass) * -7px) 0 rgba(255,70,150,.6),calc(var(--bass) * 7px) 0 rgba(60,220,255,.55)}
-body.amped #hero .hero-name em{filter:drop-shadow(calc(var(--bass) * -7px) 0 rgba(255,70,150,.65)) drop-shadow(calc(var(--bass) * 7px) 0 rgba(60,220,255,.6))!important}
+/* Section headings: a light colour split on hover only (never on the name) */
+.section-h,.contact-hl{transition:text-shadow .25s}
+.section-h:hover,.contact-hl:hover{text-shadow:-2px 0 rgba(255,70,150,.45),2px 0 rgba(60,220,255,.4)}
 
-/* Oil-slick edges on cards */
+/* Oil-slick edges on cards, hover only */
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
 .case-card:hover,.aip-card:hover,.sk-card:hover,.clink:hover{border-color:transparent!important;
   background:linear-gradient(#150f22,#150f22) padding-box,conic-gradient(from var(--ang),#ff5fc8,#7b5cff,#3cc6c0,#f3c77a,#ff5fc8) border-box!important;
   animation:angSpin 3.5s linear infinite;box-shadow:0 0 44px -14px rgba(255,95,200,.45)!important}
 @keyframes angSpin{to{--ang:360deg}}
-body.amped .case-card,body.amped .aip-card,body.amped .sk-card{box-shadow:0 0 calc(var(--bass) * 40px) -12px rgba(201,178,255,.55)!important}
 
-/* Dividers are waveforms */
+/* Dividers are sound waves: thin and quiet so reading is never interrupted */
 hr.divider{opacity:0!important}
-canvas.wave{display:block;position:relative;z-index:1;width:100%;height:44px;margin:-22px 0 -21px;pointer-events:none}
+.wave{position:relative;z-index:1;height:20px;margin:-10px 0 -9px;overflow:hidden;pointer-events:none;contain:strict;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);mask:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent)}
+.wave i{position:absolute;left:0;top:0;width:calc(100% + 240px);height:100%;will-change:transform;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='20' viewBox='0 0 240 20'%3E%3Cpath d='M0 10 Q30 2 60 10 T120 10 T180 10 T240 10' fill='none' stroke='%23C9B2FF' stroke-opacity='.45' stroke-width='1'/%3E%3C/svg%3E") repeat-x 0 50%/240px 20px;
+  transform:scaleY(.25)}
+body.amped .wave i{animation:waveRun 3.2s linear infinite,waveBreathe var(--beat) ease-in-out infinite alternate}
+@keyframes waveRun{from{translate:0 0}to{translate:-240px 0}}
+@keyframes waveBreathe{from{transform:scaleY(.35)}to{transform:scaleY(.9)}}
 
-/* Now playing */
-.np{position:fixed;left:1.25rem;bottom:1.25rem;z-index:150;display:flex;align-items:center;gap:.7rem;padding:.55rem .9rem .55rem .7rem;border:1px solid rgba(243,199,122,.35);border-radius:999px;background:rgba(10,8,22,.82);backdrop-filter:blur(12px);box-shadow:0 10px 30px -10px rgba(0,0,0,.7);animation:npIn .5s cubic-bezier(.2,1.2,.4,1) both}
+/* Player: floating video window (YouTube requires a visible player of at least 200px) */
+.np{position:fixed;left:1.25rem;bottom:1.25rem;z-index:150;width:372px;padding:.55rem .55rem .55rem;border:1px solid rgba(243,199,122,.3);border-radius:16px;background:rgba(10,8,22,.94);box-shadow:0 14px 40px -14px rgba(0,0,0,.8);animation:npIn .45s cubic-bezier(.2,1.2,.4,1) both}
 .np[hidden]{display:none}
 @keyframes npIn{from{opacity:0;transform:translateY(12px)}}
-.np-eq{display:flex;align-items:flex-end;gap:2px;height:16px}
-.np-eq i{display:block;width:3px;height:100%;border-radius:1px;background:linear-gradient(#ff5fc8,#F3C77A);transform-origin:bottom;transform:scaleY(.2)}
-.np-copy{display:flex;flex-direction:column;line-height:1.15}
-.np-copy b{font-size:.78rem;color:var(--t1);font-weight:600}
-.np-copy small{font-size:.66rem;color:var(--t3)}
-@media(max-width:640px){.np{left:.75rem;bottom:.85rem;max-width:calc(100% - 7.5rem)}.np-copy small{display:none}}
+.np-top{display:flex;align-items:center;gap:.55rem;padding:0 .2rem .45rem .35rem}
+.np-title{flex:1;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-close{appearance:none;border:0;background:none;color:var(--t3);font-size:1.1rem;line-height:1;cursor:pointer;padding:0 .2rem}
+.np-close:hover{color:var(--t1)}
+.np-slot{position:relative;width:100%;aspect-ratio:16/9;min-height:200px;border-radius:10px;overflow:hidden;background:#17111f}
+.np-slot iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.np-fail{display:none;margin:.5rem .3rem 0;font-size:.75rem;color:var(--t2)}
+.np-fail a{color:var(--s)}
+.np.np-failed .np-fail{display:block}.np.np-failed .np-slot{display:none}
+@media(max-width:640px){.np{left:.6rem;right:.6rem;bottom:.6rem;width:auto;padding:.45rem}body.np-open .rag-launcher{bottom:calc(.65rem + 270px)!important}}
+.np-eq{display:flex;align-items:flex-end;gap:2px;height:11px}
+.np-eq i{display:block;width:2px;height:100%;border-radius:1px;background:#F3C77A;transform-origin:bottom;transform:scaleY(.3)}
+body.amped .np-eq i{animation:eqBar .7s ease-in-out infinite alternate}
+body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-child(3){animation-duration:.9s}body.amped .np-eq i:nth-child(4){animation-duration:.6s}
+@keyframes eqBar{from{transform:scaleY(.25)}to{transform:scaleY(1)}}
 
 /* Footer */
 .foot-in{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
@@ -1443,8 +1462,9 @@ canvas.wave{display:block;position:relative;z-index:1;width:100%;height:44px;mar
 @media(min-width:901px){.foot-riff{margin-right:7rem}}
 
 @media(prefers-reduced-motion:reduce){
-  .eclipse-disc::before,body.amped #lightshow,body.amped .eclipse-haze,.case-card:hover,.aip-card:hover,.sk-card:hover,.clink:hover{animation:none!important}
-  body.amped .eclipse-disc,body.amped #starfield{transform:none}
+  .eclipse-disc::before,body.amped .eclipse::after,body.amped #lightshow,body.amped #starfield,body.amped .wave i,body.amped .np-eq i,
+  .case-card:hover,.aip-card:hover,.sk-card:hover,.clink:hover{animation:none!important}
+  body.amped .eclipse::after{opacity:.5}
   .tonearm{transition:opacity .3s}
 }
 </style>
@@ -1463,7 +1483,7 @@ canvas.wave{display:block;position:relative;z-index:1;width:100%;height:44px;mar
 
 <nav>
   <a href="#hero" class="nav-logo">PK<em>·</em></a>
-  <button class="amp" id="ampKnob" type="button" aria-pressed="false" aria-label="Turn it up: play a live space-rock groove. Drag, scroll or use arrow keys for volume." title="Turn it up. This one goes to 11.">
+  <button class="amp" id="ampKnob" type="button" aria-pressed="false" aria-label="Turn it up: play Feels Like We Only Go Backwards by Tame Impala" title="Turn it up. This one goes to 11.">
     <span class="amp-dial" aria-hidden="true"><span class="amp-cap"></span></span>
     <span class="amp-label"><b>Turn it up</b><small id="ampState">off</small></span>
   </button>
@@ -2252,14 +2272,15 @@ canvas.wave{display:block;position:relative;z-index:1;width:100%;height:44px;mar
     <a href="https://www.linkedin.com/in/kapoor-prerna/" target="_blank" rel="noopener" id="flt" data-cta="get-in-touch">Get in Touch <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1 6h10M6 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   </div>
 </div>
-<div class="np" id="nowPlaying" hidden aria-live="polite">
-  <span class="np-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
-  <span class="np-copy"><b>Orbit Jam</b><small>live groove, made in your browser &#183; 96 BPM</small></span>
+<div class="np" id="nowPlaying" hidden>
+  <div class="np-top"><span class="np-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="np-title">Now spinning &#183; Tame Impala &#183; Feels Like We Only Go Backwards</span><button class="np-close" id="npClose" type="button" aria-label="Close player">&#215;</button></div>
+  <div class="np-slot"><div id="videoSlot"></div></div>
+  <p class="np-fail">Couldn&#39;t load the video. <a href="https://www.youtube.com/watch?v=wycjnCCgUes" target="_blank" rel="noopener">Watch Feels Like We Only Go Backwards on YouTube &#8599;</a></p>
 </div>
 <footer>
   <div class="foot-in"><p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p><p class="foot-riff">Space, with the volume up <span aria-hidden="true">&#10022;</span></p></div>
 </footer>
-  <script src="assets/space-rock.js?v=2026-11-08.1" defer></script>
+  <script src="assets/space-rock.js?v=2026-11-08.3" defer></script>
   <script src="assets/mira-facts.js?v=2026-11-06.2"></script>
   <script src="assets/chatbot-knowledge.js?v=2026-11-06.2"></script>
   <script src="assets/eval-dataset.js?v=2026-11-06.2"></script>

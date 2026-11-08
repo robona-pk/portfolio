@@ -175,9 +175,9 @@ Gemini uses a server-side key, so abuse can consume quota or create cost. The en
 
 ## Space rock amp events (pre-production)
 
-The "Turn it up" amp knob in the nav plays an original groove synthesised in the browser and makes the page react to it. Two events measure whether visitors use it.
+The "Turn it up" amp knob in the nav plays Tame Impala's "Feels Like We Only Go Backwards" (official video, YouTube privacy-enhanced player) and puts the page into its amped look. Two events measure whether visitors use it.
 
 | Event | Properties | Meaning |
 | --- | --- | --- |
-| `amp_turned_on` | `volume` (0 to 11) | Visitor started the music |
-| `amp_turned_off` | `seconds_listened`, `volume` | Visitor stopped it; listening time shows whether the feature holds attention |
+| `amp_turned_on` | `song` | Visitor started the music |
+| `amp_turned_off` | `song`, `seconds_listened` | Visitor stopped it; listening time shows whether the feature holds attention |

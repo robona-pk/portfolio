@@ -182,3 +182,4 @@ The "Turn it up" amp knob in the nav plays Tame Impala's "Feels Like We Only Go 
 | `amp_turned_on` | `song` | Visitor started the music |
 | `amp_turned_off` | `song`, `seconds_listened` | Visitor stopped it; listening time shows whether the feature holds attention |
 | `portrait_flipped` | `side` (`drums` or `portrait`) | Visitor flipped the About photo to the drum kit or back |
+| `player_resized` | `width` (px) | Visitor resized the video window |

@@ -19,7 +19,49 @@
   function track(name, props) {
     try { if (window.posthog && posthog.capture) posthog.capture(name, props); } catch (e) {}
   }
-  function showPlayer(on) { player.hidden = !on; body.classList.toggle('np-open', on); }
+  function showPlayer(on) { player.hidden = !on; body.classList.toggle('np-open', on); if (on) checkWide(); }
+
+  /* Resizable player: drag the corner grip or use arrow keys. YouTube requires a
+     player at least 200px tall, so height never drops below that (CSS handles it). */
+  const MIN_W = 220, KEY = 'pk-player-width';
+  const maxW = () => Math.min(720, innerWidth - 20);
+  function setWidth(w, save) {
+    w = Math.round(Math.max(MIN_W, Math.min(maxW(), w)));
+    player.style.setProperty('--np-w', w + 'px');
+    checkWide();
+    if (save) { try { localStorage.setItem(KEY, String(w)); } catch (e) {} }
+    return w;
+  }
+  function checkWide() {
+    const r = player.getBoundingClientRect();
+    body.classList.toggle('np-wide', !player.hidden && r.right > innerWidth - 130);
+  }
+  try { const saved = +localStorage.getItem(KEY); if (saved) setWidth(saved, false); } catch (e) {}
+  const grip = document.getElementById('npResize');
+  if (grip) {
+    let sx = 0, sy = 0, sw = 0, dragging = false;
+    grip.addEventListener('pointerdown', e => {
+      dragging = true; sx = e.clientX; sy = e.clientY; sw = player.getBoundingClientRect().width;
+      grip.setPointerCapture(e.pointerId); player.classList.add('is-resizing'); e.preventDefault();
+    });
+    grip.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      setWidth(sw + (e.clientX - sx) - (e.clientY - sy) * 16 / 9 / 2, false);
+    });
+    const end = () => {
+      if (!dragging) return; dragging = false; player.classList.remove('is-resizing');
+      setWidth(player.getBoundingClientRect().width, true);
+      track('player_resized', { width: Math.round(player.getBoundingClientRect().width) });
+    };
+    grip.addEventListener('pointerup', end); grip.addEventListener('pointercancel', end);
+    grip.addEventListener('keydown', e => {
+      const step = e.shiftKey ? 80 : 30, w = player.getBoundingClientRect().width;
+      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { e.preventDefault(); setWidth(w + step, true); }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { e.preventDefault(); setWidth(w - step, true); }
+    });
+    grip.addEventListener('dblclick', () => { player.style.removeProperty('--np-w'); try { localStorage.removeItem(KEY); } catch (e) {} checkWide(); });
+  }
+  addEventListener('resize', () => { if (!player.hidden) { const w = player.getBoundingClientRect().width; if (w > maxW()) setWidth(maxW(), false); checkWide(); } });
 
   function setPlaying(on) {
     if (on === playing) return;

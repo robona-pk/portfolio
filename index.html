@@ -1447,19 +1447,23 @@ body.amped .wave i{animation:waveRun 3.2s linear infinite,waveBreathe var(--beat
 @keyframes waveBreathe{from{transform:scaleY(.35)}to{transform:scaleY(.9)}}
 
 /* Player: floating video window (YouTube requires a visible player of at least 200px) */
-.np{position:fixed;left:1.25rem;bottom:1.25rem;z-index:150;width:372px;padding:.55rem .55rem .55rem;border:1px solid rgba(243,199,122,.3);border-radius:16px;background:rgba(10,8,22,.94);box-shadow:0 14px 40px -14px rgba(0,0,0,.8);animation:npIn .45s cubic-bezier(.2,1.2,.4,1) both}
+.np{position:fixed;left:1.25rem;bottom:1.25rem;z-index:150;width:var(--np-w,264px);max-width:calc(100vw - 1.2rem);padding:.35rem .35rem .35rem;border:1px solid rgba(243,199,122,.3);border-radius:14px;background:rgba(10,8,22,.94);box-shadow:0 14px 40px -14px rgba(0,0,0,.8);animation:npIn .45s cubic-bezier(.2,1.2,.4,1) both}
 .np[hidden]{display:none}
 @keyframes npIn{from{opacity:0;transform:translateY(12px)}}
-.np-top{display:flex;align-items:center;gap:.55rem;padding:0 .2rem .45rem .35rem}
-.np-title{flex:1;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-top{display:flex;align-items:center;gap:.45rem;padding:0 1.5rem .3rem .3rem;min-height:18px}
+.np-title{flex:1;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .np-close{appearance:none;border:0;background:none;color:var(--t3);font-size:1.1rem;line-height:1;cursor:pointer;padding:0 .2rem}
 .np-close:hover{color:var(--t1)}
-.np-slot{position:relative;width:100%;aspect-ratio:16/9;min-height:200px;border-radius:10px;overflow:hidden;background:#17111f}
+.np-slot{position:relative;width:100%;height:max(200px,calc((var(--np-w,264px) - .7rem) * 9 / 16));border-radius:9px;overflow:hidden;background:#000} /* YouTube needs a player at least 200px tall; narrower than 16:9 it letterboxes */
 .np-slot iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
 .np-fail{display:none;margin:.5rem .3rem 0;font-size:.75rem;color:var(--t2)}
 .np-fail a{color:var(--s)}
 .np.np-failed .np-fail{display:block}.np.np-failed .np-slot{display:none}
-@media(max-width:640px){.np{left:.6rem;right:.6rem;bottom:.6rem;width:auto;padding:.45rem}body.np-open .rag-launcher{bottom:calc(.65rem + 270px)!important}}
+@media(max-width:640px){.np{left:.6rem;bottom:.6rem;width:var(--np-w,240px)}body.np-wide .rag-launcher{bottom:calc(.65rem + 250px)!important}}
+.np-resize{position:absolute;right:.3rem;top:.25rem;width:20px;height:20px;padding:0;border:0;border-radius:5px;background:none;color:var(--t3);cursor:nesw-resize;touch-action:none;display:grid;place-items:center}
+.np-resize:hover,.np-resize:focus-visible{color:var(--t1);background:rgba(201,178,255,.12);outline:none}
+.np-resize svg{width:12px;height:12px}
+.np.is-resizing{user-select:none;animation:none}.np.is-resizing iframe{pointer-events:none}
 .np-eq{display:flex;align-items:flex-end;gap:2px;height:11px}
 .np-eq i{display:block;width:2px;height:100%;border-radius:1px;background:#F3C77A;transform-origin:bottom;transform:scaleY(.3)}
 body.amped .np-eq i{animation:eqBar .7s ease-in-out infinite alternate}
@@ -2305,14 +2309,14 @@ body.amped .pf-back{box-shadow:0 0 60px rgba(255,95,200,.35)!important}
   </div>
 </div>
 <div class="np" id="nowPlaying" hidden>
-  <div class="np-top"><span class="np-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="np-title">Now spinning &#183; Tame Impala &#183; Feels Like We Only Go Backwards</span><button class="np-close" id="npClose" type="button" aria-label="Close player">&#215;</button></div>
+  <div class="np-top"><span class="np-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="np-title" title="Tame Impala, Feels Like We Only Go Backwards">Tame Impala &#183; Feels Like We Only Go Backwards</span><button class="np-close" id="npClose" type="button" aria-label="Close player">&#215;</button><button class="np-resize" id="npResize" type="button" aria-label="Resize player: drag, or use arrow keys" title="Drag to resize"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M4 1h7v7M11 1 6.5 5.5M1 4v7h7"/></svg></button></div>
   <div class="np-slot"><div id="videoSlot"></div></div>
   <p class="np-fail">Couldn&#39;t load the video. <a href="https://www.youtube.com/watch?v=wycjnCCgUes" target="_blank" rel="noopener">Watch Feels Like We Only Go Backwards on YouTube &#8599;</a></p>
 </div>
 <footer>
   <div class="foot-in"><p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p><p class="foot-riff">Space, with the volume up <span aria-hidden="true">&#10022;</span></p></div>
 </footer>
-  <script src="assets/space-rock.js?v=2026-11-08.5" defer></script>
+  <script src="assets/space-rock.js?v=2026-11-08.6" defer></script>
   <script src="assets/mira-facts.js?v=2026-11-06.2"></script>
   <script src="assets/chatbot-knowledge.js?v=2026-11-06.2"></script>
   <script src="assets/eval-dataset.js?v=2026-11-06.2"></script>

@@ -112,7 +112,31 @@
     player.classList.add('np-failed'); // shows the "Watch on YouTube" link; Friday look stays on
   }
 
-  knob.addEventListener('click', () => setMode(!modeOn));
+  knob.addEventListener('click', () => {
+    setMode(!modeOn);
+    hideTip();
+    if (!body.classList.contains('amp-used')) {
+      body.classList.add('amp-used');
+      try { localStorage.setItem('pk-friday-used', '1'); } catch (e) {}
+    }
+  });
+
+  /* Discoverability: the knob pings until first use; a one-time tip appears on the first visit */
+  const tip = document.getElementById('ampTip');
+  let used = false, tipSeen = false;
+  try { used = localStorage.getItem('pk-friday-used') === '1'; tipSeen = localStorage.getItem('pk-friday-tip') === '1'; } catch (e) {}
+  if (used) body.classList.add('amp-used');
+  function hideTip() { if (tip) tip.classList.remove('is-shown'); }
+  if (tip && !used && !tipSeen) {
+    setTimeout(() => {
+      if (modeOn || scrollY > 300) return;
+      tip.classList.add('is-shown');
+      try { localStorage.setItem('pk-friday-tip', '1'); } catch (e) {}
+      track('friday_tip_shown', {});
+      setTimeout(hideTip, 6000);
+      addEventListener('scroll', () => { if (scrollY > 200) hideTip(); }, { passive: true });
+    }, 2500);
+  }
   closeBtn && closeBtn.addEventListener('click', () => setMode(false));
 
   /* Tonearm that drops onto the eclipse record when the music plays */

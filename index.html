@@ -1368,7 +1368,15 @@ footer p{color:var(--t3)!important}
 
 /* Amp knob */
 .amp{position:relative;display:inline-flex;align-items:center;gap:.6rem;margin:0 auto 0 1.6rem;padding:.25rem .7rem .25rem .3rem;border:1px solid rgba(201,178,255,.18);border-radius:999px;background:rgba(14,11,32,.5);color:var(--t2);cursor:pointer;font:inherit;transition:border-color .25s,background .25s}
-.amp:hover{border-color:rgba(201,178,255,.45)}
+.amp:hover{border-color:rgba(243,199,122,.8);background:linear-gradient(135deg,rgba(243,199,122,.16),rgba(255,95,200,.10))}
+/* stand out: gold edge + warm tint + a soft ping until the visitor has tried it once (opacity/transform only) */
+.amp{border-color:rgba(243,199,122,.55)!important;background:linear-gradient(135deg,rgba(243,199,122,.10),rgba(255,95,200,.06))}
+.amp::after{content:"";position:absolute;inset:-1px;border-radius:999px;border:1px solid rgba(243,199,122,.8);pointer-events:none;opacity:0;will-change:transform,opacity}
+body:not(.amp-used):not(.amped) .amp::after{animation:ampPing 2.6s cubic-bezier(.2,.7,.3,1) 1.2s infinite}
+@keyframes ampPing{0%{transform:scale(1);opacity:.75}70%,100%{transform:scale(1.18,1.45);opacity:0}}
+.amp-tip{position:absolute;left:0;top:calc(100% + 10px);z-index:5;padding:.45rem .7rem;border-radius:10px;background:#F3C77A;color:#170f1b;font-size:.72rem;font-weight:600;white-space:nowrap;box-shadow:0 10px 30px -10px rgba(0,0,0,.7);opacity:0;transform:translateY(-4px);transition:opacity .35s,transform .35s;pointer-events:none}
+.amp-tip::before{content:"";position:absolute;left:20px;top:-5px;width:10px;height:10px;background:#F3C77A;transform:rotate(45deg);border-radius:2px}
+.amp-tip.is-shown{opacity:1;transform:none}
 .amp:focus-visible{outline:2px solid var(--s);outline-offset:3px}
 .amp-dial{position:relative;width:30px;height:30px;border-radius:50%;flex:none}
 .amp-dial::before,.amp-dial::after{content:"";position:absolute;inset:0;border-radius:50%;-webkit-mask:radial-gradient(circle,transparent 0 11.5px,#000 12px);mask:radial-gradient(circle,transparent 0 11.5px,#000 12px)}
@@ -1377,13 +1385,14 @@ footer p{color:var(--t3)!important}
 .amp-cap{position:absolute;left:50%;top:50%;width:19px;height:19px;margin:-9.5px 0 0 -9.5px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4a3f6b,#17111f 70%);box-shadow:0 0 0 1px rgba(201,178,255,.3),0 2px 6px rgba(0,0,0,.6);transform:rotate(-135deg);transition:transform .7s cubic-bezier(.3,1.4,.5,1)}
 .amp-cap::after{content:"";position:absolute;left:50%;top:2px;width:2px;height:6px;margin-left:-1px;border-radius:1px;background:#F3C77A}
 .amp-label{display:flex;flex-direction:column;line-height:1.1;text-align:left}
-.amp-label b{font-size:.74rem;font-weight:600;color:var(--t1);letter-spacing:.01em}
+.amp-label b{font-size:.74rem;font-weight:600;color:#F7E3B8;letter-spacing:.01em}
 .amp-label small{font-size:.62rem;color:var(--t3);letter-spacing:.14em;text-transform:uppercase}
-body.amped .amp{border-color:rgba(243,199,122,.5);background:rgba(243,199,122,.06)}
+body.amped .amp{border-color:rgba(243,199,122,.9)!important;background:rgba(243,199,122,.14)}
 body.amped .amp-cap{transform:rotate(135deg)}
 body.amped .amp-dial::after{opacity:1}
 body.amped .amp-label small{color:#F3C77A}
-@media(max-width:640px){.amp{margin-left:.9rem;padding-right:.3rem}.amp-label{display:none}}
+@media(max-width:640px){.amp{margin-left:.75rem;gap:.45rem;padding:.2rem .6rem .2rem .25rem}.amp-dial{width:26px;height:26px}.amp-cap{width:16px;height:16px;margin:-8px 0 0 -8px}.amp-label b{font-size:.72rem}.amp-label small{font-size:.56rem}}
+@media(prefers-reduced-motion:reduce){.amp::after{animation:none!important}}
 
 /* The eclipse is also a record */
 .eclipse-disc::before{content:"";position:absolute;inset:5%;border-radius:50%;pointer-events:none;will-change:transform;
@@ -1514,6 +1523,7 @@ body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-
   <button class="amp" id="ampKnob" type="button" aria-pressed="false" aria-label="Friday Mode: play Feels Like We Only Go Backwards by Tame Impala" title="Friday Mode. This one goes to 11.">
     <span class="amp-dial" aria-hidden="true"><span class="amp-cap"></span></span>
     <span class="amp-label"><b>Friday Mode</b><small id="ampState">off</small></span>
+    <span class="amp-tip" id="ampTip" aria-hidden="true">Tap for Tame Impala &#9834;</span>
   </button>
   <ul class="nav-links" id="nl">
     <li><a href="#about">About</a></li>
@@ -2314,7 +2324,7 @@ body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-
 <footer>
   <div class="foot-in"><p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p></div>
 </footer>
-  <script src="assets/space-rock.js?v=2026-11-08.7" defer></script>
+  <script src="assets/space-rock.js?v=2026-11-08.8" defer></script>
   <script src="assets/mira-facts.js?v=2026-11-06.2"></script>
   <script src="assets/chatbot-knowledge.js?v=2026-11-06.2"></script>
   <script src="assets/eval-dataset.js?v=2026-11-06.2"></script>

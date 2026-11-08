@@ -183,3 +183,4 @@ The "Friday Mode" amp knob in the nav plays Tame Impala's "Feels Like We Only Go
 | `amp_turned_off` | `song`, `seconds_listened` | Visitor stopped it; listening time shows whether the feature holds attention |
 | `portrait_flipped` | `side` (`drums` or `portrait`) | Visitor flipped the About photo to the drum kit or back |
 | `player_resized` | `width` (px) | Visitor resized the video window |
+| `friday_tip_shown` | none | The one-time "Tap for Tame Impala" tip appeared (first visit only) |

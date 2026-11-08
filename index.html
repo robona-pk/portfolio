@@ -1470,7 +1470,7 @@ body.amped .np-eq i{animation:eqBar .7s ease-in-out infinite alternate}
 body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-child(3){animation-duration:.9s}body.amped .np-eq i:nth-child(4){animation-duration:.6s}
 @keyframes eqBar{from{transform:scaleY(.25)}to{transform:scaleY(1)}}
 
-/* About portrait flips to a psychedelic shot of Prerna's drum kit */
+/* About portrait flips to a photo of Prerna's drum kit (unedited) */
 .pf{display:block;width:100%;padding:0;margin:0;border:0;background:none;color:inherit;font:inherit;text-align:inherit;cursor:pointer;perspective:1400px;position:relative}
 .pf:focus-visible{outline:2px solid var(--s);outline-offset:6px;border-radius:999px 999px 0 0}
 .pf-inner{position:relative;display:block;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.3,1.25,.45,1)}
@@ -1483,7 +1483,7 @@ body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-
 .pf:hover .pf-hint,.pf:focus-visible .pf-hint{opacity:1}
 @media(hover:none){.pf-hint{opacity:.85}}
 .pf.is-flipped .pf-hint{opacity:0}
-body.amped .pf-back{box-shadow:0 0 60px rgba(255,95,200,.35)!important}
+
 @media(prefers-reduced-motion:reduce){.pf-inner{transition:transform .01s}.pf:hover .pf-inner{transform:none}.pf.is-flipped .pf-inner,.pf.is-flipped:hover .pf-inner{transform:rotateY(180deg)}}
 
 /* Footer */
@@ -1590,7 +1590,7 @@ body.amped .pf-back{box-shadow:0 0 60px rgba(255,95,200,.35)!important}
       <button class="pf" id="portraitFlip" type="button" aria-pressed="false" aria-label="Flip the photo to see Prerna's drum kit">
         <span class="pf-inner">
           <span class="about-portrait-arch pf-face pf-front"><img src="assets/prerna-kapoor-portrait-720.webp" alt="Prerna Kapoor" loading="lazy" decoding="async"></span>
-          <span class="about-portrait-arch pf-face pf-back"><img src="assets/prerna-drums-psychedelic-720.webp" alt="Prerna's electronic drum kit, in psychedelic colours" loading="lazy" decoding="async"></span>
+          <span class="about-portrait-arch pf-face pf-back"><img src="assets/prerna-drum-kit.webp" alt="Prerna's electronic drum kit" loading="lazy" decoding="async"></span>
         </span>
         <span class="pf-hint" aria-hidden="true">&#8635; flip</span>
       </button>

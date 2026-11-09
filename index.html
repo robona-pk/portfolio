@@ -1374,9 +1374,6 @@ footer p{color:var(--t3)!important}
 .amp::after{content:"";position:absolute;inset:-1px;border-radius:999px;border:1px solid rgba(243,199,122,.8);pointer-events:none;opacity:0;will-change:transform,opacity}
 body:not(.amp-used):not(.amped) .amp::after{animation:ampPing 2.6s cubic-bezier(.2,.7,.3,1) 1.2s infinite}
 @keyframes ampPing{0%{transform:scale(1);opacity:.75}70%,100%{transform:scale(1.18,1.45);opacity:0}}
-.amp-tip{position:absolute;left:0;top:calc(100% + 10px);z-index:5;padding:.45rem .7rem;border-radius:10px;background:#F3C77A;color:#170f1b;font-size:.72rem;font-weight:600;white-space:nowrap;box-shadow:0 10px 30px -10px rgba(0,0,0,.7);opacity:0;transform:translateY(-4px);transition:opacity .35s,transform .35s;pointer-events:none}
-.amp-tip::before{content:"";position:absolute;left:20px;top:-5px;width:10px;height:10px;background:#F3C77A;transform:rotate(45deg);border-radius:2px}
-.amp-tip.is-shown{opacity:1;transform:none}
 .amp:focus-visible{outline:2px solid var(--s);outline-offset:3px}
 .amp-dial{position:relative;width:30px;height:30px;border-radius:50%;flex:none}
 .amp-dial::before,.amp-dial::after{content:"";position:absolute;inset:0;border-radius:50%;-webkit-mask:radial-gradient(circle,transparent 0 11.5px,#000 12px);mask:radial-gradient(circle,transparent 0 11.5px,#000 12px)}
@@ -1523,7 +1520,6 @@ body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-
   <button class="amp" id="ampKnob" type="button" aria-pressed="false" aria-label="Friday Mode: play Feels Like We Only Go Backwards by Tame Impala" title="Friday Mode. This one goes to 11.">
     <span class="amp-dial" aria-hidden="true"><span class="amp-cap"></span></span>
     <span class="amp-label"><b>Friday Mode</b><small id="ampState">off</small></span>
-    <span class="amp-tip" id="ampTip" aria-hidden="true">Tap for Tame Impala &#9834;</span>
   </button>
   <ul class="nav-links" id="nl">
     <li><a href="#about">About</a></li>
@@ -2313,7 +2309,7 @@ body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-
 <footer>
   <div class="foot-in"><p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p></div>
 </footer>
-  <script src="assets/space-rock.js?v=2026-11-08.8" defer></script>
+  <script src="assets/space-rock.js?v=2026-11-09.1" defer></script>
   <script src="assets/mira-facts.js?v=2026-11-06.2"></script>
   <script src="assets/chatbot-knowledge.js?v=2026-11-06.2"></script>
   <script src="assets/eval-dataset.js?v=2026-11-06.2"></script>

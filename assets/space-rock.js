@@ -19,6 +19,35 @@
   function track(name, props) {
     try { if (window.posthog && posthog.capture) posthog.capture(name, props); } catch (e) {}
   }
+  // Tag every PostHog event with Friday Mode state so any metric (scroll depth, CTAs,
+  // conversions) can be split by it. friday_mode = current state; friday_mode_used =
+  // turned on at least once in this visit (session).
+  function tagFriday(props) {
+    try {
+      if (!window.posthog) return;
+      if (posthog.register) posthog.register({ friday_mode: props.on ? 'on' : 'off' });
+      if (props.used && posthog.register_for_session) posthog.register_for_session({ friday_mode_used: true });
+    } catch (e) {}
+  }
+  let usedThisVisit = false;
+  tagFriday({ on: false });
+
+  // Scroll depth milestones (25/50/75/100%), once each per page view, tagged with Friday Mode
+  const depthHit = new Set();
+  let depthTimer = null;
+  function checkDepth() {
+    depthTimer = null;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    if (max <= 0) return;
+    const pct = (scrollY / max) * 100;
+    [25, 50, 75, 100].forEach(m => {
+      if (pct >= m - 0.5 && !depthHit.has(m)) {
+        depthHit.add(m);
+        track('scroll_depth_reached', { depth: m, friday_mode: modeOn ? 'on' : 'off', friday_mode_used: usedThisVisit });
+      }
+    });
+  }
+  addEventListener('scroll', () => { if (!depthTimer) depthTimer = setTimeout(checkDepth, 250); }, { passive: true });
   function showPlayer(on) { player.hidden = !on; body.classList.toggle('np-open', on); if (on) checkWide(); }
 
   /* Resizable player: drag the corner grip or use arrow keys. YouTube requires a
@@ -76,6 +105,7 @@
     showPlayer(on);
     if (on) {
       startedAt = performance.now(); placeArm();
+      usedThisVisit = true; tagFriday({ on: true, used: true });
       track('amp_turned_on', { song: SONG });
       if (!yt) { pending = true; if (!loading) loadYouTube(); }
       else if (ready) yt.playVideo();
@@ -83,6 +113,7 @@
     } else {
       pending = false;
       if (ready) yt.pauseVideo();
+      tagFriday({ on: false });
       track('amp_turned_off', { song: SONG, seconds_listened: Math.round((performance.now() - startedAt) / 1000) });
     }
   }
@@ -181,6 +212,8 @@
     flip.setAttribute('aria-pressed', on ? 'true' : 'false');
     flip.setAttribute('aria-label', on ? 'Flip the photo back to Prerna' : "Flip the photo to see Prerna's drum kit");
     if (tag) tag.textContent = on ? 'DRUMS / 4:4' : 'PM / 05';
+    const hint = document.getElementById('pfHint');
+    if (hint) hint.textContent = on ? '\u21BA flip back' : '\u21BB flip';
     track('portrait_flipped', { side: on ? 'drums' : 'portrait' });
   });
 

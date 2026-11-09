@@ -183,3 +183,8 @@ The "Friday Mode" amp knob in the nav plays Tame Impala's "Feels Like We Only Go
 | `amp_turned_off` | `song`, `seconds_listened` | Visitor stopped it; listening time shows whether the feature holds attention |
 | `portrait_flipped` | `side` (`drums` or `portrait`) | Visitor flipped the About photo to the drum kit or back |
 | `player_resized` | `width` (px) | Visitor resized the video window |
+| `scroll_depth_reached` | `depth` (25, 50, 75, 100), `friday_mode` (`on`/`off` at that moment), `friday_mode_used` (turned on at any point this visit) | Fired once per milestone per page view |
+
+**Friday Mode tags on every event.** All PostHog events also carry `friday_mode` (current state, super property) and, once a visitor turns it on, `friday_mode_used: true` for the rest of that session. This includes `$pageleave`, so PostHog's built-in `$prev_pageview_max_scroll_percentage` can be split the same way.
+
+**Scroll depth: Friday Mode vs not.** Trends insight on `scroll_depth_reached`, unique users, breakdown by `depth`, then by `friday_mode_used`. Or a funnel: `$pageview` → `scroll_depth_reached` (depth = 50) → (depth = 100), broken down by `friday_mode_used`.

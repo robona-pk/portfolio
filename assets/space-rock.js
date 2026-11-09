@@ -106,7 +106,7 @@
     if (on) {
       startedAt = performance.now(); placeArm();
       usedThisVisit = true; tagFriday({ on: true, used: true });
-      setFlip(true, 'friday_mode');
+      armAutoFlip();
       track('amp_turned_on', { song: SONG });
       if (!yt) { pending = true; if (!loading) loadYouTube(); }
       else if (ready) yt.playVideo();
@@ -115,6 +115,7 @@
       pending = false;
       if (ready) yt.pauseVideo();
       tagFriday({ on: false });
+      autoFlipArmed = false; clearTimeout(autoFlipTimer);
       setFlip(false, 'friday_mode');
       track('amp_turned_off', { song: SONG, seconds_listened: Math.round((performance.now() - startedAt) / 1000) });
     }
@@ -220,6 +221,22 @@
     track('portrait_flipped', { side: on ? 'drums' : 'portrait', trigger });
   }
   if (flip) flip.addEventListener('click', () => setFlip(!flip.classList.contains('is-flipped'), 'click'));
+
+  // With Friday Mode on, flip to the drums when the visitor reaches the photo,
+  // so they see it happen. Once per Friday Mode activation.
+  let autoFlipArmed = false, autoFlipTimer = null, photoVisible = false;
+  function tryAutoFlip() {
+    if (!autoFlipArmed || !photoVisible) return;
+    autoFlipArmed = false;
+    autoFlipTimer = setTimeout(() => { if (modeOn) setFlip(true, 'friday_mode'); }, 450);
+  }
+  function armAutoFlip() { autoFlipArmed = true; tryAutoFlip(); }
+  if (flip && 'IntersectionObserver' in window) {
+    new IntersectionObserver(es => es.forEach(e => {
+      photoVisible = e.isIntersecting;
+      if (photoVisible) tryAutoFlip(); else clearTimeout(autoFlipTimer);
+    }), { threshold: 0.5 }).observe(flip);
+  }
 
   /* Section dividers become sound waves (pure CSS motion once inserted) */
   document.querySelectorAll('hr.divider').forEach(hr => {

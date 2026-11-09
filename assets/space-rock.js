@@ -106,6 +106,7 @@
     if (on) {
       startedAt = performance.now(); placeArm();
       usedThisVisit = true; tagFriday({ on: true, used: true });
+      setFlip(true, 'friday_mode');
       track('amp_turned_on', { song: SONG });
       if (!yt) { pending = true; if (!loading) loadYouTube(); }
       else if (ready) yt.playVideo();
@@ -114,6 +115,7 @@
       pending = false;
       if (ready) yt.pauseVideo();
       tagFriday({ on: false });
+      setFlip(false, 'friday_mode');
       track('amp_turned_off', { song: SONG, seconds_listened: Math.round((performance.now() - startedAt) / 1000) });
     }
   }
@@ -203,19 +205,21 @@
     st = setTimeout(() => { ls.classList.remove('is-scrolling'); st = null; }, 180);
   }, { passive: true });
 
-  /* About portrait flips to the drum kit */
+  /* About portrait flips to the drum kit: by click, or automatically with Friday Mode */
   const flip = document.getElementById('portraitFlip');
   const tag = document.getElementById('portraitTag');
-  if (flip) flip.addEventListener('click', () => {
-    const on = !flip.classList.contains('is-flipped');
+  function setFlip(on, trigger) {
+    if (!flip || flip.classList.contains('is-flipped') === on) return;
     flip.classList.toggle('is-flipped', on);
     flip.setAttribute('aria-pressed', on ? 'true' : 'false');
     flip.setAttribute('aria-label', on ? 'Flip the photo back to Prerna' : "Flip the photo to see Prerna's drum kit");
     if (tag) tag.textContent = on ? 'DRUMS / 4:4' : 'PM / 05';
     const hint = document.getElementById('pfHint');
     if (hint) hint.textContent = on ? '\u21BA flip back' : '\u21BB flip';
-    track('portrait_flipped', { side: on ? 'drums' : 'portrait' });
-  });
+    // trigger: 'click' = a person flipped it; 'friday_mode' = automatic flip with Friday Mode
+    track('portrait_flipped', { side: on ? 'drums' : 'portrait', trigger });
+  }
+  if (flip) flip.addEventListener('click', () => setFlip(!flip.classList.contains('is-flipped'), 'click'));
 
   /* Section dividers become sound waves (pure CSS motion once inserted) */
   document.querySelectorAll('hr.divider').forEach(hr => {

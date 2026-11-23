@@ -1388,6 +1388,16 @@ body.amped .amp{border-color:rgba(243,199,122,.9)!important;background:rgba(243,
 body.amped .amp-cap{transform:rotate(135deg)}
 body.amped .amp-dial::after{opacity:1}
 body.amped .amp-label small{color:#F3C77A}
+/* One-time Friday Mode hint: quiet text under the knob, no motion beyond a fade */
+.amp-hint{position:absolute;top:calc(100% - 4px);z-index:210;display:flex;align-items:center;gap:.15rem;padding:.2rem .25rem .2rem .7rem;border:1px solid rgba(201,178,255,.22);border-radius:10px;background:rgba(10,8,24,.92);backdrop-filter:blur(10px);box-shadow:0 10px 30px -12px rgba(0,0,0,.8);opacity:0;transform:translateY(-4px);transition:opacity .35s,transform .35s}
+.amp-hint[hidden]{display:none}
+.amp-hint.is-shown{opacity:1;transform:none}
+.amp-hint-go{border:0;background:none;color:var(--t2);font:inherit;font-size:.74rem;cursor:pointer;padding:.2rem 0;text-align:left}
+.amp-hint-go:hover,.amp-hint-go:focus-visible{color:#F7E3B8}
+.amp-hint-x{border:0;background:none;color:var(--t3);font-size:1rem;line-height:1;cursor:pointer;padding:.2rem .4rem;border-radius:6px}
+.amp-hint-x:hover,.amp-hint-x:focus-visible{color:var(--t1)}
+@media(prefers-reduced-motion:reduce){.amp-hint{transition:none}}
+@media(max-width:640px){.amp-hint-go{font-size:.7rem}}
 @media(max-width:640px){.amp{margin-left:.75rem;gap:.45rem;padding:.2rem .6rem .2rem .25rem}.amp-dial{width:26px;height:26px}.amp-cap{width:16px;height:16px;margin:-8px 0 0 -8px}.amp-label b{font-size:.72rem}.amp-label small{font-size:.56rem}}
 @media(prefers-reduced-motion:reduce){.amp::after{animation:none!important}}
 
@@ -1519,6 +1529,10 @@ body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-
     <span class="amp-dial" aria-hidden="true"><span class="amp-cap"></span></span>
     <span class="amp-label"><b>Friday Mode</b><small id="ampState">off</small></span>
   </button>
+  <div class="amp-hint" id="ampHint" hidden>
+    <button type="button" class="amp-hint-go" id="ampHintGo">Try Friday Mode: one song, only if you tap &#9834;</button>
+    <button type="button" class="amp-hint-x" id="ampHintX" aria-label="Dismiss Friday Mode hint">&times;</button>
+  </div>
   <ul class="nav-links" id="nl">
     <li><a href="#about">About</a></li>
     <li><a href="#cases">Work</a></li>
@@ -2307,9 +2321,9 @@ body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-
 <footer>
   <div class="foot-in"><p>&#169; 2026 PRERNA KAPOOR &#183; PRODUCT MANAGER &#183; BENGALURU</p></div>
 </footer>
-  <script src="assets/space-rock.js?v=2026-11-23.1" defer></script>
+  <script src="assets/space-rock.js?v=2026-11-23.2" defer></script>
   <script src="assets/mira-facts.js?v=2026-11-06.2"></script>
-  <script src="assets/chatbot-knowledge.js?v=2026-11-06.2"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-11-23.1"></script>
   <script src="assets/eval-dataset.js?v=2026-11-06.2"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close

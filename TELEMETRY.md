@@ -181,7 +181,7 @@ The "Friday Mode" amp knob in the nav plays Tame Impala's "Feels Like We Only Go
 | --- | --- | --- |
 | `amp_turned_on` | `song`, `source` (`direct` = the knob, `tip` = the one-time hint) | Visitor started the music. Break down by `source` to measure tip → play conversion |
 | `amp_turned_off` | `song`, `source` (`direct` / `close`), `seconds_listened` | Visitor stopped it; listening time shows whether the feature holds attention |
-| `friday_tip_shown` | `forced` (true only with `?fridayhint=1`) | The one-time "Try Friday Mode" hint appeared. Once per browser, only for visitors who never used Friday Mode, 2.5s after load |
+| `friday_tip_shown` | `forced` (true only with `?fridayhint=1`) | The one-time "Psst… try Friday Mode" hint appeared. Once per browser, only for visitors who never used Friday Mode, 2.5s after load |
 | `friday_tip_clicked` | none | Visitor tapped the hint; Friday Mode turns on and `amp_turned_on` follows with `source = tip` |
 | `friday_tip_dismissed` | `method` (`close`, `knob`, `scroll`, `timeout`) | Hint closed without being tapped |
 | `engagement_time` | `seconds_mode_on`, `seconds_mode_off`, `reason` (`hidden`/`pagehide`), `friday_mode`, `friday_mode_used` | Active time since the last report, split by Friday Mode state. Counts visible-tab time with input in the last 60s, or any time while the song plays. Sum each property for total time per mode |

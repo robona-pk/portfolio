@@ -163,7 +163,8 @@
   if (usedBefore) body.classList.add('amp-used');
   closeBtn && closeBtn.addEventListener('click', () => setMode(false, 'close'));
 
-  /* One-time hint under the knob. Quiet text, no sound until the visitor taps.
+  /* One-time hint under the knob. Quiet text that doesn't reveal the song (the
+     surprise is the point); no sound until the visitor taps.
      Shown once per browser to people who have never used Friday Mode.
      Funnel: friday_tip_shown -> friday_tip_clicked -> amp_turned_on (source = tip).
      Add ?fridayhint=1 to the URL to force it for testing. */

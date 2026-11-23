@@ -3038,6 +3038,9 @@ function unsupportedPortfolioResponse() {
     policyOnly: true
   };
 }
+// Friday Mode is a surprise: Mira never describes what it does (no song, no music).
+const fridayModeQuestion = /\bfriday[- ]?mode\b|\b(?:the )?(?:amp|knob)\b.{0,20}\b(?:do|does|for|is)\b/i;
+const fridayModeAnswer = 'That one’s a surprise. Flip on Friday Mode at the top of the page and see for yourself.';
 const educationQuestion = /\b(education|degree|university|college|stud(y|ied)|biotechnology|srm)\b/i;
 const rolesQuestion = /\b(preferred roles?|roles? (is|are).{0,18}\b(looking|open)|senior product manager|product manager role)\b/i;
 const dopamineDetoxQuestion = /\b(dopamine detox|dopamine fast(?:ing)?|detox(?:ing)? from dopamine)\b/i;
@@ -3667,6 +3670,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     citations: [], policyOnly: true
   };
   if (unsupportedPersonalFactQuestion.test(question)) return unsupportedPortfolioResponse();
+  if (fridayModeQuestion.test(question)) return { answer: fridayModeAnswer, citations: [], policyOnly: true };
   if (failureQuestion.test(question)) return {
     answer: failureAnswer,
     citations: [],
@@ -3739,6 +3743,7 @@ const policyControlledAnswers = new Set([
   contactAnswer,
   capabilityAnswer,
   careerMoveAnswer,
+  fridayModeAnswer,
   experienceAnswer,
   identityAnswer,
   roleAnswer,

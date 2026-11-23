@@ -3025,17 +3025,17 @@ function unsupportedPortfolioResponse() {
   };
 }
 // Career direction (brief Nov 23, M1/M2). Mira never improvises future plans:
-// stated-direction questions get approved career-interest text; questions asking
-// Mira to judge where she *should* go get a clearly framed assessment built only
-// from documented outcomes, with no titles, companies, or timelines.
+// stated-direction questions get Prerna-approved text; questions asking Mira to
+// judge where she *should* go are redirected to Prerna (no assessment, no titles,
+// companies, or timelines).
 const futureAssessmentQuestion = /\bwhere (?:should|could|can|would|will) (?:prerna|she|her)\b.{0,30}\b(?:be|go|reach|end up|land|grow)\b|\b(?:what|which) (?:role|level|position|title)\b.{0,24}\b(?:should|could|would)\b.{0,12}\b(?:prerna|she)\b|\b(?:how far|how high) (?:can|could|will) (?:prerna|she) go\b|\bpotential\b.{0,24}\b(?:years?|future|long run|go)\b/i;
 const futureLongQuestion = /\b(?:\d+|two|three|four|five|ten|few)\s+years?\b.{0,24}\b(?:down the line|from now|later|ahead|time|out|plan|vision|goal)s?\b|\bin (?:\d+|two|three|four|five|ten|a few) years\b|\blong[- ]term\b.{0,16}\b(?:goals?|plans?|vision|aspirations?|ambitions?)\b|\bwhere (?:does|do|will|would) (?:prerna|she) (?:see|picture|imagine) (?:herself|her self|her)\b|\bcareer (?:goals?|aspirations?|ambitions?|plans?|vision)\b|\b(?:her|prerna'?s) (?:ambitions?|aspirations?)\b/i;
 const futureNearQuestion = /\b(?:next|coming|upcoming)\s+(?:few\s+)?(?:\d+|one|two|three|six|twelve|few)?\s*(?:months?|quarters?|year)\b|\b(?:short|near)[- ]term\b|\b(?:perceives?|sees?|see) (?:herself|her self)\b|\bwhat(?:'?s| is)? next for (?:prerna|her)\b/i;
 // Past-tense or company-specific questions ("what did she do in her first 6 months at Lenskart?") are about her record, not her plans.
 const pastRecordQuestion = /\b(?:did|was|were|had|has been)\b/i;
 const futureNearAnswer = 'In the near term, Prerna is focused on her next Product Manager or Senior Product Manager role: one where she owns a meaningful customer journey end to end and turns adoption problems into measurable customer and business outcomes, especially in B2C and AI-enabled products.';
-const futureLongAnswer = 'Prerna hasn’t published a five-year plan. The direction she has shared is toward senior product roles with end-to-end ownership of high-impact products, particularly in B2C and AI-enabled products. For her longer-term goals, it’s best to ask her directly.';
-const futureAssessmentAnswer = 'That’s a judgement call, so here’s what her documented work supports rather than a prediction: she has led a four-person APM team, built a ₹28L business from 0→1 at Bajaj Finserv Health, contributed ₹6Cr+ in annualised impact at Lenskart, and builds AI products hands-on. That record points toward roles with broader product ownership and team leadership. Where she takes it is her call.';
+const futureLongAnswer = 'Prerna hasn’t published a five-year plan, but she enjoys the craft of product management and sees herself building more consumer-facing products and taking on interesting problems worth fixing. For her longer-term goals, it’s best to ask her directly.';
+const futureAssessmentAnswer = 'That’s best answered by Prerna herself. Please reach out to her directly.';
 // Trait questions (brief Nov 23, M3): answer with a documented example and its
 // result, not a process description.
 const creativityQuestion = /\bout[- ]of[- ](?:the[- ])?box\b|\bcreativ\w*|\binnovat\w*|\bunconventional\b|\boriginal think\w*|\blateral think\w*|\bthinks? differently\b|\bimaginative\b|\bresourceful\w*/i;
@@ -3671,7 +3671,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   if (unsupportedPersonalFactQuestion.test(question)) return unsupportedPortfolioResponse();
   if (futureAssessmentQuestion.test(question)) return {
     answer: futureAssessmentAnswer,
-    citations: ['Resume · Bajaj — Product leadership', 'Work · Lenskart impact'],
+    citations: [],
     action: { label: 'Contact Prerna', href: '#contact' }, policyOnly: true
   };
   if (futureLongQuestion.test(question)) return {

@@ -179,8 +179,8 @@ The "Friday Mode" amp knob in the nav plays Tame Impala's "Feels Like We Only Go
 
 | Event | Properties | Meaning |
 | --- | --- | --- |
-| `amp_turned_on` | `song` | Visitor started the music |
-| `amp_turned_off` | `song`, `seconds_listened` | Visitor stopped it; listening time shows whether the feature holds attention |
+| `amp_turned_on` | `song`, `source` (`direct` = the knob, `tip` = the one-time hint) | Visitor started the music. Break down by `source` to measure tip → play conversion |
+| `amp_turned_off` | `song`, `source` (`direct` / `close`), `seconds_listened` | Visitor stopped it; listening time shows whether the feature holds attention |
 | `portrait_flipped` | `side` (`drums` or `portrait`), `trigger` (`click` or `friday_mode`) | About photo flipped. Filter `trigger = click` to count people who flipped it themselves; `friday_mode` flips happen automatically when Friday Mode turns on/off |
 | `player_resized` | `width` (px) | Visitor resized the video window |
 | `scroll_depth_reached` | `depth` (25, 50, 75, 100), `friday_mode` (`on`/`off` at that moment), `friday_mode_used` (turned on at any point this visit) | Fired once per milestone per page view |

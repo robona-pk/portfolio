@@ -96,7 +96,9 @@
      On: the video window appears, the song plays, the page goes into its Friday look.
      Off: the song stops, the window disappears, the page goes back to normal. */
   let modeOn = false;
-  function setMode(on) {
+  // source: how the visitor turned the mode on/off — 'direct' (the knob),
+  // 'tip' (the one-time hint), 'close' (the player's x). Lets tip -> play be measured.
+  function setMode(on, source = 'direct') {
     if (on === modeOn) return;
     modeOn = on;
     body.classList.toggle('amped', on);
@@ -107,7 +109,7 @@
       startedAt = performance.now(); placeArm();
       usedThisVisit = true; tagFriday({ on: true, used: true });
       armAutoFlip();
-      track('amp_turned_on', { song: SONG });
+      track('amp_turned_on', { song: SONG, source });
       if (!yt) { pending = true; if (!loading) loadYouTube(); }
       else if (ready) yt.playVideo();
       else pending = true;
@@ -117,7 +119,7 @@
       tagFriday({ on: false });
       autoFlipArmed = false; clearTimeout(autoFlipTimer);
       setFlip(false, 'friday_mode');
-      track('amp_turned_off', { song: SONG, seconds_listened: Math.round((performance.now() - startedAt) / 1000) });
+      track('amp_turned_off', { song: SONG, source, seconds_listened: Math.round((performance.now() - startedAt) / 1000) });
     }
   }
 
@@ -147,7 +149,7 @@
   }
 
   knob.addEventListener('click', () => {
-    setMode(!modeOn);
+    setMode(!modeOn, 'direct');
     if (!body.classList.contains('amp-used')) {
       body.classList.add('amp-used');
       try { localStorage.setItem('pk-friday-used', '1'); } catch (e) {}
@@ -156,7 +158,7 @@
 
   /* Discoverability: the knob pings until first use (remembered per visitor) */
   try { if (localStorage.getItem('pk-friday-used') === '1') body.classList.add('amp-used'); } catch (e) {}
-  closeBtn && closeBtn.addEventListener('click', () => setMode(false));
+  closeBtn && closeBtn.addEventListener('click', () => setMode(false, 'close'));
 
   /* Tonearm that drops onto the eclipse record when the music plays */
   const hero = document.getElementById('hero');

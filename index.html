@@ -3036,10 +3036,9 @@ const pastRecordQuestion = /\b(?:did|was|were|had|has been)\b/i;
 const futureNearAnswer = 'In the near term, Prerna is focused on her next Product Manager or Senior Product Manager role: one where she owns a meaningful customer journey end to end and turns adoption problems into measurable customer and business outcomes, especially in B2C and AI-enabled products.';
 const futureLongAnswer = 'Prerna hasn’t published a five-year plan, but she enjoys the craft of product management and sees herself building more consumer-facing products and taking on interesting problems worth fixing. For her longer-term goals, it’s best to ask her directly.';
 const futureAssessmentAnswer = 'That’s best answered by Prerna herself. Please reach out to her directly.';
-// Trait questions (brief Nov 23, M3): answer with a documented example and its
-// result, not a process description.
+// Trait questions (brief Nov 23, M3): short Prerna-approved summary, invites the visitor to ask for the stories.
 const creativityQuestion = /\bout[- ]of[- ](?:the[- ])?box\b|\bcreativ\w*|\binnovat\w*|\bunconventional\b|\boriginal think\w*|\blateral think\w*|\bthinks? differently\b|\bimaginative\b|\bresourceful\w*/i;
-const creativityAnswer = 'One documented example: at Lenskart, Home Trial users were dropping between cart and address selection, and the data didn’t say why. Prerna asked colleagues who had never seen the journey to narrate what each screen meant. That surfaced a hunch that pricing was confusing people. Customer interviews confirmed it: the frame price made a free trial look chargeable. Making it clear the trial was free lifted cart-to-address conversion from 26% to 58%.'
+const creativityAnswer = 'She tends to question assumptions and look for simple, unexpected fixes, and those fixes have moved real numbers at Lenskart and Bajaj Finserv Health. Ask her for the stories behind them.';
 const educationQuestion = /\b(education|degree|university|college|stud(y|ied)|biotechnology|srm)\b/i;
 const rolesQuestion = /\b(preferred roles?|roles? (is|are).{0,18}\b(looking|open)|senior product manager|product manager role)\b/i;
 const dopamineDetoxQuestion = /\b(dopamine detox|dopamine fast(?:ing)?|detox(?:ing)? from dopamine)\b/i;
@@ -3685,7 +3684,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   };
   if (creativityQuestion.test(question)) return {
     answer: creativityAnswer,
-    citations: ['Interview prep · Ambiguous-data decision'], policyOnly: true
+    citations: [], action: { label: 'Contact Prerna', href: '#contact' }, policyOnly: true
   };
   if (failureQuestion.test(question)) return {
     answer: failureAnswer,

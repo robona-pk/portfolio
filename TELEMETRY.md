@@ -181,10 +181,18 @@ The "Friday Mode" amp knob in the nav plays Tame Impala's "Feels Like We Only Go
 | --- | --- | --- |
 | `amp_turned_on` | `song`, `source` (`direct` = the knob, `tip` = the one-time hint) | Visitor started the music. Break down by `source` to measure tip → play conversion |
 | `amp_turned_off` | `song`, `source` (`direct` / `close`), `seconds_listened` | Visitor stopped it; listening time shows whether the feature holds attention |
+| `friday_tip_shown` | `forced` (true only with `?fridayhint=1`) | The one-time "Psst… try Friday Mode" hint appeared. Once per browser, only for visitors who never used Friday Mode, 2.5s after load |
+| `friday_tip_clicked` | none | Visitor tapped the hint; Friday Mode turns on and `amp_turned_on` follows with `source = tip` |
+| `friday_tip_dismissed` | `method` (`close`, `knob`, `scroll`, `timeout`) | Hint closed without being tapped |
+| `engagement_time` | `seconds_mode_on`, `seconds_mode_off`, `reason` (`hidden`/`pagehide`), `friday_mode`, `friday_mode_used` | Active time since the last report, split by Friday Mode state. Counts visible-tab time with input in the last 60s, or any time while the song plays. Sum each property for total time per mode |
 | `portrait_flipped` | `side` (`drums` or `portrait`), `trigger` (`click` or `friday_mode`) | About photo flipped. Filter `trigger = click` to count people who flipped it themselves; `friday_mode` flips happen automatically when Friday Mode turns on/off |
 | `player_resized` | `width` (px) | Visitor resized the video window |
 | `scroll_depth_reached` | `depth` (25, 50, 75, 100), `friday_mode` (`on`/`off` at that moment), `friday_mode_used` (turned on at any point this visit) | Fired once per milestone per page view |
 
 **Friday Mode tags on every event.** All PostHog events also carry `friday_mode` (current state, super property) and, once a visitor turns it on, `friday_mode_used: true` for the rest of that session. This includes `$pageleave`, so PostHog's built-in `$prev_pageview_max_scroll_percentage` can be split the same way.
+
+**Tip funnel.** Funnel: `friday_tip_shown` → `friday_tip_clicked` → `amp_turned_on` (filter `source = tip`).
+
+**Time in each mode.** Trends on `engagement_time`, math = property sum of `seconds_mode_on` and, as a second series, `seconds_mode_off`. Divide by unique users for per-visitor time.
 
 **Scroll depth: Friday Mode vs not.** Trends insight on `scroll_depth_reached`, unique users, breakdown by `depth`, then by `friday_mode_used`. Or a funnel: `$pageview` → `scroll_depth_reached` (depth = 50) → (depth = 100), broken down by `friday_mode_used`.

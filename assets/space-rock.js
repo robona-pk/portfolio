@@ -100,6 +100,7 @@
   // 'tip' (the one-time hint), 'close' (the player's x). Lets tip -> play be measured.
   function setMode(on, source = 'direct') {
     if (on === modeOn) return;
+    tick(); // attribute elapsed time to the state that is ending
     modeOn = on;
     body.classList.toggle('amped', on);
     knob.setAttribute('aria-pressed', on ? 'true' : 'false');
@@ -157,8 +158,93 @@
   });
 
   /* Discoverability: the knob pings until first use (remembered per visitor) */
-  try { if (localStorage.getItem('pk-friday-used') === '1') body.classList.add('amp-used'); } catch (e) {}
+  let usedBefore = false;
+  try { usedBefore = localStorage.getItem('pk-friday-used') === '1'; } catch (e) {}
+  if (usedBefore) body.classList.add('amp-used');
   closeBtn && closeBtn.addEventListener('click', () => setMode(false, 'close'));
+
+  /* One-time hint under the knob. Quiet text that doesn't reveal the song (the
+     surprise is the point); no sound until the visitor taps.
+     Shown once per browser to people who have never used Friday Mode.
+     Funnel: friday_tip_shown -> friday_tip_clicked -> amp_turned_on (source = tip).
+     Add ?fridayhint=1 to the URL to force it for testing. */
+  const hint = document.getElementById('ampHint');
+  const hintGo = document.getElementById('ampHintGo');
+  const hintX = document.getElementById('ampHintX');
+  if (hint && hintGo && hintX) {
+    let forced = false, seen = false;
+    try { forced = new URLSearchParams(location.search).get('fridayhint') === '1'; } catch (e) {}
+    try { seen = localStorage.getItem('pk-friday-hint') === '1'; } catch (e) {}
+    let hintOpen = false, hintTimer = null;
+    const placeHint = () => { hint.style.left = knob.offsetLeft + 'px'; };
+    const closeHint = method => {
+      if (!hintOpen) return;
+      hintOpen = false; clearTimeout(hintTimer);
+      hint.classList.remove('is-shown');
+      setTimeout(() => { hint.hidden = true; }, 350);
+      if (method) track('friday_tip_dismissed', { method });
+    };
+    if (forced || (!usedBefore && !seen)) {
+      setTimeout(() => {
+        if (modeOn) return; // already discovered it
+        placeHint(); hint.hidden = false;
+        requestAnimationFrame(() => hint.classList.add('is-shown'));
+        hintOpen = true;
+        try { localStorage.setItem('pk-friday-hint', '1'); } catch (e) {}
+        track('friday_tip_shown', { forced });
+        hintTimer = setTimeout(() => closeHint('timeout'), 12000);
+      }, 2500);
+    }
+    hintGo.addEventListener('click', () => {
+      track('friday_tip_clicked', {});
+      closeHint(null);
+      setMode(true, 'tip');
+      if (!body.classList.contains('amp-used')) {
+        body.classList.add('amp-used');
+        try { localStorage.setItem('pk-friday-used', '1'); } catch (e) {}
+      }
+    });
+    hintX.addEventListener('click', () => closeHint('close'));
+    knob.addEventListener('click', () => closeHint('knob'));
+    addEventListener('scroll', () => { if (hintOpen && scrollY > 600) closeHint('scroll'); }, { passive: true });
+    addEventListener('resize', () => { if (hintOpen) placeHint(); });
+  }
+
+  /* Engagement time split by Friday Mode state.
+     Counts only time the tab is visible and the visitor is engaged: they interacted
+     in the last 60s, or the song is playing. Sent as deltas in engagement_time when
+     the tab is hidden or the page closes, so sum(seconds_mode_on) vs
+     sum(seconds_mode_off) answers "time spent in each mode" directly. */
+  const IDLE_MS = 60000;
+  let lastInput = performance.now(), lastTick = performance.now();
+  let secOn = 0, secOff = 0;
+  ['pointerdown', 'keydown', 'scroll', 'touchstart', 'wheel'].forEach(t =>
+    addEventListener(t, () => { lastInput = performance.now(); }, { passive: true }));
+  function tick() {
+    const now = performance.now(), dt = (now - lastTick) / 1000;
+    lastTick = now;
+    if (document.visibilityState !== 'visible') return;
+    if (!modeOn && now - lastInput > IDLE_MS) return;
+    if (modeOn) secOn += dt; else secOff += dt;
+  }
+  setInterval(tick, 1000);
+  function flushEngagement(reason) {
+    tick();
+    const on = Math.round(secOn), off = Math.round(secOff);
+    if (on + off < 1) return;
+    secOn = 0; secOff = 0;
+    try {
+      if (window.posthog && posthog.capture) posthog.capture('engagement_time', {
+        seconds_mode_on: on, seconds_mode_off: off, reason,
+        friday_mode: modeOn ? 'on' : 'off', friday_mode_used: usedThisVisit
+      }, { transport: 'sendBeacon' });
+    } catch (e) {}
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flushEngagement('hidden');
+    else lastTick = performance.now();
+  });
+  addEventListener('pagehide', () => flushEngagement('pagehide'));
 
   /* Tonearm that drops onto the eclipse record when the music plays */
   const hero = document.getElementById('hero');

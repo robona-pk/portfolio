@@ -2323,7 +2323,7 @@ body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-
 </footer>
   <script src="assets/space-rock.js?v=2026-11-23.4" defer></script>
   <script src="assets/mira-facts.js?v=2026-11-06.2"></script>
-  <script src="assets/chatbot-knowledge.js?v=2026-11-06.2"></script>
+  <script src="assets/chatbot-knowledge.js?v=2026-11-23.2"></script>
   <script src="assets/eval-dataset.js?v=2026-11-23.1"></script>
   <script>/* ═══════════════════════════════════════════════════════
    CASE STUDY MODAL — open / close
@@ -3053,6 +3053,9 @@ const futureAssessmentAnswer = 'That’s best answered by Prerna herself. Please
 // Trait questions (brief Nov 23, M3): short Prerna-approved summary, invites the visitor to ask for the stories.
 const creativityQuestion = /\bout[- ]of[- ](?:the[- ])?box\b|\bcreativ\w*|\binnovat\w*|\bunconventional\b|\boriginal think\w*|\blateral think\w*|\bthinks? differently\b|\bimaginative\b|\bresourceful\w*/i;
 const creativityAnswer = 'She tends to question assumptions and look for simple, unexpected fixes, and those fixes have moved real numbers at Lenskart and Bajaj Finserv Health. Ask her for the stories behind them.';
+// Friday Mode is a surprise: Mira never describes what it does (no song, no music).
+const fridayModeQuestion = /\bfriday[- ]?mode\b|\b(?:the )?(?:amp|knob)\b.{0,20}\b(?:do|does|for|is)\b/i;
+const fridayModeAnswer = 'That one’s a surprise. Flip on Friday Mode at the top of the page and see for yourself.';
 const educationQuestion = /\b(education|degree|university|college|stud(y|ied)|biotechnology|srm)\b/i;
 const rolesQuestion = /\b(preferred roles?|roles? (is|are).{0,18}\b(looking|open)|senior product manager|product manager role)\b/i;
 const dopamineDetoxQuestion = /\b(dopamine detox|dopamine fast(?:ing)?|detox(?:ing)? from dopamine)\b/i;
@@ -3700,6 +3703,7 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     answer: creativityAnswer,
     citations: [], action: { label: 'Contact Prerna', href: '#contact' }, policyOnly: true
   };
+  if (fridayModeQuestion.test(question)) return { answer: fridayModeAnswer, citations: [], policyOnly: true };
   if (failureQuestion.test(question)) return {
     answer: failureAnswer,
     citations: [],
@@ -3776,6 +3780,7 @@ const policyControlledAnswers = new Set([
   futureLongAnswer,
   futureAssessmentAnswer,
   creativityAnswer,
+  fridayModeAnswer,
   experienceAnswer,
   identityAnswer,
   roleAnswer,

@@ -909,7 +909,7 @@ nav a:hover,.nav-name,.nav-dot{color:var(--s2)!important}
 .rag-feedback{display:flex;align-items:center;gap:.4rem;margin-top:.65rem;padding-top:.55rem;border-top:1px solid rgba(255,220,151,.09)}.rag-feedback-label{font-size:.68rem;color:var(--t3);margin-right:.15rem}.rag-feedback button{appearance:none;border:1px solid rgba(255,220,151,.18);background:transparent;color:var(--t2);font:600 .66rem var(--fb);padding:.28rem .45rem;border-radius:7px;cursor:pointer}.rag-feedback button:hover,.rag-feedback button:focus-visible{border-color:#E5A534;color:#FFE2A4;outline:none}.rag-feedback button[aria-pressed="true"]{background:rgba(240,160,32,.15);border-color:#E5A534;color:#FFE2A4}.rag-feedback-saved{font-size:.66rem;color:#FFD88A}
 .rag-feedback{flex-wrap:wrap}.rag-feedback button:disabled{cursor:default;opacity:.62}.rag-feedback button[aria-pressed="true"]:disabled{opacity:1}.rag-feedback-reasons{display:none;flex:0 0 100%;gap:.35rem;flex-wrap:wrap;padding-top:.2rem}.rag-feedback-reasons.open{display:flex}.rag-feedback-reasons .rag-feedback-prompt{flex:0 0 100%;font-size:.66rem;color:var(--t3);margin:0 0 .05rem}.rag-feedback-reasons button{font-weight:500;padding:.3rem .5rem}
 .rag-prompts{border-top-color:rgba(255,220,151,.1)}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:#E5A534;color:#FFE2A4}.rag-input{background:#11100d;border-color:rgba(255,220,151,.15);border-radius:14px}.rag-input:focus{border-color:#E5A534}.rag-send{background:#D89524;color:#171108;border-radius:14px}.rag-send:hover{background:#F3C45D;color:#171108}
-@media(max-width:640px){.rag-launcher{right:.55rem;bottom:.65rem}.rag-launch{width:94px;height:98px}.rag-nudge{display:none!important}.rag-modal{right:.55rem;bottom:102px;padding:0;align-items:flex-end}.rag-chat{width:calc(100vw - 1.1rem);border-radius:22px}.rag-launch{animation-duration:5.5s}}
+@media(max-width:640px){.rag-launcher{right:.55rem;bottom:.65rem}.rag-launch{width:94px;height:98px}.rag-nudge{right:64px;bottom:72px;padding:.5rem .7rem;font-size:.72rem;border-radius:14px 14px 4px 14px}.rag-modal{right:.55rem;bottom:102px;padding:0;align-items:flex-end}.rag-chat{width:calc(100vw - 1.1rem);border-radius:22px}.rag-launch{animation-duration:5.5s}}
 @media(prefers-reduced-motion:reduce){.rag-launch{animation:none}.rag-launch img,.rag-build-note.is-leaving{transition:none}}
 
 /* Contact: one divider, more breathing room, footer outside the section */
@@ -1388,6 +1388,8 @@ body.amped .amp{border-color:rgba(243,199,122,.9)!important;background:rgba(243,
 body.amped .amp-cap{transform:rotate(135deg)}
 body.amped .amp-dial::after{opacity:1}
 body.amped .amp-label small{color:#F3C77A}
+/* Mira "Ask me anything" bubble: on phones, step aside while the Friday Mode player is open */
+@media(max-width:640px){body.np-open .rag-nudge{display:none!important}}
 /* One-time Friday Mode hint: quiet text under the knob, no motion beyond a fade */
 .amp-hint{position:absolute;top:calc(100% - 4px);z-index:210;display:flex;align-items:center;gap:.15rem;padding:.2rem .25rem .2rem .7rem;border:1px solid rgba(201,178,255,.22);border-radius:10px;background:rgba(10,8,24,.92);backdrop-filter:blur(10px);box-shadow:0 10px 30px -12px rgba(0,0,0,.8);opacity:0;transform:translateY(-4px);transition:opacity .35s,transform .35s}
 .amp-hint[hidden]{display:none}
@@ -2258,7 +2260,7 @@ body.amped .np-eq i:nth-child(2){animation-duration:.5s}body.amped .np-eq i:nth-
 
 <!-- PORTFOLIO RAG ASSISTANT -->
 <div class="rag-launcher">
-  <span class="rag-nudge">Ask Mira</span>
+  <span class="rag-nudge">Ask me anything</span>
   <button class="rag-launch" id="ragLaunch" type="button" aria-label="Ask Mira about Prerna's work" aria-haspopup="dialog" aria-controls="ragModal">
     <img src="assets/prerna-portfolio-bot-256.webp" alt="A small ivory and amber portfolio assistant robot" decoding="async">
   </button>

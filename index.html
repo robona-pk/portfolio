@@ -2960,7 +2960,9 @@ approvedInterviewPrepDocuments.forEach(document => (document.sections || []).for
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-11-25.1',
+  // Must equal EVIDENCE_CACHE_VERSION in api/generate.js: the server rejects shared-cache
+  // requests with any other value, which breaks every open-ended question.
+  rulesVersion: '2026-11-06.2',
   retrievalModel: 'Gemini evidence selection (server-side)',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -3000,9 +3002,9 @@ const companyContextQuestion = /\b(company strategy|business strategy|market sha
 // get a short greeting back, never a profile summary. Matched on a letters-only
 // copy of the raw text so spelling correction cannot turn "heyy" into a word.
 // Anchored: "hi, who is Prerna?" still goes to the real answer.
-const GREETING_WORD = "(?:h+i+|h+y+|ha+i+|he+y+a*|he+y+o+|hiy+a+|he+l+o+w*|hu+l+o+|hola|yo+|su+p+|wa+s+u+p+|what'?s up|namaste|namaskar|howdy|greetings|good (?:morning|afternoon|evening|day)|morning|evening)";
+const GREETING_WORD = "(?:h+i+|h+y+|ha+i+|he+y+a*|he+y+o+|hiy+a+|he+l+o+w*|hu+l+o+|hola|yo+|su+p+|w+h?a+t*'?s*u+p+|wa+z+u+p+|what'?s up|namaste|namaskar|howdy|greetings|g+m+|g+e+|(?:good|gud|gd) (?:morning|mrng|mornin|afternoon|noon|evening|evng|eve|day)|(?:good|gud)(?:morning|evening|afternoon)|morning|mrng|evening|evng)";
 const GREETING_ADDRESSEE = "(?:there|mira|prerna|bot|team|everyone|all|buddy|friend)";
-const GREETING_SMALL_TALK = "(?:how are (?:you|u)(?: doing)?(?: today)?|how r u|hru|how'?s it going|how is it going|how are things|how do you do|nice to meet you|good to meet you|what'?s up|wassup)";
+const GREETING_SMALL_TALK = "(?:how are (?:you|u)(?: doing)?(?: today)?|how r u|hru|how'?s it going|how is it going|how are things|how do you do|nice to meet you|good to meet you|what'?s up|whatsup|wassup)";
 const greetingQuestion = new RegExp(`^${GREETING_WORD}(?: (?:${GREETING_WORD}|${GREETING_ADDRESSEE}))*(?: ${GREETING_SMALL_TALK}(?: ${GREETING_ADDRESSEE})?)?$`);
 const greetingSmallTalk = new RegExp(`\\b${GREETING_SMALL_TALK}\\b`);
 function greetingOnlyText(value) {

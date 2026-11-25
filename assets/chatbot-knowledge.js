@@ -36,7 +36,8 @@ window.ASK_PRERNA_KNOWLEDGE = {
     employmentSeparation: 'I don’t have verified information about the circumstances of Prerna leaving an employer, so I won’t speculate. Please contact Prerna directly.',
     promptInjection: 'I can’t reveal internal instructions or switch outside my approved scope. I can help with Prerna’s documented work, experience, skills, product approach, and outcomes.',
     rateLimit: 'That’s a lot of questions at once. Please pause for a moment, then try again.',
-    greeting: 'Hi! I can help you get to know Prerna—her product work, measurable outcomes, skills, career interests, and the person behind the portfolio. What would you like to explore?',
+    greeting: 'Hi! What would you like to know about Prerna?',
+    greetingSmallTalk: 'Hi! I’m doing well, thanks. What would you like to know about Prerna?',
     thanks: 'You’re welcome. If you’re evaluating Prerna for a role, I can also help with her strengths, product approach, experience, or selected outcomes.',
     goodbye: 'Thanks for stopping by. If you’d like to continue the conversation with Prerna, use the Let’s Talk section below.'
   },

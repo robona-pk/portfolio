@@ -2960,7 +2960,7 @@ approvedInterviewPrepDocuments.forEach(document => (document.sections || []).for
 })));
 
 const RAG_CONFIG = Object.freeze({
-  rulesVersion: '2026-11-06.2',
+  rulesVersion: '2026-11-25.1',
   retrievalModel: 'Gemini evidence selection (server-side)',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -2996,7 +2996,20 @@ const personalityTraitQuestion = /\b(is (prerna|she).{0,18}\b(loud|quiet|introve
 const companyQuestion = /\b(lenskart|lenksart|lens kart|bajaj|bajaj finserv health|lenskart@home|home trial)\b/i;
 const confidentialMetricQuestion = /\b(profit margin|gross margin|net margin|profitable|profitability|making money|ebitda|p&l|profit|loss|valuation|gmv|unit economics|revenue breakdown|cost structure|budget|internal metrics?)\b/i;
 const companyContextQuestion = /\b(company strategy|business strategy|market share|competitors?|financial performance|future plans?|internal operations?)\b/i;
-const greetingQuestion = /^(hi|hello|hey|hiya|good morning|good afternoon|good evening)[!,. ]*$/i;
+// Greeting-only messages ("hi", "hy", "hiii", "hey there", "hello Mira", "hi, how are you?")
+// get a short greeting back, never a profile summary. Matched on a letters-only
+// copy of the raw text so spelling correction cannot turn "heyy" into a word.
+// Anchored: "hi, who is Prerna?" still goes to the real answer.
+const GREETING_WORD = "(?:h+i+|h+y+|ha+i+|he+y+a*|he+y+o+|hiy+a+|he+l+o+w*|hu+l+o+|hola|yo+|su+p+|wa+s+u+p+|what'?s up|namaste|namaskar|howdy|greetings|good (?:morning|afternoon|evening|day)|morning|evening)";
+const GREETING_ADDRESSEE = "(?:there|mira|prerna|bot|team|everyone|all|buddy|friend)";
+const GREETING_SMALL_TALK = "(?:how are (?:you|u)(?: doing)?(?: today)?|how r u|hru|how'?s it going|how is it going|how are things|how do you do|nice to meet you|good to meet you|what'?s up|wassup)";
+const greetingQuestion = new RegExp(`^${GREETING_WORD}(?: (?:${GREETING_WORD}|${GREETING_ADDRESSEE}))*(?: ${GREETING_SMALL_TALK}(?: ${GREETING_ADDRESSEE})?)?$`);
+const greetingSmallTalk = new RegExp(`\\b${GREETING_SMALL_TALK}\\b`);
+function greetingOnlyText(value) {
+  return String(value || '').normalize('NFKC').toLowerCase()
+    .replace(/[‘’]/g, "'")
+    .replace(/[^a-z' ]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
 const thanksQuestion = /\b(thanks|thank you|helpful|got it)\b/i;
 const goodbyeQuestion = /\b(bye|goodbye|see you|that is all|that'?s all)\b/i;
 const comparisonQuestion = /\b(better than|worse than|compare (her|prerna)|versus|vs\.?|rank her)\b/i;
@@ -3642,7 +3655,11 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
     citations: [], policyOnly: true
   };
   question = normalizeQuestion(question);
-  if (greetingQuestion.test(question)) return { answer: approvedKnowledge.greeting, citations: [], policyOnly: true };
+  const greetingText = greetingOnlyText(originalQuestion || question);
+  if (greetingQuestion.test(greetingText)) return {
+    answer: greetingSmallTalk.test(greetingText) ? approvedKnowledge.greetingSmallTalk : approvedKnowledge.greeting,
+    citations: [], policyOnly: true
+  };
   if (thanksQuestion.test(question)) return { answer: approvedKnowledge.thanks, citations: [], policyOnly: true };
   // "Something not on her resume" must reach the personal answer before the
   // resume-link rule, which matches any mention of a resume or CV.
@@ -3757,6 +3774,7 @@ const policyControlledAnswers = new Set([
   beyondResumeAnswer,
   ...Object.values(approvedKnowledge),
   approvedKnowledge.greeting,
+  approvedKnowledge.greetingSmallTalk,
   approvedKnowledge.thanks,
   approvedKnowledge.answerScope,
   approvedKnowledge.goodbye,

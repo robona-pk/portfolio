@@ -87,6 +87,20 @@ One anonymous event is captured after each completed visitor request. Evaluation
 | `security_mode` | `fast_policy`, `rule`, `server_evidence_guard`, `model_guardrail`, `input_guard`, or `request_error` |
 | `security_score` | Rule score where applicable; model guardrails report through `security_mode` |
 
+### `portfolio_assistant_question_submitted`
+
+Fired when a visitor sends a question, before the answer. `request_id` is the same ID carried by the matching `portfolio_assistant_response`, so a repeat tap (two submit events, two IDs) can be told apart from a duplicate capture (one submit event, two response events with one ID).
+
+- `request_id`, `input_method` (`typed`, `chip`, `clarify_button`), `prompt_label` (chip or button text), `user_question` (redacted)
+
+### `portfolio_assistant_repeat_suppressed`
+
+The same question sent again within 3 seconds is not re-answered; the answer is already on screen. Added after the 26 Nov 2026 sessions, where both double sends had separate request IDs and the first answer had rendered in under 70 ms (user taps, not duplicate capture).
+
+- `previous_request_id`, `input_method`, `ms_since_previous`
+
+`answer_mode` on `portfolio_assistant_response` can now be `clarify`: the input was a fragment or typo, so Mira asked the visitor to rephrase instead of greeting them.
+
 ### `portfolio_assistant_rate_limited`
 
 Captured when the visible browser UI receives more than 10 questions in one minute. It includes `request_id` and `requests_in_last_minute`. This is a user-experience safeguard, not strong abuse prevention: a determined visitor can clear or bypass client-side JavaScript.

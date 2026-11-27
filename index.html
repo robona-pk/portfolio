@@ -413,6 +413,7 @@ background:linear-gradient(135deg,var(--s),var(--s2));-webkit-background-clip:te
 .rag-message.bot{align-self:flex-start;background:var(--bg2);color:var(--t2);border-left:2px solid #5B8CFF}.rag-message.user{align-self:flex-end;background:rgba(43,108,255,.14);color:var(--t1);border-color:rgba(91,140,255,.42)}
 .rag-message.loading{color:var(--t3);font-style:italic}.rag-message.error{border-left-color:#F87171}
 .rag-action{display:inline-flex;align-items:center;margin-top:.7rem;border:1px solid rgba(91,140,255,.5);color:#AFC7FF;font-size:.72rem;font-weight:700;padding:.42rem .62rem;background:rgba(43,108,255,.1);text-decoration:none;transition:background .18s,border-color .18s,color .18s,transform .18s}.rag-action:hover,.rag-action:focus-visible{border-color:#AFC7FF;background:rgba(43,108,255,.2);color:#fff;outline:none}.rag-action:active{transform:translateY(1px)}
+button.rag-action{font-family:inherit;cursor:pointer;border-radius:inherit}
 .rag-prompts{display:flex;flex-wrap:wrap;gap:.45rem;padding:.75rem 1.15rem;border-top:1px solid var(--border)}
 .rag-prompt{appearance:none;background:transparent;border:1px solid var(--bhi);color:var(--t2);font-family:var(--fb);font-size:.72rem;padding:.42rem .6rem;cursor:pointer;transition:border-color .2s,color .2s}.rag-prompt:hover,.rag-prompt:focus-visible{border-color:#5B8CFF;color:var(--t1);outline:none}.rag-prompt:disabled{cursor:wait;opacity:.5}
 .rag-form{display:flex;gap:.55rem;padding:1rem 1.15rem;border-top:1px solid var(--border)}.rag-input{min-width:0;flex:1;background:var(--bg);border:1px solid var(--bhi);border-radius:2px;color:var(--t1);font:inherit;font-size:.85rem;padding:.72rem .8rem;outline:none}.rag-input:focus{border-color:#5B8CFF}.rag-input::placeholder{color:var(--t3)}.rag-send{flex:0 0 auto;border:0;border-radius:2px;background:#2B6CFF;color:#fff;font:700 .78rem var(--fb);padding:.72rem .95rem;cursor:pointer;transition:transform .15s,opacity .15s}.rag-send:hover{opacity:.9}.rag-send:active{transform:translateY(1px)}.rag-send:disabled{opacity:.55;cursor:wait}
@@ -2962,7 +2963,7 @@ approvedInterviewPrepDocuments.forEach(document => (document.sections || []).for
 const RAG_CONFIG = Object.freeze({
   // Must equal EVIDENCE_CACHE_VERSION in api/generate.js: the server rejects shared-cache
   // requests with any other value, which breaks every open-ended question.
-  rulesVersion: '2026-11-25.1',
+  rulesVersion: '2026-11-27.1',
   retrievalModel: 'Gemini evidence selection (server-side)',
   generationModel: 'gemini-3.5-flash-lite',
   comparisonModel: 'onnx-community/Qwen2.5-0.5B-Instruct',
@@ -3112,8 +3113,25 @@ function evidenceActionForSources(sourceIds = [], factId = '') {
 }
 const beyondResumeQuestion = /\b(?:not|isn'?t|isn t|aren'?t|never)\b.{0,30}\b(?:in|on|from)\b.{0,14}\b(?:resume|cv|curriculum vitae)\b|\b(?:beyond|apart from|besides|other than|outside(?: of)?)\s+(?:her |the |prerna'?s |prerna s )?(?:resume|cv|curriculum vitae)\b|\b(?:resume|cv)\b.{0,24}\b(?:won'?t|won t|doesn'?t|doesn t|does not|wouldn'?t|wouldn t|will not|can'?t|can t|cannot|don'?t|don t)\b.{0,12}\b(?:tell|say|show|cover|mention|capture)|\b(?:won'?t|won t|doesn'?t|doesn t|does not|wouldn'?t|wouldn t|will not|can'?t|can t|cannot|don'?t|don t)\b.{0,16}\b(?:resume|cv)\b.{0,10}\b(?:tell|say|show|cover|mention|capture)|\b(?:fun|interesting|random|surprising|cool|unexpected|quirky|little[- ]known|lesser[- ]known)\s+facts?\b.{0,20}\b(?:her|prerna|she)\b|\bsomething\s+(?:fun|interesting|surprising|cool|unexpected|random|personal|different|unique)\s+about\s+(?:her|prerna)\b|\b(?:something|anything)\b.{0,12}\b(?:i|we|people|most people|recruiters?)\b.{0,12}\b(?:don'?t|don t|do not|wouldn'?t|wouldn t|would not|won'?t|won t|might not|may not)\b.{0,8}\bknow\b|\b(?:who|what)(?: is|'s| s|s)?\s+(?:she|prerna)\b.{0,8}\blike\s+as\s+a\s+(?:person|human)\b|\b(?:person|human)\s+behind\s+(?:the |her )?(?:resume|cv|portfolio)\b|\bbeyond (?:her )?work\b|\boff the record\b/i;
 const beyondResumeTopicGuard = /\b(lenskart|bajaj|case stud(?:y|ies)|projects?|metrics?|revenue|skills?|tools?|experience at|work at|work on|outcomes?)\b/i;
-const beyondResumeAnswer = approvedKnowledge.beyondResume || 'Prerna treats her brain like her favourite product: she studies how it works, then runs experiments on it. She’s deep into neuroscience, and her biggest experiment was a dopamine detox, stepping back from high-stimulation habits to win back her focus. Off-screen, she drums, lifts, and travels solo to meet strangers.';
+const beyondResumeAnswer = approvedKnowledge.beyondResume || 'Prerna treats her brain like her favourite product: she studies how it works, then experiments on it. She’s deep into neuroscience and dopamine detox, which changed her relationship with focus. Off-screen, she lifts weights, plays the drums, and sometimes travels solo to meet new people.';
 const resumeQuestion = /\b(resume|curriculum vitae|cv)\b/i;
+// Typos of "beyond" ("bryond", "beyound", "byond") next to resume/CV. Distance 1,
+// or 2 when the word still starts with "b", so "second resume" is not caught.
+function beyondLikeToken(token) {
+  if (!token || token.length < 4 || token.length > 8) return false;
+  const distance = editDistance(token, 'beyond');
+  return distance <= 1 || (distance === 2 && token[0] === 'b');
+}
+function beyondResumeTypo(question) {
+  const words = String(question || '').toLowerCase().replace(/[^a-z\s]+/g, ' ').trim().split(/\s+/);
+  return words.some((word, index) => beyondLikeToken(word)
+    && words.slice(index + 1, index + 4).some(next => /^(resume|cv|resum|resumes)$/.test(next)));
+}
+// "Beyond" on its own (or a typo of it) is a fragment: ask, do not greet.
+function beyondFragment(question) {
+  const words = String(question || '').toLowerCase().replace(/[^a-z\s]+/g, ' ').trim().split(/\s+/).filter(word => word && word !== 'the');
+  return words.length === 1 && beyondLikeToken(words[0]);
+}
 const strengthsQuestion = /\b(strengths?|strongest|strong suit|best at|superpower)\b/i;
 const strengthsAnswer = 'Her work shows signs of high agency: Prerna brings energy and persistence to ambiguous problems, looks for evidence, turns insights into experiments, and stays involved through iteration.';
 const weaknessesQuestion = /\b(weakness|weaknesses|area(s)? (to|of) improve|shortcoming|development area)\b/i;
@@ -3667,9 +3685,15 @@ async function localRagAnswer(question, originalQuestion = question, runtimeOpti
   if (thanksQuestion.test(question)) return { answer: approvedKnowledge.thanks, citations: [], policyOnly: true };
   // "Something not on her resume" must reach the personal answer before the
   // resume-link rule, which matches any mention of a resume or CV.
-  if (beyondResumeQuestion.test(question) && !beyondResumeTopicGuard.test(question) && !promptInjection.test(question)) return {
+  if ((beyondResumeQuestion.test(question) || beyondResumeTypo(question)) && !beyondResumeTopicGuard.test(question) && !promptInjection.test(question)) return {
     answer: beyondResumeAnswer,
     citations: [],
+    policyOnly: true
+  };
+  if (beyondFragment(originalQuestion || question)) return {
+    answer: approvedKnowledge.clarifyBeyond,
+    citations: [],
+    action: { label: 'Yes, beyond the resume', question: 'What\'s something I wouldn\'t know about her?' },
     policyOnly: true
   };
   if (resumeQuestion.test(question)) return {
@@ -3779,6 +3803,8 @@ const policyControlledAnswers = new Set([
   ...Object.values(approvedKnowledge),
   approvedKnowledge.greeting,
   approvedKnowledge.greetingSmallTalk,
+  approvedKnowledge.clarify,
+  approvedKnowledge.clarifyBeyond,
   approvedKnowledge.thanks,
   approvedKnowledge.answerScope,
   approvedKnowledge.goodbye,
@@ -4204,6 +4230,23 @@ async function generatePortfolioAnswerWithServerSelection(question, result, runt
       generationLatencyMs: Math.round(performance.now() - generationStartedAt),
       failureStage: ''
     };
+    // A fragment or typo gets a short clarifying question, never a greeting.
+    if (!selection.blocked && (selection.unclear || selection.answer === 'UNCLEAR')) return {
+      answer: approvedKnowledge.clarify,
+      retrievedSources: [],
+      retrievalScores: [],
+      answerMode: 'clarify',
+      fallback: false,
+      fallbackReason: '',
+      error: '',
+      retrievalCacheHit: false,
+      generationCacheHit: Boolean(selection.serverCacheHit),
+      generationInputTokens: Number(selection.inputTokens || 0),
+      generationOutputTokens: Number(selection.outputTokens || 0),
+      generationModel: selection.model || RAG_CONFIG.generationModel,
+      generationLatencyMs: Math.round(performance.now() - generationStartedAt),
+      failureStage: ''
+    };
     if (selection.blocked || selection.answer === 'BLOCKED') return {
       answer: approvedKnowledge.promptInjection || outOfScopeAnswer,
       retrievedSources: [],
@@ -4336,7 +4379,7 @@ function withTimeLimit(promise, waitMs, fallbackValue) {
 
 async function resolvePortfolioRequest(question, runtimeOptions = {}) {
   const startedAt = performance.now();
-  const requestId = createRequestId();
+  const requestId = runtimeOptions.requestId || createRequestId();
   const retrievalCacheHit = false;
   try {
     const visitorQuestion = String(question || '').trim();
@@ -4494,7 +4537,14 @@ function appendRagMessage(kind, text, citations = [], action = null, requestId =
   const copy = document.createElement('div');
   copy.textContent = text;
   message.appendChild(copy);
-  if (action) {
+  if (action?.question) {
+    const ask = document.createElement('button');
+    ask.type = 'button';
+    ask.className = 'rag-action';
+    ask.textContent = action.label;
+    ask.addEventListener('click', () => askPortfolioAssistant(action.question, { inputMethod: 'clarify_button', promptLabel: action.label }));
+    message.appendChild(ask);
+  } else if (action) {
     const link = document.createElement('a');
     link.className = 'rag-action';
     link.href = action.href;
@@ -4592,11 +4642,34 @@ function appendRagMessage(kind, text, citations = [], action = null, requestId =
   return message;
 }
 
-async function askPortfolioAssistant(question) {
+async function askPortfolioAssistant(question, submission = {}) {
   const input = document.getElementById('ragInput');
   const button = document.getElementById('ragSend');
   const mode = document.getElementById('ragMode');
   if (!question || assistantRequestInFlight) return;
+  const inputMethod = submission.inputMethod || 'typed';
+  // Telemetry on 26 Nov showed the same chip question sent twice ~2 s apart
+  // with two request IDs: two real taps after an instant answer, not a
+  // duplicate capture. The answer is already on screen, so skip the repeat.
+  const submittedAt = Date.now();
+  if (lastSubmittedQuestion.text === question && submittedAt - lastSubmittedQuestion.at < REPEAT_SUBMIT_WINDOW_MS) {
+    if (window.posthog && !portfolioEvalMode) posthog.capture('portfolio_assistant_repeat_suppressed', {
+      previous_request_id: lastSubmittedQuestion.requestId,
+      input_method: inputMethod,
+      ms_since_previous: submittedAt - lastSubmittedQuestion.at,
+      $process_person_profile: false
+    });
+    return;
+  }
+  const submissionRequestId = createRequestId();
+  lastSubmittedQuestion = { text: question, at: submittedAt, requestId: submissionRequestId };
+  if (window.posthog && !portfolioEvalMode) posthog.capture('portfolio_assistant_question_submitted', {
+    request_id: submissionRequestId,
+    input_method: inputMethod,
+    prompt_label: submission.promptLabel || '',
+    user_question: redactTelemetryText(question),
+    $process_person_profile: false
+  });
   const buildNote = document.getElementById('ragBuildNote');
   if (buildNote) {
     buildNote.classList.add('is-leaving');
@@ -4607,10 +4680,9 @@ async function askPortfolioAssistant(question) {
   const now = Date.now();
   recentAssistantRequests = recentAssistantRequests.filter(timestamp => now - timestamp < 60000);
   if (recentAssistantRequests.length >= RAG_CONFIG.maximumRequestsPerMinute) {
-    const requestId = createRequestId();
-    appendRagMessage('bot', approvedKnowledge.rateLimit || RAG_CONFIG.fallbackAnswer, [], null, requestId);
+    appendRagMessage('bot', approvedKnowledge.rateLimit || RAG_CONFIG.fallbackAnswer, [], null, submissionRequestId);
     if (window.posthog && !portfolioEvalMode) posthog.capture('portfolio_assistant_rate_limited', {
-      request_id: requestId,
+      request_id: submissionRequestId,
       requests_in_last_minute: recentAssistantRequests.length,
       $process_person_profile: false
     });
@@ -4624,7 +4696,7 @@ async function askPortfolioAssistant(question) {
   document.getElementById('ragMessages')?.setAttribute('aria-busy', 'true');
   try {
     mode.textContent = 'Preparing answer...';
-    const result = await resolvePortfolioRequest(question);
+    const result = await resolvePortfolioRequest(question, { requestId: submissionRequestId });
     mode.textContent = 'Portfolio assistant';
     lastAssistantRequestId = result.requestId;
     captureAssistantTelemetry(result);
@@ -4643,6 +4715,8 @@ async function askPortfolioAssistant(question) {
 const portfolioEvalMode = new URLSearchParams(window.location.search).has('eval');
 let recentAssistantRequests = [];
 let assistantRequestInFlight = false;
+const REPEAT_SUBMIT_WINDOW_MS = 3000;
+let lastSubmittedQuestion = { text: '', at: 0, requestId: '' };
 window.runPortfolioEval = (question, runtimeOptions = {}) => resolvePortfolioRequest(question, portfolioEvalMode ? runtimeOptions : {});
 
 const ragForm = document.getElementById('ragForm');
@@ -4655,9 +4729,9 @@ if (ragBuildLink) ragBuildLink.addEventListener('click', () => {
 });
 if (ragForm) ragForm.addEventListener('submit', event => {
   event.preventDefault();
-  askPortfolioAssistant(document.getElementById('ragInput').value.trim());
+  askPortfolioAssistant(document.getElementById('ragInput').value.trim(), { inputMethod: 'typed' });
 });
-document.querySelectorAll('.rag-prompt').forEach(button => button.addEventListener('click', () => askPortfolioAssistant(button.dataset.question)));
+document.querySelectorAll('.rag-prompt').forEach(button => button.addEventListener('click', () => askPortfolioAssistant(button.dataset.question, { inputMethod: 'chip', promptLabel: button.textContent.trim() })));
 
 const ragModal = document.getElementById('ragModal');
 const ragLaunch = document.getElementById('ragLaunch');
